@@ -267,3 +267,50 @@ role; it is reported separately (new rule in EVALUATION_PRINCIPLES).
   "nesting 1.00 without rules" becomes "depth 1 = 1.00; depth >= 2 is NOT solvable with addresses from the prefix".
 - NEW: the first clean proof that a form of deferred addressing IS necessary (not for verb/frames, but for identical prefixes with different roles).
 Time: 21.7 s/variant (30k sentences, D=1024, batch 8), of which ~13 s Python encoding; full run (7 variants x 5 seeds) 12.7 min.
+
+# ROUND 6 (DGX, English world): language switch check (v5_scale --lang en), left expectations (v6_left), compositional nesting (v7_nested)
+From here on advanced tests use the English world (AGENTS.md). Same model, same evaluation, same regime (30k sentences, batch 8, lr 0.02, D=1024, 5 seeds).
+English world: 6 frames x 16 formulations; training T0,1,2,3,6,9,12,15; new formulations with all transitions seen: T8 '{B} , {A} V to {C}',
+T10 'from {A} , {C} VR {B}'; unseen transitions/categories: T4, T5, T7, T11, T13, T14. Nesting: '{X} says that <P>', '{X} claims that <P>', '<P> , says {X}'.
+
+## 6a. Does the Romanian table reproduce on the English world? (logs/2026-10-15_1246_v5_scale_9ea27cd.txt; flat world as in round 5)
+| code | seen | new id. | new form., seen trans. | UNseen trans. | depth 1-2 (seen) | depth 3 (A,B,C,X1,X2 only) |
+|---|---|---|---|---|---|---|
+| path | 0.970 | 0.984 | 0.501±0.011 | 0.406±0.034 | 0.834 | 0.681 |
+| chain | 1.000 | 1.000 | 0.104±0.038 | 0.411±0.008 | 0.930 | 0.784 |
+| bigram | 0.973 | 0.989 | 0.768±0.011 | 0.674±0.021 | 0.904 | 0.749 |
+| pos | 0.788 | 0.791 | 0.648±0.005 | 0.790±0.017 | 0.705 | 0.556 |
+| path+bigram | 0.980 | 0.995 | 0.764±0.022 | 0.755±0.025 | 0.910 | 0.741 |
+| path+chain+bigram | 1.000 (m .51) | 1.000 | **0.785±0.016** (m .15) | 0.788±0.014 (m .16) | 0.935 | 0.780 |
+| all 4 | 1.000 (m .51) | 1.000 | 0.709±0.019 | **0.993±0.005** | 0.939 | 0.807 |
+Reproduces (within +-0.03 of the Romanian world): seen 1.00, new identities 1.00, UNSEEN transitions 0.788 vs 0.821 (model) and 0.993 vs
+0.984 (with pos), depth 1-2 0.935 vs 0.938. Does NOT reproduce: "seen transitions" 0.785 vs 0.998.
+Per formulation x role (seed 0, path+chain+bigram): T8 A 1.00 B 1.00 C 1.00; T10 A 0.81 B 1.00 **C 0.04** (C decoded as a third person 172/180).
+Cause: in training the only formulation with a person after a comma is T9 'to {C} , {A} V {B}' (the AGENT); bigram ',:P' therefore means A,
+and the chain/path combination 'from ... , P' is new => C has no correct address anywhere. Every single code fails on T10-C (path 0.10,
+bigram 0.06, chain 0.08). The "seen transitions" axis measures how REDUNDANT the formulation set is, not the mechanism: the Romanian T9/T10
+were near-duplicates of training formulations ('lui C A da B' vs 'lui C A ii da B'); the English T10 is a genuine role ambiguity after a comma
+that only the preceding 'from A' (by exclusion) or the following recipient verb could resolve. Same family as the pos/T10 effect in round 5:
+a regularity true in all training formulations and false in a test one.
+
+## 6b. §5.1b — left expectations / re-addressing (v6_left.py; logs/2026-10-15_1249_v6_left_9ea27cd.txt; flat world, English)
+Mechanism: an emitter also emits LEFT expectations; the most recent non-emitter of each category before it, not yet re-addressed, is
+re-addressed to address(emitter) (x) L[c_emitter, c]; one re-addressing per word, by the first emitter that follows it; emitters anchor.
+Trace ('p0 says that p1 claims that p2 gives o0 to p3 .'): p1 = says:that+that:claims+L(claims:P); p2 = ...+that:gives+L(gives:P); at
+depth 1 p1 = says:that+that:gives+L(gives:P). The identical prefix no longer matters; what follows decides. Union-then-restriction
+(write at all candidates, subtract the losers) equals address replacement on the final state, which is what is trained.
+| code | seen | new id. | seen trans. | UNSEEN trans. | depth 1 | depth 2 (seen) | depth 3 (A,B,C,X1,X2) |
+|---|---|---|---|---|---|---|---|
+| chain | 1.000 | 1.000 | 0.102 | 0.415 | 1.000 | 0.859 | 0.784 |
+| chainL | 1.000 | 1.000 | 0.069 | 0.456 | 1.000 | 0.903 | 0.778 |
+| path+chain+bigram | 1.000 | 1.000 | 0.784 | 0.791 | 0.998 | 0.869 | 0.779 |
+| path+chainL+bigram | 1.000 | 1.000 | 0.745 | 0.798 | 1.000 | 0.903 | 0.788 |
+Depth 2 PER ROLE (A | B | C | X1 | X2): chain 0.964 | 1.000 | 0.971 | 0.703 | 0.647 ; chainL 1.000 | 1.000 | 1.000 | 0.772 | 0.773 ;
+  path+chain+bigram 0.960 | 1.000 | 0.966 | 0.766 | 0.653 ; path+chainL+bigram 1.000 | 1.000 | 1.000 | 0.782 | 0.760.
+Criterion (X2 > 0.9 at depth 2, no per-role loss): NOT met. Left expectations fix the INNER roles completely (A, C 0.96 -> 1.00) and move the
+speakers only from 0.65 to 0.77; cost 0.04 on "seen transitions" (T10, see 6a). Why the speakers stay stuck — an algebraic constraint of the
+FLAT world: with cumulative addresses, A depth-invariant forces the chain through 'says that' to sum to zero, and then X2's address equals
+X1's. Writing a = says:that, b = claims:that, c = that:says, d = that:claims, g = that:gives: A(d1) => a+g = 0 and b+g = 0; A(d2) =>
+d+b = 0 and c+a = 0; X2 - X1 = a+d = 0. Exact equality is impossible; argmax decoding softens it to ~0.77 (round-1 lesson: rule 10 —
+measured, not only argued). The flat world (depth-indexed speaker roles X1..X3, depth-invariant A,B,C) asks a compositional address
+scheme for something no compositional scheme can give. The model is not what is wrong here; the world is.

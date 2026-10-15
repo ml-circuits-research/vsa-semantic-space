@@ -1,0 +1,38 @@
+# 2026-10-15T13:11:16+02:00  commit=043caf8  cmd: python3 v7_nested.py --variants main
+# Python 3.12.3  NVIDIA GB10
+v7_nested: device=cuda (NVIDIA GB10), torch 2.14.1+cu130, D=1024, N=30000, batch=8, lr=0.02, seeds=5
+world = v5_scale (en) sentences, COMPOSITIONAL roles: S = R_X f_X + R_rep (x) S_inner; one speaker role; training depths 0-2, test depth 3
+training formulations: [0, 1, 2, 3, 6, 9, 12, 15]
+  T4 '{A} V {C} {B} .': tranzitii noi (GIVE) [('P', 'O'), ('gives', 'P')], categorii noi []
+  T5 '{C} is VP {B} by {A} .': tranzitii noi (GIVE) [('O', 'by'), ('given', 'O')], categorii noi []
+  T7 'it is {B} that {A} V to {C} .': tranzitii noi (GIVE) [('O', 'that'), ('that', 'P')], categorii noi ['that']
+  T8 '{B} , {A} V to {C} .': tranzitii noi (GIVE) [], categorii noi []
+  T10 'from {A} , {C} VR {B} .': tranzitii noi (GIVE) [], categorii noi []
+  T11 '{C} VR from {A} {B} .': tranzitii noi (GIVE) [('P', 'O'), ('receives', 'from')], categorii noi []
+  T13 '{B} is what {A} V to {C} .': tranzitii noi (GIVE) [('COP', 'what')], categorii noi []
+  T14 'by {A} , {B} is VP to {C} .': tranzitii noi (GIVE) [(',', 'O')], categorii noi []
+  => new formulations with ALL transitions seen: [8, 10]; with UNSEEN transitions/categories: [4, 5, 7, 11, 13, 14]
+chance: seen identities 1/12 = 0.083; new identities 1/6 = 0.167. Trivial control: 'everything at the origin' = chance.
+
+  seed 0 path+chain+bigram   ( 44.7s train) 1.00 (m 0.45) | 1.00 (m 0.46) | 0.73 (m 0.10) | 0.75 (m 0.12) | 0.98 (m 0.27) | 0.82 (m 0.16) | 0.48 (m 0.02)  || depth 2 per role: A 0.93 B 0.95 C 0.88 X1 0.67 X2 0.67  || depth 3: A 0.43 B 0.41 C 0.38 X1 0.65 X2 0.52 X3 0.49
+  seed 0 path+chainL+bigram  ( 39.2s train) 1.00 (m 0.45) | 1.00 (m 0.46) | 0.73 (m 0.09) | 0.75 (m 0.10) | 0.98 (m 0.30) | 0.88 (m 0.18) | 0.53 (m 0.04)  || depth 2 per role: A 0.96 B 0.95 C 0.95 X1 0.77 X2 0.78  || depth 3: A 0.50 B 0.45 C 0.54 X1 0.65 X2 0.48 X3 0.57
+  seed 1 path+chain+bigram   ( 44.0s train) 1.00 (m 0.46) | 1.00 (m 0.47) | 0.70 (m 0.10) | 0.74 (m 0.12) | 0.95 (m 0.26) | 0.81 (m 0.15) | 0.43 (m 0.02)  || depth 2 per role: A 0.93 B 0.94 C 0.89 X1 0.64 X2 0.62  || depth 3: A 0.32 B 0.33 C 0.30 X1 0.68 X2 0.49 X3 0.47
+  seed 1 path+chainL+bigram  ( 39.2s train) 1.00 (m 0.45) | 1.00 (m 0.47) | 0.70 (m 0.09) | 0.76 (m 0.10) | 0.98 (m 0.30) | 0.87 (m 0.18) | 0.56 (m 0.05)  || depth 2 per role: A 0.95 B 0.96 C 0.95 X1 0.75 X2 0.76  || depth 3: A 0.50 B 0.47 C 0.56 X1 0.68 X2 0.52 X3 0.61
+  seed 2 path+chain+bigram   ( 44.1s train) 1.00 (m 0.45) | 1.00 (m 0.45) | 0.71 (m 0.09) | 0.77 (m 0.12) | 0.98 (m 0.27) | 0.82 (m 0.15) | 0.46 (m 0.02)  || depth 2 per role: A 0.93 B 0.93 C 0.91 X1 0.67 X2 0.64  || depth 3: A 0.36 B 0.37 C 0.34 X1 0.67 X2 0.54 X3 0.48
+  seed 2 path+chainL+bigram  ( 39.1s train) 1.00 (m 0.44) | 1.00 (m 0.45) | 0.70 (m 0.08) | 0.79 (m 0.10) | 0.98 (m 0.30) | 0.88 (m 0.18) | 0.55 (m 0.04)  || depth 2 per role: A 0.95 B 0.97 C 0.94 X1 0.76 X2 0.77  || depth 3: A 0.50 B 0.44 C 0.55 X1 0.69 X2 0.50 X3 0.58
+  seed 3 path+chain+bigram   ( 44.2s train) 1.00 (m 0.45) | 1.00 (m 0.45) | 0.83 (m 0.10) | 0.75 (m 0.11) | 0.97 (m 0.26) | 0.83 (m 0.16) | 0.47 (m 0.02)  || depth 2 per role: A 0.95 B 0.94 C 0.94 X1 0.66 X2 0.66  || depth 3: A 0.37 B 0.39 C 0.35 X1 0.67 X2 0.52 X3 0.52
+  seed 3 path+chainL+bigram  ( 39.0s train) 1.00 (m 0.44) | 1.00 (m 0.45) | 0.75 (m 0.08) | 0.77 (m 0.10) | 0.98 (m 0.30) | 0.90 (m 0.19) | 0.54 (m 0.04)  || depth 2 per role: A 0.96 B 0.99 C 0.97 X1 0.78 X2 0.79  || depth 3: A 0.47 B 0.44 C 0.55 X1 0.66 X2 0.51 X3 0.58
+  seed 4 path+chain+bigram   ( 44.2s train) 1.00 (m 0.44) | 1.00 (m 0.45) | 0.70 (m 0.10) | 0.74 (m 0.11) | 0.98 (m 0.27) | 0.80 (m 0.15) | 0.45 (m 0.02)  || depth 2 per role: A 0.92 B 0.93 C 0.90 X1 0.66 X2 0.61  || depth 3: A 0.35 B 0.35 C 0.33 X1 0.69 X2 0.49 X3 0.47
+  seed 4 path+chainL+bigram  ( 39.2s train) 1.00 (m 0.44) | 1.00 (m 0.45) | 0.70 (m 0.09) | 0.74 (m 0.10) | 0.98 (m 0.30) | 0.87 (m 0.18) | 0.52 (m 0.03)  || depth 2 per role: A 0.94 B 0.95 C 0.95 X1 0.75 X2 0.77  || depth 3: A 0.48 B 0.41 C 0.53 X1 0.64 X2 0.48 X3 0.57
+
+== MEANS over 5 seeds: accuracy (margin) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  path+chain+bigram   1.000±0.000 (m 0.45) | 1.000±0.000 (m 0.46) | 0.735±0.047 (m 0.10) | 0.751±0.010 (m 0.12) | 0.971±0.010 (m 0.27) | 0.815±0.010 (m 0.15) | 0.457±0.017 (m 0.02)
+  path+chainL+bigram  1.000±0.000 (m 0.45) | 1.000±0.000 (m 0.46) | 0.715±0.021 (m 0.09) | 0.760±0.018 (m 0.10) | 0.980±0.002 (m 0.30) | 0.881±0.010 (m 0.18) | 0.538±0.014 (m 0.04)
+== depth 2 (seen), PER ROLE: A | B | C | X1 | X2
+  path+chain+bigram   0.931±0.011 | 0.939±0.010 | 0.905±0.019 | 0.661±0.010 | 0.641±0.022
+  path+chainL+bigram  0.953±0.007 | 0.962±0.014 | 0.951±0.012 | 0.763±0.010 | 0.776±0.011
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  path+chain+bigram   0.365±0.036 | 0.369±0.028 | 0.339±0.024 | 0.672±0.014 | 0.512±0.022 | 0.487±0.017
+  path+chainL+bigram  0.491±0.013 | 0.444±0.021 | 0.547±0.010 | 0.665±0.019 | 0.497±0.018 | 0.583±0.015
+
+checklist: [x] world addresses [x] shared F (assert) [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] trivial control = chance [x] same regime (13) [x] no new role at new depth (14) [x] per role (15)
