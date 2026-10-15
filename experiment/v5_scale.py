@@ -15,16 +15,30 @@ import argparse, time
 import numpy as np, torch
 import camp as cp, v2, v4, v4_torch
 
-VERBS = {  # cadru -> (V activ, VP participiu, VR verbul destinatarului)
-    "GIVE": ("da", "dat", "primeste"), "SELL": ("vinde", "vandut", "cumpara"), "SEND": ("trimite", "trimis", "primeste"),
-    "LEND": ("imprumuta", "imprumutat", "ia"), "SHOW": ("arata", "aratat", "vede"), "OFFER": ("ofera", "oferit", "accepta"),
+LANGS = {
+  "ro": dict(
+    VERBS={"GIVE": ("da", "dat", "primeste"), "SELL": ("vinde", "vandut", "cumpara"), "SEND": ("trimite", "trimis", "primeste"),
+           "LEND": ("imprumuta", "imprumutat", "ia"), "SHOW": ("arata", "aratat", "vede"), "OFFER": ("ofera", "oferit", "accepta")},
+    PATTERNS=["{A} V {B} lui {C} .", "{C} VR {B} de la {A} .", "{B} e VP lui {C} de {A} .", "lui {C} {A} ii V {B} .",
+              "{B} ii este VP lui {C} de catre {A} .", "{A} ii V lui {C} {B} .", "{B} e VP de {A} lui {C} .", "lui {C} ii V {B} {A} .",
+              "{A} V lui {C} {B} .", "lui {C} {A} V {B} .", "{A} ii V {B} lui {C} .",
+              "{B} , {A} il V lui {C} .", "de la {A} , {C} VR {B} .", "{C} VR de la {A} {B} .", "{B} este VP lui {C} de {A} .", "{A} , lui {C} , ii V {B} ."],
+    TRAIN_T=[0, 1, 2, 3, 6, 12, 14], OUTER=["{X} spune ca <P>", "{X} zice ca <P>", "<P> , spune {X}"], COP=["e", "este"]),
+  "en": dict(   # from 2026-10-15 on, advanced tests use the English world (author decision; see AGENTS.md)
+    VERBS={"GIVE": ("gives", "given", "receives"), "SELL": ("sells", "sold", "buys"), "SEND": ("sends", "sent", "gets"),
+           "LEND": ("lends", "lent", "borrows"), "SHOW": ("shows", "shown", "sees"), "OFFER": ("offers", "offered", "accepts")},
+    PATTERNS=["{A} V {B} to {C} .", "{C} VR {B} from {A} .", "{B} is VP to {C} by {A} .", "{B} is VP by {A} to {C} .",
+              "{A} V {C} {B} .", "{C} is VP {B} by {A} .", "it is {A} who V {B} to {C} .", "it is {B} that {A} V to {C} .",
+              "{B} , {A} V to {C} .", "to {C} , {A} V {B} .", "from {A} , {C} VR {B} .", "{C} VR from {A} {B} .",
+              "what {A} V to {C} is {B} .", "{B} is what {A} V to {C} .", "by {A} , {B} is VP to {C} .", "{A} V {B} , to {C} ."],
+    TRAIN_T=[0, 1, 2, 3, 6, 9, 12, 15], OUTER=["{X} says that <P>", "{X} claims that <P>", "<P> , says {X}"], COP=["is"]),
 }
-PATTERNS = ["{A} V {B} lui {C} .", "{C} VR {B} de la {A} .", "{B} e VP lui {C} de {A} .", "lui {C} {A} ii V {B} .",
-            "{B} ii este VP lui {C} de catre {A} .", "{A} ii V lui {C} {B} .", "{B} e VP de {A} lui {C} .", "lui {C} ii V {B} {A} .",
-            "{A} V lui {C} {B} .", "lui {C} {A} V {B} .", "{A} ii V {B} lui {C} .",
-            "{B} , {A} il V lui {C} .", "de la {A} , {C} VR {B} .", "{C} VR de la {A} {B} .", "{B} este VP lui {C} de {A} .", "{A} , lui {C} , ii V {B} ."]
-TRAIN_T = [0, 1, 2, 3, 6, 12, 14]
-OUTER = ["{X} spune ca <P>", "{X} zice ca <P>", "<P> , spune {X}"]
+LANG = None
+def set_lang(name):
+    """alege limba lumii; rebind-uieste globalele folosite de BigWorld/templates/split_templates"""
+    global LANG, VERBS, PATTERNS, TRAIN_T, OUTER, COP
+    LANG = name; d = LANGS[name]; VERBS, PATTERNS, TRAIN_T, OUTER, COP = d["VERBS"], d["PATTERNS"], d["TRAIN_T"], d["OUTER"], d["COP"]
+set_lang("ro")
 XROLES = ["X1", "X2", "X3"]
 
 def templates():
@@ -38,7 +52,7 @@ class BigWorld(cp.World):
         words |= {x for o in OUTER for x in o.split() if not x.startswith("{") and x != "<P>"}
         self.vocab = sorted(set(self.persons) | set(self.objects) | words); self.idx = {x: i for i, x in enumerate(self.vocab)}
         self.cat = {**{p: "P" for p in self.persons}, **{o: "O" for o in self.objects}, **{x: x for x in words}}
-        for v in ["e", "este"]: self.cat[v] = "COP"
+        for v in COP: self.cat[v] = "COP"
     def event(self, persons=None, objects=None, depth=0):
         P = persons or self.persons; O = objects or self.objects
         ids = self.rng.choice(P, 2 + depth, replace=False); B = self.rng.choice(O)
@@ -121,9 +135,10 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--n_id", type=int, default=18)
     ap.add_argument("--depth_train", type=int, default=2); ap.add_argument("--device", default="cuda"); ap.add_argument("--variants", default="all")
-    a = ap.parse_args(); D, N = a.D, a.N
+    ap.add_argument("--lang", default="ro")
+    a = ap.parse_args(); D, N = a.D, a.N; set_lang(a.lang)
     print(f"v5_scale: device={a.device} ({torch.cuda.get_device_name(0)}), torch {torch.__version__}, D={D}, N={N}, batch={a.batch}, lr={a.lr}, seeds={a.seeds}")
-    print(f"lume: {len(VERBS)} cadre x {len(PATTERNS)} formulari; {a.n_id}+{a.n_id} identitati (12 antrenare); imbricare 0-{a.depth_train} antrenare, 3 test; forme exterioare {OUTER}")
+    print(f"lume ({LANG}): {len(VERBS)} cadre x {len(PATTERNS)} formulari; {a.n_id}+{a.n_id} identitati (12 antrenare); imbricare 0-{a.depth_train} antrenare, 3 test; forme exterioare {OUTER}")
     print("formulari de antrenare:", TRAIN_T)
     w0 = BigWorld(a.n_id, np.random.default_rng(0)); held_seen, held_new = split_templates(w0)
     print(f"  => formulari noi cu TOATE tranzitiile vazute: {held_seen}; cu tranzitii/categorii NEVAZUTE: {held_new}")
