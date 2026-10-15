@@ -1,15 +1,16 @@
 """
-v5_scale: 00_READ_FIRST.md §5.1 — reproducerea rundei 3 pe o LUME DE 2-3x, cu 5 seed-uri, cu v4_torch (GPU).
-Modelul e NESCHIMBAT (v4: identitate fixa + adresa = bundle de coduri path/chain/bigram/pos). Se schimba doar lumea:
-  - 6 cadre (GIVE, SELL, SEND, LEND, SHOW, OFFER), fiecare cu 16 formulari (aceleasi 16 tipare, verbe diferite; fiecare forma verbala
-    e categorie proprie, ca in v4) -> de 3x mai multe categorii si tranzitii;
-  - 18 persoane + 18 obiecte (12 de antrenare, 6 noi; sansa 1/12 = 0.083, resp. 1/6 = 0.167);
-  - imbricare 0-3 nivele: '{X} spune ca <P>', '{X} zice ca <P>', '<P> , spune {X}'; vorbitorii X1 (exterior), X2, X3 sunt roluri in lume.
-    Antrenare pe adancimi 0-2; adancimea 3 e CONSTRUCTIE NOUA (drum mai lung decat orice vazut).
-Axe de evaluare (EVALUATION_PRINCIPLES.md), separate:
-  identitati vazute/noi | formulari noi cu tranzitii vazute | formulari noi cu tranzitii/categorii NEvazute | adancime 3 (nevazuta).
-Criteriul §5.1: coloanele comune cu runda 3 in +-0.03 fata de v4 pe lumea mica (0.94 / 0.90 pentru 'toate 4').
-Rulare: python3 v5_scale.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--depth_train 2] [--variants all|toate4]
+v5_scale: 00_READ_FIRST.md §5.1 — reproduction of round 3 on a 2-3x LARGER WORLD, with 5 seeds, with v4_torch (GPU).
+The model is UNCHANGED (v4: fixed identity + address = bundle of path/chain/bigram/pos codes). Only the world changes:
+  - 6 frames (GIVE, SELL, SEND, LEND, SHOW, OFFER), each with 16 formulations (the same 16 patterns, different verbs; each verb form
+    is its own category, as in v4) -> 3x more categories and transitions;
+  - 18 persons + 18 objects (12 for training, 6 new; chance 1/12 = 0.083, resp. 1/6 = 0.167);
+  - nesting 0-3 levels: '{X} spune ca <P>', '{X} zice ca <P>', '<P> , spune {X}' (Romanian world; see LANGS["en"] for the English one);
+    the speakers X1 (outermost), X2, X3 are roles in the world.
+    Training on depths 0-2; depth 3 is a NEW CONSTRUCTION (a longer path than anything seen).
+Evaluation axes (EVALUATION_PRINCIPLES.md), separate:
+  seen/new identities | new formulations with seen transitions | new formulations with UNSEEN transitions/categories | depth 3 (unseen).
+Criterion §5.1: the columns shared with round 3 within +-0.03 of v4 on the small world (0.94 / 0.90 for 'all 4').
+Run: python3 v5_scale.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--depth_train 2] [--variants all|all4]  ('toate4' is still accepted)
 """
 import argparse, time
 import numpy as np, torch
@@ -35,7 +36,7 @@ LANGS = {
 }
 LANG = None
 def set_lang(name):
-    """alege limba lumii; rebind-uieste globalele folosite de BigWorld/templates/split_templates"""
+    """select the world language; rebinds the globals used by BigWorld/templates/split_templates"""
     global LANG, VERBS, PATTERNS, TRAIN_T, OUTER, COP
     LANG = name; d = LANGS[name]; VERBS, PATTERNS, TRAIN_T, OUTER, COP = d["VERBS"], d["PATTERNS"], d["TRAIN_T"], d["OUTER"], d["COP"]
 set_lang("ro")
@@ -61,12 +62,12 @@ class BigWorld(cp.World):
     def render(self, ev, t, outer=None):
         kind, A, B, C = ev[:4]; d = self.depth(ev); outer = outer if outer is not None else [self.rng.integers(len(OUTER)) for _ in range(d)]
         s = self.frames[kind][t].format(A=A, B=B, C=C).rsplit(" .", 1)[0]
-        for lvl in range(d - 1, -1, -1):                      # de la cel mai interior (X_d) spre exterior (X1)
+        for lvl in range(d - 1, -1, -1):                      # from the innermost (X_d) outward (X1)
             s = OUTER[outer[lvl]].replace("<P>", s).format(X=ev[4 + lvl])
         return (s + " .").split()
 
 class BigRoleWorld:
-    """roluri explicite A, B, C, X1..X3; identitati IMPARTITE cu modelul"""
+    """explicit roles A, B, C, X1..X3; identities SHARED with the model"""
     def __init__(self, F, world, rng):
         self.F, self.w = F, world; self.R = {r: np.exp(1j * rng.uniform(-np.pi, np.pi, F.shape[1])) for r in ["A", "B", "C"] + XROLES}
     def state(self, ev):
@@ -96,11 +97,11 @@ class V5(v4_torch.V4Torch):
             with torch.no_grad(): self.theta[0] = 0
 
 def decode_stats(m, world, w, templs, persons, objects, depth=0, n=40, max_role_depth=None):
-    """acuratete si marja pe TOATE rolurile prezente (A, B, C, X1..Xd), cu adresele lumii"""
+    """accuracy and margin over ALL roles present (A, B, C, X1..Xd), with the world addresses"""
     acc, marg = [], []
     R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}
     Fn = m.F / m.F.abs().pow(2).sum(-1, keepdim=True).sqrt()
-    # rolurile evaluate: doar cele care au putut fi tinte la antrenare (PRINCIPII 14: un rol nou e la sansa prin constructie)
+    # evaluated roles: only those that could have been targets during training (PRINCIPLES 14: a new role is at chance by construction)
     roles = [("A", 1, persons), ("B", 2, objects), ("C", 3, persons)] + [(XROLES[i], 4 + i, persons) for i in range(min(depth, max_role_depth or depth))]
     for kind in w.frames:
         for t in templs:
@@ -116,7 +117,7 @@ def decode_stats(m, world, w, templs, persons, objects, depth=0, n=40, max_role_
     return float(np.mean(acc)), float(np.mean(marg))
 
 def split_templates(w):
-    """formulari noi cu TOATE tranzitiile vazute vs cu tranzitii/categorii NEvazute (pe toate cadrele, categoriile verbelor fiind per cadru)"""
+    """new formulations with ALL transitions seen vs with UNSEEN transitions/categories (over all frames, the verb categories being per frame)"""
     def tr(kind, t):
         cats = [w.cat[x] for x in w.frames[kind][t].format(A="p0", B="o0", C="p1").split()]; return set(zip(cats[:-1], cats[1:])), set(cats)
     seen_tr, seen_cat = set(), set()
@@ -127,7 +128,7 @@ def split_templates(w):
         if t in TRAIN_T: continue
         new = [(tr(k, t)[0] - seen_tr, tr(k, t)[1] - seen_cat) for k in w.frames]
         (held_seen if all(not a and not b for a, b in new) else held_new).append(t)
-        a, b = new[0]; print(f"  T{t} '{PATTERNS[t]}': tranzitii noi (GIVE) {sorted(a)}, categorii noi {sorted(b)}")
+        a, b = new[0]; print(f"  T{t} '{PATTERNS[t]}': new transitions (GIVE) {sorted(a)}, new categories {sorted(b)}")
     return held_seen, held_new
 
 if __name__ == "__main__":
@@ -138,16 +139,16 @@ if __name__ == "__main__":
     ap.add_argument("--lang", default="ro")
     a = ap.parse_args(); D, N = a.D, a.N; set_lang(a.lang)
     print(f"v5_scale: device={a.device} ({torch.cuda.get_device_name(0)}), torch {torch.__version__}, D={D}, N={N}, batch={a.batch}, lr={a.lr}, seeds={a.seeds}")
-    print(f"lume ({LANG}): {len(VERBS)} cadre x {len(PATTERNS)} formulari; {a.n_id}+{a.n_id} identitati (12 antrenare); imbricare 0-{a.depth_train} antrenare, 3 test; forme exterioare {OUTER}")
-    print("formulari de antrenare:", TRAIN_T)
+    print(f"world ({LANG}): {len(VERBS)} frames x {len(PATTERNS)} formulations; {a.n_id}+{a.n_id} identities (12 train); nesting 0-{a.depth_train} train, 3 test; outer forms {OUTER}")
+    print("training formulations:", TRAIN_T)
     w0 = BigWorld(a.n_id, np.random.default_rng(0)); held_seen, held_new = split_templates(w0)
-    print(f"  => formulari noi cu TOATE tranzitiile vazute: {held_seen}; cu tranzitii/categorii NEVAZUTE: {held_new}")
-    ex = w0.event(w0.persons[:12], w0.objects[:12], depth=3); print(f"  exemplu adancime 3: {' '.join(w0.render(ex, 0))}")
-    print(f"sansa: identitati vazute 1/12 = {1/12:.3f}; identitati noi 1/6 = {1/6:.3f}. Control trivial: 'toate la origine' (fara coduri) = sansa.\n")
+    print(f"  => new formulations with ALL transitions seen: {held_seen}; with UNSEEN transitions/categories: {held_new}")
+    ex = w0.event(w0.persons[:12], w0.objects[:12], depth=3); print(f"  depth 3 example: {' '.join(w0.render(ex, 0))}")
+    print(f"chance: seen identities 1/12 = {1/12:.3f}; new identities 1/6 = {1/6:.3f}. Trivial control: 'everything at the origin' (no codes) = chance.\n")
     variants = [("path", ["path"]), ("chain", ["chain"]), ("bigram", ["bigram"]), ("pos", ["pos"]), ("path+bigram", ["path", "bigram"]),
-                ("path+chain+bigram", ["path", "chain", "bigram"]), ("toate 4", ["path", "chain", "bigram", "pos"])]
-    if a.variants == "toate4": variants = variants[-1:]
-    cols = ["vazute (ad.0)", "id. noi (ad.0)", "form. noi, tranz. vazute", "form. noi, tranz. NEvazute", "imbricare ad.1-2 (vazuta)", "imbricare ad.3 (NEvazuta; doar A,B,C,X1,X2 — X3 n-a fost tinta)"]
+                ("path+chain+bigram", ["path", "chain", "bigram"]), ("all 4", ["path", "chain", "bigram", "pos"])]
+    if a.variants in ("all4", "toate4"): variants = variants[-1:]
+    cols = ["seen (depth 0)", "new ids (depth 0)", "new form., seen trans.", "new form., UNSEEN trans.", "nesting depth 1-2 (seen)", "nesting depth 3 (UNSEEN; only A,B,C,X1,X2 — X3 was never a target)"]
     results = {name: [] for name, _ in variants}
     for seed in range(a.seeds):
         w = BigWorld(a.n_id, np.random.default_rng(seed)); cats = sorted(set(w.cat.values()))
@@ -164,8 +165,8 @@ if __name__ == "__main__":
                  tuple(np.mean([decode_stats(m, world, w, TRAIN_T, trP, trO, d, n=15) for d in (1, 2)], axis=0)),
                  decode_stats(m, world, w, TRAIN_T, trP, trO, 3, n=20, max_role_depth=a.depth_train)]
             results[name].append(r)
-            print(f"  seed {seed} {name:18s} ({t_train:5.1f}s antr., {m.t_encode:4.1f}s enc., {time.time()-t0-t_train:4.1f}s eval) " + " | ".join(f"{x:.2f} (m {mg:.2f})" for x, mg in r), flush=True)
-    print(f"\n== MEDII pe {a.seeds} seed-uri: acuratete (marja) ==  coloane: " + " | ".join(cols))
+            print(f"  seed {seed} {name:18s} ({t_train:5.1f}s train, {m.t_encode:4.1f}s enc., {time.time()-t0-t_train:4.1f}s eval) " + " | ".join(f"{x:.2f} (m {mg:.2f})" for x, mg in r), flush=True)
+    print(f"\n== MEANS over {a.seeds} seeds: accuracy (margin) ==  columns: " + " | ".join(cols))
     for name, _ in variants:
         r = np.array(results[name]); print(f"  {name:18s} " + " | ".join(f"{r[:,i,0].mean():.3f}±{r[:,i,0].std():.3f} (m {r[:,i,1].mean():.2f})" for i in range(len(cols))))
-    print(f"\nchecklist: [x] adrese din lume [x] F comun (assert) [x] sansa tiparita [x] axe separate (identitati / tranzitii vazute / NEvazute / adancime) [x] marja [{'x' if a.seeds >= 3 else ' '}] >=3 seed-uri [x] control trivial = sansa")
+    print(f"\nchecklist: [x] world addresses [x] shared F (assert) [x] chance printed [x] separate axes (identities / seen transitions / UNSEEN / depth) [x] margin [{'x' if a.seeds >= 3 else ' '}] >=3 seeds [x] trivial control = chance")
