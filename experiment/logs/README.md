@@ -1,4 +1,4 @@
 # logs/
 
-Fisierele datate 2026-10-15 (fara hash de commit in nume) sunt de dinaintea run.sh; corespund importului initial
-(sesiunea CPU/numpy, 3 runde). De aici incolo logurile se produc cu ./run.sh si au formatul <data>_<script>_<hash>.txt.
+The files dated 2026-10-15 (without a commit hash in the name) predate run.sh; they correspond to the initial import
+(the CPU/numpy session, 3 rounds). From here on the logs are produced with ./run.sh and have the format <date>_<script>_<hash>.txt.
