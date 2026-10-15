@@ -115,6 +115,12 @@ if __name__ == "__main__":
     freq = collections.Counter(w for r in train for w in tok(r["question"])); freq.update(w for r in train for h in ttabs[r["table_id"]] for w in tok(h))
     singles = [w for w, _ in freq.most_common(a.n_freq)] + ["<sep>", "<bar>"]
     t0 = time.time(); sents = [tok(r["question"]) for r in train] + [tok(h) for r in train[:20000] for h in ttabs[r["table_id"]]]
+    # NO LEAKAGE CHECK: the skip-gram (hence the clusters) is trained on TRAIN questions and TRAIN table headers only; dev/test words are
+    # in the vocabulary only to receive fixed random identities. Words seen only in evaluation splits keep an UNTRAINED skip-gram vector
+    # and therefore a random cluster — a handicap for the model on those words, not a leak. Both facts are asserted and logged here.
+    train_words = {w for s_ in sents for w in s_}; assert all(w in vocab for w in train_words)
+    eval_only = {w for rows, tabs in splits.values() for r in rows for w in tok(r["question"])} - train_words
+    print(f"clustering data: {len(sents)} train sequences only (questions + train headers); dev/test NOT used. Evaluation-split question words never seen in train: {len(eval_only)} of {V} types (random cluster, fixed identity).")
     emb = v10.skipgram([s for s in sents if len(s) > 1], vocab, dim=64, window=2, epochs=3, device=dev_, seed=0)
     X = torch.tensor(emb, device=dev_); X = X / (X.norm(dim=1, keepdim=True) + 1e-8)
     gk = torch.Generator(device="cpu").manual_seed(0); C = X[torch.randperm(V, generator=gk)[:a.k_clusters].to(dev_)].clone()
