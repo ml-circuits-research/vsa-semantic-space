@@ -1,0 +1,39 @@
+# 2026-10-15T16:14:56+02:00  commit=9916e38  cmd: python3 v11_wikisql.py --inputs q --seeds 3 --split dev,test
+# Python 3.12.3  NVIDIA GB10
+v11_wikisql: device=cuda, D=512, epochs=3, batch=32; train 56355, dev 8421, vocabulary 38088; inputs q
+categories: 48 skip-gram clusters + 42 frequent tokens = 90 (8s). Singletons: ['the', 'what', 'of', 'is', 'team', 'date', 'score', 'a', 'was', 'for', 'in', 'and', 'name', 'when', 'than', 'year', 's', 'points', 'home', 'with'] ...
+   cluster 0 sample: ['salle', 'classification', 'uccfs', 'nickname', 'hendrick', 'motorsports', 'nhl', 'wales', 'whalers', 'perm', 'score', 'two']
+   cluster 1 sample: ['that', 'has', 'which', 'class', 'had', 'planet', 'omega', 'lindenwood', 'network', 'cell', 'free', 'nos']
+   cluster 2 sample: ['appliances', 'round4', 'round5', 'pinoresinol', 'survive', 'directedby', 'diversification', 'casino', 'inbound', 'reigns', 'nlpd', 'flts']
+targets built (7s)
+
+chance: selected column ~0.166; majority aggregator 0.715
+trivial control 'overlap only' selected column: 0.484
+BASELINE BoW + logistic regression: selected column 0.497  aggregator 0.870  sel+agg jointly 0.437 (no condition prediction in this baseline)
+
+  [q seed 0] epoch 0 done (55s), last loss 0.647
+  model q seed 0 epoch 0                       sel 0.784  agg 0.797  cond1-col 0.574  FULL (sel+agg+all cond cols) 0.311 | cos(S, S_sql) 0.594 | same-table pairs: same skeleton 0.768 (n=336), different 0.512 (n=12227), HARD (same sel) 0.582 (n=1866) | separation 0.256
+  [q seed 0] epoch 1 done (119s), last loss 0.624
+  model q seed 0 epoch 1                       sel 0.804  agg 0.811  cond1-col 0.611  FULL (sel+agg+all cond cols) 0.354 | cos(S, S_sql) 0.614 | same-table pairs: same skeleton 0.759 (n=336), different 0.487 (n=12227), HARD (same sel) 0.563 (n=1866) | separation 0.273
+  [q seed 0] epoch 2 done (180s), last loss 0.788
+  model q seed 0 epoch 2                       sel 0.815  agg 0.818  cond1-col 0.636  FULL (sel+agg+all cond cols) 0.380 | cos(S, S_sql) 0.630 | same-table pairs: same skeleton 0.756 (n=336), different 0.468 (n=12227), HARD (same sel) 0.546 (n=1866) | separation 0.289
+  model q seed 0 FINAL on test (15878)         sel 0.817  agg 0.818  cond1-col 0.629  FULL (sel+agg+all cond cols) 0.383 | cos(S, S_sql) 0.627 | same-table pairs: same skeleton 0.745 (n=531), different 0.468 (n=22604), HARD (same sel) 0.545 (n=3515) | separation 0.277
+  learned gates (q): most open [('has', 1.0), ('the', 0.99), ('and', 0.99), ('than', 0.99), ('is', 0.8), ('of', 0.75), ('what', 0.7), ('a', 0.61), ('which', 0.61), ('cluster43', 0.47), ('cluster27', 0.47), ('cluster35', 0.44), ('was', 0.43), ('cluster24', 0.41), ('cluster33', 0.28), ('cluster7', 0.2)]
+  [q seed 1] epoch 0 done (55s), last loss 0.611
+  model q seed 1 epoch 0                       sel 0.776  agg 0.795  cond1-col 0.570  FULL (sel+agg+all cond cols) 0.306 | cos(S, S_sql) 0.592 | same-table pairs: same skeleton 0.771 (n=336), different 0.516 (n=12227), HARD (same sel) 0.585 (n=1866) | separation 0.255
+  [q seed 1] epoch 1 done (122s), last loss 0.743
+  model q seed 1 epoch 1                       sel 0.798  agg 0.811  cond1-col 0.610  FULL (sel+agg+all cond cols) 0.350 | cos(S, S_sql) 0.617 | same-table pairs: same skeleton 0.762 (n=336), different 0.485 (n=12227), HARD (same sel) 0.558 (n=1866) | separation 0.277
+  [q seed 1] epoch 2 done (207s), last loss 0.652
+  model q seed 1 epoch 2                       sel 0.811  agg 0.813  cond1-col 0.627  FULL (sel+agg+all cond cols) 0.375 | cos(S, S_sql) 0.628 | same-table pairs: same skeleton 0.757 (n=336), different 0.471 (n=12227), HARD (same sel) 0.547 (n=1866) | separation 0.286
+  model q seed 1 FINAL on test (15878)         sel 0.807  agg 0.813  cond1-col 0.630  FULL (sel+agg+all cond cols) 0.378 | cos(S, S_sql) 0.626 | same-table pairs: same skeleton 0.746 (n=531), different 0.471 (n=22604), HARD (same sel) 0.546 (n=3515) | separation 0.275
+  learned gates (q): most open [('has', 1.0), ('and', 1.0), ('than', 1.0), ('the', 0.99), ('is', 0.9), ('of', 0.77), ('was', 0.66), ('which', 0.64), ('cluster27', 0.6), ('cluster43', 0.46), ('cluster35', 0.42), ('cluster24', 0.42), ('cluster33', 0.26), ('cluster7', 0.22), ('what', 0.19), ('cluster32', 0.12)]
+  [q seed 2] epoch 0 done (61s), last loss 0.681
+  model q seed 2 epoch 0                       sel 0.778  agg 0.797  cond1-col 0.575  FULL (sel+agg+all cond cols) 0.310 | cos(S, S_sql) 0.592 | same-table pairs: same skeleton 0.772 (n=336), different 0.516 (n=12227), HARD (same sel) 0.585 (n=1866) | separation 0.256
+  [q seed 2] epoch 1 done (147s), last loss 0.470
+  model q seed 2 epoch 1                       sel 0.799  agg 0.806  cond1-col 0.619  FULL (sel+agg+all cond cols) 0.356 | cos(S, S_sql) 0.621 | same-table pairs: same skeleton 0.764 (n=336), different 0.483 (n=12227), HARD (same sel) 0.556 (n=1866) | separation 0.281
+  [q seed 2] epoch 2 done (234s), last loss 0.391
+  model q seed 2 epoch 2                       sel 0.805  agg 0.811  cond1-col 0.632  FULL (sel+agg+all cond cols) 0.372 | cos(S, S_sql) 0.628 | same-table pairs: same skeleton 0.761 (n=336), different 0.474 (n=12227), HARD (same sel) 0.549 (n=1866) | separation 0.287
+  model q seed 2 FINAL on test (15878)         sel 0.810  agg 0.815  cond1-col 0.627  FULL (sel+agg+all cond cols) 0.379 | cos(S, S_sql) 0.625 | same-table pairs: same skeleton 0.747 (n=531), different 0.473 (n=22604), HARD (same sel) 0.549 (n=3515) | separation 0.273
+  learned gates (q): most open [('and', 1.0), ('has', 1.0), ('than', 1.0), ('the', 0.99), ('is', 0.9), ('of', 0.75), ('was', 0.72), ('cluster27', 0.65), ('cluster43', 0.46), ('cluster35', 0.4), ('cluster24', 0.38), ('cluster33', 0.27), ('cluster29', 0.25), ('cluster7', 0.24), ('which', 0.17), ('cluster30', 0.14)]
+
+checklist: [x] world addresses [x] fixed identities [x] chance + majority printed [x] BoW+LR baseline [x] hard pairs reported separately [ ] >=3 seeds (see --seeds) [x] no test calibration
