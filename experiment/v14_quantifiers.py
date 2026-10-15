@@ -57,8 +57,9 @@ class QWorld(v5.BigWorld):
             q_roles = list(rng.choice(roles, 2, replace=False)); dets = {r: rng.choice(["every", "some", "a"]) for r in q_roles}; scope = sorted(q_roles)
         else:
             nq = n_quant if n_quant is not None else int(rng.integers(1, 3))
-            q_roles = list(rng.choice(roles, nq, replace=False))
-            if nq == 1: dets = {q_roles[0]: rng.choice(DETS_Q)}; scope = [q_roles[0]]
+            q_roles = list(rng.choice(roles, nq, replace=False)) if nq else []
+            if nq == 0: dets = {}; scope = []                                           # affirmative, all definite: the base sentences at depths 0-2
+            elif nq == 1: dets = {q_roles[0]: rng.choice(DETS_Q)}; scope = [q_roles[0]]
             else:
                 wide = q_roles[0]; dets = {wide: rng.choice(["each", "a certain"]), q_roles[1]: rng.choice(["every", "some", "a"])}; scope = [wide]
         D = {r: dets.get(r, DET_DEF) for r in roles}
@@ -105,10 +106,10 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--delta", type=float, default=0.25)
+    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v14_quantifiers (E2): device={a.device}, D={D}, N={N}, seeds={a.seeds}; quantifier = role on the argument (R_Q (x) f_det inside the slot); scope = R_sc (x) f_role; ambiguity = superposition in the WORLD")
-    print(f"training: UNAMBIGUOUS only (one quantifier, or two with a wide-scope marker 'each' / 'a certain'), depths 0-1; 12 nouns per class (6 new at test)")
+    print(f"training: affirmative (all definite) at depths 0-2 (share {a.p_aff}) + UNAMBIGUOUS quantified sentences (one quantifier, or two with a wide-scope marker) at depths 0-1; 12 nouns per class (6 new at test)")
     print(f"test: unambiguous depth 0 / 1 / 2 (UNSEEN depth), new nouns, AMBIGUOUS (never trained) depth 0; 'both' reported when the top-2 scope scores are within delta={a.delta}")
     print(f"patterns: {PATTERNS}\nchance: noun 1/12 = 0.083 (new 1/6); determiner 1/6; scope 1/3; full frame ~0\n")
     cols = ["unamb d0: nouns", "dets", "SCOPE", "FULL", "unamb d1: FULL", "unamb d2 UNSEEN: SCOPE", "FULL", "new nouns d0: FULL", "AMBIG d0: both reported", "ambig: cos to superposed world", "ambig: forced surface-first"]
@@ -119,7 +120,10 @@ if __name__ == "__main__":
         m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
         trng = np.random.default_rng(200 + seed); sents, targets = [], []
         for n in range(N):
-            d = int(trng.integers(2)); ev = w.qevent(trng, depth=d, nouns_p=trNP, nouns_o=trNO); sents.append(w.qrender(ev, int(trng.integers(len(PATTERNS))), trng)); targets.append(world.state(ev))
+            # E1b protocol (after the 9c protocol error): affirmative (all 'the') sentences at depths 0-2, quantified sentences at depths 0-1
+            if trng.random() < a.p_aff: ev = w.qevent(trng, depth=int(trng.integers(3)), nouns_p=trNP, nouns_o=trNO, n_quant=0)
+            else: ev = w.qevent(trng, depth=int(trng.integers(2)), nouns_p=trNP, nouns_o=trNO)
+            sents.append(w.qrender(ev, int(trng.integers(len(PATTERNS))), trng)); targets.append(world.state(ev))
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
         opt = torch.optim.Adam([m.theta, m.logits], lr=a.lr)
         for i in range(0, N, a.batch):
