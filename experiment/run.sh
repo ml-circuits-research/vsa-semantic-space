@@ -3,7 +3,7 @@
 set -euo pipefail
 [ $# -ge 1 ] || { echo "usage: ./run.sh script.py [arguments]"; exit 1; }
 # logs/ is ignored by the check: new logs are always uncommitted at run time
-if [ -n "$(git status --porcelain 2>/dev/null | grep -v " logs/")" ]; then
+if [ -n "$(git status --porcelain 2>/dev/null | grep -v "logs/")" ]; then
   echo "There are uncommitted changes. Commit first (git add -A && git commit), so that the log corresponds to a commit."; exit 1
 fi
 mkdir -p logs
