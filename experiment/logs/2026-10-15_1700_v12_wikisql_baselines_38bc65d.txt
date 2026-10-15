@@ -1,0 +1,20 @@
+# 2026-10-15T17:00:26+02:00  commit=38bc65d  cmd: python3 v12_wikisql_baselines.py --sizes 1000,5000 --epochs 60,20 --seeds 1 --t_lrs 1e-3 --cluster_on_subset
+# Python 3.12.3  NVIDIA GB10
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v12_wikisql_baselines.py:35: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D)
+v12_wikisql_baselines: device=cuda, D=512; train pool 54355 (+2000 validation held out from train), dev 8421, test 15878, vocabulary 38086; sizes [1000, 5000], epochs {1000: 60, 5000: 20}
+clustering data (WHOLE train pool): 182320 sequences from 54355 training questions only; dev/test/val not used (29836 word types).
+dev same-table pairs: same skeleton 336, different 12227; HARD H1 'different words, same SQL' (Jaccard<0.3) 26; H2 'same words, different SQL' (Jaccard>=0.5) 1353
+  pairs, bag of identities (lexical only): bag: same 0.760 diff 0.462 sep 0.298 AUC 0.858 | H1 0.337 | H2 0.772
+  transformer lr=0.001: validation cos 0.565 (16s)
+  => transformer lr fixed at 0.001 (validation held out from train; never dev/test)
+
+== training size 1000 (60 epochs) ==
+clustering data (ABLATION: the 1000 training questions only): 7324 sequences from 1000 training questions only; dev/test/val not used (3137 word types).
+  BoW + LR                                 [dev ] sel 0.459 agg 0.761 cond1  —    FULL(sel+agg only) 0.355
+  ours (path+bigram+chainL) n=1000 seed 0 [77s] [dev ] sel 0.654 agg 0.760 cond1 0.419 FULL 0.174 cos 0.372 | pairs model: same 0.658 diff 0.297 sep 0.361 AUC 0.898 | H1 0.287 | H2 0.468
+  transformer (same input) n=1000 ep=60 seed 0 [27s] [dev ] sel 0.414 agg 0.817 cond1 0.341 FULL 0.103 cos 0.449 | pairs model: same 0.798 diff 0.502 sep 0.296 AUC 0.904 | H1 0.601 | H2 0.677
+== training size 5000 (20 epochs) ==
+clustering data (ABLATION: the 5000 training questions only): 36954 sequences from 5000 training questions only; dev/test/val not used (8384 word types).
+  BoW + LR                                 [dev ] sel 0.495 agg 0.811 cond1  —    FULL(sel+agg only) 0.405
+  BoW + LR                                 [test] sel 0.496 agg 0.810 cond1  —    FULL(sel+agg only) 0.405

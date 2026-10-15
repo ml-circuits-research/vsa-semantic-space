@@ -34,3 +34,7 @@ Added on the DGX (2026-10-15, rounds 4-5):
     0.998 without saying that it is ONE role in ONE formulation, with a precise cause (pos: false position regularity). The mean hides the mechanism.
 16. **A retracted claim is searched for and corrected in ALL documents in the same commit as the retraction** (grep the key words;
     the round-8a retraction of 'emergent categories' had to be propagated to seven files a commit later).
+17. **For every logical operator (negation, quantifier, modality, conditional, coordination), report SCOPE correctness — what the operator
+    acts on — separately from its presence.** A negation attached to the wrong argument is worse for a reasoner than a missed negation.
+    Operators are ROLES in the world; the model stays uniform (same step for every word). If an operator needs a special rule, that is a
+    finding to report, not a fix to hide.

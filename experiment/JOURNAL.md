@@ -132,3 +132,16 @@ pillar 1); decide short vs full AFTER v12. (3) If the lexical bag separates the 
 "on WikiSQL the equivalence separation is lexical; the set lacks pairs with the same words and different SQL" — do not change the metric.
 Checked: in v12 the skip-gram clusters are trained on the WHOLE train pool at every curve size (for both models); the data-efficiency claim
 must say "with distributional categories from the whole training corpus, without labels" (noted in the script and to be written in 8d).
+
+## 2026-10-15 (DGX, evening) — judgment after 8d: short empirical paper now; new programme (verifier / formalizer)
+Decisions (final unless contradicted): short empirical paper NOW (EMPIRICAL_NOTE.md; headline = selected column 0.82 vs 0.54 vs 0.50, full
+query second in the same table, aggregator loss in the same sentence); the 4x/10x transformer budget check is the GATE (if 0.75+ at 10x, the
+claim narrows to 1k-5k); Spider later for a full paper. PAPER_NOTE §7 approved (no round numbers; fact + consequence per lesson).
+Corrections: n stated for every hard-pair set; H2 phrased as "the role state moves same-words/different-SQL pairs apart where the lexicon
+cannot"; data-efficiency sentence carries its condition; ablation with categories from the subset only (both models) added (v12 --cluster_on_subset).
+New requirements: R1 frame(S) + diff as canonical output, full-frame accuracy everywhere; R2 frame -> Prolog and -> SMT-LIB with a round-trip
+test; R3 operators are roles in the world; R4 rule 17 (scope separately from presence); R5 LLM annotation pipelines with inter-LLM agreement.
+Experiments in order: E1 negation, E2 quantifiers, E3 modality/conditionals, E6 verifier on real text, E4 coordination, E5 reference, E7 LLM
+pipeline; Spider after E6; capacity after all. Not to do: no tuning to chase the aggregator/transformer; no metric change; no time estimates in docs.
+Note recorded for E1-E4: operators announced AFTER their scope (postposed) fall under the declared limit of causal addressing (RESULTS 6c) and
+will be reported separately as such. For E5, identities must carry an accessible feature (gender) for pronoun cleanup to be possible by construction.
