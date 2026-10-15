@@ -487,3 +487,21 @@ Reading:
   real text with executable consequence, at a single seed and without a tuned neural baseline. Before any claim: 3 seeds; the test split
   (15,878); a tuned small transformer / BERT-small at 1k / 5k / 56k; and the aggregator weakness addressed (a dedicated code or a
   separate readout) or reported as is. Spider (nested SQL) only after that.
+
+## 8c. WikiSQL, 3 seeds, dev AND test, full-query accuracy (logs/2026-10-15_1614_v11_wikisql_9916e38.txt; question only; D = 512, 3 epochs)
+No leakage: skip-gram clusters trained on TRAIN questions and TRAIN headers only (asserted and logged from this commit on); dev/test words
+have fixed random identities and, if unseen in train, an untrained skip-gram vector => a random cluster (a handicap for the model, not a leak).
+| split | model | selected column | aggregator | condition-1 column | FULL query (sel + agg + all condition columns) | cos(S, S_sql) | same / different skeleton | HARD (same sel) | separation |
+|---|---|---|---|---|---|---|---|---|---|
+| dev (8,421) | chance / majority | 0.166 | 0.715 | — | — | — | — | — | — |
+| dev | BoW + LR | 0.497 | **0.870** | — (no condition model) | 0.437 (sel + agg only) | — | — | — | — |
+| dev | full model, 3 seeds | **0.810±0.004** | 0.814±0.003 | **0.632±0.004** | **0.376±0.003** | 0.629 | 0.758 / 0.471 | 0.547 | 0.287±0.001 |
+| test (15,878) | full model, 3 seeds | **0.811±0.004** | 0.815±0.002 | 0.629±0.001 | **0.380±0.002** | 0.626 | 0.746 / 0.471 | 0.547 | 0.275±0.002 |
+Per seed (dev / test): sel 0.815/0.817, 0.811/0.807, 0.805/0.810; FULL 0.380/0.383, 0.375/0.378, 0.372/0.379. 180-234 s per seed (3 epochs).
+Learned gates, stable across seeds: has, and, than, the (0.99-1.00), is (0.8-0.9), of (0.75), was, which, what, a (0.2-0.7); content clusters
+<= 0.65 (most < 0.3). Same partition as the synthetic world (relation markers open, content closed), now on 56k real questions, 3 seeds.
+Reading: dev and test agree to the third decimal; the selected column WITHOUT the table is 0.81 vs 0.50 for the mandatory baseline on both
+splits; the aggregator stays below the bag of words (lexical decision, not structural — reported as is, no dedicated head); the FULL query
+(the number text-to-SQL papers compare) is 0.38, far below the state of the art (~0.9 with large pretrained models and the table as input)
+and above the baseline's sel+agg-only 0.44 is not comparable (no conditions there). The equivalence separation is 0.28-0.29 (criterion 0.3
+not met); whether it is lexical or role-based is what round 8d (v12: hard pairs with the lexical bag on the same row) measures.
