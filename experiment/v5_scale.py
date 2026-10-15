@@ -1,12 +1,12 @@
 """
-v5_scale: 00_CITESTE_INTAI.md §5.1 — reproducerea rundei 3 pe o LUME DE 2-3x, cu 5 seed-uri, cu v4_torch (GPU).
+v5_scale: 00_READ_FIRST.md §5.1 — reproducerea rundei 3 pe o LUME DE 2-3x, cu 5 seed-uri, cu v4_torch (GPU).
 Modelul e NESCHIMBAT (v4: identitate fixa + adresa = bundle de coduri path/chain/bigram/pos). Se schimba doar lumea:
   - 6 cadre (GIVE, SELL, SEND, LEND, SHOW, OFFER), fiecare cu 16 formulari (aceleasi 16 tipare, verbe diferite; fiecare forma verbala
     e categorie proprie, ca in v4) -> de 3x mai multe categorii si tranzitii;
   - 18 persoane + 18 obiecte (12 de antrenare, 6 noi; sansa 1/12 = 0.083, resp. 1/6 = 0.167);
   - imbricare 0-3 nivele: '{X} spune ca <P>', '{X} zice ca <P>', '<P> , spune {X}'; vorbitorii X1 (exterior), X2, X3 sunt roluri in lume.
     Antrenare pe adancimi 0-2; adancimea 3 e CONSTRUCTIE NOUA (drum mai lung decat orice vazut).
-Axe de evaluare (PRINCIPII_EVALUARE.md), separate:
+Axe de evaluare (EVALUATION_PRINCIPLES.md), separate:
   identitati vazute/noi | formulari noi cu tranzitii vazute | formulari noi cu tranzitii/categorii NEvazute | adancime 3 (nevazuta).
 Criteriul §5.1: coloanele comune cu runda 3 in +-0.03 fata de v4 pe lumea mica (0.94 / 0.90 pentru 'toate 4').
 Rulare: python3 v5_scale.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--depth_train 2] [--variants all|toate4]

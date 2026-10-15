@@ -1,0 +1,116 @@
+# Semantic space as a path: project history, status, outlook
+(handover document for a new session; read it in full before running anything)
+
+## 0. The idea we started from (the author's original formulation)
+Interpreting text = a trajectory in a space (graph / hypergraph / lattice). The context is a node; each word "develops" the space according
+to rules encoded in its structure; different sentences with the same meaning are different paths to the same point. Questions: can a
+system be trained to learn word weights so as to obtain the equivalences? Is there a link to "a thousand brains" (Hawkins), to VSA/HDC, to fiber bundles?
+
+## 1. The mathematical framework chosen
+Vector Symbolic Architecture with Fractional Power Encoding: complex vectors of modulus 1 (phases), D = 512-1024.
+  bind = element-wise multiplication (= addition of phases) = rigid DISPLACEMENT (labelled edge, isometry)
+  bundle = addition of vectors = MELTING into a common body (center of mass, hyperedge); the only irreversible operation
+  cleanup = argmax cosine over known candidates = "gravity" toward the nearest concept
+Geometric reading: the space is a D-dimensional torus; binding with a role moves you into a "fiber" (a copy of the space); fiber bundles of fiber bundles =
+chained binds; "algebraic fractal" = contractive bind (IFS) — discussed, NOT implemented (see 7).
+
+## 2. The model that remained standing (after 3 rounds)
+A word = a pair (what it is, what it does):
+  - identity f_w: fixed, random vector, never learned (one per word)
+  - address: computed from the CONTEXT through codes learned per CATEGORY (not per word): persons, objects, copulas = classes; verbs and
+    function words = individual categories
+Single step, identical for every word:  S <- S + address(context) (x) f_w
+The state of a sentence = S (bundle). Two formulations are equivalent if they have deposited the same identities at the same addresses.
+Address = BUNDLE OF SEVERAL CODES (round 3, v4.py):
+  path   = sum of the displacements of the categories in the prefix (additive, commutative, robust)
+  bigram = previous category + own category (local; surprisingly strong)
+  chain  = the chain of expectations: a word takes the most recent unconsumed expectation for its category; emitters (gates per
+           category) emit expectations relative to their own address (precise, large margin, fragile on new material)
+  pos    = absolute position (x) category
+World: explicit roles S_world = sum_role R_role (x) f_filler, with the SAME f as the model.
+Single objective: maximize cos(S, S_world). Generative, no paraphrase labels, no negatives. Adam, lr 0.02, 10-15k sentences.
+Evaluation: decode role r from S with the WORLD's address R_r: argmax_x cos(S (x) conj(R_r), f_x). Report accuracy + margin.
+
+## 3. History, by round, with the mistakes
+ROUND 1 (sim_deplasari.py, f.py, camp.py, k.py, control_transformer.py, mlp_control.py)
+  - A: word->word prediction: collapse (everything similar). C: predicting the consequence through associative memory: predicts 100% but does NOT align
+    the states. D: prototypes: memorizes. E: generative with both sides learned: collapse. => prediction produces equivalence only if it is
+    GENERATIVE through a fixed operation and the world is fixed. (CONFIRMED also in rounds 2-3.)
+  - F: factorizing the word (displacement per category, fixed identity) was necessary. (CONFIRMED.)
+  - G/K: "deferred addressing" (the buffer before the verb) and "zoom-in" at 'ca' set by hand. REFUTED in round 2: they were not necessary;
+    the apparent failure came from (a) evaluation with addresses from the active form (penalized legitimate overlapping addresses) and (b) BUG: world and model with
+    different identities. All round 1 figures on non-active formulations are underestimates.
+  - "Algebraic impossibility of per-word displacement": correct argument for EXACT equality of addresses, irrelevant with argmax decoding.
+  - H: new identities zero-shot 0.94: CONFIRMED (1.00 in rounds 2-3), but it is a property of the construction (the identity does not enter the parameters)
+    and presupposes that the category is known.
+  - I: categories discovered unsupervised by clustering the displacements: exact clusters. CONFIRMED on synthetic; on real text (SICK) it gives
+    clean classes (man/person/woman; boy/kid/child). The word2vec control is missing.
+  - Transformer control (854k params, untuned) and bag-of-words MLP: both 0.25 on new identities (chance) vs VSA 1.00. Valid only as
+    "at this data regime"; the transformer was not tuned.
+  - SICK (real text, relatedness 1-5): NEGATIVE (Spearman 0.45 vs 0.575 Jaccard). SICK does not measure roles; it does not refute the thesis, but shows that on text
+    without a world the signal is noisy. WikiSQL (text->SQL, executable consequence): modest signal (selected col. 0.49 vs chance 0.15, without the table).
+ROUND 2 (v2.py, v3.py, gates.py, nest2.py)
+  - The simple path over categories, WITHOUT rules, solves perfectly all seen formulations and the nesting 'X spune ca <prop>' (the major correction).
+  - v2 (expectations): margin x3 (0.50 vs 0.15), prediction 0.95 vs 0.53, but fragile on new formulations (0.18).
+  - GATES ARE LEARNED: discrete search on the prediction criterion opens verbs/prepositions/copula/period and REJECTS persons and objects.
+    Learned gates > hand-set gates (0.52 vs 0.46 on the new formulation).
+ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
+  - The real barrier = new CONSTRUCTIONS (unseen category transitions): an untrained phase randomizes a multiplicative address.
+  - Redundancy (bundle of codes) raises it from 0.60 to 0.82 (model = path+chain+bigram); 0.90 only with the position prior pos, which costs
+    elsewhere (round 5). The rest up to 1.00 is on new categories (no information in the data). bigram alone = 1.00 on seen transitions.
+
+## 4. What the experiments indicate (with confidence level)
+  CERTAIN (3-5 seeds, correct evaluation; round 5 on a 3x world): factorization necessary; generative objective necessary; aligned roles
+    (11 formulations x 2 frames; 16 x 6); new identities 1.00; redundancy of the STRUCTURAL codes (path+chain+bigram) helps on new constructions:
+    0.58 -> 0.82, stable across worlds; nesting of DEPTH 1 = 1.00 without rules.
+  CERTAIN and NEGATIVE (round 5): nesting of depth >= 2 is NOT solvable with addresses computed from the prefix (identical prefix, different roles;
+    ~0.5 on the inner speaker, even when seen in training) => a form of deferred addressing IS necessary there. The pos code is an absolute
+    position prior: it helps on new categories, hurts on free order; its contribution depends on the set of formulations, not on the mechanism.
+  PROBABLE (1-2 seeds or a single set): gates can be learned by search (gates.py: a single world); emergent categories on real text;
+    learned gates = the same set on other worlds.
+  WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
+  NEGATIVE: SICK; v2 alone on new constructions; associative prediction for equivalence.
+
+## 5. What must be VALIDATED at scale (in order of importance)
+  1. [DONE, round 5, v5_scale.py] Reproduction with 5 seeds, 3x world: path+chain+bigram reproduced (+-0.03); all 4 NOT (pos);
+     nesting >= 2 NEGATIVE (identical prefix). See RESULTS.md ROUND 5.
+  1b. NEW, priority: deferred addressing / retroactive re-addressing for identical prefixes with different roles (nesting >= 2). Candidates:
+     (a) v2 with moving already-placed words when a new emitter appears; (b) minimal non-causal code (the next category); (c) state
+     with a one-step delay. Criterion: X2 at depth 2 > 0.9 without lowering anything else.
+  2. Gates learned BY GRADIENT (sigmoid + soft mix of provisional/expected address). Criterion: they converge to "identities closed,
+     actions/relations open" on >=3 different worlds. If so => "everything emerges from a single objective" is supported.
+  3. The word2vec control for categories (same data): if it gives equally clean clusters, the emergence of categories is not the architecture's merit.
+  4. Control "associative memory with a bottleneck": if it aligns equally well, "generative necessary" narrows to "limited capacity necessary".
+  5. TUNED transformer (+ dropout, weight decay, lr sweep) and small BERT, at 1k/5k/50k examples: a data-efficiency curve, not a point.
+  6. Capacity: 64-1000 identities at D = 4096-16384; sparse block codes; cleanup at large vocabulary.
+  7. Real text with executable consequence: WikiSQL with v4 (all 4 codes) + learned gates + discovered categories + the table visible.
+     Mandatory baseline: bag of words + logistic regression. Then Spider (nested SQL).
+  8. Consequence signal without a synthetic world: next sentence / multiple captions per image (COCO) / translations (OPUS) with hard negatives.
+
+## 6. Concrete steps on the DGX (torch)
+  Day 1: port (phases as nn.Parameter; torch.polar; cumsum over categories; autograd replaces grad_cos; batch by length);
+          check on v4.py that it reproduces the ROUND 3 table with seed 0; then 5 seeds, large world.
+  Day 2: gates by gradient; word2vec control; associative memory with a bottleneck.
+  Days 3-5: tuned transformer + data curves; capacity.
+  Week 2: WikiSQL/Spider with v4; BoW+LR baseline.
+  If 2 and 3 come out well: write the principle note (POSITIONING.md, article 1). If 7 comes out well: the empirical article.
+
+## 7. Outlook and unimplemented ideas
+  - Contractive bind (IFS, algebraic fractal): addresses with scale, readable depth, non-accumulating noise; cost: fragile inversion.
+  - Non-commutative address space (permutations) for native order; commutative only inside a frame.
+  - Expectations with a specific identity (not just category) = top-down lexical prediction; would reduce the overlap of the first word.
+  - Multiresolution through clocks (fast level on words, slow on sentences) instead of anchors.
+  - Link to TBT/grid cells: motivation and interpretation, NOT a result; stays in the discussion, not in the title.
+
+## 8. Evaluation principles (summary; in full in EVALUATION_PRINCIPLES.md)
+  addresses from the world; shared F (assert); chance printed; 3 separate seen/unseen axes (identities / formulations with seen transitions /
+  unseen transitions); margin reported; >=3 seeds; trivial control in the same table; no calibration from the test set; trace one example
+  before training; a failure is checked first as evaluation, then data, then optimization, only then architecture.
+
+## 9. File map
+  GIT_WORKFLOW.md (how we commit and communicate through GitHub) | run.sh (runs + saves a log with date and hash) | JOURNAL.md | logs/
+  00_READ_FIRST.md (this one) | README_RUN.md (how to run, which file does what) | README_DGX.md (plan, data sources, porting)
+  RESULTS.md (all tables, 3 rounds) | INTERPRETATION.md (how to read each metric) | POSITIONING.md (articles, controls, citations)
+  EVALUATION_PRINCIPLES.md | code: camp.py (the world + v1), v2.py (expectations, RoleWorld, evaluate), v4.py (redundant codes; the CURRENT MODEL),
+  gates.py (gate search), nest2.py (nesting), control_transformer.py, mlp_control.py, sick_test.py, wikisql_test.py | log_*.txt
+  Quick check command (2 min on CPU): python3 v2.py ; main command (25 min CPU, seconds on GPU): python3 v4.py

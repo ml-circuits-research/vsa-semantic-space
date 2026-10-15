@@ -1,33 +1,33 @@
-# Cum rulezi
+# How to run
 
-Cerinte: Python 3.10+, numpy. Atat. NU e nevoie de GPU: toate experimentele de aici ruleaza in 0.5-5 minute pe un CPU obisnuit.
-(GPU devine util abia la D >= 4096, vocabular de mii de cuvinte si text real; atunci portarea in torch cu tensori complecsi e directa:
- bind = inmultire element cu element, bundle = adunare, iar gradientele le da autograd, nu mai trebuie scrise de mana.)
+Requirements: Python 3.10+, numpy. That is all. NO GPU is needed: all the experiments here run in 0.5-5 minutes on an ordinary CPU.
+(The GPU becomes useful only at D >= 4096, a vocabulary of thousands of words and real text; then the port to torch with complex tensors is direct:
+ bind = element-wise multiplication, bundle = addition, and the gradients come from autograd, no longer written by hand.)
 
-Fisiere, in ordinea istorica (fiecare e autonom sau importa pe cel dinainte):
-- sim_deplasari.py      primele experimente (A predictie, B contrastiv, C consecinta, D prototipuri, E generativ). `python3 sim_deplasari.py`
-- f.py, f2.py           factorizarea cuvantului (deplasare pe categorie); raport pe roluri. `python3 f2.py`
-- camp.py               lumea sintetica + v1 (istoric; bufferul si zoom-in-ul din el NU sunt necesare, vezi runda 2). `python3 camp.py`
-- gh.py                 G (adresare amanata) + H (identitati nevazute)
-- i2.py                 I: categoriile descoperite nesupervizat (clustering iterativ)
-- j.py                  J: capacitate (D, numar de identitati, adjuncte)
-- k.py                  K: compozitie ierarhica "X spune ca <propozitie>"
-- mlp_control.py        CONTROL: MLP pe bundle fara ordine (baseline 'fara ordine, cu capacitate')
-- control_transformer.py  CONTROL: transformer mic (numpy, backprop manual, gradient-check inclus) vs VSA pe aceeasi sarcina
-- v2.py, v3.py, gates.py, nest2.py   RUNDA 2: asteptari, dual, porti invatate, imbricare fara reguli
-- v4.py                 MODELUL FINAL (runda 3): adrese redundante (path, bigram, chain, pos); evaluare dupa PRINCIPII_EVALUARE.md. `python3 v4.py`
-- PRINCIPII_EVALUARE.md  reguli de evaluare (de citit inainte de orice experiment nou)
-- REZULTATE.md          toate rezultatele si concluziile
-- INTERPRETARE.md       cum se citeste fiecare metrica, ce ar infirma teza, capcane in cifre
-- POZITIONARE.md        nume, figura 1, trei articole posibile, bariera, controale, ce sa citezi
-- README_DGX.md         planul de validare pe DGX: experimente cu criterii merge/nu merge, surse de date, portare torch
-- log_*.txt             iesirile brute ale rularilor
+Files, in historical order (each is self-contained or imports the previous one):
+- sim_deplasari.py      the first experiments (A prediction, B contrastive, C consequence, D prototypes, E generative). `python3 sim_deplasari.py`
+- f.py, f2.py           word factorization (displacement per category); report per role. `python3 f2.py`
+- camp.py               the synthetic world + v1 (historical; its buffer and zoom-in are NOT necessary, see round 2). `python3 camp.py`
+- gh.py                 G (deferred addressing) + H (unseen identities)
+- i2.py                 I: categories discovered unsupervised (iterative clustering)
+- j.py                  J: capacity (D, number of identities, adjuncts)
+- k.py                  K: hierarchical composition "X spune ca <propozitie>"
+- mlp_control.py        CONTROL: MLP on an orderless bundle (baseline 'no order, with capacity')
+- control_transformer.py  CONTROL: small transformer (numpy, manual backprop, gradient-check included) vs VSA on the same task
+- v2.py, v3.py, gates.py, nest2.py   ROUND 2: expectations, dual, learned gates, nesting without rules
+- v4.py                 THE FINAL MODEL (round 3): redundant addresses (path, bigram, chain, pos); evaluation according to EVALUATION_PRINCIPLES.md. `python3 v4.py`
+- EVALUATION_PRINCIPLES.md  evaluation rules (to be read before any new experiment)
+- RESULTS.md            all results and conclusions
+- INTERPRETATION.md     how to read each metric, what would refute the thesis, traps in the figures
+- POSITIONING.md        name, figure 1, three possible articles, the barrier, controls, what to cite
+- README_DGX.md         the validation plan on the DGX: experiments with works/does-not-work criteria, data sources, torch port
+- log_*.txt             the raw outputs of the runs
 
-Parametrii principali: D (dimensiunea hipervectorilor), n_sent (propozitii de antrenare), lr (Adam, 0.02 e bun), persons/objects.
+Main parameters: D (hypervector dimension), n_sent (training sentences), lr (Adam, 0.02 is good), persons/objects.
 
-Urmatorii pasi sugerati (in ordinea valorii):
-1. [DEPASIT dupa runda 2: declansatoarele de mana nu erau necesare; portile se invata prin cautare (gates.py).] Urmeaza portile prin
-   GRADIENT, pe >=3 lumi — vezi 00_CITESTE_INTAI.md §5.2. Planul valid e in 00_CITESTE_INTAI.md §5-6.
-2. Text real intr-un domeniu inchis; consecinta = starea propozitiei urmatoare (self-supervised) in loc de lumea sintetica.
-3. Capacitate: D=4096-16384 si coduri rare pe blocuri (sparse block codes) pentru cleanup mai curat la vocabular mare.
-4. Control mai puternic: transformer mai mare + mai multe date, ca sa vezi unde se inchide diferenta de eficienta.
+Suggested next steps (in order of value):
+1. [SUPERSEDED after round 2: the hand-set triggers were not necessary; the gates are learned by search (gates.py).] Next come the gates by
+   GRADIENT, on >=3 worlds — see 00_READ_FIRST.md §5.2. The valid plan is in 00_READ_FIRST.md §5-6.
+2. Real text in a closed domain; consequence = the state of the next sentence (self-supervised) instead of the synthetic world.
+3. Capacity: D=4096-16384 and sparse block codes for cleaner cleanup at large vocabulary.
+4. Stronger control: larger transformer + more data, to see where the efficiency gap closes.

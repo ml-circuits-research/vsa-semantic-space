@@ -1,61 +1,61 @@
-# Plan de validare pe DGX Spark
+# Validation plan on the DGX Spark
 
-PLANUL VALID este cel din 00_CITESTE_INTAI.md §5-6 (ordinea experimentelor, criterii, pasi pe zile). Acest fisier pastreaza doar:
-portarea in torch si sursele de date. Sectiunile marcate DEPASIT sunt planul de dupa runda 1 si contrazic runda 2 (adresarea amanata si
-zoom-in-ul nu sunt necesare; portile se invata); raman ca istoric, nu se urmeaza.
+THE VALID PLAN is the one in 00_READ_FIRST.md §5-6 (order of experiments, criteria, day-by-day steps). This file keeps only:
+the port to torch and the data sources. The sections marked SUPERSEDED are the plan from after round 1 and contradict round 2 (deferred addressing and
+zoom-in are not necessary; the gates are learned); they remain as history, they are not to be followed.
 
-## Portare in torch (prima zi)
-Totul e numpy cu gradiente scrise de mana ca sa mearga aici fara torch. In torch:
-  theta = nn.Parameter(...); m = torch.polar(torch.ones_like(theta), theta)   # deplasari ca unitati complexe
-  L = torch.cumprod(m[cats], dim=0); S = (L * F[ids]).sum(0)                  # pasul uniform, pe GPU, in batch
-  loss = -cosine(S * T, S_lume)                                                # autograd face restul
-Batch: grupeaza propozitiile pe lungime (sau pad + masca). D=4096-16384 incape lejer in memoria unificata.
+## Port to torch (first day)
+Everything is numpy with hand-written gradients so that it runs here without torch. In torch:
+  theta = nn.Parameter(...); m = torch.polar(torch.ones_like(theta), theta)   # displacements as complex units
+  L = torch.cumprod(m[cats], dim=0); S = (L * F[ids]).sum(0)                  # the uniform step, on GPU, in batch
+  loss = -cosine(S * T, S_lume)                                                # autograd does the rest
+Batch: group the sentences by length (or pad + mask). D=4096-16384 fits easily in unified memory.
 
-## Surse de date cu echivalenta "data de lume" (toate publice)
+## Data sources with equivalence "given by a world" (all public)
 - WikiSQL: https://raw.githubusercontent.com/salesforce/WikiSQL/master/data.tar.bz2 (26 MB; jsonl + sqlite)
-- Spider (text->SQL imbricat): https://github.com/taoyds/spider (link catre Google Drive in README)
-- CoSQL / SParC: conversatii -> SQL (yale-lily)
-- Cod + teste: APPS, CodeContests, MBPP (HuggingFace datasets); echivalenta = aceleasi teste trecute
-- Demonstratii: Lean mathlib (github.com/leanprover-community/mathlib4), miniF2F; linii de derivare = echivalente prin constructie
-- Instructiuni cu stare: ProPara (github.com/allenai/propara), ALFRED (askforalfred.com), TextWorld (Microsoft)
-- Legende multiple per imagine: COCO captions (images.cocodataset.org/annotations/annotations_trainval2017.zip), Flickr30k (Kaggle)
-- Traduceri paralele: OPUS (opus.nlpl.eu), Tatoeba (tatoeba.org/downloads) — adauga negative grele automat
-- Parafraze cu negative grele gata facute: PAWS (github.com/google-research-datasets/paws), PAWS-X (6 limbi, inclusiv ... nu romana; dar OPUS are)
-- Markeri de reformulare din manuale/Wikipedia ("adica", "cu alte cuvinte", "i.e."): extragere proprie, volum mare, zgomot mare
+- Spider (text->SQL nested): https://github.com/taoyds/spider (link to Google Drive in the README)
+- CoSQL / SParC: conversations -> SQL (yale-lily)
+- Code + tests: APPS, CodeContests, MBPP (HuggingFace datasets); equivalence = the same tests passed
+- Proofs: Lean mathlib (github.com/leanprover-community/mathlib4), miniF2F; derivation lines = equivalent by construction
+- Instructions with state: ProPara (github.com/allenai/propara), ALFRED (askforalfred.com), TextWorld (Microsoft)
+- Multiple captions per image: COCO captions (images.cocodataset.org/annotations/annotations_trainval2017.zip), Flickr30k (Kaggle)
+- Parallel translations: OPUS (opus.nlpl.eu), Tatoeba (tatoeba.org/downloads) — adds hard negatives automatically
+- Paraphrases with ready-made hard negatives: PAWS (github.com/google-research-datasets/paws), PAWS-X (6 languages, including ... not Romanian; but OPUS has it)
+- Reformulation markers from textbooks/Wikipedia ("adica", "cu alte cuvinte", "i.e."): own extraction, large volume, large noise
 
 
-## DEPASIT (plan dupa runda 1; pastrat ca istoric, nu se urmeaza — vezi 00_CITESTE_INTAI.md §5-6)
-> ## Ce ai in zip
-> - camp.py, k.py: modelul sintetic complet (pas uniform, adresare amanata, zoom-in, invatare generativa) + evaluare pe roluri
-> - control_transformer.py: controlul (transformer numpy) pe aceeasi sarcina
-> - sick_test.py, wikisql_test.py: primele teste pe text real (negativ pe SICK, modest-pozitiv pe WikiSQL)
-> - REZULTATE.md: toate numerele si concluziile; log_*.txt: iesiri brute; corp/: SICK (mic) — WikiSQL se descarca (vezi mai jos)
+## SUPERSEDED (plan from after round 1; kept as history, not to be followed — see 00_READ_FIRST.md §5-6)
+> ## What is in the zip
+> - camp.py, k.py: the complete synthetic model (uniform step, deferred addressing, zoom-in, generative learning) + evaluation on roles
+> - control_transformer.py: the control (numpy transformer) on the same task
+> - sick_test.py, wikisql_test.py: the first tests on real text (negative on SICK, modestly positive on WikiSQL)
+> - RESULTS.md: all numbers and conclusions; log_*.txt: raw outputs; corp/: SICK (small) — WikiSQL is downloaded (see below)
 >
-> ## Experimentele, in ordinea valorii (fiecare cu criteriul de "merge / nu merge")
-> 1. WikiSQL complet (56k; 15k test) cu: categorii descoperite (clustering iterativ ca in i2.py), adresare amanata cu declansator
->    invatat (vezi 3), D=8192. Merge daca: col.selectata > 0.7 si agregator > 0.85 FARA sa vada tabelul; si perechi acelasi-schelet
->    separate de schelet-diferit cu > 0.3 cosinus. Nu merge daca ramane sub sacul de cuvinte + regresie logistica pe aceiasi tokeni (fa-l ca baseline!).
-> 2. Spider (github.com/taoyds/spider; mai greu, SQL imbricat): testeaza zoom-in-ul (k.py) pe sub-interogari.
-> 3. Invatarea declansatoarelor: in loc de "verbul scrie bufferul", invata un scor per cuvant/categorie care decide flush-ul (sigmoid, gradient prin
->    bundle ponderat: S += sigma(s_w) * termen_amanat + (1 - sigma(s_w)) * termen_imediat). Merge daca scorul invatat se aliniaza cu verbele/
->    cuvintele de legatura fara sa i le fi spus.
-> 4. Echivalenta cu negative grele: perechi (intrebare, intrebare cu rolurile/valorile schimbate) construite automat din SQL; raporteaza separat
->    acuratetea pe aceste perechi, nu doar corelatia globala (SICK a aratat ca media ascunde exact ce conteaza).
-> 5. Control puternic: un transformer mic in torch (sau un BERT mic) pe aceeasi sarcina si aceleasi date; compara la date putine (1k, 5k, 56k).
-> 6. Capacitate: coduri rare pe blocuri (sparse block codes; Laiho/Frady/Kleyko) in loc de faze dense, pentru vocabular de 50k+.
+> ## The experiments, in order of value (each with its "works / does not work" criterion)
+> 1. Full WikiSQL (56k; 15k test) with: discovered categories (iterative clustering as in i2.py), deferred addressing with a learned
+>    trigger (see 3), D=8192. Works if: selected col. > 0.7 and aggregator > 0.85 WITHOUT seeing the table; and same-skeleton pairs
+>    separated from different-skeleton by > 0.3 cosine. Does not work if it stays below bag of words + logistic regression on the same tokens (make it the baseline!).
+> 2. Spider (github.com/taoyds/spider; harder, nested SQL): tests the zoom-in (k.py) on sub-queries.
+> 3. Learning the triggers: instead of "the verb writes the buffer", learn a score per word/category that decides the flush (sigmoid, gradient through
+>    a weighted bundle: S += sigma(s_w) * deferred_term + (1 - sigma(s_w)) * immediate_term). Works if the learned score aligns with the verbs/
+>    linking words without having been told.
+> 4. Equivalence with hard negatives: pairs (question, question with roles/values swapped) built automatically from the SQL; report separately
+>    the accuracy on these pairs, not just the global correlation (SICK showed that the mean hides exactly what matters).
+> 5. Strong control: a small transformer in torch (or a small BERT) on the same task and the same data; compare at little data (1k, 5k, 56k).
+> 6. Capacity: sparse block codes (Laiho/Frady/Kleyko) instead of dense phases, for a vocabulary of 50k+.
 >
-> ## La ce te poti astepta, realist
-> - Nu la un model care bate LLM-urile pe text->SQL (acelea sunt la ~90%; aici, fara tabel si cu 10k parametri, am 0.49 dupa 70 s de CPU).
-> - La un strat de stare semantica citibila (cine-ce-cui), antrenabil cu putine date, care generalizeaza la cuvinte noi fara reantrenare
->   si care poate VERIFICA echivalenta a doua formulari rol cu rol. Util ca verificator/interpret langa un LLM, in domenii inchise.
-> - Cel mai valoros rezultat stiintific posibil: daca declansatoarele (3) se invata singure pe WikiSQL/Spider, atunci intreg mecanismul
->   (categorii, cadre, roluri, ierarhie) e emergent dintr-un singur obiectiv de predictie generativa. Asta ar merita publicat.
+> ## What to expect, realistically
+> - Not a model that beats LLMs on text->SQL (those are at ~90%; here, without the table and with 10k parameters, I have 0.49 after 70 s of CPU).
+> - A layer of readable semantic state (who-what-to-whom), trainable with little data, which generalizes to new words without retraining
+>   and which can VERIFY the equivalence of two formulations role by role. Useful as a verifier/interpreter next to an LLM, in closed domains.
+> - The most valuable scientific result possible: if the triggers (3) learn themselves on WikiSQL/Spider, then the whole mechanism
+>   (categories, frames, roles, hierarchy) is emergent from a single generative-prediction objective. That would be worth publishing.
 >
-> ## Dupa runda 2: ce sa rulezi intai pe DGX
-> 0. Reproduce tabelul principal din REZULTATE.md "RUNDA 2" cu 5 seed-uri (v2.py, v3.py), apoi gates.py cu N mare.
-> 1. Generalizare la CONSTRUCTII noi (bariera reala): lume cu 10-20 formulari; tine deoparte formulari ale caror tranzitii au fost toate vazute
->    separat vs formulari cu tranzitii noi. Testeaza coduri REDUNDANTE pentru adrese (bundle de mai multe drumuri / blocuri), ca o tranzitie
->    neantrenata sa nu randomizeze toata adresa.
-> 2. Porti invatate prin gradient (sigmoid + amestec moale intre adresa provizorie si cea asteptata) in loc de cautare discreta; verifica
->    daca converg la acelasi set (identitatile inchise, verbele/prepozitiile deschise).
-> 3. WikiSQL cu v3 (dual) + porti invatate + categorii descoperite; raporteaza marja, nu doar acuratetea.
+> ## After round 2: what to run first on the DGX
+> 0. Reproduce the main table from RESULTS.md "ROUND 2" with 5 seeds (v2.py, v3.py), then gates.py with large N.
+> 1. Generalization to new CONSTRUCTIONS (the real barrier): world with 10-20 formulations; hold out formulations whose transitions have all been seen
+>    separately vs formulations with new transitions. Test REDUNDANT codes for addresses (bundle of several paths / blocks), so that an untrained
+>    transition does not randomize the whole address.
+> 2. Gates learned by gradient (sigmoid + soft mix between the provisional and the expected address) instead of discrete search; check
+>    whether they converge to the same set (identities closed, verbs/prepositions open).
+> 3. WikiSQL with v3 (dual) + learned gates + discovered categories; report the margin, not just the accuracy.

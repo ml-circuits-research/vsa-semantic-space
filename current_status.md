@@ -1,41 +1,41 @@
-# Stare curenta (actualizat la fiecare punct de judecata; ultima: 2026-10-15 seara, commit 965332d)
+# Current status (updated at every judgment point; last: 2026-10-15 evening, commit 965332d)
 
-## Ce s-a facut azi pe DGX
-- Mediu: .venv cu numpy 2.5.4 si torch 2.14.1+cu130 (aarch64 + CUDA, GPU GB10 vizibil).
-- Curatenie documente (a1ff20b): aliniere la runda 2-3; retrase "imposibilitatea algebrica" si "adresarea amanata"; nivel de incredere corectat.
-- Runda 4: v4.py numpy pe CPU DGX reproduce EXACT runda 3 (3 decimale). v4_torch.py (GPU) da scoruri IDENTICE cu numpy pe toate 24 rulari.
-  Timp/varianta: CPU vechi ~77 s -> CPU DGX 24.8 s -> GPU batch=1 28.5 s (nu castiga: Python) -> GPU encodare o data + batch 32: 2.2 s.
-  Batch 8-32 pastreaza concluziile pentru "toate 4" (+-0.03); codurile slabe pierd la batch 32.
-- Runda 5 (§5.1): v5_scale.py, lume de 3x (6 cadre x 16 formulari, 18+18 identitati, imbricare 0-3), 5 seed-uri, D=1024, 30k, batch 8.
+## What was done today on the DGX
+- Environment: .venv with numpy 2.5.4 and torch 2.14.1+cu130 (aarch64 + CUDA, GPU GB10 visible).
+- Document cleanup (a1ff20b): alignment to rounds 2-3; "algebraic impossibility" and "deferred addressing" retracted; confidence level corrected.
+- Round 4: v4.py numpy on the DGX CPU reproduces round 3 EXACTLY (3 decimals). v4_torch.py (GPU) gives scores IDENTICAL to numpy on all 24 runs.
+  Time/variant: old CPU ~77 s -> DGX CPU 24.8 s -> GPU batch=1 28.5 s (no gain: Python) -> GPU encoding once + batch 32: 2.2 s.
+  Batch 8-32 preserves the conclusions for "all 4" (+-0.03); the weak codes lose at batch 32.
+- Round 5 (§5.1): v5_scale.py, 3x world (6 frames x 16 formulations, 18+18 identities, nesting 0-3), 5 seeds, D=1024, 30k, batch 8.
 
-## Rezultate runda 5 (5 seed-uri)
-| cod | vazute | id. noi | form. noi tranz. vazute | tranz. NEvazute | imbricare ad.1-2 | ad.3 |
+## Round 5 results (5 seeds)
+| code | seen | new id. | new form. seen trans. | UNseen trans. | nesting depth 1-2 | depth 3 |
 |---|---|---|---|---|---|---|
 | path+chain+bigram | 1.000 | 1.000 | 0.998 | 0.821 | 0.938 | 0.673 |
-| toate 4 | 1.000 | 1.000 | 0.841 | 0.984 | 0.943 | 0.687 |
-| (lume mica, runda 3) path+chain+bigram | 1.000 | 1.000 | 0.987 | 0.824 | — | — |
-| (lume mica, runda 3) toate 4 | 1.000 | 1.000 | 0.942 | 0.901 | — | — |
+| all 4 | 1.000 | 1.000 | 0.841 | 0.984 | 0.943 | 0.687 |
+| (small world, round 3) path+chain+bigram | 1.000 | 1.000 | 0.987 | 0.824 | — | — |
+| (small world, round 3) all 4 | 1.000 | 1.000 | 0.942 | 0.901 | — | — |
 
-## Concluzii fata de scop
-1. REPRODUS: path+chain+bigram e stabil intre lumi (0.99 / 0.82). Identitati noi 1.00. Acesta e modelul care tine.
-2. NU reprodus: "toate 4" se inverseaza. Cauza: codul pos = prior de pozitie absoluta. Invata din T1 "persoana de la pozitia 5 = agent";
-   in T10 destinatarul e la 5 => pos voteaza complet gresit (A->C, 0.15) si bate adresele suprapuse ale primului cuvant. Castigul lui pe
-   tranzitii nevazute vine din categorii noi ('catre', 'il') unde celelalte coduri n-au nimic. Ambele tin de setul de formulari, nu de mecanism.
-   PROPUNERE: raportam modelul = path+chain+bigram; pos separat, ca prior.
-3. NEGATIV SI CURAT (cel mai important): imbricarea de adancime >= 2 e nerezolvabila cu adrese din prefix.
-   '{X1} spune ca {A} V ...' si '{X1} spune ca {X2} zice ca ...' au prefix identic 'P spune ca P' => orice cod cauzal da acelasi loc pentru
-   A (ad.1) si X2 (ad.2), lumea cere roluri diferite => ~0.5 (X2 0.28-0.53 pentru orice cod, confundat cu A), CHIAR pe date vazute.
-   Nu ajuta D, nu ajuta datele. Runda 2 a retras "adresarea amanata" prea mult: nu e nevoie de "verbul scrie bufferul", dar E nevoie ca un
-   cuvant sa poata fi reasezat de ce urmeaza. Prima dovada fortata de date. Schimba figura 1 si contributiile articolului.
-4. Defect de design prins: la adancime 3 apare rolul X3, niciodata tinta la antrenare => la sansa prin constructie (0.08 ~ 1/12);
-   cifra "ad.3" il amesteca cu degradarea reala a lui A/X1/X2. Devenit regula 14 in PRINCIPII_EVALUARE.
-   Reguli noi: 13 (acelasi regim de optimizare la comparatii), 15 (detaliere per formulare x rol inainte de interpretare).
+## Conclusions relative to the goal
+1. REPRODUCED: path+chain+bigram is stable across worlds (0.99 / 0.82). New identities 1.00. This is the model that holds.
+2. NOT reproduced: "all 4" inverts. Cause: the pos code = absolute position prior. It learns from T1 "person at position 5 = agent";
+   in T10 the recipient is at 5 => pos votes completely wrong (A->C, 0.15) and beats the overlapping addresses of the first word. Its gain on
+   unseen transitions comes from new categories ('catre', 'il') where the other codes have nothing. Both belong to the set of formulations, not to the mechanism.
+   PROPOSAL: we report the model = path+chain+bigram; pos separately, as a prior.
+3. NEGATIVE AND CLEAN (the most important): nesting of depth >= 2 is unsolvable with addresses from the prefix.
+   '{X1} spune ca {A} V ...' and '{X1} spune ca {X2} zice ca ...' have the identical prefix 'P spune ca P' => any causal code gives the same place for
+   A (depth 1) and X2 (depth 2), the world requires different roles => ~0.5 (X2 0.28-0.53 for any code, confused with A), EVEN on seen data.
+   D does not help, data does not help. Round 2 retracted "deferred addressing" too much: there is no need for "the verb writes the buffer", but there IS a need for a
+   word to be re-addressable by what follows. The first proof forced by data. It changes figure 1 and the article's contributions.
+4. Design flaw caught: at depth 3 the role X3 appears, never a target in training => at chance by construction (0.08 ~ 1/12);
+   the "depth 3" figure mixes it with the real degradation of A/X1/X2. Became rule 14 in EVALUATION_PRINCIPLES.
+   New rules: 13 (same optimization regime in comparisons), 15 (breakdown per formulation x role before interpretation).
 
-## Intrebari pentru judecata celeilalte sesiuni
-1. Acceptam path+chain+bigram ca "modelul" si pos ca prior separat?
-2. Pasul urmator: §5.1b (reasezare retroactiva: un cuvant plasat poate fi mutat cand apare un emitator nou; criteriu X2 > 0.9 la adancime 2
-   fara pierderi altundeva) INAINTE de §5.2 (porti prin gradient)? Argument: portile depind de acelasi mecanism de asteptari.
+## Questions for the other session's judgment
+1. Do we accept path+chain+bigram as "the model" and pos as a separate prior?
+2. Next step: §5.1b (retroactive re-addressing: a placed word can be moved when a new emitter appears; criterion X2 > 0.9 at depth 2
+   without losses elsewhere) BEFORE §5.2 (gates by gradient)? Argument: the gates depend on the same expectation mechanism.
 
-## Fisiere relevante
-experiment/REZULTATE.md (runda 4, 5) | experiment/JURNAL.md | experiment/PRINCIPII_EVALUARE.md (13-15) | experiment/00_CITESTE_INTAI.md §4-5
+## Relevant files
+experiment/RESULTS.md (rounds 4, 5) | experiment/JOURNAL.md | experiment/EVALUATION_PRINCIPLES.md (13-15) | experiment/00_READ_FIRST.md §4-5
 experiment/v4_torch.py, v5_scale.py, diag_v5.py | experiment/logs/2026-10-15_1128_v5_scale_0defffd.txt

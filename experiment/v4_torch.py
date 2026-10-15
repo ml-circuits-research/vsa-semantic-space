@@ -9,7 +9,7 @@ Fluxul de date (lume, identitati, seed-uri, ordinea propozitiilor de antrenare) 
 Diferente fata de v4.py: aritmetica optimizatorului (torch.optim.Adam vs Adam scris de mana), float64 implicit; --batch > 1 schimba
 regimul de optimizare (acelasi numar de propozitii, mai putini pasi) si se raporteaza separat.
 
-Evaluare conform PRINCIPII_EVALUARE.md (identic cu v4.py): adrese din lume, F comun (assert), sansa tiparita, 3 axe vazut/nevazut,
+Evaluare conform EVALUATION_PRINCIPLES.md (identic cu v4.py): adrese din lume, F comun (assert), sansa tiparita, 3 axe vazut/nevazut,
 marja, >=3 seed-uri, control trivial.
 
 Rulare: python3 v4_torch.py [--lr 0.02] [--seeds 3] [--N 10000] [--D 512] [--batch 1] [--device cuda] [--variants all|toate4]

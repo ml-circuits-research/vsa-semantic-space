@@ -6,7 +6,7 @@ Adresa unui cuvant = bundle de mai multe coduri independente, fiecare cu alt mod
   bigram : doar categoria precedenta + categoria proprie (foarte partajabil)
   pos    : pozitia absoluta (x) categoria proprie (cod HDC clasic de secventa)
 Ipoteza: o tranzitie nevazuta strica un cod, nu pe toate; decodarea argmax supravietuieste.
-Evaluare conform PRINCIPII_EVALUARE.md: adrese din lume, F comun, sansa tiparita, 3 axe vazut/nevazut (identitati, formulari cu
+Evaluare conform EVALUATION_PRINCIPLES.md: adrese din lume, F comun, sansa tiparita, 3 axe vazut/nevazut (identitati, formulari cu
 tranzitii vazute, formulari cu tranzitii/categorii nevazute), marja, 3 seed-uri, control trivial.
 """
 import numpy as np, time, sys, itertools
