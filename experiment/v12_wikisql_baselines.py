@@ -48,6 +48,7 @@ if __name__ == "__main__":
     ap.add_argument("--batch", type=int, default=32); ap.add_argument("--k_clusters", type=int, default=48); ap.add_argument("--n_freq", type=int, default=40)
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--t_lrs", default="1e-3,3e-4"); ap.add_argument("--n_val", type=int, default=2000)
     ap.add_argument("--epochs", default="60,20,3"); ap.add_argument("--only", default="all", help="all | transformer | ours (robustness checks, e.g. a longer transformer budget)")
+    ap.add_argument("--cluster_on_subset", action="store_true", help="ablation: skip-gram categories trained ONLY on the training subset of each curve size (both models)")
     a = ap.parse_args(); dev_ = a.device; tok, load = v11.tok, v11.load
     train_all, ttabs = load("train"); dev, dtabs = load("dev"); test, tetabs = load("test")
     rng0 = np.random.default_rng(0); perm = rng0.permutation(len(train_all)); val = [train_all[i] for i in perm[:a.n_val]]; train_pool = [train_all[i] for i in perm[a.n_val:]]
@@ -62,22 +63,26 @@ if __name__ == "__main__":
     V = len(vocab); sizes = [int(x) for x in a.sizes.split(",")]; epochs = dict(zip(sizes, [int(x) for x in a.epochs.split(",")]))
     print(f"v12_wikisql_baselines: device={dev_}, D={a.D}; train pool {len(train_pool)} (+{len(val)} validation held out from train), dev {len(dev)}, test {len(test)}, vocabulary {V}; sizes {sizes}, epochs {epochs}")
     hid = lambda tabs, tid: [[vid(w) for w in tok(h)] for h in tabs[tid]]
-    # categories: frequent tokens + skip-gram clusters, TRAIN POOL ONLY (never dev/test/val)
-    freq = collections.Counter(w for r in train_pool for w in tok(r["question"])); freq.update(w for r in train_pool for h in ttabs[r["table_id"]] for w in tok(h))
-    singles = [w for w, _ in freq.most_common(a.n_freq)]
-    sents = [tok(r["question"]) for r in train_pool] + [tok(h) for r in train_pool[:20000] for h in ttabs[r["table_id"]]]
-    train_words = {w for s_ in sents for w in s_}; print(f"clustering data: {len(sents)} TRAIN-pool sequences only (the WHOLE pool, at every curve size, for both models); dev/test/val not used (asserted: {len(train_words)} word types).")
-    emb = v10.skipgram([s for s in sents if len(s) > 1], vocab, dim=64, window=2, epochs=3, device=dev_, seed=0)
-    X = torch.tensor(emb, device=dev_); X = X / (X.norm(dim=1, keepdim=True) + 1e-8); gk = torch.Generator().manual_seed(0)
-    C = X[torch.randperm(V, generator=gk)[:a.k_clusters].to(dev_)].clone()
-    for it in range(25):
-        asg = (X @ C.T).argmax(1)
-        for c in range(a.k_clusters):
-            mem = X[asg == c]
-            if len(mem): C[c] = mem.mean(0) / (mem.mean(0).norm() + 1e-8)
-    asg = (X @ C.T).argmax(1).cpu().numpy()
-    cat_of = torch.tensor(np.array([a.k_clusters + singles.index(w) if w in singles else asg[i] for w, i in sorted(vocab.items(), key=lambda x: x[1])]))
-    K = a.k_clusters + len(singles); world = v11.World(vocab, a.D, dev_, 0); Freal = torch.cat([world.F.real, world.F.imag], 1)
+    def build_categories(pool, label):
+        """frequent tokens + skip-gram clusters from `pool` ONLY (never dev/test/val); returns (cat_of, K, singles)"""
+        freq = collections.Counter(w for r in pool for w in tok(r["question"])); freq.update(w for r in pool for h in ttabs[r["table_id"]] for w in tok(h))
+        singles = [w for w, _ in freq.most_common(a.n_freq)]
+        sents = [tok(r["question"]) for r in pool] + [tok(h) for r in pool[:20000] for h in ttabs[r["table_id"]]]
+        train_words = {w for s_ in sents for w in s_}
+        print(f"clustering data ({label}): {len(sents)} sequences from {len(pool)} training questions only; dev/test/val not used ({len(train_words)} word types).")
+        emb = v10.skipgram([s for s in sents if len(s) > 1], vocab, dim=64, window=2, epochs=3, device=dev_, seed=0)
+        X = torch.tensor(emb, device=dev_); X = X / (X.norm(dim=1, keepdim=True) + 1e-8); gk = torch.Generator().manual_seed(0)
+        C = X[torch.randperm(V, generator=gk)[:a.k_clusters].to(dev_)].clone()
+        for it in range(25):
+            asg = (X @ C.T).argmax(1)
+            for c in range(a.k_clusters):
+                mem = X[asg == c]
+                if len(mem): C[c] = mem.mean(0) / (mem.mean(0).norm() + 1e-8)
+        asg = (X @ C.T).argmax(1).cpu().numpy()
+        cat_of = torch.tensor(np.array([a.k_clusters + singles.index(w) if w in singles else asg[i] for w, i in sorted(vocab.items(), key=lambda x: x[1])]))
+        return cat_of, a.k_clusters + len(singles), singles
+    cat_of, K, singles = build_categories(train_pool, "WHOLE train pool")
+    world = v11.World(vocab, a.D, dev_, 0); Freal = torch.cat([world.F.real, world.F.imag], 1)
     def targets(rows, tabs):
         return torch.stack([world.sql_state({"sel": r["sql"]["sel"], "agg": r["sql"]["agg"], "conds": [[c, o, [vid(w) for w in tok(str(v))]] for c, o, v in r["sql"]["conds"]]}, hid(tabs, r["table_id"])) for r in rows])
     qids = lambda r: [vid(w) for w in tok(r["question"])]
@@ -178,6 +183,7 @@ if __name__ == "__main__":
     # ---- the curve
     for n in sizes:
         rows = train_pool[:n]; print(f"== training size {n} ({epochs[n]} epochs) ==")
+        if a.cluster_on_subset: cat_of, K, singles = build_categories(rows, f"ABLATION: the {n} training questions only")
         bow_lr(rows)
         for seed in range(a.seeds):
             if a.only in ("all", "ours"):

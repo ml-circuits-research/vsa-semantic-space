@@ -2,3 +2,16 @@
 # Python 3.12.3  NVIDIA GB10
 /home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v12_wikisql_baselines.py:35: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
   self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D)
+v12_wikisql_baselines: device=cuda, D=512; train pool 54355 (+2000 validation held out from train), dev 8421, test 15878, vocabulary 38086; sizes [56355], epochs {56355: 12}
+clustering data: 182320 TRAIN-pool sequences only (the WHOLE pool, at every curve size, for both models); dev/test/val not used (asserted: 29836 word types).
+dev same-table pairs: same skeleton 336, different 12227; HARD H1 'different words, same SQL' (Jaccard<0.3) 26; H2 'same words, different SQL' (Jaccard>=0.5) 1353
+  pairs, bag of identities (lexical only): bag: same 0.760 diff 0.462 sep 0.298 AUC 0.858 | H1 0.337 | H2 0.772
+  transformer lr=0.001: validation cos 0.645 (93s)
+  => transformer lr fixed at 0.001 (validation held out from train; never dev/test)
+
+== training size 56355 (12 epochs) ==
+  BoW + LR                                 [dev ] sel 0.505 agg 0.855 cond1  —    FULL(sel+agg only) 0.437
+  transformer (same input) n=56355 ep=12 seed 0 [72s] [dev ] sel 0.631 agg 0.892 cond1 0.531 FULL 0.281 cos 0.648 | pairs model: same 0.893 diff 0.559 sep 0.334 AUC 0.913 | H1 0.830 | H2 0.698
+  transformer (same input) n=56355 ep=12 seed 0 [72s] [test] sel 0.626 agg 0.893 cond1 0.513 FULL 0.267 cos 0.643
+
+checklist: [x] same input (fixed identities + same categories, no table) [x] same objective and decoder [x] BoW+LR on every size [x] FULL-query accuracy [x] hard pairs with the lexical bag on the same row [x] validation from train only [x] no extra tuning for ours [x] test split reported
