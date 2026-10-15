@@ -144,16 +144,21 @@ after a comma that in every training formulation preceded an agent. With the pos
 to 0.54. This is the precise, data-forced form of "deferred addressing is necessary": a displacement applied retroactively to a whole
 clause, and only for right-announced structure. We declare it as a limit here; the remedy (clause-level re-addressing) is future work.
 
-## 7. What was retracted, and what each retraction taught
-Round 1 argued an "algebraic impossibility" of per-word displacement and hand-coded two triggers (the verb writes a buffer; 'that' opens a
-frame). Round 2 retracted both: they were artefacts of decoding with the model's own addresses and of a world/model identity mismatch;
-argmax decoding tolerates overlapping addresses. Round 5 found nesting of depth 2 "unsolvable from the prefix"; round 6 sharpened it into
-section 6: the flat world was contradictory (our construction), the real limit is right-announced structure. Round 8 retracted "categories
-emerge": the untied learned displacements do cluster the 54 content words into the five true classes (purity, ARI and nearest-neighbour
-category all 1.000, five seeds) — and so does a skip-gram trained on the same sentences (1.000). Categories are recoverable from
-distribution; the model consumes them as input, it does not produce them; what emerges from the objective are the gates. Each retraction
-became a rule (EVALUATION_PRINCIPLES 1-16) that the next round had to pass; we report them because they are what makes the remaining
-claims credible.
+## 7. Negative results and what they fixed
+We report our negative results because they are what makes the remaining claims credible: each one became an evaluation rule that the
+later experiments had to pass. Decoding with the model's own addresses masks legitimate overlapping addresses — two formulations may
+place a word at a superposed address and still decode correctly by argmax; an "algebraic impossibility" of per-word displacement that we
+had argued, and the two hand-coded triggers it motivated (the verb writes a buffer; 'that' opens a frame), were artefacts of that
+evaluation and of a world/model identity mismatch. Rule: decode with the world's addresses, share the identities, trace one example by
+hand before training. A world that introduces a new role at every nesting depth (speakers X1, X2, X3 with depth-invariant A, B, C) is
+contradictory for any cumulative addressing — the inner speaker and the agent are reached through the same prefix — and we first misread
+the resulting 0.5 as a limit of the model; it was a limit of our world, and a new depth must never add a new role (section 6). Position
+as a code is a prior, not a mechanism: it helps where no other cue exists and votes wrongly under free word order, so its contribution is a
+property of the formulation set; and the axis "new formulations with seen transitions" measured the redundancy of our formulations, not
+the model, which is why we replaced it with "role cues seen". Categories are distributional, gates are not: the learned displacements
+cluster the content words into their five classes perfectly, and so does a skip-gram on the same sentences, so categories are an input the
+model consumes rather than something it produces; the gating structure, by contrast, is not recoverable from co-occurrence and does emerge
+from the objective (section 4). Finally, a retracted claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats (part of the claims)
 The world is ours: synthetic, six frames, two reporting verbs, 36 identities, D = 1024; the positive nesting result holds for reporting

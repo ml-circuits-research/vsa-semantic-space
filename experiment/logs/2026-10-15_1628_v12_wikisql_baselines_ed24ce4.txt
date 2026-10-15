@@ -2,3 +2,23 @@
 # Python 3.12.3  NVIDIA GB10
 /home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v12_wikisql_baselines.py:32: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
   self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D)
+v12_wikisql_baselines: device=cuda, D=512; train pool 54355 (+2000 validation held out from train), dev 8421, test 15878, vocabulary 38086; sizes [1000, 5000, 56355], epochs {1000: 60, 5000: 20, 56355: 3}
+clustering data: 182320 TRAIN-pool sequences only; dev/test/val not used (asserted: 29836 word types).
+dev same-table pairs: same skeleton 336, different 12227; HARD H1 'different words, same SQL' (Jaccard<0.3) 26; H2 'same words, different SQL' (Jaccard>=0.5) 1353
+  pairs, bag of identities (lexical only): bag: same 0.760 diff 0.462 sep 0.298 AUC 0.858 | H1 0.337 | H2 0.772
+  transformer lr=0.001: validation cos 0.616 (43s)
+  transformer lr=0.0003: validation cos 0.575 (43s)
+  => transformer lr fixed at 0.001 (validation held out from train; never dev/test)
+
+== training size 1000 (60 epochs) ==
+  BoW + LR                                 [dev ] sel 0.475 agg 0.762 cond1  —    FULL(sel+agg only) 0.371
+  ours (path+bigram+chainL) n=1000 seed 0 [62s] [dev ] sel 0.630 agg 0.764 cond1 0.381 FULL 0.161 cos 0.290 | pairs model: same 0.580 diff 0.200 sep 0.380 AUC 0.897 | H1 0.168 | H2 0.382
+  transformer (same input) n=1000 seed 0 [6s] [dev ] sel 0.411 agg 0.824 cond1 0.366 FULL 0.116 cos 0.455 | pairs model: same 0.792 diff 0.494 sep 0.298 AUC 0.909 | H1 0.583 | H2 0.667
+  ours (path+bigram+chainL) n=1000 seed 1 [63s] [dev ] sel 0.633 agg 0.768 cond1 0.392 FULL 0.164 cos 0.294 | pairs model: same 0.586 diff 0.200 sep 0.386 AUC 0.901 | H1 0.167 | H2 0.384
+  transformer (same input) n=1000 seed 1 [14s] [dev ] sel 0.422 agg 0.817 cond1 0.357 FULL 0.116 cos 0.453 | pairs model: same 0.778 diff 0.483 sep 0.295 AUC 0.898 | H1 0.575 | H2 0.649
+  ours (path+bigram+chainL) n=1000 seed 2 [62s] [dev ] sel 0.632 agg 0.767 cond1 0.389 FULL 0.167 cos 0.293 | pairs model: same 0.584 diff 0.200 sep 0.385 AUC 0.895 | H1 0.162 | H2 0.386
+  transformer (same input) n=1000 seed 2 [6s] [dev ] sel 0.412 agg 0.815 cond1 0.358 FULL 0.112 cos 0.455 | pairs model: same 0.781 diff 0.491 sep 0.290 AUC 0.901 | H1 0.614 | H2 0.663
+== training size 5000 (20 epochs) ==
+  BoW + LR                                 [dev ] sel 0.502 agg 0.810 cond1  —    FULL(sel+agg only) 0.413
+  ours (path+bigram+chainL) n=5000 seed 0 [95s] [dev ] sel 0.760 agg 0.800 cond1 0.555 FULL 0.294 cos 0.511 | pairs model: same 0.683 diff 0.360 sep 0.323 AUC 0.906 | H1 0.354 | H2 0.530
+  transformer (same input) n=5000 seed 0 [11s] [dev ] sel 0.510 agg 0.864 cond1 0.415 FULL 0.164 cos 0.568 | pairs model: same 0.884 diff 0.593 sep 0.292 AUC 0.896 | H1 0.822 | H2 0.722

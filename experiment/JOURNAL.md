@@ -123,3 +123,12 @@ Next (for judgment): WikiSQL 3 seeds + test split + tuned neural baselines (tran
 ## 2026-10-15 (DGX) — propagation of the 8a retraction
 Propagated the 'emergent categories' retraction to INTERPRETATION (point 3 -> gates), 00_READ_FIRST (§3 I, §4, §5.3-5.4), POSITIONING (claim sentence,
 contributions, controls), INITIAL_ANALYSIS_DGX, README_RUN, README_DGX, current_status; rule 16 added to EVALUATION_PRINCIPLES. Wording everywhere: categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.
+
+## 2026-10-15 (DGX) — decisions after the interim (8c) judgment
+PAPER_NOTE §7 rewritten as "Negative results and what they fixed": lessons, not round numbers; the reason first. (2) If the same-input
+transformer reaches us at 56k but not at 1k/5k, the empirical claim is "data efficiency on the selected column without the table, with a
+readable role state" — enough for a short paper (findings/workshop) with the curve as main figure; a full paper needs Spider (nested SQL =
+pillar 1); decide short vs full AFTER v12. (3) If the lexical bag separates the hard pairs as well as the model: keep it as a negative —
+"on WikiSQL the equivalence separation is lexical; the set lacks pairs with the same words and different SQL" — do not change the metric.
+Checked: in v12 the skip-gram clusters are trained on the WHOLE train pool at every curve size (for both models); the data-efficiency claim
+must say "with distributional categories from the whole training corpus, without labels" (noted in the script and to be written in 8d).

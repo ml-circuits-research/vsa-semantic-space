@@ -16,6 +16,9 @@ cos(S, S_sql); and the HARD PAIRS built from SQL on the same table, each reporte
   H2 "same words, different SQL": different skeleton, Jaccard >= 0.5
   plus the AUC of "same skeleton vs different" by cosine, model vs bag — if the bag separates as well, the separation is lexical, not role-based.
 No leakage: skip-gram clusters from TRAIN only (asserted in v11); validation split carved from TRAIN; dev/test never used for any choice.
+NOTE on the curve: the skip-gram clusters (categories) are trained on the WHOLE train pool (~54k questions + headers) at every size, for ours
+AND for the transformer; at 1k/5k the model sees 1k/5k labelled (question, SQL) pairs but categories from the full unlabelled corpus. Any
+"data efficiency" claim must say: "with distributional categories from the whole training corpus, without labels".
 Run: python3 v12_wikisql_baselines.py [--sizes 1000,5000,56355] [--seeds 3] [--D 512]
 """
 import argparse, json, re, time, math, collections
@@ -63,7 +66,7 @@ if __name__ == "__main__":
     freq = collections.Counter(w for r in train_pool for w in tok(r["question"])); freq.update(w for r in train_pool for h in ttabs[r["table_id"]] for w in tok(h))
     singles = [w for w, _ in freq.most_common(a.n_freq)]
     sents = [tok(r["question"]) for r in train_pool] + [tok(h) for r in train_pool[:20000] for h in ttabs[r["table_id"]]]
-    train_words = {w for s_ in sents for w in s_}; print(f"clustering data: {len(sents)} TRAIN-pool sequences only; dev/test/val not used (asserted: {len(train_words)} word types).")
+    train_words = {w for s_ in sents for w in s_}; print(f"clustering data: {len(sents)} TRAIN-pool sequences only (the WHOLE pool, at every curve size, for both models); dev/test/val not used (asserted: {len(train_words)} word types).")
     emb = v10.skipgram([s for s in sents if len(s) > 1], vocab, dim=64, window=2, epochs=3, device=dev_, seed=0)
     X = torch.tensor(emb, device=dev_); X = X / (X.norm(dim=1, keepdim=True) + 1e-8); gk = torch.Generator().manual_seed(0)
     C = X[torch.randperm(V, generator=gk)[:a.k_clusters].to(dev_)].clone()
