@@ -47,7 +47,7 @@ if __name__ == "__main__":
     ap.add_argument("--sizes", default="1000,5000,56355"); ap.add_argument("--seeds", type=int, default=3); ap.add_argument("--D", type=int, default=512)
     ap.add_argument("--batch", type=int, default=32); ap.add_argument("--k_clusters", type=int, default=48); ap.add_argument("--n_freq", type=int, default=40)
     ap.add_argument("--device", default="cuda"); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--t_lrs", default="1e-3,3e-4"); ap.add_argument("--n_val", type=int, default=2000)
-    ap.add_argument("--epochs", default="60,20,3")
+    ap.add_argument("--epochs", default="60,20,3"); ap.add_argument("--only", default="all", help="all | transformer | ours (robustness checks, e.g. a longer transformer budget)")
     a = ap.parse_args(); dev_ = a.device; tok, load = v11.tok, v11.load
     train_all, ttabs = load("train"); dev, dtabs = load("dev"); test, tetabs = load("test")
     rng0 = np.random.default_rng(0); perm = rng0.permutation(len(train_all)); val = [train_all[i] for i in perm[:a.n_val]]; train_pool = [train_all[i] for i in perm[a.n_val:]]
@@ -180,6 +180,8 @@ if __name__ == "__main__":
         rows = train_pool[:n]; print(f"== training size {n} ({epochs[n]} epochs) ==")
         bow_lr(rows)
         for seed in range(a.seeds):
-            t0 = time.time(); fn = train_ours(rows, seed, epochs[n]); full_eval(fn, f"ours (path+bigram+chainL) n={n} seed {seed} [{time.time()-t0:.0f}s]", with_test=(n == max(sizes)))
-            t0 = time.time(); fn, _ = train_tr(rows, seed, epochs[n], t_lr); full_eval(fn, f"transformer (same input) n={n} seed {seed} [{time.time()-t0:.0f}s]", with_test=(n == max(sizes)))
+            if a.only in ("all", "ours"):
+                t0 = time.time(); fn = train_ours(rows, seed, epochs[n]); full_eval(fn, f"ours (path+bigram+chainL) n={n} seed {seed} [{time.time()-t0:.0f}s]", with_test=(n == max(sizes)))
+            if a.only in ("all", "transformer"):
+                t0 = time.time(); fn, _ = train_tr(rows, seed, epochs[n], t_lr); full_eval(fn, f"transformer (same input) n={n} ep={epochs[n]} seed {seed} [{time.time()-t0:.0f}s]", with_test=(n == max(sizes)))
     print("\nchecklist: [x] same input (fixed identities + same categories, no table) [x] same objective and decoder [x] BoW+LR on every size [x] FULL-query accuracy [x] hard pairs with the lexical bag on the same row [x] validation from train only [x] no extra tuning for ours [x] test split reported")

@@ -22,3 +22,23 @@ dev same-table pairs: same skeleton 336, different 12227; HARD H1 'different wor
   BoW + LR                                 [dev ] sel 0.502 agg 0.810 cond1  —    FULL(sel+agg only) 0.413
   ours (path+bigram+chainL) n=5000 seed 0 [95s] [dev ] sel 0.760 agg 0.800 cond1 0.555 FULL 0.294 cos 0.511 | pairs model: same 0.683 diff 0.360 sep 0.323 AUC 0.906 | H1 0.354 | H2 0.530
   transformer (same input) n=5000 seed 0 [11s] [dev ] sel 0.510 agg 0.864 cond1 0.415 FULL 0.164 cos 0.568 | pairs model: same 0.884 diff 0.593 sep 0.292 AUC 0.896 | H1 0.822 | H2 0.722
+  ours (path+bigram+chainL) n=5000 seed 1 [95s] [dev ] sel 0.760 agg 0.798 cond1 0.553 FULL 0.287 cos 0.513 | pairs model: same 0.682 diff 0.363 sep 0.319 AUC 0.902 | H1 0.345 | H2 0.531
+  transformer (same input) n=5000 seed 1 [11s] [dev ] sel 0.497 agg 0.865 cond1 0.417 FULL 0.162 cos 0.568 | pairs model: same 0.876 diff 0.591 sep 0.285 AUC 0.889 | H1 0.811 | H2 0.724
+  ours (path+bigram+chainL) n=5000 seed 2 [96s] [dev ] sel 0.757 agg 0.801 cond1 0.551 FULL 0.288 cos 0.514 | pairs model: same 0.684 diff 0.363 sep 0.322 AUC 0.905 | H1 0.347 | H2 0.533
+  transformer (same input) n=5000 seed 2 [14s] [dev ] sel 0.475 agg 0.857 cond1 0.414 FULL 0.150 cos 0.565 | pairs model: same 0.874 diff 0.591 sep 0.283 AUC 0.885 | H1 0.796 | H2 0.724
+== training size 56355 (3 epochs) ==
+  BoW + LR                                 [dev ] sel 0.499 agg 0.870 cond1  —    FULL(sel+agg only) 0.441
+  ours (path+bigram+chainL) n=56355 seed 0 [152s] [dev ] sel 0.814 agg 0.800 cond1 0.623 FULL 0.370 cos 0.619 | pairs model: same 0.757 diff 0.467 sep 0.290 AUC 0.915 | H1 0.464 | H2 0.624
+  ours (path+bigram+chainL) n=56355 seed 0 [152s] [test] sel 0.821 agg 0.798 cond1 0.629 FULL 0.375 cos 0.617
+  transformer (same input) n=56355 seed 0 [23s] [dev ] sel 0.541 agg 0.894 cond1 0.452 FULL 0.197 cos 0.619 | pairs model: same 0.911 diff 0.616 sep 0.294 AUC 0.899 | H1 0.862 | H2 0.744
+  transformer (same input) n=56355 seed 0 [23s] [test] sel 0.537 agg 0.894 cond1 0.434 FULL 0.190 cos 0.615
+  ours (path+bigram+chainL) n=56355 seed 1 [152s] [dev ] sel 0.820 agg 0.801 cond1 0.625 FULL 0.366 cos 0.622 | pairs model: same 0.754 diff 0.463 sep 0.290 AUC 0.912 | H1 0.461 | H2 0.621
+  ours (path+bigram+chainL) n=56355 seed 1 [152s] [test] sel 0.822 agg 0.804 cond1 0.628 FULL 0.373 cos 0.620
+  transformer (same input) n=56355 seed 1 [26s] [dev ] sel 0.548 agg 0.892 cond1 0.453 FULL 0.198 cos 0.621 | pairs model: same 0.910 diff 0.615 sep 0.295 AUC 0.902 | H1 0.856 | H2 0.743
+  transformer (same input) n=56355 seed 1 [26s] [test] sel 0.550 agg 0.892 cond1 0.435 FULL 0.193 cos 0.616
+  ours (path+bigram+chainL) n=56355 seed 2 [156s] [dev ] sel 0.814 agg 0.803 cond1 0.630 FULL 0.369 cos 0.622 | pairs model: same 0.754 diff 0.462 sep 0.292 AUC 0.915 | H1 0.462 | H2 0.620
+  ours (path+bigram+chainL) n=56355 seed 2 [156s] [test] sel 0.820 agg 0.806 cond1 0.630 FULL 0.375 cos 0.620
+  transformer (same input) n=56355 seed 2 [23s] [dev ] sel 0.541 agg 0.892 cond1 0.446 FULL 0.192 cos 0.618 | pairs model: same 0.909 diff 0.618 sep 0.290 AUC 0.898 | H1 0.860 | H2 0.745
+  transformer (same input) n=56355 seed 2 [23s] [test] sel 0.545 agg 0.893 cond1 0.431 FULL 0.187 cos 0.614
+
+checklist: [x] same input (fixed identities + same categories, no table) [x] same objective and decoder [x] BoW+LR on every size [x] FULL-query accuracy [x] hard pairs with the lexical bag on the same row [x] validation from train only [x] no extra tuning for ours [x] test split reported
