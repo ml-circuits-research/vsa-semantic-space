@@ -74,8 +74,13 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
     a whole clause (the round-1 zoom-in), forced by data for right-announced structure only. The pos code is an absolute position prior:
     it helps on new categories, hurts on free order; its contribution depends on the set of formulations, not on the mechanism.
     "Seen transitions" as an axis measures the redundancy of the formulation set (RESULTS 6a), not the mechanism.
-  PROBABLE (1-2 seeds or a single set): gates can be learned by search (gates.py: a single world); emergent categories on real text;
-    learned gates = the same set on other worlds.
+  CERTAIN (round 7, 5 seeds, reference world): the gates EMERGE by gradient from the single generative objective — identities (P, O)
+    closed, relation markers (to, from, by, that, comma, copula) open, VERBS closed — the same set in every seed; no loss at depths 1-3
+    (1.00), better than the hand set on new formulations. The search of round 2 had opened the verbs; with left re-addressing they are
+    redundant as emitters: the emergent partition is identities / relation markers / action words. Control (round 7b): a small tuned
+    transformer on the same task, identities and objective gets 0.22 on new identities (chance 0.17) and 0.39 at the unseen depth
+    (inner roles at chance) — "at this data regime", as in round 1.
+  PROBABLE (1-2 seeds or a single set): emergent categories on real text.
   WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
   NEGATIVE: SICK; v2 alone on new constructions; associative prediction for equivalence.
 
@@ -89,8 +94,10 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
      boundary itself from expectations (',' as emitter). Criterion: depth 2 > 0.95 on all roles with all 3 outer forms, nothing else lower.
      Also: redesign the "seen transitions" axis so that it tests mechanism, not redundancy (hold out formulations whose every LOCAL role
      cue has been seen with the SAME role).
-  2. Gates learned BY GRADIENT (sigmoid + soft mix of provisional/expected address). Criterion: they converge to "identities closed,
-     actions/relations open" on >=3 different worlds. If so => "everything emerges from a single objective" is supported.
+  2. [DONE, round 7, v8_gates.py] Gates by gradient: identities closed and relation markers open on 5/5 worlds (criterion met);
+     verbs CLOSED (criterion as written not met — the hand/search set was a prior, the gradient's set is better on every axis).
+     "Everything emerges from a single objective" is supported for the gating structure; the partition is identities / relation markers /
+     action words. Transformer control (v9_transformer.py) done: fails on new identities and unseen depth at this regime.
   3. The word2vec control for categories (same data): if it gives equally clean clusters, the emergence of categories is not the architecture's merit.
   4. Control "associative memory with a bottleneck": if it aligns equally well, "generative necessary" narrows to "limited capacity necessary".
   5. TUNED transformer (+ dropout, weight decay, lr sweep) and small BERT, at 1k/5k/50k examples: a data-efficiency curve, not a point.

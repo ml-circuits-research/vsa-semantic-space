@@ -1,0 +1,44 @@
+# 2026-10-15T14:14:54+02:00  commit=75e7e0d  cmd: python3 v9_transformer.py
+# Python 3.12.3  NVIDIA GB10
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v9_transformer.py:28: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D); self.drop = nn.Dropout(dropout)
+v9_transformer: device=cuda (NVIDIA GB10), torch 2.14.1+cu130, D=1024, N=30000, epochs=12, batch=32, seeds=5
+control for 6c: same compositional world (en, outer ['{X} says that <P>', '{X} claims that <P>']), same fixed identities at the input, same objective -cos(S, S_world), same decoder.
+transformer: d_model=128, layers=2, heads=4, d_ff=256; tuning grid lr 1e-3,3e-4 x dropout 0.0,0.1, selected on seed 0 by training-distribution validation
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+  new formulations: seen trans. [8, 10]; UNSEEN trans. [4, 5, 7, 11, 13, 14]; ROLE CUES seen [8, 13]
+chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167. Trivial control: mean-pooled bag of identities = order-free.
+
+  seed 0 lr=0.001 dropout=0 (  50s, 0.79M params) validation cos 0.963
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v9_transformer.py:28: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D); self.drop = nn.Dropout(dropout)
+  seed 0 lr=0.001 dropout=0.1 (  58s, 0.79M params) validation cos 0.867
+  seed 0 lr=0.0003 dropout=0 (  34s, 0.79M params) validation cos 0.962
+  seed 0 lr=0.0003 dropout=0.1 (  48s, 0.79M params) validation cos 0.916
+  => chosen config: lr=0.001, dropout=0 (by validation cos, seed 0)
+  seed 0 transformer 1.00 (m 0.54) | 0.22 (m -0.02) | 1.00 (m 0.54) | 0.82 (m 0.34) | 1.00 (m 0.54) | 1.00 (m 0.46) | 0.80 (m 0.28) | 0.44 (m 0.12)  || depth 3 per role: A 0.14 B 0.22 C 0.18 X1 1.00 X2 1.00 X3 0.07
+  seed 1 lr=0.001 dropout=0 (  71s, 0.79M params) validation cos 0.917
+  seed 1 transformer 1.00 (m 0.54) | 0.20 (m -0.02) | 0.67 (m 0.29) | 0.88 (m 0.34) | 1.00 (m 0.52) | 0.76 (m 0.27) | 0.79 (m 0.28) | 0.38 (m 0.12)  || depth 3 per role: A 0.09 B 0.06 C 0.07 X1 1.00 X2 1.00 X3 0.08
+  seed 2 lr=0.001 dropout=0 (  84s, 0.79M params) validation cos 0.920
+  seed 2 transformer 1.00 (m 0.54) | 0.23 (m -0.02) | 0.67 (m 0.17) | 0.73 (m 0.24) | 0.97 (m 0.50) | 0.79 (m 0.27) | 0.80 (m 0.28) | 0.37 (m 0.12)  || depth 3 per role: A 0.05 B 0.07 C 0.08 X1 1.00 X2 1.00 X3 0.04
+  seed 3 lr=0.001 dropout=0 (  79s, 0.79M params) validation cos 0.903
+  seed 3 transformer 1.00 (m 0.46) | 0.20 (m -0.02) | 0.74 (m 0.27) | 0.75 (m 0.26) | 1.00 (m 0.45) | 0.90 (m 0.31) | 0.81 (m 0.27) | 0.37 (m 0.10)  || depth 3 per role: A 0.05 B 0.03 C 0.08 X1 1.00 X2 1.00 X3 0.06
+  seed 4 lr=0.001 dropout=0 (  73s, 0.79M params) validation cos 0.877
+  seed 4 transformer 0.86 (m 0.30) | 0.22 (m -0.02) | 0.77 (m 0.26) | 0.73 (m 0.22) | 0.87 (m 0.30) | 0.76 (m 0.27) | 0.79 (m 0.28) | 0.39 (m 0.10)  || depth 3 per role: A 0.07 B 0.12 C 0.07 X1 1.00 X2 1.00 X3 0.07
+
+== MEANS over 5 seeds: accuracy (margin) ==  columns: seen | new ids | new form., seen trans. | new form., UNSEEN trans. | new form., ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  transformer (lr=0.001, dropout=0) 0.971±0.057 (m 0.48) | 0.215±0.012 (m -0.02) | 0.770±0.122 (m 0.30) | 0.783±0.057 (m 0.28) | 0.968±0.050 (m 0.46) | 0.839±0.095 (m 0.32) | 0.797±0.008 (m 0.28) | 0.390±0.024 (m 0.11)
+== depth 2 (seen), PER ROLE: A | B | C | X1 | X2
+  transformer 0.486±0.023 | 1.000±0.000 | 0.497±0.023 | 1.000±0.000 | 1.000±0.000
+== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3
+  transformer 0.082±0.034 | 0.100±0.067 | 0.096±0.040 | 1.000±0.000 | 1.000±0.000 | 0.063±0.014
+reference (RESULTS 6c, VSA path+chainL+bigram, same world/regime): depth 1 1.000, depth 2 1.000, depth 3 1.000 on all six roles; new ids 1.000.
+
+checklist: [x] world addresses [x] shared F (assert) [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] no test calibration (validation on training distribution) [x] same data/objective (13) [x] per role (15)

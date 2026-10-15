@@ -76,3 +76,21 @@ trained on depths 1-2, tested on depth 3, same data, same fixed identities, same
 (c) describe chainL as the code does (re-addressing), not as union-then-restriction — done in RESULTS 6b and v6_left.py.
 Criterion for §5.2: gates learned by gradient converge to the same set as by search (identities closed, verbs/prepositions open) on >= 3
 worlds/seeds, with no loss in the round-6c table.
+
+## 2026-10-15 (DGX, late afternoon) — round 7: gates by gradient, transformer control, rebuilt axis
+Ran: run.sh v8_gates.py (5 seeds, 6 variants, 134 s/variant soft chain) -> logs/2026-10-15_1412_v8_gates_06e12bd.txt
+     run.sh v9_transformer.py (grid on seed 0, then 5 seeds)            -> logs/2026-10-15_1414_v9_transformer_75e7e0d.txt
+Result: (7c) gates emerge by gradient, identical sets in every seed: P, O closed; to/from/by/that/comma/COP open; ALL verbs closed; no loss
+  at depths 1-3 (1.00), better on new formulations (bundle 0.78/0.76 -> 0.85/0.87; chainL alone role cues 0.22 -> 1.00). Criterion half
+  met: agrees with search on what is closed, disagrees on verbs; the gradient's set is better on every axis. (7b) transformer control:
+  new ids 0.215 (chance 0.167), depth 3 unseen 0.39 (A/B/C at chance, X1/X2 1.00), depth 2 seen A/C ~0.49; flat axes comparable.
+  (7a) role-cues axis: T8, T13 seen; T10 moves to unseen; every bundle at 1.000 on it.
+Surprise / problem: verbs closed — with left re-addressing a verb has nothing to emit that the prepositions and 'that' do not give; the round-2
+  search needed verbs because only emitters could place the words after them. run.sh refused once more (porcelain paths are repo-relative,
+  the 'logs/' filter had a leading space) and the refusal went to /dev/null; fixed, and run.sh output is no longer discarded.
+Changed in code: v8_gates.py (soft chain, gates as logits, chainL-alone variants), v9_transformer.py (control), v5_scale.split_templates_rolecues,
+  run.sh filter. Docs: RESULTS ROUND 7 (a, b, c), 00_READ_FIRST §4 (gates CERTAIN; control) and §5.2 DONE, current_status rewritten.
+Next (proposals for judgment): (1) word2vec control for categories and the bottleneck associative-memory control (§5.3-5.4) — both cheap now;
+  (2) capacity (D 4096-16384, 64-1000 identities) on the reference world; (3) then WikiSQL with the full model + BoW+LR baseline (§5.7).
+  Writing: the principle note (POSITIONING article 1) now has its two pillars — composition to an unseen depth (6c) and emergent gates (7c) —
+  plus the controls (7b) and the declared limit (right-announced structure).

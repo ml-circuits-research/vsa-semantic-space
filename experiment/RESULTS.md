@@ -347,3 +347,78 @@ Conclusions:
   or a world that does not demand it.
 - Cost of the compositional world on flat axes: none on seen / new identities; "seen transitions" 0.74-0.79 and "unseen transitions" 0.74-0.76
   (vs 0.785 / 0.788 flat): within +-0.05, same T10 failure as 6a.
+
+# ROUND 7 (DGX, reference world = compositional, English, prefixed reporting): control, rebuilt axis, gates by gradient
+Decisions applied (judgment 2026-10-15): compositional world is the reference; §5.1c postponed and declared a known limit of causal
+addressing; §5.2 gates by gradient; transformer control on test 6c; "seen transitions" axis rebuilt and kept.
+
+## 7a. Rebuilt axis: "new formulations with all ROLE CUES seen" (v5_scale.split_templates_rolecues)
+A held-out formulation passes iff for every role slot both local cues — (previous category, role) and (role, next category) — occur in a
+training formulation with the SAME role. English world, training T0,1,2,3,6,9,12,15: role cues seen = T8 '{B} , {A} V to {C}', T13 '{B} is what
+{A} V to {C}'; unseen role cues = T4, T5, T7, T10, T11, T14. T10 'from {A} , {C} VR {B}' (C 0.04 in 6a) correctly moves to the unseen group
+(the cue ', C' was only seen as ', A'). The old "seen transitions" axis is still reported next to it.
+
+## 7b. CONTROL on test 6c: small transformer, same task (v9_transformer.py; logs/2026-10-15_1414_v9_transformer_75e7e0d.txt)
+Same fixed identities F at the input (new identities = new random vectors), same objective -cos(S, S_world) with the compositional world,
+same decoder (unbinding conj(R_rep)^k conj(R_role)), same 30k sentences (depths 0-2, TRAIN_T), 12 epochs, batch 32, AdamW + cosine.
+Architecture: linear(2D -> 128) + sinusoidal positions -> 2-layer pre-norm TransformerEncoder (4 heads, d_ff 256) -> masked mean pooling ->
+linear(128 -> 2D) -> complex S; 0.79M parameters (VSA: ~1.6M phases). Minimal tuning on seed 0 by VALIDATION on fresh training-distribution
+sentences (never on a test axis): lr 1e-3 / dropout 0 -> val cos 0.963; 3e-4 / 0 -> 0.962; 1e-3 / 0.1 -> 0.867; 3e-4 / 0.1 -> 0.916.
+Chosen: lr 1e-3, dropout 0. Then 5 seeds (same world/identity seeds as the VSA runs).
+| model | seen | new ids | seen trans. | UNSEEN trans. | ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) |
+|---|---|---|---|---|---|---|---|---|
+| transformer (tuned) | 0.971±0.057 (m .48) | **0.215±0.012** (m -.02) | 0.770±0.122 | 0.783±0.057 | 0.968±0.050 | 0.839±0.095 | 0.797±0.008 | **0.390±0.024** (m .11) |
+| VSA path+chainL+bigram (6c, same regime) | 1.000 | 1.000 | 0.793 | 0.745 | (7c) | 1.000 | 1.000 | **1.000** |
+Per role, transformer: depth 2 (seen): A 0.486, B 1.000, C 0.497, X1 1.000, X2 1.000 — it never separates agent from recipient inside a
+doubly reported clause even on TRAINING data; depth 3 (unseen): A 0.082, B 0.100, C 0.096 (chance 0.083), X1 1.000, X2 1.000, X3 0.063.
+Reading: (i) new identities 0.215 ~ chance 0.167: a fixed random input vector it has never seen is not usable — the VSA model gets 1.00
+because identities never enter its parameters (property of the construction; here measured against a control on the same input).
+(ii) At the unseen depth the transformer places the two speakers it knows and puts everything else at chance: it reproduces the deepest
+configuration it has seen (two R_rep) rather than composing a third; the VSA model composes it by construction. (iii) On flat axes the
+two are comparable (seen trans. 0.77 vs 0.79; unseen trans. 0.78 vs 0.75; role cues 0.97). Same caveat as round 1: "at this data regime,
+a small transformer trained identically does not generalize to new identities or to a deeper construction" — not "transformers cannot".
+What the control does NOT cover: more data / epochs, a larger model, learned input embeddings (which would remove the fixed-identity
+constraint and with it the zero-shot test). Parameter counts are comparable (0.79M vs ~1.6M).
+
+## 7c. §5.2 — GATES LEARNED BY GRADIENT (v8_gates.py; logs/2026-10-15_1412_v8_gates_06e12bd.txt; 5 seeds, same regime as 6c)
+Soft chain: g_c = sigmoid(s_c) = probability that category c emits; the address of a word is the gate-weighted mixture over "the most
+recent open emitter before it" (right) and, for a non-emitter, "the first open emitter after it" (left re-addressing, v6); fully in torch,
+differentiable in the gates; no consumed-expectation bookkeeping. Hand gates (fixed at +-6) = reference; learned from an all-closed start
+(g = 0.12) and from an all-open start (g = 0.88). Bundle path + soft chainL + bigram, and soft chainL ALONE. 32 categories.
+| variant | seen | new ids | seen trans. | UNSEEN trans. | ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) |
+|---|---|---|---|---|---|---|---|---|
+| bundle, hand gates (fixed) | 1.000 | 1.000 | 0.783±0.031 | 0.756±0.012 | 1.000 | 1.000 | 1.000 | 1.000 (all 6 roles) |
+| bundle, learned, start closed | 1.000 | 1.000 | **0.848±0.064** (m .25) | **0.870±0.038** | 1.000 | 1.000 | 1.000 | 0.996 (A 0.986, C 0.991) |
+| bundle, learned, start open | 1.000 | 1.000 | 0.790±0.021 | 0.736±0.007 | 1.000 | 1.000 | 1.000 | 1.000 (all 6 roles) |
+| chainL ALONE, hand | 1.000 | 1.000 | 0.059 | 0.469 | 0.221 | 1.000 | 1.000 | 1.000 |
+| chainL ALONE, learned closed | 1.000 | 1.000 | **0.614** | **0.628** | **1.000** | 1.000 | 1.000 | 1.000 |
+| chainL ALONE, learned open | 1.000 | 1.000 | 0.627 | 0.537 | 1.000 | 1.000 | 1.000 | 1.000 |
+The soft chain with hand gates reproduces 6c exactly (the consumption bookkeeping costs nothing). Role-cues axis: 1.000 for every bundle.
+Learned gates (mean sigmoid over 5 seeds; OPEN if > 0.5), identical sets in every seed:
+  bundle, start closed:  OPEN that 1.00, to 1.00, by 0.91, '.' 0.67;  from 0.20;  everything else 0.00-0.03.
+  bundle, start open:    OPEN that, to, from, by, COP, who, it, says, ',', claims, what (all 1.00);  CLOSED all 18 verb forms (<= 0.02), O 0.01, P 0.00.
+  chainL alone, closed:  OPEN that, to, from, by (0.97-0.99), ',' 0.81;  CLOSED everything else (<= 0.01) including P, O, all verbs, says, claims.
+  chainL alone, open:    OPEN from, to, that, by, ',', COP 0.72, it 0.58;  who 0.38;  CLOSED P, O, all verbs, says, claims (<= 0.02).
+Criterion ("same set as by search: identities closed, verbs/prepositions open", no loss in 6c): HALF met.
+- Met: P and O are closed in every seed and every start (identities never open frames) — the part the search also found; no loss on the
+  6c table (depth 1-3 at 1.00; bundle-closed 0.996); on new formulations the learned gates are BETTER than the hand set (seen trans.
+  0.78 -> 0.85, unseen 0.76 -> 0.87 in the bundle; chainL alone 0.06 -> 0.61 and role cues 0.22 -> 1.00): fewer emitters = fewer
+  untrained transitions, the round-2 observation again.
+- Not met: the VERBS are closed in every seed, from both starts, with or without the other codes. The gradient's set is the function
+  words that announce a relation — prepositions (to, from, by), the connective 'that', the comma, the copula — plus 'says/claims' only
+  from the open start (they are not needed: 'that' carries the clause). With left re-addressing available, a verb has nothing to emit
+  that 'to'/'by'/'that' and the left slot do not already give; the search of round 2 (no left expectations, Romanian small world) needed
+  the verbs because only emitters could place the words after them.
+- Reading for the paper: the gates DO emerge from the single generative objective, stably across 5 worlds, and they separate the vocabulary
+  into identities (closed), relation markers (open) and action words (closed: identities of actions, not operators). That is a cleaner
+  emergent partition than "verbs + prepositions open"; the hand set was a linguistic prior, not the optimum. The criterion as written
+  assumed the search's set was the target; the honest statement is that gradient and search agree on what must be closed and disagree
+  on verbs, and the gradient's choice is the better one on every axis measured. Start-dependence (closed start opens 4-5 categories, open
+  start 11) means the objective is flat over the extra function words: they are harmless, not needed.
+Open issue: the soft chain is ~5x slower than the hard one (134 s vs 22-38 s per variant): the position loop in torch. Acceptable for now.
+
+## Round 7 conclusions
+1. Gates emerge by gradient (5 seeds): identities closed, relation markers open, verbs closed; no loss at depths 1-3; better on new formulations.
+2. The transformer control at the same regime fails exactly where the construction gives the VSA model its generalization: new identities
+   (0.22 ~ chance) and the unseen depth (0.39; inner roles at chance, speakers perfect).
+3. The rebuilt "role cues seen" axis is at 1.000 for every bundle; the old "seen transitions" axis stays as a redundancy measure.
