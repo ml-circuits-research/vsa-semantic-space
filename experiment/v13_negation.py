@@ -95,10 +95,10 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--n_id", type=int, default=18)
-    ap.add_argument("--device", default="cuda"); ap.add_argument("--p_neg", type=float, default=0.4)
+    ap.add_argument("--device", default="cuda"); ap.add_argument("--p_neg", type=float, default=0.4); ap.add_argument("--neg_depth_train", type=int, default=0, help="E1b: negation seen in training up to this depth (0 = depth 0 only)")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v13_negation (E1): device={a.device}, D={D}, N={N}, batch={a.batch}, seeds={a.seeds}; negation as a role R_neg bound to its scope; model = v8 bundle, learned gates (start closed)")
-    print(f"training: affirmative at depths 0-2 (formulations {v5.TRAIN_T}) + negated forms (scopes S, A, B, C; both patterns each) at DEPTH 0 only, p_neg={a.p_neg}")
+    print(f"training: affirmative at depths 0-2 (formulations {v5.TRAIN_T}) + negated forms (scopes S, A, B, C; both patterns each) at depths 0-{a.neg_depth_train}, p_neg={a.p_neg}")
     print("test: negation at depth 0 (seen forms; fresh events), affirmative depths 0-3, and the UNSEEN combination negation inside reported speech (depth 1, 2)")
     for sc, ps in NEG_PATTERNS.items(): print(f"  scope {sc}: {ps}")
     print(f"chance: fillers 1/13 (12 + the indefinite) = {1/13:.3f}; scope among 5 hypotheses = 0.200\n")
@@ -112,7 +112,7 @@ if __name__ == "__main__":
         rng = m.rng; sents, targets = [], []
         for n in range(N):
             if rng.random() < a.p_neg:
-                sc = ["S", "A", "B", "C"][int(rng.integers(4))]; ev = w.event(trP, trO, depth=0, neg=sc); toks = w.render(ev, int(rng.integers(2)))
+                sc = ["S", "A", "B", "C"][int(rng.integers(4))]; ev = w.event(trP, trO, depth=int(rng.integers(a.neg_depth_train + 1)), neg=sc); toks = w.render(ev, int(rng.integers(2)))
             else:
                 d = int(rng.integers(3)); ev = w.event(trP, trO, depth=d); toks = w.render(ev, int(rng.choice(v5.TRAIN_T)))
             sents.append(toks); targets.append(world.state(ev, toks))

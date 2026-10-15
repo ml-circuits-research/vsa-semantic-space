@@ -39,3 +39,12 @@ chance: fillers 1/13 (12 + the indefinite) = 0.077; scope among 5 hypotheses = 0
   seed 0 (453s) 0.999 | 1.000 | 1.000 | 1.000 | 1.000 | 0.988 | 0.588 | 0.528 | 0.508  || cos(aff, neg): model 0.22, bag 0.72, world 0.06  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'nothing', 'that', 'to', 'who']
   seed 1 (239s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.603 | 0.516 | 0.525  || cos(aff, neg): model 0.14, bag 0.72, world 0.04  || gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'not', 'nothing', 'that', 'to', 'who']
   seed 2 (234s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.996 | 0.431 | 0.372 | 0.492  || cos(aff, neg): model 0.18, bag 0.72, world 0.03  || gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'not', 'nothing', 'that', 'to', 'who']
+  seed 3 (196s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.988 | 0.572 | 0.463 | 0.637  || cos(aff, neg): model 0.20, bag 0.72, world 0.03  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'nothing', 'that', 'to', 'who']
+  seed 4 (196s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.992 | 0.603 | 0.375 | 0.471  || cos(aff, neg): model 0.17, bag 0.73, world 0.02  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'nothing', 'that', 'to', 'who']
+
+== MEANS over 5 seeds: aff d0: roles | neg d0: roles | neg d0: presence | neg d0: SCOPE | neg d0: FULL frame | aff d3 UNSEEN: roles | neg d1 UNSEEN: scope | neg d1 UNSEEN: FULL | neg d2 UNSEEN: FULL
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.993±0.005 | 0.559±0.065 | 0.451±0.067 | 0.527±0.058
+== pair separation cos(affirmed, negated), same event: model 0.184±0.027 | bag of identities (control) 0.722 | world 0.034   (criterion: gap 1 - cos > 0.5 for the model)
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 to=1.00 never=1.00 by=0.98 anything=0.95 who=0.88 not=0.87 nothing=0.75 does=0.65 .=0.56 from=0.40 nobody=0.22 it=0.05 offer=0.01 give=0.01 given=0.01
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] scope separately from presence (17) [x] FULL frame (R1) [x] pair separation with lexical control [x] unseen combination (negation inside reporting) [x] >=3 seeds [x] model unchanged, operator = role
