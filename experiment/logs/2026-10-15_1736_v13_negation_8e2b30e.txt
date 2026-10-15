@@ -1,0 +1,50 @@
+# 2026-10-15T17:36:59+02:00  commit=8e2b30e  cmd: python3 v13_negation.py --neg_depth_train 1
+# Python 3.12.3  NVIDIA GB10
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:103: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+v13_negation (E1): device=cuda, D=1024, N=40000, batch=8, seeds=5; negation as a role R_neg bound to its scope; model = v8 bundle, learned gates (start closed)
+training: affirmative at depths 0-2 (formulations [0, 1, 2, 3, 6, 9, 12, 15]) + negated forms (scopes S, A, B, C; both patterns each) at depths 0-1, p_neg=0.4
+test: negation at depth 0 (seen forms; fresh events), affirmative depths 0-3, and the UNSEEN combination negation inside reported speech (depth 1, 2)
+  scope S: ['{A} does not V {B} to {C} .', '{A} never V3 {B} to {C} .']
+  scope A: ['it is not {A} who V3 {B} to {C} .', 'nobody V3 {B} to {C} .']
+  scope C: ['{A} V3 {B} not to {C} .', '{A} V3 {B} to nobody .']
+  scope B: ['{A} V3 nothing to {C} .', '{A} does not V anything to {C} .']
+chance: fillers 1/13 (12 + the indefinite) = 0.077; scope among 5 hypotheses = 0.200
+
+     depth 0 scope A form 0 'it is not {A} who V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(60)}
+     depth 0 scope A form 1 'nobody V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(60)}
+     depth 0 scope B form 0 '{A} V3 nothing to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(60)}
+     depth 0 scope B form 1 '{A} does not V anything to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(60)}
+     depth 0 scope C form 0 '{A} V3 {B} not to {C} .': scope acc 1.00  decoded as {np.str_('C'): np.int64(60)}
+     depth 0 scope C form 1 '{A} V3 {B} to nobody .': scope acc 1.00  decoded as {np.str_('C'): np.int64(60)}
+     depth 0 scope S form 0 '{A} does not V {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(60)}
+     depth 0 scope S form 1 '{A} never V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(60)}
+     depth 1 scope A form 0 'it is not {A} who V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(40)}
+     depth 1 scope A form 1 'nobody V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(40)}
+     depth 1 scope B form 0 '{A} V3 nothing to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(40)}
+     depth 1 scope B form 1 '{A} does not V anything to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(40)}
+     depth 1 scope C form 0 '{A} V3 {B} not to {C} .': scope acc 1.00  decoded as {np.str_('C'): np.int64(40)}
+     depth 1 scope C form 1 '{A} V3 {B} to nobody .': scope acc 1.00  decoded as {np.str_('C'): np.int64(40)}
+     depth 1 scope S form 0 '{A} does not V {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(40)}
+     depth 1 scope S form 1 '{A} never V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(40)}
+     depth 2 scope A form 0 'it is not {A} who V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(30)}
+     depth 2 scope A form 1 'nobody V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('A'): np.int64(30)}
+     depth 2 scope B form 0 '{A} V3 nothing to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(30)}
+     depth 2 scope B form 1 '{A} does not V anything to {C} .': scope acc 1.00  decoded as {np.str_('B'): np.int64(30)}
+     depth 2 scope C form 0 '{A} V3 {B} not to {C} .': scope acc 1.00  decoded as {np.str_('C'): np.int64(30)}
+     depth 2 scope C form 1 '{A} V3 {B} to nobody .': scope acc 1.00  decoded as {np.str_('C'): np.int64(30)}
+     depth 2 scope S form 0 '{A} does not V {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(30)}
+     depth 2 scope S form 1 '{A} never V3 {B} to {C} .': scope acc 1.00  decoded as {np.str_('S'): np.int64(30)}
+  seed 0 (198s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.993 | 1.000 | 1.000 | 1.000  || cos(aff, neg): model 0.28, bag 0.72, world 0.06  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'that', 'to', 'who']
+  seed 1 (197s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000  || cos(aff, neg): model 0.20, bag 0.72, world 0.04  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'that', 'to', 'who']
+  seed 2 (197s) 1.000 | 1.000 | 0.988 | 0.988 | 0.988 | 1.000 | 0.988 | 0.988 | 0.983  || cos(aff, neg): model 0.24, bag 0.72, world 0.03  || gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'that', 'to', 'who']
+  seed 3 (197s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000  || cos(aff, neg): model 0.24, bag 0.72, world 0.02  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'that', 'to']
+  seed 4 (197s) 1.000 | 1.000 | 0.877 | 0.877 | 0.877 | 0.988 | 0.909 | 0.909 | 0.875  || cos(aff, neg): model 0.27, bag 0.73, world 0.02  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'that', 'to']
+
+== MEANS over 5 seeds: aff d0: roles | neg d0: roles | neg d0: presence | neg d0: SCOPE | neg d0: FULL frame | aff d3 UNSEEN: roles | neg d1 UNSEEN: scope | neg d1 UNSEEN: FULL | neg d2 UNSEEN: FULL
+  1.000±0.000 | 1.000±0.000 | 0.973±0.048 | 0.973±0.048 | 0.973±0.048 | 0.993±0.007 | 0.979±0.035 | 0.979±0.035 | 0.972±0.049
+== pair separation cos(affirmed, negated), same event: model 0.245±0.028 | bag of identities (control) 0.723 | world 0.034   (criterion: gap 1 - cos > 0.5 for the model)
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 to=1.00 never=1.00 anything=1.00 by=0.94 does=0.77 .=0.67 who=0.55 not=0.46 from=0.20 offer=0.01 give=0.01 lend=0.01 nobody=0.01 sees=0.01 send=0.01
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] scope separately from presence (17) [x] FULL frame (R1) [x] pair separation with lexical control [x] unseen combination (negation inside reporting) [x] >=3 seeds [x] model unchanged, operator = role

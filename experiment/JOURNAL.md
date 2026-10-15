@@ -159,3 +159,5 @@ Surprise / problem: the first operator-inside-operator failure is specific (sent
 Changed in code: frame.py, frame_roundtrip.py, v13_negation.py (+ --neg_depth_train), v12 (--only, --cluster_on_subset). Docs: EMPIRICAL_NOTE.md
   (full draft, gate and ablation filled), PAPER_NOTE §6b and §7 (approved tone), RESULTS 8d additions + ROUND 9 (a, b), rule 17, 00_READ_FIRST §4-5.
 Next: E1b result -> then E2 (quantifiers), E3 (modality/conditionals), E6 (verifier with injected errors on WikiSQL).
+E1b (same night): negation seen at depths 0-1 -> depth 2 unseen FULL 0.972±0.049, all 8 forms at scope 1.00 (seed 0); sentential negation
+composes once seen inside a clause (E1: 0.0-0.5 -> 1.00). Data limit, not mechanism. Rule for E2-E3: operators trained at depths 0-1, tested at 2.

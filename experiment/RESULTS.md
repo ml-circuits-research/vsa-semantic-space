@@ -606,3 +606,17 @@ inside-operator is not free: argument-scoped negation composes into reporting (0
 to the theme). Hypothesis to test next (E1b, running): sentential negation displaces the whole clause and was only ever seen at depth 0, where
 no 'that' precedes it; seen once inside a reported clause, it should compose one level further, as reporting itself did (6c). (iii) Gates:
 the negation operators join the relation markers; the emergent partition is unchanged in kind.
+### 9b-bis. E1b — negation seen inside reporting at depth 1, tested at depth 2 (UNSEEN) (logs/2026-10-15_1736_v13_negation_8e2b30e.txt; 5 seeds)
+Same as E1 except the negated forms are sampled at depths 0-1 in training (--neg_depth_train 1).
+| axis | E1 (negation seen at depth 0 only) | E1b (seen at depths 0-1) | criterion |
+|---|---|---|---|
+| negated, depth 0: FULL frame | 1.000 | 0.973±0.048 | > 0.95 MET |
+| negation inside reporting, depth 1: scope / FULL | 0.559 / 0.451 (unseen) | 0.979 / 0.979 (seen) | — |
+| negation inside reporting, depth 2 (UNSEEN in both): FULL | 0.527±0.060 | **0.972±0.049** | > 0.9 MET |
+| pair separation cos(aff, neg) | 0.184 | 0.245 (bag 0.723) | gap > 0.5 MET |
+Per form at depth 2 (seed 0): all eight forms, including sentential 'does not V' and 'never V3', scope 1.00 (E1: 0.53 / 0.13). One seed (4) is
+at 0.88-0.91 on the negated axes (one form unstable), the other four at 0.98-1.00. Gates: that, to, never, anything 1.00; by 0.94; does 0.77; '.'
+0.67; who 0.55; not 0.46 (borderline); nobody, verbs ~0.
+Reading: the E1 failure was a DATA limit, not a mechanism limit — exactly the pattern of reporting itself (6c): an operator that displaces a
+whole clause composes one level further than trained once it has been seen inside another operator at least once. Rule to carry into E2-E3:
+train every operator at depths 0-1, test at 2; report the unseen depth as the composition test.
