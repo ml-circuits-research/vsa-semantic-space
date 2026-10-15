@@ -145,3 +145,17 @@ Experiments in order: E1 negation, E2 quantifiers, E3 modality/conditionals, E6 
 pipeline; Spider after E6; capacity after all. Not to do: no tuning to chase the aggregator/transformer; no metric change; no time estimates in docs.
 Note recorded for E1-E4: operators announced AFTER their scope (postposed) fall under the declared limit of causal addressing (RESULTS 6c) and
 will be reported separately as such. For E5, identities must carry an accessible feature (gender) for pronoun cleanup to be possible by construction.
+
+## 2026-10-15 (DGX, night) — round 9: frame + round trip (R1/R2), E1 negation, empirical note, budget gate, ablation
+Ran: run.sh frame_roundtrip.py (3 seeds) -> logs/2026-10-15_1705_frame_roundtrip_a622582.txt ; run.sh v13_negation.py (5 seeds) ->
+     logs/2026-10-15_1709_v13_negation_5b9e933.txt ; transformer budget 4x/10x -> logs/2026-10-15_1652/_1655_v12... ; subset-categories
+     ablation -> logs/2026-10-15_1700_v12_wikisql_baselines_38bc65d.txt ; E1b (negation seen at depths 0-1, test depth 2) launched.
+Result: (9a) frame(S) with estimated depth -> Prolog / SMT: 1.000 on depths 0-3 (3 unseen). (9b) negation as a role: roles, presence, scope,
+  full frame all 1.000 at depth 0 for all 8 forms; separation 0.18 (bag 0.72); negation words become emitters; sentential negation inside
+  reporting (unseen combination) 0.0-0.5 scope — attaches to the theme — while argument-scoped forms compose (0.8-1.0). Budget gate: 10x
+  transformer 0.65 < 0.75, claim stands. Ablation: categories from the subset only, gap unchanged (ours 0.654 / 0.751 vs transformer 0.414 / 0.516).
+Surprise / problem: the first operator-inside-operator failure is specific (sentential scope) and testable (E1b). 'nobody' stays closed:
+  the indefinite under negation lives in the filler. Four runs shared the GPU for an hour (4-8x slowdown): launch sequentially from now on.
+Changed in code: frame.py, frame_roundtrip.py, v13_negation.py (+ --neg_depth_train), v12 (--only, --cluster_on_subset). Docs: EMPIRICAL_NOTE.md
+  (full draft, gate and ablation filled), PAPER_NOTE §6b and §7 (approved tone), RESULTS 8d additions + ROUND 9 (a, b), rule 17, 00_READ_FIRST §4-5.
+Next: E1b result -> then E2 (quantifiers), E3 (modality/conditionals), E6 (verifier with injected errors on WikiSQL).

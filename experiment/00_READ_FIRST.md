@@ -83,7 +83,14 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
   RETRACTED as a contribution (round 8a, 5 seeds): "emergent categories" — categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b. (Both the learned
     displacements and skip-gram on the same sentences cluster the words at 1.000; kept only as a consistency check.) Control B (round 8a): a linear associative map with any rank (8-1024) gets chance on new identities and the
     transformer's signature at the unseen depth; "generative with a fixed operation is necessary" stands against it.
-  WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
+  CERTAIN (round 9, 5 seeds): the state is a frame — frame(S) with the depth estimated from S, Prolog and SMT (z3) round trip at 1.000 on
+    depths 0-3 (3 unseen). NEGATION AS A ROLE (E1): decoded, scope-correct and separated from the affirmed state at 1.000 / 0.18 vs the
+    lexical bag's 0.72, every form, no rule; negation words become emitters like 'that'. NEGATIVE: sentential negation does not compose
+    into reported speech when seen only at depth 0 (scope 0.0-0.5); argument-scoped negation does (0.8-1.0). E1b running.
+  CERTAIN (round 8, WikiSQL, 3 seeds, dev = test): selected column 0.82 vs 0.54 (same-input transformer, 10x budget 0.65) vs 0.50 (BoW+LR)
+    without the table, at every size from 1k; full query 0.37 vs 0.19; aggregator lost (lexical, 0.80 vs 0.89); equivalence separation
+    lexical overall, role-based on hard same-words/different-SQL pairs (-0.15, n = 1,353).
+  WEAK / TO BE VALIDATED: any claim about general text; operators beyond negation (E2-E5).
   NEGATIVE: SICK; v2 alone on new constructions; associative prediction for equivalence.
 
 ## 5. What must be VALIDATED at scale (in order of importance)
@@ -108,6 +115,10 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
      without the table vs 0.494 BoW+LR (criterion met); aggregator 0.813 vs 0.867 BoW+LR (NOT met); separation 0.28 (NOT met); table at
      the input HURTS (0.67). Next: 3 seeds, test split, tuned neural baselines at 1k/5k/56k, aggregator readout. Then Spider.
   8. Consequence signal without a synthetic world: next sentence / multiple captions per image (COCO) / translations (OPUS) with hard negatives.
+  9. [NEW PROGRAMME, judgment 2026-10-15 after 8d: verifier / formalizer] R1 frame(S)+diff everywhere [DONE, 9a]; R2 Prolog/SMT round trip
+     [DONE, 9a]; R3-R4 operators as roles with scope reported separately (rule 17): E1 negation [DONE, 9b: scope 1.00 at depth 0; sentential
+     negation inside reporting fails when unseen there — E1b running], E2 quantifiers, E3 modality/conditionals, E6 verifier on real text
+     (injected errors, precision/recall), E4 coordination, E5 reference, E7 LLM annotation pipeline; Spider after E6; capacity after all.
 
 ## 6. Concrete steps on the DGX (torch)
   Day 1: port (phases as nn.Parameter; torch.polar; cumsum over categories; autograd replaces grad_cos; batch by length);

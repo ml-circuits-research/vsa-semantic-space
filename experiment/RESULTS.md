@@ -573,3 +573,36 @@ per depth, 3 seeds.
 The depth estimate separates cleanly (depth scores e.g. [0.10, 0.04, 0.06, 0.22] for a depth-3 sentence). From now on every evaluation
 reports full-frame accuracy (R1). This is the product skeleton in minimal form: text -> state -> frame -> Prolog / SMT -> answer, no learning
 anywhere after the state.
+
+## 9b. E1 — NEGATION as a role (v13_negation.py; logs/2026-10-15_1709_v13_negation_5b9e933.txt; 5 seeds, D = 1024, 40k sentences, batch 8)
+World: R_neg bound to its scope — sentential (R_neg (x) S), on an argument (R_role (x) R_neg (x) f), negative quantifier (R_role (x) R_neg (x)
+f_someone / f_something). Eight negated formulations (two per scope): 'does not V', 'never V3' (S); 'it is not X who', 'nobody' (A); 'nothing',
+'does not V anything' (B); 'not to C', 'to nobody' (C). Model unchanged (v8 bundle, gates learned, start closed); every operator word is an
+ordinary category. Training: affirmative at depths 0-2 + negated forms at DEPTH 0 only (p = 0.4). Decoding (rule 17): five hypotheses
+{none, S, A, B, C}, argmax of the mean best cosine over the three roles under the keys each hypothesis implies; scope = the hypothesis,
+presence = hypothesis != none. Chance: fillers 1/13, scope 0.20.
+| axis | result (5 seeds) | criterion |
+|---|---|---|
+| affirmative, depth 0: roles | 1.000 | — |
+| negated, depth 0 (seen forms, fresh events): roles | 1.000±0.000 | > 0.95 MET |
+| negated, depth 0: negation PRESENCE | 1.000±0.000 | — |
+| negated, depth 0: SCOPE (which of S/A/B/C) | **1.000±0.000** | > 0.9 MET |
+| negated, depth 0: FULL frame (roles + scope + depth) | **1.000±0.000** | > 0.95 MET |
+| pair separation cos(affirmed, negated), same event | model **0.184±0.027** (gap 0.82) ; bag of identities 0.722 ; world 0.034 | gap > 0.5 MET |
+| affirmative, depth 3 (UNSEEN): roles | 0.993 | (unchanged by adding negation) |
+| negation INSIDE reporting, depth 1 (UNSEEN combination): scope | 0.559±0.065 | > 0.9 NOT met |
+| negation inside reporting, depth 1: FULL frame | 0.451±0.070 | — |
+| negation inside reporting, depth 2: FULL frame | 0.527±0.060 | — |
+Per form at the unseen combination (seed 0, depth 1 / depth 2): argument-scoped forms compose — 'nobody V' 1.00 / 1.00; 'to nobody' 1.00 /
+1.00; 'it is not X who' 0.85 / 0.80; 'nothing' 0.90 / 0.37; 'does not V anything' 0.70 / 0.43 — while SENTENTIAL negation does not: 'does
+not V' 0.20 / 0.53 and 'never V3' 0.00 / 0.13, decoded as scope B (or C) instead of S: inside a reported clause the negation attaches to the
+theme, not to the whole clause. All forms are 1.00 at depth 0.
+Learned gates (mean over seeds): that 1.00, to 1.00, never 1.00, by 0.98, anything 0.95, who 0.88, not 0.87, nothing 0.75, does 0.65, '.' 0.56;
+nobody 0.22, it 0.05, verbs ~0. The negation words become emitters like 'that' — an operator opens a fibre — except 'nobody', which the
+objective treats as an identity ('someone' under negation lives in the filler, not in the structure).
+Reading. (i) "Operator = role" holds for negation on its own at every scope: decoded, separated from the affirmed state by construction
+(0.18 vs the lexical bag's 0.72), with the scope right in 100% of cases and no rule for any word. (ii) The unseen COMBINATION operator-
+inside-operator is not free: argument-scoped negation composes into reporting (0.8-1.0), sentential negation does not (0.0-0.5, attaching
+to the theme). Hypothesis to test next (E1b, running): sentential negation displaces the whole clause and was only ever seen at depth 0, where
+no 'that' precedes it; seen once inside a reported clause, it should compose one level further, as reporting itself did (6c). (iii) Gates:
+the negation operators join the relation markers; the emergent partition is unchanged in kind.
