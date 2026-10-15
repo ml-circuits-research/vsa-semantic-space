@@ -10,15 +10,19 @@ formulari diferite sa converga la aceeasi stare, rol cu rol, iar categoriile sin
 Trei panouri, nu unul:
  (a) pasul uniform: L <- L * m_cat(w); S <- S + L * f_w, cu o propozitie activa si una pasiva desenate ca doua drumuri pe o grila care
      ating aceleasi (adresa, identitate) in alta ordine;
- (b) adresarea amanata: bufferul dinaintea verbului, scris la adresa verbului; si zoom-in-ul la "ca" ca ancora + drum relativ;
+ (b) coduri de adresa REDUNDANTE (path, bigram, chain, pos) in bundle: o tranzitie de categorii neantrenata nu randomizeaza toata adresa
+     (runda 3: 0.60 -> 0.90 pe constructii noi). [RETRAS: "adresarea amanata" (buffer + zoom-in la "ca") din runda 1; infirmata in runda 2.]
  (c) obiectivul: S * T ≈ S_lume, cu T fix, versus memoria asociativa (care NU aliniaza). Acest panou e cheia argumentului.
 Tabelul 1 = rezultatele negative (A, C, D, E2) cu explicatia algebrica a fiecaruia. E neobisnuit, dar e ce da credibilitate:
 arata ca ingredientele nu sunt alese arbitrar, ci fortate.
 
 ## Trei articole posibile, de la cel mai sigur la cel mai ambitios
 1. **Nota de principiu** (workshop neuro-simbolic la NeurIPS/ICLR, sau Neural Computation / Frontiers in Comp. Neurosci.):
-   "Necessary conditions for role emergence in vector-symbolic sequence models". Contributii: (i) imposibilitatea algebrica a deplasarii
-   per cuvant; (ii) asociativ vs generativ; (iii) emergenta categoriilor; (iv) generalizare zero-shot la identitati noi vs transformer mic.
+   "Necessary conditions for role emergence in vector-symbolic sequence models". Contributii: (i) adrese suprapuse + decodare argmax:
+   alinierea rolurilor nu cere egalitate exacta de adrese [RETRAS: "imposibilitatea algebrica a deplasarii per cuvant" — corecta doar pentru
+   egalitate exacta, irelevanta cu decodare argmax; vezi runda 2]; (ii) asociativ vs generativ; (iii) emergenta categoriilor;
+   (iv) portile (cine deschide un cadru) se invata prin cautare pe criteriul predictiei; (v) generalizare zero-shot la identitati noi vs
+   transformer mic.
    Cerinte minime: 5 seed-uri, F comune, lume cu 4-6 cadre si 8+ formulari, controlul word2vec pentru categorii, controlul "memorie
    asociativa cu gat de sticla". Realizabil in 2-3 saptamani pe DGX. Credibilitate: buna, daca pretentiile raman la nivelul sintetic.
 2. **Articol empiric** (ACL/EMNLP findings, sau CoNLL): text->SQL cu stare citibila. Contributii: eficienta datelor (curbe 1k/5k/56k),
@@ -30,8 +34,9 @@ arata ca ingredientele nu sunt alese arbitrar, ci fortate.
 ## Unde e bariera, cinstit
 - Pe text fara lume (SICK) am pierdut fata de sacul de cuvinte. Nu publica nimic pe text general inainte de a avea un set unde echivalenta
   e data de executie/imagine si unde negativele grele (roluri inversate) sunt masurate separat.
-- Declansatoarele (verb -> flush, "ca" -> cadru) sunt puse de mana. Un recenzent le va numi "parsare ascunsa". Raspunsul corect e sa le
-  inveti (README_DGX, exp. 3) sau sa le declari explicit ca prior minimal si sa arati ca sunt doua biti de informatie, nu un parser.
+- [RETRAS dupa runda 2] Declansatoarele (verb -> flush, "ca" -> cadru) puse de mana nu erau necesare: drumul pe categorii rezolva
+  formularile vazute si imbricarea fara ele; portile (cine emite asteptari) se invata prin cautare (gates.py). Ramane de aratat ca se invata
+  si prin gradient, pe >=3 lumi (00_CITESTE_INTAI.md §5.2).
 - Capacitatea: 64 identitati -> 0.66 la D=1024. Standard pentru HDC; se rezolva cu D mare si coduri rare, dar trebuie aratat.
 - Controlul cu transformer e slab (netunat). Pana nu e tunat, formularea permisa e "la acest regim de date, un transformer mic antrenat
   identic nu generalizeaza", nu "transformerele nu pot".

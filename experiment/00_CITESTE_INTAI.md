@@ -60,8 +60,9 @@ RUNDA 3 (v4.py, PRINCIPII_EVALUARE.md)
 
 ## 4. Ce indica experimentele (cu nivelul de incredere)
   SIGUR (3 seed-uri, evaluare corecta): factorizare necesara; obiectiv generativ necesar; roluri aliniate pe 11 formulari x 2 cadre;
-    identitati noi 1.00; imbricare 1.00 fara reguli; redundanta ajuta la constructii noi; portile se pot invata prin cautare.
-  PROBABIL (1-2 seed-uri sau un singur set): categorii emergente pe text real; porti invatate = acelasi set pe alte lumi.
+    identitati noi 1.00; redundanta ajuta la constructii noi.
+  PROBABIL (1-2 seed-uri sau un singur set): imbricare 1.00 fara reguli (nest2: 2 seed-uri drum singur, 1 seed dual); portile se pot
+    invata prin cautare (gates.py: o singura lume); categorii emergente pe text real; porti invatate = acelasi set pe alte lumi.
   SLAB / DE VALIDAT: avantajul fata de transformer (control netunat); WikiSQL 0.49; orice afirmatie despre text general.
   NEGATIV: SICK; v2 singur pe constructii noi; predictia asociativa pentru echivalenta.
 

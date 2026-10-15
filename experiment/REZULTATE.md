@@ -169,6 +169,8 @@ Concluzii:
 - Ipoteza redundantei se CONFIRMA: pe tranzitii nevazute, de la 0.60 (path) / 0.51 (chain) la 0.90 (4 coduri); pe tranzitii vazute, de la 0.31 (chain) la 0.99.
 - Surpriza: codul BIGRAM singur (adresa = categoria precedenta + proprie) e cel mai bun pe formulari noi cu tranzitii vazute (1.00, marja .31):
   rolurile sunt in mare parte LOCALE (prepozitia dinainte decide), iar primul cuvant ramane suprapus si e rezolvat de argmax.
+- Nota: pe formulari noi cu tranzitii VAZUTE, "toate 4" (0.94) e SUB bigram singur (1.00): redundanta ajuta pe tranzitii noi
+  (0.71 -> 0.90) si costa putin pe cele vazute (codurile mai fragile, chain/pos, adauga zgomot acolo unde bigram era deja suficient).
 - Lantul de asteptari (v2) are marja maxima pe vazute dar e cel mai fragil pe nou; nu merita singur, merita in bundle.
 - Toate codurile dau 1.00 pe identitati noi: compozitionalitatea pe identitati e o proprietate a familiei, nu a unui cod.
 - Bariera ramane pe tranzitii/categorii cu adevarat noi (0.90, nu 1.00): acolo nu exista informatie in date; partea recuperata vine din
