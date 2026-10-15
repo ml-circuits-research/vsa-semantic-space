@@ -1,0 +1,82 @@
+
+== HAND gates (round 2 prior): emitters = [',', '.', 'COP', 'accepts', 'borrows', 'buys', 'by', 'claims', 'from', 'gets', 'given', 'gives', 'it', 'lends', 'lent', 'offered', 'offers', 'receives', 'says', 'sees', 'sells', 'sends', 'sent', 'shown', 'shows', 'sold', 'that', 'to', 'what', 'who']
+  p0 gives o0 to p1 .
+     p0      <- L[gives:P]
+     gives   <- root
+     o0      <- gives:to + L[to:O]
+     to      <- gives:to
+     p1      <- gives:to + to:. + L[.:P]
+     .       <- gives:to + to:.
+  p0 says that p1 gives o0 to p2 .
+     p0      <- L[says:P]
+     says    <- root
+     that    <- says:that
+     p1      <- says:that + that:gives + L[gives:P]
+     gives   <- says:that + that:gives
+     o0      <- says:that + that:gives + gives:to + L[to:O]
+     to      <- says:that + that:gives + gives:to
+     p2      <- says:that + that:gives + gives:to + to:. + L[.:P]
+     .       <- says:that + that:gives + gives:to + to:.
+  p0 says that p1 claims that p2 gives o0 to p3 .
+     p0      <- L[says:P]
+     says    <- root
+     that    <- says:that
+     p1      <- says:that + that:claims + L[claims:P]
+     claims  <- says:that + that:claims
+     that    <- says:that + that:claims + claims:that
+     p2      <- says:that + that:claims + claims:that + that:gives + L[gives:P]
+     gives   <- says:that + that:claims + claims:that + that:gives
+     o0      <- says:that + that:claims + claims:that + that:gives + gives:to + L[to:O]
+     to      <- says:that + that:claims + claims:that + that:gives + gives:to
+     p3      <- says:that + that:claims + claims:that + that:gives + gives:to + to:. + L[.:P]
+     .       <- says:that + that:claims + claims:that + that:gives + gives:to + to:.
+  o0 is given to p1 by p0 .
+     o0      <- L[COP:O]
+     is      <- root
+     given   <- COP:given
+     to      <- COP:given + given:to
+     p1      <- COP:given + given:to + to:by + L[by:P]
+     by      <- COP:given + given:to + to:by
+     p0      <- COP:given + given:to + to:by + by:. + L[.:P]
+     .       <- COP:given + given:to + to:by + by:.
+
+== LEARNED gates (round 7c, start closed): emitters = ['.', 'by', 'that', 'to']
+  p0 gives o0 to p1 .
+     p0      <- L[to:P]
+     gives   <- L[to:gives]
+     o0      <- L[to:O]
+     to      <- root
+     p1      <- to:. + L[.:P]
+     .       <- to:.
+  p0 says that p1 gives o0 to p2 .
+     p0      <- L[that:P]
+     says    <- L[that:says]
+     that    <- root
+     p1      <- that:to + L[to:P]
+     gives   <- that:to + L[to:gives]
+     o0      <- that:to + L[to:O]
+     to      <- that:to
+     p2      <- that:to + to:. + L[.:P]
+     .       <- that:to + to:.
+  p0 says that p1 claims that p2 gives o0 to p3 .
+     p0      <- L[that:P]
+     says    <- L[that:says]
+     that    <- root
+     p1      <- that:that + L[that:P]
+     claims  <- that:that + L[that:claims]
+     that    <- that:that
+     p2      <- that:that + that:to + L[to:P]
+     gives   <- that:that + that:to + L[to:gives]
+     o0      <- that:that + that:to + L[to:O]
+     to      <- that:that + that:to
+     p3      <- that:that + that:to + to:. + L[.:P]
+     .       <- that:that + that:to + to:.
+  o0 is given to p1 by p0 .
+     o0      <- L[to:O]
+     is      <- L[to:COP]
+     given   <- L[to:given]
+     to      <- root
+     p1      <- to:by + L[by:P]
+     by      <- to:by
+     p0      <- to:by + by:. + L[.:P]
+     .       <- to:by + by:.

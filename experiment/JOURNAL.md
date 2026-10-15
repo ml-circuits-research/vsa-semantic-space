@@ -94,3 +94,13 @@ Next (proposals for judgment): (1) word2vec control for categories and the bottl
   (2) capacity (D 4096-16384, 64-1000 identities) on the reference world; (3) then WikiSQL with the full model + BoW+LR baseline (§5.7).
   Writing: the principle note (POSITIONING article 1) now has its two pillars — composition to an unseen depth (6c) and emergent gates (7c) —
   plus the controls (7b) and the declared limit (right-announced structure).
+
+## 2026-10-15 (DGX) — decisions after the round-7 judgment
+(1) The partition identities / relation markers / action words is the reference; the LEARNED gates (start closed: that, to, by, '.') replace
+the hand set in all subsequent runs; the hand set stays as a table row (the ablation showing the linguistic prior was not optimal).
+(2) Order: cheap controls first (word2vec for categories, bottleneck associative memory) — without them "emergent" is attackable; then
+WikiSQL (decides whether there is an empirical paper) before capacity (a curve that changes no decision); vectorize the soft chain with WikiSQL.
+(3) Start the principle note now, in parallel: two pillars (composition to an unseen depth; emergent gates), a control failing on exactly
+those axes, a declared limit with demonstration (postposed structure), the thread of the two retractions; with the caveats (own world,
+small control, two reporting verbs). In the gates section: a concrete TRACE — the same sentence with hand gates and with learned gates,
+addresses word by word.
