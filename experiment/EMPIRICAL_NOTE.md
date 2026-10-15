@@ -34,7 +34,7 @@ trained on the 1k / 5k training questions ONLY (both models), ours gives 0.654 /
 whole-corpus categories) and the transformer 0.414 / 0.516 (vs 0.415 / 0.510): the gap does not depend on where the categories come from.
 
 ## 3. Results (RESULTS 8d; logs/2026-10-15_1628_v12_wikisql_baselines_ed24ce4.txt)
-Figure 1 (to draw): selected-column accuracy vs training size, three curves. Table 1 (dev; test at 56k in brackets; std <= 0.005):
+Figure 1: figures/fig1_wikisql_curve.png — selected-column accuracy (dev) vs training size, three curves with seed bars (ours 0.63 -> 0.76 -> 0.82; transformer 0.42 -> 0.49 -> 0.54; BoW+LR 0.48 -> 0.50 -> 0.50; chance 0.17). Table 1 (dev; test at 56k in brackets; std <= 0.005):
 | n train | model | selected column | aggregator | condition-1 column | FULL query |
 |---|---|---|---|---|---|
 | 1k | ours | **0.632** | 0.766 | **0.387** | **0.164** |

@@ -161,3 +161,10 @@ Changed in code: frame.py, frame_roundtrip.py, v13_negation.py (+ --neg_depth_tr
 Next: E1b result -> then E2 (quantifiers), E3 (modality/conditionals), E6 (verifier with injected errors on WikiSQL).
 E1b (same night): negation seen at depths 0-1 -> depth 2 unseen FULL 0.972±0.049, all 8 forms at scope 1.00 (seed 0); sentential negation
 composes once seen inside a clause (E1: 0.0-0.5 -> 1.00). Data limit, not mechanism. Rule for E2-E3: operators trained at depths 0-1, tested at 2.
+
+## 2026-10-15 (DGX, night) — decisions after the round-9 judgment
+Working rule accepted with an explicit reserve (written in RESULTS 9b-bis): operators compose after one exposure inside each other; E2-E3
+trained at depths 0-1, tested at 2. EMPIRICAL_NOTE to be read by the reviewing session; figure 1 = PNG from the log, three curves with seed
+bars. Launches sequential from now on (times go into reports). E2 addition: scope ambiguity ("every child reads a book") reported separately;
+the model is NOT trained on ambiguous sentences — the world holds both hypotheses; the test is whether the state decodes both with near-equal
+strength on ambiguous sentences and one on disambiguated ones ("knows when it does not know", by composition).

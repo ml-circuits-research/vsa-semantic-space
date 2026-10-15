@@ -620,3 +620,7 @@ at 0.88-0.91 on the negated axes (one form unstable), the other four at 0.98-1.0
 Reading: the E1 failure was a DATA limit, not a mechanism limit — exactly the pattern of reporting itself (6c): an operator that displaces a
 whole clause composes one level further than trained once it has been seen inside another operator at least once. Rule to carry into E2-E3:
 train every operator at depths 0-1, test at 2; report the unseen depth as the composition test.
+Reserve (judgment 2026-10-15, written here on purpose): the rule "operators compose one level further after one exposure inside each other"
+is EMPIRICAL, observed on two operators (reporting, 6c; negation, 9b-bis). It becomes a claim only if it also holds on the next two
+(quantifiers, modality/conditionals). If one of them does not compose after one exposure, that is a result of equal weight and is not
+"repaired" with more data without saying so.
