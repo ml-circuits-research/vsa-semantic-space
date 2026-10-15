@@ -1,4 +1,4 @@
-# Current status (rewritten at every judgment point; last: 2026-10-15 night, round 9 incl. E1b)
+# Current status (rewritten at every judgment point; last: 2026-10-15 night, round 9 incl. E1b and E2 first run)
 
 ## Deliverables requested in the post-8d judgment (section F) — status
 - EMPIRICAL_NOTE.md: full draft; curve as figure 1 (to draw), same-input table, hard-pair table with n, budget check (gate PASSED: 10x
@@ -22,6 +22,22 @@ E1b (done): negation seen at depths 0-1, tested at depth 2 (UNSEEN): FULL frame 
 sentential negation included (E1: 0.0-0.5 -> 1.00). A DATA limit, not a mechanism limit — the same pattern as reporting in 6c: an operator
 composes one level further than trained once it has been seen inside another operator once.
 
+## E2 — quantifiers as roles, first run (5 seeds; RESULTS 9c)
+PROTOCOL ERROR found by the diagnostic, stated first: training had quantifier sentences at depths 0-1 and NO sentence at depth 2 at all
+(E1b had affirmative sentences at 0-2). The chain parameter 'that:that' only exists at depth >= 2, so at depth 2 everything collapses (nouns
+0.31, determiners 0.29) — not the quantifiers. The depth-2 column is void; E2 is being re-run with the E1b protocol (affirmative 0-2,
+operator 0-1). The composition rule is NOT yet tested for quantifiers; the reserve stands untouched.
+What the run establishes at depths 0-1:
+| axis | result | criterion |
+|---|---|---|
+| nouns / determiners (depth 0) | 1.000 / 0.973 | MET |
+| scope with ONE quantifier (depth 0 / 1) | 0.950 / 0.967 | > 0.9 MET |
+| scope with TWO quantifiers, marker 'each' / 'a certain' (depth 0 / 1) | **0.811 / 0.744** | > 0.9 NOT met — real weakness |
+| ambiguous 'every ... a ...' (never trained): both hypotheses reported | **0.46-0.50**; cos to the superposed world 0.86; forced choice surface-first 0.32 | reported; partial "knows it does not know", by composition |
+Learned gates: that, '.', to open; recipient verbs (sees, buys, receives, ...) open, active verbs closed; determiners closed.
+Decision taken (rule 10: evaluation -> data -> optimization -> architecture): this is a data/protocol error at the evaluation-data level,
+fixed in the data; nothing in the model is changed.
+
 ## Conclusions relative to the new programme
 1. "Operator = role" holds for negation on its own, every scope, no rule, scope right 100%: Prolog/Z3 is a plan, not a promise, for
    single operators AND for negation inside reporting after one exposure (E1b): operators compose one level further than trained, as
@@ -30,8 +46,13 @@ composes one level further than trained once it has been seen inside another ope
 3. The short empirical paper is complete as a draft with its gate passed and its condition ablated.
 
 ## Questions for judgment
-1. E1b resolved the E1 failure (0.97 at the unseen depth once negation is seen inside a clause). Proposal: accept "operators compose after one
-   exposure inside each other" as the working rule, train E2-E3 operators at depths 0-1 and test at 2, and move to E2 (quantifiers) now.
+1. E2 two-quantifier scope at 0.81 / 0.74 (one quantifier 0.95): report as a limit of the scope role as defined (one R_sc term per wide
+   argument), or allow one world-side change — a per-quantifier scope term R_sc (x) f_det (x) f_role — before E3? My preference: report as is
+   now, re-run E2 with the corrected protocol, and decide after the depth-2 result.
+2. Ambiguity: "both reported" at ~0.5 by composition, never trained. Is that the number to keep (honest, partial), or do we also report the
+   forced-choice distribution (surface-first 0.32) as the default the state would give a reasoner?
+3. Figure 1 is drawn (figures/fig1_wikisql_curve.png); EMPIRICAL_NOTE references it. E3 (modality/conditionals, with the right-announced 'Q if P'
+   form reported separately) is written and waits for the GPU (sequential launches).
 2. EMPIRICAL_NOTE: ready for a read-through? Figure 1 (the curve) still to draw — as a PNG from the log, or a table only for the findings format?
 3. Process: four runs shared the GPU (4-8x slower each). Sequential launches from now on unless told otherwise.
 

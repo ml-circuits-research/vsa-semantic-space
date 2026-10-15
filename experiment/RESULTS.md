@@ -624,3 +624,33 @@ Reserve (judgment 2026-10-15, written here on purpose): the rule "operators comp
 is EMPIRICAL, observed on two operators (reporting, 6c; negation, 9b-bis). It becomes a claim only if it also holds on the next two
 (quantifiers, modality/conditionals). If one of them does not compose after one exposure, that is a result of equal weight and is not
 "repaired" with more data without saying so.
+
+## 9c. E2 — QUANTIFIERS as roles, scope ambiguity as a superposition (v14_quantifiers.py; logs/2026-10-15_1815_v14_quantifiers_4ec4ecc.txt; 5 seeds)
+World: argument slot R_role (x) (f_noun + R_Q (x) f_det); scope role R_sc (x) f_role for the wide-scope argument; 'each' / 'a certain' force
+wide scope; two unmarked quantifiers ('every ... a ...') => the world holds BOTH hypotheses (R_sc (x) (f_r1 + f_r2) / sqrt 2). Training on
+UNAMBIGUOUS sentences only (one quantifier, or two with a marker). PROTOCOL ERROR, found by the diagnostic (diag_v14.py) and stated first:
+training contained quantifier sentences at depths 0-1 and NO sentence of any kind at depth 2 (E1b had affirmative sentences at 0-2); the chain
+parameter 'that:that' exists only at depth >= 2, so at depth 2 EVERYTHING collapses (nouns 0.31, determiners 0.29), not the quantifiers in
+particular. The depth-2 column therefore does NOT test the composition rule for quantifiers; E2 is re-run with the E1b protocol (affirmative
+0-2, operator 0-1). The reserve of 9b-bis is untouched by this run.
+What this run does establish (depths 0-1, seen):
+| axis | result (5 seeds) | criterion |
+|---|---|---|
+| nouns / determiners, depth 0 | 1.000 / 0.973±0.019 | > 0.95 MET |
+| SCOPE, unambiguous, depth 0 — all | 0.862±0.026 | > 0.9 NOT met |
+| SCOPE, one quantifier (diag, seed 0, depth 0 / 1) | 0.950 / 0.967 | MET |
+| SCOPE, two quantifiers with a marker (diag, depth 0 / 1) | 0.811 / 0.744 | NOT met |
+| FULL frame, unambiguous, depth 0 / 1 | 0.798±0.074 / 0.724±0.074 | — |
+| new nouns (6 unseen per class), depth 0, FULL | 0.800±0.081 | — |
+| AMBIGUOUS (never trained): "both hypotheses reported" | 0.458±0.046 (diag seed 0: 0.500) | reported, no criterion |
+| ambiguous: cos(S, superposed world state) | 0.858±0.011 | — |
+| ambiguous: forced choice = surface-first | 0.322±0.077 | — |
+Scope-score profile (diag): true wide role 0.36 vs other roles 0.09 (one quantifier); 0.32 vs 0.08 (two marked); ambiguous: the two
+quantified roles 0.22 vs the third 0.03 — the superposition is there, but with two quantifiers the wrong one wins in ~20% of cases. Per
+determiner (one quantifier): every 0.95, each 1.00, some 0.87, a 1.00, a certain 1.00. Per pattern: 0.80 ('C VR B from A') to 0.975.
+Learned gates: that 1.00, '.' 0.87, to 0.80, and — new — the RECIPIENT verbs (sees, buys, accepts, borrows, receives, gets 0.54-0.63) open,
+while the active verbs stay closed; determiners (every, each, some, a, the) closed, 'from' 0.40, 'by' 0.32.
+Reading: (i) quantifier = role on the argument holds for nouns and determiners (1.00 / 0.97) and for scope with ONE quantifier (0.95);
+(ii) with TWO quantifiers the scope decision is the weak point (0.81), a real result to keep; (iii) "knows when it does not know": on never-seen
+ambiguous sentences the state reports both scope hypotheses in 46-50% of cases and sits at 0.86 cosine from the superposed world state —
+partial, by composition, with no training on ambiguity; (iv) the depth-2 result is void (protocol), re-run pending.

@@ -168,3 +168,10 @@ trained at depths 0-1, tested at 2. EMPIRICAL_NOTE to be read by the reviewing s
 bars. Launches sequential from now on (times go into reports). E2 addition: scope ambiguity ("every child reads a book") reported separately;
 the model is NOT trained on ambiguous sentences — the world holds both hypotheses; the test is whether the state decodes both with near-equal
 strength on ambiguous sentences and one on disambiguated ones ("knows when it does not know", by composition).
+
+## 2026-10-15 (DGX, night) — E2 quantifiers: protocol error found by the diagnostic; re-run with the E1b protocol
+Ran: run.sh v14_quantifiers.py (5 seeds) -> logs/2026-10-15_1815_v14_quantifiers_4ec4ecc.txt ; diag_v14.py (seed 0, inline).
+Result: nouns 1.00, determiners 0.97, scope 0.95 with one quantifier / 0.81 with two marked (NOT met), ambiguous "both" 0.46-0.50 by composition.
+Depth 2: everything collapses (nouns 0.31) because NO depth-2 sentence of any kind was in training ('that:that' untrained) — a protocol error,
+not a quantifier result; the composition rule is not tested by this run. Fix: affirmative sentences at depths 0-2 in training (as in E1b).
+Figure 1 drawn (figures/fig1_wikisql_curve.png); E3 script written (v15_modality.py), not yet run (sequential launches).
