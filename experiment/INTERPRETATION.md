@@ -36,8 +36,7 @@ between predictions for questions from the same table with the same (sel, agg, c
    >0.8 with another learning rule.
 2. Generative prediction (fixed operation) produces equivalence, associative does not (C,D vs F,G). Brought down by: an associative memory with a
    bottleneck (limited capacity) that aligns the states equally well. (A useful experiment to do, actually.)
-3. Categories emerge (I: exact clusters; SICK: man/person/woman). Brought down by: equally clean clusters obtained from simple co-occurrence
-   (word2vec on the same corpus). Do this control; if word2vec gives them just as well, the emergence is not the architecture's merit.
+3. The gates emerge (7c: identities closed, relation markers open, verbs closed, identical in 5 seeds; 8b: the same partition on real WikiSQL questions). [Former point 3, 'categories emerge', brought down in 8a: categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.]
 
 ## Known traps in the figures here
 - Single seed everywhere. The variation between seeds was NOT measured; on synthetic expect +-0.05, on WikiSQL +-0.02. Run 5 seeds.

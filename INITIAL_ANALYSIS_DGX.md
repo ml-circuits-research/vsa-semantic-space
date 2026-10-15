@@ -1,5 +1,7 @@
 # Analysis of `experiment/` — what it is, what is established, what is unconfirmed, discrepancies
 
+[Note, 2026-10-15 evening: 'emergent categories' was retracted as a contribution in round 8a — categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b. See experiment/RESULTS.md 8a.]
+
 ## What the project is
 
 Starting hypothesis: understanding a sentence means traversing a path in a space, and two sentences with the same

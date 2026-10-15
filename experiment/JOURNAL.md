@@ -119,3 +119,7 @@ Changed in code: v10_controls.py, v11_wikisql.py, trace_gates.py. Docs: RESULTS 
   POSITIONING contributions updated; 00_READ_FIRST §4 (retraction), §5.7 started; current_status rewritten.
 Next (for judgment): WikiSQL 3 seeds + test split + tuned neural baselines (transformer, BERT-small) at 1k/5k/56k + an aggregator readout;
   write the empirical paper outline only if the advantage survives the tuned baselines. Principle note: tighten prose, add figure 1.
+
+## 2026-10-15 (DGX) — propagation of the 8a retraction
+Propagated the 'emergent categories' retraction to INTERPRETATION (point 3 -> gates), 00_READ_FIRST (§3 I, §4, §5.3-5.4), POSITIONING (claim sentence,
+contributions, controls), INITIAL_ANALYSIS_DGX, README_RUN, README_DGX, current_status; rule 16 added to EVALUATION_PRINCIPLES. Wording everywhere: categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.

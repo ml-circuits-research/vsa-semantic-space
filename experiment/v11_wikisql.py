@@ -87,13 +87,14 @@ def pad(seqs, device, fill=0):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--epochs", type=int, default=3); ap.add_argument("--D", type=int, default=512); ap.add_argument("--batch", type=int, default=32)
-    ap.add_argument("--seeds", type=int, default=1); ap.add_argument("--inputs", default="q,qh"); ap.add_argument("--n_train", type=int, default=56355); ap.add_argument("--n_dev", type=int, default=8421)
+    ap.add_argument("--seeds", type=int, default=3); ap.add_argument("--inputs", default="q,qh"); ap.add_argument("--n_train", type=int, default=56355); ap.add_argument("--n_dev", type=int, default=8421)
     ap.add_argument("--k_clusters", type=int, default=48); ap.add_argument("--n_freq", type=int, default=40); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda")
-    ap.add_argument("--max_header", type=int, default=24)
+    ap.add_argument("--max_header", type=int, default=24); ap.add_argument("--split", default="dev", help="dev | test | dev,test")
     a = ap.parse_args(); dev_ = a.device
-    train, ttabs = load("train"); dev, dtabs = load("dev"); train = train[:a.n_train]; dev = dev[:a.n_dev]
+    train, ttabs = load("train"); splits = {sp: load(sp) for sp in a.split.split(",")}; train = train[:a.n_train]
+    dev, dtabs = splits[a.split.split(",")[0]]; dev = dev[:a.n_dev]   # "dev" below = the first evaluation split; others evaluated at the end of training
     vocab = {}; vid = lambda w: vocab.setdefault(w, len(vocab))
-    for rows, tabs in ((train, ttabs), (dev, dtabs)):
+    for rows, tabs in [(train, ttabs)] + [(r, t) for r, t in splits.values()]:
         for r in rows:
             for w in tok(r["question"]): vid(w)
             for h in tabs[r["table_id"]]:
@@ -164,10 +165,11 @@ if __name__ == "__main__":
         perm = torch.randperm(len(Xs), device=dev_)
         for i in range(0, len(Xs), 1024): sl = perm[i:i+1024]; loss = torch.nn.functional.binary_cross_entropy_with_logits(Ws(Xs[sl]).squeeze(1), ys[sl]); opt.zero_grad(); loss.backward(); opt.step()
     acc_sel_lr = np.mean([int(Ws(col_feats(r, dtabs).to(dev_)).squeeze(1).argmax()) == r["sql"]["sel"] for r in dev])
-    print(f"BASELINE BoW + logistic regression: selected column {acc_sel_lr:.3f}  aggregator {acc_agg_lr:.3f}\n")
+    both = np.mean([(int(Ws(col_feats(r, dtabs).to(dev_)).squeeze(1).argmax()) == r["sql"]["sel"]) and (int(Wa(hb(r).to(dev_).unsqueeze(0)).argmax()) == r["sql"]["agg"]) for r in dev])
+    print(f"BASELINE BoW + logistic regression: selected column {acc_sel_lr:.3f}  aggregator {acc_agg_lr:.3f}  sel+agg jointly {both:.3f} (no condition prediction in this baseline)\n")
     # ---- the model
-    def evaluate(m, cats_fn, mode, name):
-        m_eval = []; sel_ok = agg_ok = c1_ok = 0; n_c1 = 0; preds = []
+    def evaluate(m, cats_fn, mode, name, dev=dev, dtabs=dtabs, tgt_dev=tgt_dev, hdr_cols=hdr_cols):
+        m_eval = []; sel_ok = agg_ok = c1_ok = full_ok = 0; n_c1 = 0; preds = []
         for i in range(0, len(dev), 256):
             rows = dev[i:i+256]; seqs = [seq(r, dtabs, mode) for r in rows]; ids, mask = pad(seqs, dev_); cats = torch.tensor(cat_of)[ids.cpu()].to(dev_)
             with torch.no_grad(): S = m.states(world.F, cats, ids, mask)
@@ -177,9 +179,11 @@ if __name__ == "__main__":
             cb = torch.stack([world.bundle(c) for c in cols]); Sn = S
             sel = int(cosb((Sn * torch.conj(world.R["SEL"])).unsqueeze(0).expand(len(cols), -1), cb).argmax())
             agg = int(cosb((Sn * torch.conj(world.R["AGG"])).unsqueeze(0).expand(6, -1), world.F[torch.tensor(world.AGG, device=dev_)]).argmax())
-            sel_ok += sel == r["sql"]["sel"]; agg_ok += agg == r["sql"]["agg"]
+            sel_ok += sel == r["sql"]["sel"]; agg_ok += agg == r["sql"]["agg"]; ok_c = True
             if r["sql"]["conds"]:
                 c1 = int(cosb((Sn * torch.conj(world.R["COND"][0] * world.R["COL"])).unsqueeze(0).expand(len(cols), -1), cb).argmax()); c1_ok += c1 == r["sql"]["conds"][0][0]; n_c1 += 1
+                ok_c = all(int(cosb((Sn * torch.conj(world.R["COND"][k] * world.R["COL"])).unsqueeze(0).expand(len(cols), -1), cb).argmax()) == c for k, (c, o, v) in enumerate(r["sql"]["conds"][:4]))
+            full_ok += (sel == r["sql"]["sel"]) and (agg == r["sql"]["agg"]) and ok_c
         # equivalence pairs on the same table
         bytab = collections.defaultdict(list)
         for i, r in enumerate(dev): bytab[r["table_id"]].append(i)
@@ -194,7 +198,7 @@ if __name__ == "__main__":
                     else:
                         diff.append(c)
                         if ra["sql"]["sel"] == rb["sql"]["sel"]: hard.append(c)
-        n = len(dev); print(f"  {name:44s} sel {sel_ok/n:.3f}  agg {agg_ok/n:.3f}  cond1-col {c1_ok/max(n_c1,1):.3f} | cos(S, S_sql) {cs.mean():.3f} | same-table pairs: same skeleton {np.mean(same):.3f} (n={len(same)}), different {np.mean(diff):.3f} (n={len(diff)}), HARD (same sel) {np.mean(hard):.3f} (n={len(hard)}) | separation {np.mean(same)-np.mean(diff):.3f}", flush=True)
+        n = len(dev); print(f"  {name:44s} sel {sel_ok/n:.3f}  agg {agg_ok/n:.3f}  cond1-col {c1_ok/max(n_c1,1):.3f}  FULL (sel+agg+all cond cols) {full_ok/n:.3f} | cos(S, S_sql) {cs.mean():.3f} | same-table pairs: same skeleton {np.mean(same):.3f} (n={len(same)}), different {np.mean(diff):.3f} (n={len(diff)}), HARD (same sel) {np.mean(hard):.3f} (n={len(hard)}) | separation {np.mean(same)-np.mean(diff):.3f}", flush=True)
     for mode in a.inputs.split(","):
         for seed in range(a.seeds):
             m = RealModel(K, a.D, dev_, seed); opt = torch.optim.Adam(m.params, lr=a.lr)
@@ -208,6 +212,9 @@ if __name__ == "__main__":
                     opt.zero_grad(); loss.backward(); opt.step()
                 print(f"  [{mode} seed {seed}] epoch {ep} done ({time.time()-t0:.0f}s), last loss {-loss.item():.3f}", flush=True)
                 evaluate(m, None, mode, f"model {mode} seed {seed} epoch {ep}")
+            for sp, (rows, tabs) in splits.items():
+                if sp == a.split.split(",")[0]: continue
+                hc = [hid(tabs, r["table_id"]) for r in rows]; evaluate(m, None, mode, f"model {mode} seed {seed} FINAL on {sp} ({len(rows)})", dev=rows, dtabs=tabs, tgt_dev=targets(rows, tabs), hdr_cols=hc)
             gts = torch.sigmoid(m.logits).detach().cpu().numpy(); openc = [(singles[i - a.k_clusters] if i >= a.k_clusters else f"cluster{i}") for i in np.argsort(-gts)[:16]]
             print(f"  learned gates ({mode}): most open {[(c, round(float(gts[np.argsort(-gts)[j]]),2)) for j, c in enumerate(openc)]}")
     print("\nchecklist: [x] world addresses [x] fixed identities [x] chance + majority printed [x] BoW+LR baseline [x] hard pairs reported separately [ ] >=3 seeds (see --seeds) [x] no test calibration")

@@ -32,3 +32,5 @@ Added on the DGX (2026-10-15, rounds 4-5):
     the new role is at chance by construction (it was never a target); mixed with the other roles it hides what generalizes and what does not.
 15. **A bundle of codes is interpreted only after the breakdown per formulation x role** (diag_v5.py): the mean over formulations showed 0.84 vs
     0.998 without saying that it is ONE role in ONE formulation, with a precise cause (pos: false position regularity). The mean hides the mechanism.
+16. **A retracted claim is searched for and corrected in ALL documents in the same commit as the retraction** (grep the key words;
+    the round-8a retraction of 'emergent categories' had to be propagated to seven files a commit later).

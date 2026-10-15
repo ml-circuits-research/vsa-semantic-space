@@ -24,7 +24,7 @@ Batch: group the sentences by length (or pad + mask). D=4096-16384 fits easily i
 - Reformulation markers from textbooks/Wikipedia ("adica", "cu alte cuvinte", "i.e."): own extraction, large volume, large noise
 
 
-## SUPERSEDED (plan from after round 1; kept as history, not to be followed — see 00_READ_FIRST.md §5-6)
+## SUPERSEDED (plan from after round 1; kept as history, not to be followed — see 00_READ_FIRST.md §5-6) Note: every mention of 'discovered / emergent categories' below is retracted as a contribution (round 8a): categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.
 > ## What is in the zip
 > - camp.py, k.py: the complete synthetic model (uniform step, deferred addressing, zoom-in, generative learning) + evaluation on roles
 > - control_transformer.py: the control (numpy transformer) on the same task

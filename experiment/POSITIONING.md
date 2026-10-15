@@ -4,7 +4,7 @@
 Proposed name: "Path-Integrated Semantic State" (PISS is unfortunate; alternatively "Displacement Semantics" or "Role-Emergent VSA" / REVSA).
 Sentence: *A word is a pair (fixed identity, learned displacement per category); the state of a sentence is the bundle of the identities
 bound to the locations reached by integrating the displacements; training it to predict generatively, through a fixed operation, the state of the consequence makes
-different formulations converge to the same state, role by role, and syntactic categories emerge without supervision.*
+different formulations converge to the same state, role by role, the learned displacements compose one nesting level further than trained, and the gates (who opens a frame) emerge without supervision.* [The former ending 'syntactic categories emerge without supervision' was retracted in round 8a: categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.]
 
 ## How the architecture is presented (figure 1)
 Three panels, not one:
@@ -45,7 +45,7 @@ it shows that the ingredients are not chosen arbitrarily, but forced.
 
 ## Which comparisons are done / planned
 Done: small transformer (numpy, 854k params, gradient-check) on synthetic; bag of words and Jaccard on SICK; bag of words and position code
-on WikiSQL. Planned (README_DGX): BoW+LR, tuned transformer, BERT-small, word2vec for categories, associative memory with a bottleneck,
+on WikiSQL. Done since (rounds 7-8): BoW+LR (WikiSQL), small tuned transformer (7b), word2vec for categories (8a, brought 'emergent categories' down), associative memory with a bottleneck (8a). Still planned: BERT-small, tuned baselines at 1k/5k/56k,
 data curves, 5 seeds. A simple MLP (bundle -> MLP -> state) is worth adding as the "no order, with capacity" baseline.
 
 ## What credibility should NOT rest on

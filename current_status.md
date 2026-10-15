@@ -7,7 +7,7 @@ started (experiment/PAPER_NOTE.md: two pillars, control, declared limit, trace h
 ## Round 8 results (full tables in experiment/RESULTS.md ROUND 8)
 8a. Controls (5 seeds, reference world):
     - word2vec for categories: learned displacements 1.000 purity/ARI/NN — and skip-gram on the same sentences ALSO 1.000.
-      => "emergent categories" RETRACTED as a contribution (kept as a consistency check). Categories can honestly come from distribution.
+      => "emergent categories" RETRACTED as a contribution: categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.
     - bottleneck associative map (S = U V x on an order-aware input, rank 8..1024): new ids ~0.24 (chance 0.17), depth 3 unseen 0.25-0.39
       with the transformer's signature (known speakers perfect, inner roles chance); rank 128 = rank 1024 = 0.74 on seen.
       => capacity is not what is missing; "generative with a fixed operation is necessary" stands.

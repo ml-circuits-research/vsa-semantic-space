@@ -43,7 +43,7 @@ ROUND 1 (sim_deplasari.py, f.py, camp.py, k.py, control_transformer.py, mlp_cont
   - "Algebraic impossibility of per-word displacement": correct argument for EXACT equality of addresses, irrelevant with argmax decoding.
   - H: new identities zero-shot 0.94: CONFIRMED (1.00 in rounds 2-3), but it is a property of the construction (the identity does not enter the parameters)
     and presupposes that the category is known.
-  - I: categories discovered unsupervised by clustering the displacements: exact clusters. CONFIRMED on synthetic; on real text (SICK) it gives
+  - I: [RETRACTED as a contribution in round 8a — categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b] categories discovered unsupervised by clustering the displacements: exact clusters. CONFIRMED on synthetic; on real text (SICK) it gives
     clean classes (man/person/woman; boy/kid/child). The word2vec control is missing.
   - Transformer control (854k params, untuned) and bag-of-words MLP: both 0.25 on new identities (chance) vs VSA 1.00. Valid only as
     "at this data regime"; the transformer was not tuned.
@@ -80,9 +80,8 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
     redundant as emitters: the emergent partition is identities / relation markers / action words. Control (round 7b): a small tuned
     transformer on the same task, identities and objective gets 0.22 on new identities (chance 0.17) and 0.39 at the unseen depth
     (inner roles at chance) — "at this data regime", as in round 1.
-  RETRACTED as a contribution (round 8a, 5 seeds): "emergent categories" — the learned displacements do cluster into the true categories
-    (1.000), but so does skip-gram on the same sentences (1.000): categories are trivially distributional in this world. Kept as a
-    consistency check. Control B (round 8a): a linear associative map with any rank (8-1024) gets chance on new identities and the
+  RETRACTED as a contribution (round 8a, 5 seeds): "emergent categories" — categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b. (Both the learned
+    displacements and skip-gram on the same sentences cluster the words at 1.000; kept only as a consistency check.) Control B (round 8a): a linear associative map with any rank (8-1024) gets chance on new identities and the
     transformer's signature at the unseen depth; "generative with a fixed operation is necessary" stands against it.
   WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
   NEGATIVE: SICK; v2 alone on new constructions; associative prediction for equivalence.
@@ -101,8 +100,8 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
      verbs CLOSED (criterion as written not met — the hand/search set was a prior, the gradient's set is better on every axis).
      "Everything emerges from a single objective" is supported for the gating structure; the partition is identities / relation markers /
      action words. Transformer control (v9_transformer.py) done: fails on new identities and unseen depth at this regime.
-  3. The word2vec control for categories (same data): if it gives equally clean clusters, the emergence of categories is not the architecture's merit.
-  4. Control "associative memory with a bottleneck": if it aligns equally well, "generative necessary" narrows to "limited capacity necessary".
+  3. [DONE, round 8a] The word2vec control for categories: equally clean clusters (1.000 vs 1.000) => categories are recoverable from distribution (skip-gram gives them equally well); the model CONSUMES them as input, it does not produce them; what emerges from the objective are the gates (who opens a frame), 7c and 8b.
+  4. [DONE, round 8a] Control "associative memory with a bottleneck": does NOT align (new ids chance, unseen depth 0.25-0.39 at any rank 8-1024) => "generative necessary" stands.
   5. TUNED transformer (+ dropout, weight decay, lr sweep) and small BERT, at 1k/5k/50k examples: a data-efficiency curve, not a point.
   6. Capacity: 64-1000 identities at D = 4096-16384; sparse block codes; cleanup at large vocabulary.
   7. [STARTED, round 8b, v11_wikisql.py] WikiSQL with the full model + learned gates + distributional categories: selected column 0.824

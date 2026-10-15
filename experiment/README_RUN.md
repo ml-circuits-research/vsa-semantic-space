@@ -9,7 +9,7 @@ Files, in historical order (each is self-contained or imports the previous one):
 - f.py, f2.py           word factorization (displacement per category); report per role. `python3 f2.py`
 - camp.py               the synthetic world + v1 (historical; its buffer and zoom-in are NOT necessary, see round 2). `python3 camp.py`
 - gh.py                 G (deferred addressing) + H (unseen identities)
-- i2.py                 I: categories discovered unsupervised (iterative clustering)
+- i2.py                 I: categories discovered unsupervised (iterative clustering) [retracted as a contribution in round 8a: skip-gram recovers them equally; the model consumes categories, it does not produce them]
 - j.py                  J: capacity (D, number of identities, adjuncts)
 - k.py                  K: hierarchical composition "X spune ca <propozitie>"
 - mlp_control.py        CONTROL: MLP on an orderless bundle (baseline 'no order, with capacity')
