@@ -80,7 +80,10 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
     redundant as emitters: the emergent partition is identities / relation markers / action words. Control (round 7b): a small tuned
     transformer on the same task, identities and objective gets 0.22 on new identities (chance 0.17) and 0.39 at the unseen depth
     (inner roles at chance) — "at this data regime", as in round 1.
-  PROBABLE (1-2 seeds or a single set): emergent categories on real text.
+  RETRACTED as a contribution (round 8a, 5 seeds): "emergent categories" — the learned displacements do cluster into the true categories
+    (1.000), but so does skip-gram on the same sentences (1.000): categories are trivially distributional in this world. Kept as a
+    consistency check. Control B (round 8a): a linear associative map with any rank (8-1024) gets chance on new identities and the
+    transformer's signature at the unseen depth; "generative with a fixed operation is necessary" stands against it.
   WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
   NEGATIVE: SICK; v2 alone on new constructions; associative prediction for equivalence.
 

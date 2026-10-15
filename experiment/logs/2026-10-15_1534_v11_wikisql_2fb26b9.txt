@@ -1,0 +1,19 @@
+# 2026-10-15T15:34:03+02:00  commit=2fb26b9  cmd: python3 v11_wikisql.py
+# Python 3.12.3  NVIDIA GB10
+v11_wikisql: device=cuda, D=512, epochs=3, batch=32; train 56355, dev 8421, vocabulary 33320; inputs q,qh
+categories: 48 skip-gram clusters + 42 frequent tokens = 90 (8s). Singletons: ['the', 'what', 'of', 'is', 'team', 'date', 'score', 'a', 'was', 'for', 'in', 'and', 'name', 'when', 'than', 'year', 's', 'points', 'home', 'with'] ...
+   cluster 0 sample: ['mobiles', 'appliances', 'omim', 'syringaresinol', 'catchment', 'isd', 'match2', 'match4', 'occupier', 'cellist', 'merger', 'subchampion']
+   cluster 1 sample: ['ios', 'eidsvold', 'round4', 'wanica', 'survive', 'deployment', 'ceo', 'notification', 'spacewalker', 'rematch', '4286km', 'tenant']
+   cluster 2 sample: ['model', 'fleet', 'quantity', 'of', 'max', 'total', 'number', 'crest', 'relapsing', 'fever', 'typhoid', 'smallpox']
+targets built (69s)
+
+chance: selected column ~0.166; majority aggregator 0.715
+trivial control 'overlap only' selected column: 0.484
+BASELINE BoW + logistic regression: selected column 0.494  aggregator 0.867
+
+  [q seed 0] epoch 0 done (104s), last loss 0.644
+  model q seed 0 epoch 0                       sel 0.792  agg 0.798  cond1-col 0.574 | cos(S, S_sql) 0.604 | same-table pairs: same skeleton 0.778 (n=336), different 0.529 (n=12227), HARD (same sel) 0.595 (n=1866) | separation 0.249
+  [q seed 0] epoch 1 done (242s), last loss 0.646
+  model q seed 0 epoch 1                       sel 0.813  agg 0.811  cond1-col 0.622 | cos(S, S_sql) 0.628 | same-table pairs: same skeleton 0.767 (n=336), different 0.495 (n=12227), HARD (same sel) 0.567 (n=1866) | separation 0.272
+  [q seed 0] epoch 2 done (388s), last loss 0.796
+  model q seed 0 epoch 2                       sel 0.824  agg 0.813  cond1-col 0.631 | cos(S, S_sql) 0.638 | same-table pairs: same skeleton 0.764 (n=336), different 0.484 (n=12227), HARD (same sel) 0.559 (n=1866) | separation 0.280

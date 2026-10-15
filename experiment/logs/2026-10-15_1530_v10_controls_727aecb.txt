@@ -21,3 +21,40 @@ Control A: 54 content words in 5 classes {np.str_('O'): np.int64(18), np.str_('P
   seed 1 B bottleneck r=    8 (   5s) 0.31 (m -0.01) | 0.17 (m -0.03) | 0.27 (m -0.02) | 0.23 (m -0.03) | 0.29 (m -0.02) | 0.36 (m 0.05) | 0.30 (m 0.03) | 0.25 (m 0.01)  || depth 3: A 0.10 B 0.07 C 0.10 X1 0.99 X2 0.13 X3 0.10
   seed 1 B bottleneck r=   32 (   6s) 0.68 (m 0.21) | 0.24 (m -0.02) | 0.65 (m 0.12) | 0.50 (m 0.06) | 0.70 (m 0.17) | 0.73 (m 0.19) | 0.68 (m 0.14) | 0.34 (m 0.07)  || depth 3: A 0.13 B 0.10 C 0.10 X1 1.00 X2 0.57 X3 0.13
   seed 1 B bottleneck r=  128 (   8s) 0.75 (m 0.23) | 0.24 (m -0.02) | 0.83 (m 0.23) | 0.35 (m 0.00) | 0.85 (m 0.29) | 0.83 (m 0.26) | 0.87 (m 0.27) | 0.41 (m 0.08)  || depth 3: A 0.11 B 0.08 C 0.09 X1 1.00 X2 1.00 X3 0.16
+  seed 1 B bottleneck r= 1024 (  27s) 0.74 (m 0.23) | 0.22 (m -0.02) | 0.83 (m 0.22) | 0.34 (m 0.01) | 0.83 (m 0.28) | 0.82 (m 0.26) | 0.86 (m 0.26) | 0.40 (m 0.08)  || depth 3: A 0.10 B 0.07 C 0.08 X1 1.00 X2 1.00 X3 0.14
+  seed 2 A model (untied displacements)           purity 1.000  ARI 1.000  NN-category 1.000   (  61s)
+  seed 2 A word2vec (skip-gram, same sentences)   purity 1.000  ARI 1.000  NN-category 1.000   (   3s)
+  seed 2 B bottleneck r=    8 (   7s) 0.28 (m -0.02) | 0.15 (m -0.02) | 0.24 (m -0.03) | 0.18 (m -0.04) | 0.30 (m -0.02) | 0.35 (m 0.05) | 0.32 (m 0.03) | 0.24 (m 0.01)  || depth 3: A 0.08 B 0.06 C 0.08 X1 1.00 X2 0.15 X3 0.07
+  seed 2 B bottleneck r=   32 (   8s) 0.65 (m 0.21) | 0.23 (m -0.02) | 0.61 (m 0.12) | 0.50 (m 0.07) | 0.71 (m 0.15) | 0.71 (m 0.19) | 0.66 (m 0.14) | 0.32 (m 0.06)  || depth 3: A 0.10 B 0.10 C 0.07 X1 1.00 X2 0.59 X3 0.06
+  seed 2 B bottleneck r=  128 (  12s) 0.73 (m 0.23) | 0.23 (m -0.02) | 0.83 (m 0.22) | 0.38 (m 0.01) | 0.85 (m 0.27) | 0.83 (m 0.25) | 0.86 (m 0.27) | 0.38 (m 0.08)  || depth 3: A 0.05 B 0.07 C 0.10 X1 1.00 X2 1.00 X3 0.03
+  seed 2 B bottleneck r= 1024 (  46s) 0.72 (m 0.23) | 0.27 (m -0.02) | 0.83 (m 0.22) | 0.36 (m 0.01) | 0.85 (m 0.27) | 0.83 (m 0.25) | 0.87 (m 0.27) | 0.37 (m 0.08)  || depth 3: A 0.06 B 0.06 C 0.09 X1 1.00 X2 1.00 X3 0.03
+  seed 3 A model (untied displacements)           purity 1.000  ARI 1.000  NN-category 1.000   (  81s)
+  seed 3 A word2vec (skip-gram, same sentences)   purity 1.000  ARI 1.000  NN-category 1.000   (   2s)
+  seed 3 B bottleneck r=    8 (   9s) 0.21 (m -0.02) | 0.18 (m -0.03) | 0.18 (m -0.03) | 0.18 (m -0.03) | 0.23 (m -0.02) | 0.35 (m 0.05) | 0.32 (m 0.04) | 0.24 (m 0.02)  || depth 3: A 0.10 B 0.06 C 0.09 X1 0.99 X2 0.15 X3 0.06
+  seed 3 B bottleneck r=   32 (  12s) 0.68 (m 0.21) | 0.26 (m -0.02) | 0.66 (m 0.14) | 0.54 (m 0.07) | 0.72 (m 0.15) | 0.72 (m 0.19) | 0.71 (m 0.15) | 0.33 (m 0.07)  || depth 3: A 0.09 B 0.10 C 0.10 X1 1.00 X2 0.65 X3 0.04
+  seed 3 B bottleneck r=  128 (  13s) 0.74 (m 0.23) | 0.26 (m -0.02) | 0.83 (m 0.23) | 0.35 (m 0.00) | 0.84 (m 0.27) | 0.82 (m 0.25) | 0.86 (m 0.27) | 0.39 (m 0.08)  || depth 3: A 0.07 B 0.10 C 0.08 X1 1.00 X2 1.00 X3 0.06
+  seed 3 B bottleneck r= 1024 (  47s) 0.74 (m 0.23) | 0.26 (m -0.02) | 0.83 (m 0.23) | 0.35 (m 0.00) | 0.86 (m 0.28) | 0.83 (m 0.25) | 0.86 (m 0.27) | 0.39 (m 0.08)  || depth 3: A 0.06 B 0.12 C 0.10 X1 1.00 X2 1.00 X3 0.07
+  seed 4 A model (untied displacements)           purity 1.000  ARI 1.000  NN-category 1.000   (  70s)
+  seed 4 A word2vec (skip-gram, same sentences)   purity 1.000  ARI 1.000  NN-category 1.000   (   2s)
+  seed 4 B bottleneck r=    8 (   5s) 0.30 (m -0.02) | 0.17 (m -0.03) | 0.29 (m -0.03) | 0.24 (m -0.04) | 0.29 (m -0.02) | 0.35 (m 0.03) | 0.31 (m 0.02) | 0.25 (m 0.01)  || depth 3: A 0.09 B 0.08 C 0.09 X1 1.00 X2 0.16 X3 0.09
+  seed 4 B bottleneck r=   32 (  12s) 0.66 (m 0.21) | 0.24 (m -0.02) | 0.65 (m 0.12) | 0.53 (m 0.07) | 0.70 (m 0.16) | 0.72 (m 0.19) | 0.70 (m 0.14) | 0.31 (m 0.06)  || depth 3: A 0.08 B 0.06 C 0.09 X1 1.00 X2 0.55 X3 0.07
+  seed 4 B bottleneck r=  128 (  13s) 0.73 (m 0.23) | 0.25 (m -0.02) | 0.83 (m 0.23) | 0.39 (m 0.01) | 0.86 (m 0.29) | 0.83 (m 0.25) | 0.86 (m 0.27) | 0.39 (m 0.08)  || depth 3: A 0.08 B 0.10 C 0.07 X1 1.00 X2 1.00 X3 0.08
+  seed 4 B bottleneck r= 1024 (  46s) 0.74 (m 0.22) | 0.24 (m -0.02) | 0.83 (m 0.22) | 0.36 (m 0.01) | 0.85 (m 0.28) | 0.84 (m 0.25) | 0.86 (m 0.27) | 0.38 (m 0.08)  || depth 3: A 0.06 B 0.08 C 0.06 X1 1.00 X2 1.00 X3 0.09
+
+== Control A, MEANS over 5 seeds: purity | ARI | nearest-neighbour category accuracy (k = 5 clusters, 54 words)
+  model (untied displacements)           1.000±0.000 | 1.000±0.000 | 1.000±0.000
+  word2vec (skip-gram, same sentences)   1.000±0.000 | 1.000±0.000 | 1.000±0.000
+
+== Control B, MEANS over 5 seeds: accuracy (margin) == columns: seen | new ids | seen trans. | UNSEEN trans. | ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN)
+  bottleneck r=    8 0.282±0.037 (m -0.02) | 0.165±0.010 (m -0.03) | 0.249±0.036 (m -0.03) | 0.208±0.024 (m -0.03) | 0.286±0.028 (m -0.02) | 0.351±0.004 (m 0.05) | 0.310±0.008 (m 0.03) | 0.245±0.006 (m 0.01)
+  bottleneck r=   32 0.666±0.013 (m 0.21) | 0.235±0.019 (m -0.02) | 0.651±0.022 (m 0.13) | 0.519±0.015 (m 0.07) | 0.706±0.005 (m 0.15) | 0.725±0.013 (m 0.19) | 0.688±0.018 (m 0.14) | 0.328±0.012 (m 0.07)
+  bottleneck r=  128 0.738±0.007 (m 0.23) | 0.238±0.018 (m -0.02) | 0.833±0.000 (m 0.23) | 0.369±0.016 (m 0.01) | 0.853±0.006 (m 0.28) | 0.827±0.002 (m 0.25) | 0.864±0.003 (m 0.27) | 0.392±0.010 (m 0.08)
+  bottleneck r= 1024 0.737±0.008 (m 0.23) | 0.239±0.025 (m -0.02) | 0.833±0.000 (m 0.22) | 0.355±0.011 (m 0.01) | 0.850±0.010 (m 0.28) | 0.829±0.006 (m 0.26) | 0.865±0.004 (m 0.27) | 0.389±0.010 (m 0.08)
+== Control B, depth 3 (UNSEEN) per role: A | B | C | X1 | X2 | X3
+  bottleneck r=    8 0.089 | 0.073 | 0.088 | 0.996 | 0.144 | 0.081
+  bottleneck r=   32 0.104 | 0.094 | 0.102 | 1.000 | 0.589 | 0.081
+  bottleneck r=  128 0.084 | 0.092 | 0.092 | 1.000 | 1.000 | 0.081
+  bottleneck r= 1024 0.074 | 0.090 | 0.090 | 1.000 | 1.000 | 0.078
+reference (RESULTS 7c, VSA bundle, learned gates): new ids 1.000, depth 3 0.996-1.000, all roles.
+
+checklist: [x] world addresses [x] shared F (assert) [x] chance printed [x] separate axes [x] margin [x] >=3 seeds [x] same data (13)

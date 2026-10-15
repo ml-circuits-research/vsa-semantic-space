@@ -422,3 +422,32 @@ Open issue: the soft chain is ~5x slower than the hard one (134 s vs 22-38 s per
 2. The transformer control at the same regime fails exactly where the construction gives the VSA model its generalization: new identities
    (0.22 ~ chance) and the unseen depth (0.39; inner roles at chance, speakers perfect).
 3. The rebuilt "role cues seen" axis is at 1.000 for every bundle; the old "seen transitions" axis stays as a redundancy measure.
+
+# ROUND 8 (DGX): the two cheap controls on "emergent" (v10_controls.py), then WikiSQL (v11_wikisql.py)
+## 8a. Controls (logs/2026-10-15_1530_v10_controls_727aecb.txt; reference world, same 30k sentences, 5 seeds)
+Control A — word2vec for categories (§5.3). 54 content words, 5 classes (P 18, O 18, V 6, VP 6, VR 6); agglomerative clustering, k = 5;
+chance purity 0.333, nearest-neighbour chance 0.245.
+| representation | purity | ARI | NN-category |
+|---|---|---|---|
+| model: untied learned displacements (one per word, generative objective) | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+| skip-gram on the same sentences (dim 64, window 2, 5 epochs) | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 |
+Verdict: the categories ARE recovered from the learned displacements — and equally perfectly by a plain distributional embedding on the
+same sentences. On a synthetic world the categories are trivially distributional (persons occupy the same slots). "Emergence of
+categories" is therefore NOT a distinctive merit of the architecture and is RETRACTED as a contribution (POSITIONING article 1 (iii));
+it stays as a consistency check (the displacements do carry the category). Consequence for real text: the categories the model needs can be
+supplied by distributional clustering (that is what v11_wikisql does), with no loss of honesty.
+Control B — associative memory with a bottleneck (§5.4). S = U V x, x = sum_k pos_k (x) F[w_k] (fixed random positions, order-aware,
+structure-free), complex linear, rank r; same objective, same decoder, 3 epochs.
+| rank r | seen | new ids | seen trans. | UNSEEN trans. | ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) | depth 3 per role |
+|---|---|---|---|---|---|---|---|---|---|
+| 8 | 0.282 | 0.165 | 0.249 | 0.208 | 0.286 | 0.351 | 0.310 | 0.245 | X1 0.996, rest ~chance |
+| 32 | 0.666 | 0.235 | 0.651 | 0.519 | 0.706 | 0.725 | 0.688 | 0.328 | X1 1.00, X2 0.59, A/B/C/X3 chance |
+| 128 | 0.738 | 0.238 | 0.833 | 0.369 | 0.853 | 0.827 | 0.864 | 0.392 | X1 1.00, X2 1.00, A/B/C/X3 chance |
+| 1024 (= D, no bottleneck) | 0.737 | 0.239 | 0.833 | 0.355 | 0.850 | 0.829 | 0.865 | 0.389 | X1 1.00, X2 1.00, A/B/C/X3 chance |
+| VSA bundle, learned gates (7c) | 1.000 | 1.000 | 0.848 | 0.870 | 1.000 | 1.000 | 1.000 | 0.996 | all 1.00 |
+Verdict: even with no bottleneck, a linear associative map on an order-aware input does not reach the model on seen data (0.74), gets
+nothing on new identities (0.24 ~ chance 0.17) and shows exactly the transformer's signature at the unseen depth (known speakers perfect,
+inner roles at chance). Capacity is not what is missing: rank 128 = rank 1024. "A generative construction with a fixed operation is
+necessary" stands against this control; it does not narrow to "limited capacity is necessary". (The per-position linear map could in
+principle implement 'unbind pos_k, bind R_role' as a diagonal complex map, but only for FIXED positions; free word order and nesting break
+the position-role correspondence, which is the point of the displacement codes.)

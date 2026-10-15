@@ -20,7 +20,7 @@ it shows that the ingredients are not chosen arbitrarily, but forced.
 1. **Principle note** (neuro-symbolic workshop at NeurIPS/ICLR, or Neural Computation / Frontiers in Comp. Neurosci.):
    "Necessary conditions for role emergence in vector-symbolic sequence models". Contributions: (i) overlapping addresses + argmax decoding:
    role alignment does not require exact equality of addresses [RETRACTED: "the algebraic impossibility of per-word displacement" — correct only for
-   exact equality, irrelevant with argmax decoding; see round 2]; (ii) associative vs generative; (iii) emergence of categories;
+   exact equality, irrelevant with argmax decoding; see round 2]; (ii) associative vs generative (confirmed against a bottleneck associative map, round 8a); (iii) [RETRACTED round 8a: emergence of categories — skip-gram on the same sentences recovers them equally; kept as a consistency check]; (iii-bis) composition to an unseen nesting depth (round 6c);
    (iv) the gates (who opens a frame) are learned by search on the prediction criterion; (v) zero-shot generalization to new identities vs
    small transformer.
    Minimum requirements: 5 seeds, shared F, world with 4-6 frames and 8+ formulations, the word2vec control for categories, the "associative memory

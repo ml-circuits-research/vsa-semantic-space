@@ -85,10 +85,14 @@ present, depth 2 falls to 0.88 and depth 3 to 0.54. This is the precise, data-fo
 displacement applied retroactively to a whole clause, and only for right-announced structure. Declared as a limit here; the remedy
 (clause-level re-addressing) is future work.
 
-## 6. Controls on "emergent" [v10_controls.py — PENDING]
-6.1 word2vec for categories: purity / ARI / nearest-neighbour category of (a) the untied learned displacements vs (b) skip-gram on the
-    same sentences, 54 content words, 5 classes. [to fill]
-6.2 bottleneck associative memory: S = U V x on an order-aware structure-free input, rank r in {8, 32, 128, 1024}; same table. [to fill]
+## 6. Controls on "emergent" [RESULTS 8a; logs/2026-10-15_1530_v10_controls_727aecb.txt]
+6.1 word2vec for categories: the untied learned displacements cluster the 54 content words into the 5 true classes perfectly (purity, ARI,
+    NN-category all 1.000, 5 seeds) — and so does skip-gram on the same sentences (1.000). Categories are trivially distributional in this
+    world; "emergent categories" is RETRACTED as a contribution and kept only as a consistency check. For real text the categories can be
+    supplied by distributional clustering with no loss of honesty (that is what the WikiSQL experiment does).
+6.2 bottleneck associative memory (S = U V x on sum_k pos_k (x) f_{w_k}, complex linear, rank 8-1024): at every rank new identities ~0.24
+    (chance 0.17) and depth 3 0.25-0.39 with the transformer's signature (known speakers perfect, inner roles at chance); rank 128 = rank
+    1024 = 0.74 on seen data. Capacity is not what is missing; the fixed generative operation is. "Generative necessary" stands.
 
 ## 7. The thread of the two retractions (what the negatives taught)
 Round 1 argued an "algebraic impossibility" of per-word displacement and hand-coded deferred addressing (verb writes the buffer, zoom-in at
