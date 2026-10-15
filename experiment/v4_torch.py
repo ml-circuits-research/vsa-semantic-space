@@ -4,7 +4,7 @@ v4_torch: portarea lui v4.py in torch (GPU). Acelasi model, aceeasi lume, aceeas
 Ce ramane in numpy/Python (neschimbat, importat din v4/v2/camp): lumea, template-urile, categoriile, portile si STRUCTURA adreselor
 (care parametri intra in fiecare termen: V4.run intoarce listele de membri; depinde doar de categorii si porti, nu de theta).
 Ce trece in torch: fazele theta ca parametru; termen = exp(i * M @ theta) * F[tok]; S = suma; loss = -cos(S, S_lume); autograd + Adam.
-  M = matrice de apartenenta (termeni x parametri), 0/1, construita din listele de membri.
+  termen k: faza = theta[idx_k].sum(), idx_k = indicii membrilor (padding cu root, faza 0). Encodarea se face O DATA, inainte de antrenare.
 Fluxul de date (lume, identitati, seed-uri, ordinea propozitiilor de antrenare) e IDENTIC cu v4.py: aceleasi rng-uri numpy.
 Diferente fata de v4.py: aritmetica optimizatorului (torch.optim.Adam vs Adam scris de mana), float64 implicit; --batch > 1 schimba
 regimul de optimizare (acelasi numar de propozitii, mai putini pasi) si se raporteaza separat.
@@ -12,7 +12,7 @@ regimul de optimizare (acelasi numar de propozitii, mai putini pasi) si se rapor
 Evaluare conform PRINCIPII_EVALUARE.md (identic cu v4.py): adrese din lume, F comun (assert), sansa tiparita, 3 axe vazut/nevazut,
 marja, >=3 seed-uri, control trivial.
 
-Rulare: python3 v4_torch.py [--seeds 3] [--N 10000] [--D 512] [--batch 1] [--device cuda] [--variants all|toate4]
+Rulare: python3 v4_torch.py [--lr 0.02] [--seeds 3] [--N 10000] [--D 512] [--batch 1] [--device cuda] [--variants all|toate4]
 """
 import argparse, time, sys
 import numpy as np, torch
@@ -52,38 +52,38 @@ class V4Torch:
         self.F_np = F_np; self.F = torch.tensor(F_np, dtype=torch.complex128 if self.dtype == torch.float64 else torch.complex64, device=self.device)
 
     def encode(self, sentences):
-        """lista de propozitii (liste de tokeni) -> M (B x T x P), ids (B x T), mask (B x T), cu padding la T max"""
+        """lista de propozitii -> idx (B x T x K) indici de parametri per termen, ids (B x T) identitati, mask (B x T).
+        Padding-ul membrilor e cu 0 = root, a carui faza e fixata la 0, deci nu schimba suma; padding-ul termenilor e mascat."""
         enc = [build_terms(self.np_model, toks) for toks in sentences]
-        T = max(len(m) for m, _ in enc); B = len(enc)
-        M = torch.zeros(B, T, self.P, dtype=self.dtype); ids = torch.zeros(B, T, dtype=torch.long); mask = torch.zeros(B, T, dtype=self.dtype)
+        B = len(enc); T = max(len(m) for m, _ in enc); K = max(len(mem) for m, _ in enc for mem in m)
+        idx = torch.zeros(B, T, K, dtype=torch.long); ids = torch.zeros(B, T, dtype=torch.long); mask = torch.zeros(B, T, dtype=self.dtype)
         for b, (members, tid) in enumerate(enc):
-            for k, mem in enumerate(members):
-                for p in mem: M[b, k, p] += 1.0
+            for k, mem in enumerate(members): idx[b, k, :len(mem)] = torch.tensor(mem)
             ids[b, :len(tid)] = torch.tensor(tid); mask[b, :len(tid)] = 1.0
-        return M.to(self.device), ids.to(self.device), mask.to(self.device)
+        return idx.to(self.device), ids.to(self.device), mask.to(self.device)
 
-    def states(self, M, ids, mask):
-        """S (B x D) = sum_k exp(i * (M @ theta)_k) * F[id_k], cu masca de padding"""
-        phase = torch.einsum("btp,pd->btd", M, self.theta * self.root_mask)
+    def states(self, idx, ids, mask):
+        """S (B x D) = sum_k exp(i * sum_{p in membri_k} theta_p) * F[id_k], cu masca de padding"""
+        phase = (self.theta * self.root_mask)[idx].sum(2)                     # B x T x D
         terms = torch.polar(torch.ones_like(phase), phase) * self.F[ids]
         return (terms * mask.unsqueeze(-1)).sum(1)
 
     def state(self, toks):
         with torch.no_grad():
-            M, ids, mask = self.encode([toks]); return self.states(M, ids, mask)[0]
+            idx, ids, mask = self.encode([toks]); return self.states(idx, ids, mask)[0]
 
     def train(self, world, n_sent, lr=0.02, templates=None, persons=None, objects=None, batch=1):
         w = self.w
-        # fluxul de propozitii identic cu v4.py: w.event (w.rng) si self.rng.choice pentru template
+        # fluxul de propozitii identic cu v4.py: w.event (w.rng) si self.rng.choice pentru template; ENCODARE O SINGURA DATA, inainte
         sents, targets = [], []
         for n in range(n_sent):
             ev = w.event(persons, objects); ts = templates or range(len(w.frames[ev[0]]))
             sents.append(w.render(ev, self.rng.choice(list(ts)))); targets.append(world.state(ev))
-        opt = torch.optim.Adam([self.theta], lr=lr, betas=(0.9, 0.999), eps=1e-8)
+        t0 = time.time(); idx_all, ids_all, mask_all = self.encode(sents); self.t_encode = time.time() - t0
         tgt_all = torch.tensor(np.array(targets), dtype=self.F.dtype, device=self.device)
+        opt = torch.optim.Adam([self.theta], lr=lr, betas=(0.9, 0.999), eps=1e-8)
         for i in range(0, n_sent, batch):
-            M, ids, mask = self.encode(sents[i:i + batch]); tgt = tgt_all[i:i + batch]
-            S = self.states(M, ids, mask)
+            sl = slice(i, i + batch); S = self.states(idx_all[sl], ids_all[sl], mask_all[sl]); tgt = tgt_all[sl]
             cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
             loss = -cos.mean()
             opt.zero_grad(); loss.backward(); opt.step()
@@ -97,8 +97,8 @@ def decode_stats(m, world, w, templates, persons, objects, n=100):
     for kind in w.frames:
         for t in templates:
             evs = [(kind,) + w.event(persons, objects)[1:] for _ in range(n)]
-            M, ids, mask = m.encode([w.render(ev, t) for ev in evs])
-            with torch.no_grad(): S = m.states(M, ids, mask)
+            idx, ids, mask = m.encode([w.render(ev, t) for ev in evs])
+            with torch.no_grad(): S = m.states(idx, ids, mask)
             Sn = S / S.abs().pow(2).sum(-1, keepdim=True).sqrt()
             for r, ri, cands in (("A", 1, persons), ("B", 2, objects), ("C", 3, persons)):
                 cid = torch.tensor([w.idx[x] for x in cands], device=m.device)
@@ -112,9 +112,9 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=3); ap.add_argument("--N", type=int, default=10000); ap.add_argument("--D", type=int, default=512)
     ap.add_argument("--batch", type=int, default=1); ap.add_argument("--device", default="cuda" if torch.cuda.is_available() else "cpu")
-    ap.add_argument("--variants", default="all"); ap.add_argument("--n_pers", type=int, default=12)
+    ap.add_argument("--variants", default="all"); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--n_pers", type=int, default=12)
     a = ap.parse_args(); D, N = a.D, a.N
-    print(f"v4_torch: device={a.device} ({torch.cuda.get_device_name(0) if a.device == 'cuda' else 'cpu'}), torch {torch.__version__}, D={D}, N={N}, batch={a.batch}, seeds={a.seeds}")
+    print(f"v4_torch: device={a.device} ({torch.cuda.get_device_name(0) if a.device == 'cuda' else 'cpu'}), torch {torch.__version__}, D={D}, N={N}, batch={a.batch}, lr={a.lr}, seeds={a.seeds}")
     TEMPLATES, TRAIN_T = v4.TEMPLATES, v4.TRAIN_T
     w0 = v4.make_world(0, a.n_pers)
     seen_tr = set().union(*[v4.transitions(w0, "GIVE", t)[0] for t in TRAIN_T]); seen_cat = set().union(*[v4.transitions(w0, "GIVE", t)[1] for t in TRAIN_T])
@@ -141,13 +141,13 @@ if __name__ == "__main__":
         for name, codes in variants:
             m = V4Torch(w, D, np.random.default_rng(200 + seed), v2.HAND_GATES(cats), codes, a.device); m.set_F(F)
             assert m.F_np is world.F
-            t0 = time.time(); m.train(world, N, templates=TRAIN_T, persons=trP, objects=trO, batch=a.batch)
+            t0 = time.time(); m.train(world, N, templates=TRAIN_T, persons=trP, objects=trO, batch=a.batch, lr=a.lr)
             if a.device == "cuda": torch.cuda.synchronize()
             t_train = time.time() - t0
             r = [decode_stats(m, world, w, TRAIN_T, trP, trO, n=40), decode_stats(m, world, w, TRAIN_T, teP, teO, n=40),
                  decode_stats(m, world, w, held_seen, trP, trO, n=60), decode_stats(m, world, w, held_new, trP, trO, n=60)]
             results[name].append(r)
-            print(f"  seed {seed} {name:22s} ({t_train:5.1f}s antrenare, {time.time()-t0-t_train:4.1f}s eval) " + " | ".join(f"{x:.2f} (m {mg:.2f})" for x, mg in r), flush=True)
+            print(f"  seed {seed} {name:22s} ({t_train:5.1f}s antrenare, din care {m.t_encode:4.1f}s encodare; {time.time()-t0-t_train:4.1f}s eval) " + " | ".join(f"{x:.2f} (m {mg:.2f})" for x, mg in r), flush=True)
     print(f"\n== MEDII pe {a.seeds} seed-uri: acuratete (marja) ==  coloane: " + " | ".join(cols))
     for name, _ in variants:
         r = np.array(results[name]); print(f"  {name:22s} " + " | ".join(f"{r[:,i,0].mean():.3f}±{r[:,i,0].std():.3f} (m {r[:,i,1].mean():.2f})" for i in range(4)))
