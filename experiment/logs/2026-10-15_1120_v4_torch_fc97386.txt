@@ -1,0 +1,49 @@
+# 2026-10-15T11:20:57+02:00  commit=fc97386  cmd: python3 v4_torch.py --batch 8
+# Python 3.12.3  NVIDIA GB10
+v4_torch: device=cuda (NVIDIA GB10), torch 2.14.1+cu130, D=512, N=10000, batch=8, lr=0.02, seeds=3
+formulari de antrenare: [0, 1, 2, 3, 6]
+  T4 '{B} ii este dat lui {C} de catre {A} .': tranzitii noi [('O', 'ii'), ('catre', 'P'), ('de', 'catre'), ('ii', 'COP')], categorii noi ['catre']
+  T5 '{A} ii da lui {C} {B} .': tranzitii noi [('P', 'O'), ('da', 'lui')], categorii noi []
+  T7 'lui {C} ii da {B} {A} .': tranzitii noi [('O', 'P')], categorii noi []
+  T8 '{A} da lui {C} {B} .': tranzitii noi [('P', 'O'), ('da', 'lui')], categorii noi []
+  T9 'lui {C} {A} da {B} .': tranzitii noi [], categorii noi []
+  T10 '{A} ii da {B} lui {C} .': tranzitii noi [], categorii noi []
+  => formulari noi cu TOATE tranzitiile vazute: [9, 10]; cu tranzitii/categorii NEVAZUTE: [4, 5, 7, 8]
+sansa: identitati vazute 1/8 = 0.125; identitati noi 1/4 = 0.250. Control trivial: 'toate la origine' (fara coduri) = sansa.
+
+  seed 0 path                   (  3.7s antrenare, din care  0.3s encodare;  0.4s eval) 1.00 (m 0.23) | 1.00 (m 0.24) | 0.82 (m 0.09) | 0.59 (m 0.06)
+  seed 0 chain                  (  4.2s antrenare, din care  1.3s encodare;  0.2s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.32 (m 0.03) | 0.51 (m 0.18)
+  seed 0 bigram                 (  3.1s antrenare, din care  0.3s encodare;  0.1s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 1.00 (m 0.32) | 0.70 (m 0.16)
+  seed 0 pos                    (  3.1s antrenare, din care  0.3s encodare;  0.1s eval) 0.86 (m 0.30) | 0.87 (m 0.31) | 0.69 (m 0.13) | 0.77 (m 0.16)
+  seed 0 path+chain (dual)      (  4.5s antrenare, din care  1.6s encodare;  0.3s eval) 1.00 (m 0.48) | 1.00 (m 0.48) | 0.64 (m 0.07) | 0.70 (m 0.11)
+  seed 0 path+bigram            (  3.5s antrenare, din care  0.6s encodare;  0.1s eval) 1.00 (m 0.45) | 1.00 (m 0.45) | 1.00 (m 0.27) | 0.82 (m 0.16)
+  seed 0 path+chain+bigram      (  4.5s antrenare, din care  1.8s encodare;  0.3s eval) 1.00 (m 0.53) | 1.00 (m 0.55) | 0.99 (m 0.17) | 0.83 (m 0.14)
+  seed 0 toate 4                (  4.9s antrenare, din care  2.1s encodare;  0.4s eval) 1.00 (m 0.53) | 1.00 (m 0.55) | 1.00 (m 0.17) | 0.90 (m 0.16)
+  seed 1 path                   (  3.2s antrenare, din care  0.3s encodare;  0.1s eval) 1.00 (m 0.23) | 1.00 (m 0.25) | 0.79 (m 0.10) | 0.59 (m 0.06)
+  seed 1 chain                  (  4.7s antrenare, din care  1.3s encodare;  0.2s eval) 1.00 (m 0.50) | 1.00 (m 0.51) | 0.44 (m 0.05) | 0.52 (m 0.18)
+  seed 1 bigram                 (  3.6s antrenare, din care  0.3s encodare;  0.1s eval) 1.00 (m 0.46) | 1.00 (m 0.47) | 1.00 (m 0.32) | 0.72 (m 0.17)
+  seed 1 pos                    (  3.2s antrenare, din care  0.3s encodare;  0.1s eval) 0.86 (m 0.31) | 0.87 (m 0.31) | 0.68 (m 0.13) | 0.76 (m 0.15)
+  seed 1 path+chain (dual)      (  4.2s antrenare, din care  1.5s encodare;  0.3s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.70 (m 0.08) | 0.73 (m 0.12)
+  seed 1 path+bigram            (  4.1s antrenare, din care  0.6s encodare;  0.1s eval) 1.00 (m 0.44) | 1.00 (m 0.45) | 1.00 (m 0.27) | 0.82 (m 0.15)
+  seed 1 path+chain+bigram      (  5.4s antrenare, din care  1.8s encodare;  0.3s eval) 1.00 (m 0.52) | 1.00 (m 0.54) | 0.99 (m 0.18) | 0.83 (m 0.14)
+  seed 1 toate 4                (  5.6s antrenare, din care  2.1s encodare;  0.4s eval) 1.00 (m 0.53) | 1.00 (m 0.54) | 0.97 (m 0.17) | 0.87 (m 0.15)
+  seed 2 path                   (  3.0s antrenare, din care  0.4s encodare;  0.1s eval) 1.00 (m 0.24) | 1.00 (m 0.25) | 0.82 (m 0.10) | 0.58 (m 0.06)
+  seed 2 chain                  (  3.9s antrenare, din care  1.3s encodare;  0.2s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.24 (m 0.02) | 0.51 (m 0.18)
+  seed 2 bigram                 (  3.1s antrenare, din care  0.3s encodare;  0.1s eval) 1.00 (m 0.47) | 1.00 (m 0.47) | 1.00 (m 0.32) | 0.72 (m 0.16)
+  seed 2 pos                    (  3.1s antrenare, din care  0.3s encodare;  0.1s eval) 0.86 (m 0.31) | 0.87 (m 0.31) | 0.70 (m 0.12) | 0.77 (m 0.15)
+  seed 2 path+chain (dual)      (  4.4s antrenare, din care  1.5s encodare;  0.3s eval) 1.00 (m 0.48) | 1.00 (m 0.48) | 0.66 (m 0.07) | 0.74 (m 0.12)
+  seed 2 path+bigram            (  3.4s antrenare, din care  0.6s encodare;  0.1s eval) 1.00 (m 0.45) | 1.00 (m 0.45) | 0.97 (m 0.27) | 0.82 (m 0.15)
+  seed 2 path+chain+bigram      (  5.0s antrenare, din care  1.8s encodare;  0.3s eval) 1.00 (m 0.53) | 1.00 (m 0.54) | 0.99 (m 0.18) | 0.83 (m 0.14)
+  seed 2 toate 4                (  5.7s antrenare, din care  2.1s encodare;  0.4s eval) 1.00 (m 0.54) | 1.00 (m 0.54) | 0.96 (m 0.17) | 0.89 (m 0.15)
+
+== MEDII pe 3 seed-uri: acuratete (marja) ==  coloane: vazute | id. noi | form. noi, tranz. vazute | form. noi, tranz. NEvazute
+  path                   1.000±0.000 (m 0.23) | 1.000±0.000 (m 0.25) | 0.810±0.012 (m 0.09) | 0.587±0.004 (m 0.06)
+  chain                  1.000±0.000 (m 0.50) | 1.000±0.000 (m 0.52) | 0.331±0.081 (m 0.04) | 0.512±0.007 (m 0.18)
+  bigram                 1.000±0.000 (m 0.47) | 1.000±0.000 (m 0.47) | 1.000±0.001 (m 0.32) | 0.713±0.008 (m 0.17)
+  pos                    0.863±0.001 (m 0.31) | 0.866±0.000 (m 0.31) | 0.689±0.006 (m 0.12) | 0.763±0.006 (m 0.15)
+  path+chain (dual)      1.000±0.000 (m 0.48) | 1.000±0.000 (m 0.48) | 0.667±0.024 (m 0.08) | 0.719±0.017 (m 0.12)
+  path+bigram            1.000±0.000 (m 0.44) | 1.000±0.000 (m 0.45) | 0.991±0.011 (m 0.27) | 0.820±0.003 (m 0.15)
+  path+chain+bigram      1.000±0.000 (m 0.53) | 1.000±0.000 (m 0.54) | 0.990±0.000 (m 0.18) | 0.832±0.003 (m 0.14)
+  toate 4                1.000±0.000 (m 0.53) | 1.000±0.000 (m 0.54) | 0.976±0.015 (m 0.17) | 0.885±0.012 (m 0.15)
+
+checklist: [x] adrese din lume [x] F comun (assert) [x] sansa tiparita [x] 3 axe separate [x] marja [x] >=3 seed-uri [x] control trivial = sansa

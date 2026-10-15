@@ -175,3 +175,39 @@ Concluzii:
 - Toate codurile dau 1.00 pe identitati noi: compozitionalitatea pe identitati e o proprietate a familiei, nu a unui cod.
 - Bariera ramane pe tranzitii/categorii cu adevarat noi (0.90, nu 1.00): acolo nu exista informatie in date; partea recuperata vine din
   codurile care nu depind de tranzitia noua (pos, path).
+
+# RUNDA 4 (DGX, 2026-10-15): reproducere pe DGX si portare in torch/GPU (v4_torch.py) — fara schimbari de model
+Aceeasi lume, aceleasi seed-uri, aceeasi evaluare ca runda 3. Loguri cu hash de commit in logs/.
+
+## Reproducere (3 seed-uri; coloane: vazute | id. noi | form. noi tranz. vazute | form. noi tranz. NEvazute)
+| rulare | toate 4 | observatie |
+|---|---|---|
+| v4.py numpy, CPU vechi (runda 3, log 2026-10-15_v4.txt) | 1.000 | 1.000 | 0.942±0.014 | 0.901±0.004 | referinta |
+| v4.py numpy, CPU DGX (logs/..._1101_v4_d26b7db.txt) | 1.000 | 1.000 | 0.942±0.014 | 0.901±0.004 | IDENTIC la 3 decimale, toate 8 variantele |
+| v4_torch.py GPU, batch=1 (logs/..._1107_v4_torch_c57d74a.txt) | 1.000 | 1.000 | 0.942±0.014 | 0.901±0.004 | IDENTIC pe toate 24 liniile (acuratete + marja) |
+Concluzie: lumea/seed-urile/evaluarea sunt deterministe si portabile; portarea torch (autograd + torch Adam, float64) e echivalenta numeric
+cu gradientul scris de mana la precizia raportata.
+
+## Batch (v4_torch, 3 seed-uri, N=10000 propozitii, lr=0.02; batch>1 = mai putini pasi, acelasi numar de propozitii)
+| batch | vazute | id. noi | form. noi tranz. vazute | form. noi tranz. NEvazute | s/varianta (antrenare) |
+|---|---|---|---|---|---|
+| 1 (= numpy) | 1.000 | 1.000 | 0.942±0.014 (m .19) | 0.901±0.004 (m .17) | 28.5 (encodare per pas) / ~20 (encodare o data) |
+| 8 (logs/..._1120_v4_torch_fc97386.txt) | 1.000 | 1.000 | 0.976±0.015 (m .17) | 0.885±0.012 (m .15) | 4.0 (din care 1.0 encodare) |
+| 32 (logs/..._1119_v4_torch_f8fedc5.txt) | 1.000 | 1.000 | 0.930±0.005 (m .19) | 0.887±0.016 (m .17) | 2.2 (din care 1.0 encodare) |
+| 128 (seed 0 doar, informativ) | 1.00 | 1.00 | 0.89 | 0.87 | ~3 |
+Pe celelalte coduri, batch 8/32 ramane in +-0.03 fata de batch 1, cu doua exceptii la batch 32: path 0.52 (vs 0.60) si path+chain 0.59/0.69
+(vs 0.71/0.75) — codurile slabe pierd cand numarul de pasi scade de 32x la acelasi lr. Concluziile rundei 3 (ordinea codurilor, 0.90 pe
+tranzitii nevazute cu toate 4) raman la batch 8-32; batch 128 incepe sa coste. Pentru lume mare: batch 8-32 si/sau mai multe propozitii.
+
+## Timp (D=512, 10k propozitii, o varianta; 24 variante per rulare completa)
+| | s/varianta | rulare completa |
+|---|---|---|
+| numpy, CPU vechi (runda 3) | ~77 | ~30 min |
+| numpy, CPU DGX (20 nuclee, dar codul e secvential) | 24.8 | 10 min |
+| torch GPU GB10, batch=1, encodare per pas | 28.5 | 11.5 min |
+| torch GPU, batch=1, encodare o singura data | ~20 | — |
+| torch GPU, batch=8 | 4.0 | 1.7 min |
+| torch GPU, batch=32 | 2.2 | 1 min |
+La D=512 si batch=1, GPU-ul NU castiga nimic: costul e Python (encodare, 10k pasi mici), nu aritmetica. Castigul (10x) vine din encodarea
+o singura data + batch. Din cele 2.2 s la batch 32, 1 s e encodarea in Python (structura adreselor din v2/v4) — urmatorul loc de optimizat
+daca lumea creste; GPU-ul devine decisiv abia la D >= 4096 si vocabular mare.
