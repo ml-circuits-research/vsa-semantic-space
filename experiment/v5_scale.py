@@ -81,12 +81,13 @@ class V5(v4_torch.V4Torch):
             opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): self.theta[0] = 0
 
-def decode_stats(m, world, w, templs, persons, objects, depth=0, n=40):
+def decode_stats(m, world, w, templs, persons, objects, depth=0, n=40, max_role_depth=None):
     """acuratete si marja pe TOATE rolurile prezente (A, B, C, X1..Xd), cu adresele lumii"""
     acc, marg = [], []
     R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}
     Fn = m.F / m.F.abs().pow(2).sum(-1, keepdim=True).sqrt()
-    roles = [("A", 1, persons), ("B", 2, objects), ("C", 3, persons)] + [(XROLES[i], 4 + i, persons) for i in range(depth)]
+    # rolurile evaluate: doar cele care au putut fi tinte la antrenare (PRINCIPII 14: un rol nou e la sansa prin constructie)
+    roles = [("A", 1, persons), ("B", 2, objects), ("C", 3, persons)] + [(XROLES[i], 4 + i, persons) for i in range(min(depth, max_role_depth or depth))]
     for kind in w.frames:
         for t in templs:
             evs = [w.event(persons, objects, depth=depth) for _ in range(n)]; evs = [(kind,) + e[1:] for e in evs]
@@ -131,7 +132,7 @@ if __name__ == "__main__":
     variants = [("path", ["path"]), ("chain", ["chain"]), ("bigram", ["bigram"]), ("pos", ["pos"]), ("path+bigram", ["path", "bigram"]),
                 ("path+chain+bigram", ["path", "chain", "bigram"]), ("toate 4", ["path", "chain", "bigram", "pos"])]
     if a.variants == "toate4": variants = variants[-1:]
-    cols = ["vazute (ad.0)", "id. noi (ad.0)", "form. noi, tranz. vazute", "form. noi, tranz. NEvazute", "imbricare ad.1-2 (vazuta)", "imbricare ad.3 (NEvazuta)"]
+    cols = ["vazute (ad.0)", "id. noi (ad.0)", "form. noi, tranz. vazute", "form. noi, tranz. NEvazute", "imbricare ad.1-2 (vazuta)", "imbricare ad.3 (NEvazuta; doar A,B,C,X1,X2 — X3 n-a fost tinta)"]
     results = {name: [] for name, _ in variants}
     for seed in range(a.seeds):
         w = BigWorld(a.n_id, np.random.default_rng(seed)); cats = sorted(set(w.cat.values()))
@@ -146,7 +147,7 @@ if __name__ == "__main__":
             r = [decode_stats(m, world, w, TRAIN_T, trP, trO, 0, n=20), decode_stats(m, world, w, TRAIN_T, teP, teO, 0, n=20),
                  decode_stats(m, world, w, held_seen, trP, trO, 0, n=30), decode_stats(m, world, w, held_new, trP, trO, 0, n=30),
                  tuple(np.mean([decode_stats(m, world, w, TRAIN_T, trP, trO, d, n=15) for d in (1, 2)], axis=0)),
-                 decode_stats(m, world, w, TRAIN_T, trP, trO, 3, n=20)]
+                 decode_stats(m, world, w, TRAIN_T, trP, trO, 3, n=20, max_role_depth=a.depth_train)]
             results[name].append(r)
             print(f"  seed {seed} {name:18s} ({t_train:5.1f}s antr., {m.t_encode:4.1f}s enc., {time.time()-t0-t_train:4.1f}s eval) " + " | ".join(f"{x:.2f} (m {mg:.2f})" for x, mg in r), flush=True)
     print(f"\n== MEDII pe {a.seeds} seed-uri: acuratete (marja) ==  coloane: " + " | ".join(cols))

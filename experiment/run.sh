@@ -2,7 +2,8 @@
 # Ruleaza un script python si salveaza logul cu data si hash-ul commit-ului curent in nume.
 set -euo pipefail
 [ $# -ge 1 ] || { echo "folosire: ./run.sh script.py [argumente]"; exit 1; }
-if [ -n "$(git status --porcelain 2>/dev/null)" ]; then
+# logs/ e ignorat la verificare: logurile noi sunt mereu necomise in momentul rularii
+if [ -n "$(git status --porcelain 2>/dev/null | grep -v " logs/")" ]; then
   echo "Exista modificari necomise. Comite intai (git add -A && git commit), ca logul sa corespunda unui commit."; exit 1
 fi
 mkdir -p logs

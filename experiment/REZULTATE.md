@@ -166,7 +166,9 @@ formulari noi cu tranzitii/categorii nevazute (T4, T5, T7, T8). Adrese din lume,
 | path+chain+bigram | 1.00 (m .53) | 1.00 | 0.99 (m .19) | 0.82 |
 | toate 4 | 1.00 (m .52) | 1.00 | 0.94 (m .19) | **0.90** (m .17) |
 Concluzii:
-- Ipoteza redundantei se CONFIRMA: pe tranzitii nevazute, de la 0.60 (path) / 0.51 (chain) la 0.90 (4 coduri); pe tranzitii vazute, de la 0.31 (chain) la 0.99.
+- Ipoteza redundantei se CONFIRMA: pe tranzitii nevazute, de la 0.60 (path) / 0.51 (chain) la 0.82 (path+chain+bigram = MODELUL; runda 5);
+  0.90 doar cu priorul de pozitie (pos), care costa in alta parte (runda 5: T10). Restul pana la 1.00 e pe categorii noi, unde nu exista
+  informatie in date. Pe tranzitii vazute, de la 0.31 (chain) la 0.99.
 - Surpriza: codul BIGRAM singur (adresa = categoria precedenta + proprie) e cel mai bun pe formulari noi cu tranzitii vazute (1.00, marja .31):
   rolurile sunt in mare parte LOCALE (prepozitia dinainte decide), iar primul cuvant ramane suprapus si e rezolvat de argmax.
 - Nota: pe formulari noi cu tranzitii VAZUTE, "toate 4" (0.94) e SUB bigram singur (1.00): redundanta ajuta pe tranzitii noi

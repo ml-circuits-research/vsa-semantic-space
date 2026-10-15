@@ -56,7 +56,8 @@ RUNDA 2 (v2.py, v3.py, gates.py, nest2.py)
     Portile invatate > portile de mana (0.52 vs 0.46 pe formulare noua).
 RUNDA 3 (v4.py, PRINCIPII_EVALUARE.md)
   - Bariera reala = CONSTRUCTII noi (tranzitii de categorii nevazute): o faza neantrenata randomizeaza o adresa multiplicativa.
-  - Redundanta (bundle de coduri) o ridica de la 0.60 la 0.90; bigram singur = 1.00 pe formulari noi din tranzitii vazute.
+  - Redundanta (bundle de coduri) o ridica de la 0.60 la 0.82 (model = path+chain+bigram); 0.90 doar cu priorul de pozitie pos, care costa
+    in alta parte (runda 5). Restul pana la 1.00 e pe categorii noi (fara informatie in date). bigram singur = 1.00 pe tranzitii vazute.
 
 ## 4. Ce indica experimentele (cu nivelul de incredere)
   SIGUR (3-5 seed-uri, evaluare corecta; runda 5 pe lume de 3x): factorizare necesara; obiectiv generativ necesar; roluri aliniate
