@@ -505,3 +505,46 @@ splits; the aggregator stays below the bag of words (lexical decision, not struc
 (the number text-to-SQL papers compare) is 0.38, far below the state of the art (~0.9 with large pretrained models and the table as input)
 and above the baseline's sel+agg-only 0.44 is not comparable (no conditions there). The equivalence separation is 0.28-0.29 (criterion 0.3
 not met); whether it is lexical or role-based is what round 8d (v12: hard pairs with the lexical bag on the same row) measures.
+
+## 8d. WikiSQL: same-input baselines, data-efficiency curve, hard SQL pairs (v12_wikisql_baselines.py; logs/2026-10-15_1628_v12_wikisql_baselines_ed24ce4.txt)
+Setup. Identical input for ours and the transformer: the sequence of FIXED identity vectors of the question tokens + the same 90 category ids
+(42 frequent tokens + 48 skip-gram clusters), no table at the input; identical objective -cos(S, S_sql); identical decoder (table columns only
+as decoding candidates). Transformer: linear(2D -> 128) + learned category embedding + sinusoidal positions, 2 pre-norm layers, 4 heads,
+masked mean pooling, linear -> complex S; lr chosen ONCE on 2,000 questions held out from TRAIN at 56k (1e-3: val cos 0.616 vs 3e-4: 0.575),
+then fixed; AdamW + cosine. No extra tuning for ours. Epochs scaled for comparable steps: 60 / 20 / 3 at 1k / 5k / 56k. 3 seeds. The
+skip-gram categories are trained on the WHOLE train pool (~54k questions + headers) at every size, for both models: the curve measures data
+efficiency "with distributional categories from the whole training corpus, without labels", not from 1k sentences alone.
+Curve (dev; test at 56k in brackets; means of 3 seeds, std <= 0.005 everywhere):
+| n train | model | sel column | aggregator | cond-1 column | FULL query |
+|---|---|---|---|---|---|
+| 1k | BoW + LR | 0.475 | 0.762 | — | 0.371 (sel+agg only) |
+| 1k | **ours** | **0.632** | 0.766 | **0.387** | **0.164** |
+| 1k | transformer, same input | 0.415 | **0.819** | 0.360 | 0.115 |
+| 5k | BoW + LR | 0.502 | 0.810 | — | 0.413 (sel+agg only) |
+| 5k | **ours** | **0.760** | 0.800 | **0.555** | **0.294** |
+| 5k | transformer, same input | 0.510 | **0.864** | 0.415 | 0.164 |
+| 56k | BoW + LR | 0.499 | 0.870 | — | 0.441 (sel+agg only) |
+| 56k | **ours** | **0.816** [test 0.821] | 0.801 [0.803] | **0.626** [0.629] | **0.368** [0.374] |
+| 56k | transformer, same input, 3 epochs (23 s) | 0.543 [0.544] | **0.893** [0.893] | 0.450 [0.433] | 0.196 [0.190] |
+Robustness check (same-input transformer with 4x and 10x the training budget at 56k): see the lines appended below this section.
+Hard pairs (dev, same table): H1 "different words, same SQL" (Jaccard < 0.3): 26 pairs; H2 "same words, different SQL" (Jaccard >= 0.5): 1,353 pairs.
+| representation | same skeleton | different | separation | AUC same-vs-different | H1 (want HIGH) | H2 (want LOW) |
+|---|---|---|---|---|---|---|
+| bag of identities (lexical overlap only, same space) | 0.760 | 0.462 | 0.298 | 0.858 | 0.337 | 0.772 |
+| ours, 56k (3 seeds) | 0.755 | 0.464 | 0.291 | **0.914** | **0.462** | **0.622** |
+| transformer, same input, 56k (3 seeds) | 0.910 | 0.616 | 0.293 | 0.900 | 0.859 | 0.744 |
+Reading:
+- The same-input transformer does NOT reach us at any size on the selected column (0.54 vs 0.82 at 56k) or the full query (0.19 vs 0.37); it
+  beats both us and the bag of words on the aggregator (0.89 vs 0.80 vs 0.87) — the aggregator is a lexical decision and the transformer is
+  the better lexical classifier; we report it as is, with no dedicated head. The data-efficiency claim holds at every size with the wording
+  above (categories from the whole unlabelled corpus). The 56k transformer trained for 23 s (3 epochs, steps matched to ours); a longer
+  budget is checked right below so that "does not reach us" is not an artefact of the step budget.
+- Equivalence: the OVERALL separation is lexical-level — ours 0.291, the bag 0.298 — so the headline "same skeleton vs different" metric does
+  not test roles on WikiSQL (as foreseen in the judgment: the set has only 26 pairs with different words and the same SQL). On the HARD
+  pairs, however, the model moves both directions the right way relative to the lexicon: H1 (different words, same SQL) 0.462 vs 0.337 for
+  the bag (+0.13, n = 26: weak evidence); H2 (same words, different SQL) 0.622 vs 0.772 (-0.15, n = 1,353: solid), and the AUC rises from
+  0.858 to 0.914. The transformer compresses everything (same 0.91 / different 0.62) and keeps H2 at the lexical level (0.744). Kept as a
+  negative-with-a-nuance: "on WikiSQL the equivalence separation is lexical; the set lacks pairs with the same words and different SQL to
+  test roles; where such pairs exist (H2), the role state separates them 0.15 better than the lexicon". Metric unchanged.
+- FULL-query accuracy 0.37 is far below text-to-SQL systems with the table at the input and pretrained encoders (~0.9); this is a model with
+  ~2.5M phases, no pretraining, no table, trained in 2.5 minutes — the comparison that matters here is the same-input one.

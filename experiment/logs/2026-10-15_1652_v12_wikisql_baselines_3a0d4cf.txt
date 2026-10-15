@@ -1,0 +1,4 @@
+# 2026-10-15T16:52:03+02:00  commit=3a0d4cf  cmd: python3 v12_wikisql_baselines.py --sizes 56355 --epochs 12 --seeds 1 --only transformer --t_lrs 1e-3
+# Python 3.12.3  NVIDIA GB10
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v12_wikisql_baselines.py:35: UserWarning: enable_nested_tensor is True, but self.use_nested_tensor is False because encoder_layer.norm_first was True
+  self.enc = nn.TransformerEncoder(layer, n_layers); self.out = nn.Linear(d_model, 2 * D)
