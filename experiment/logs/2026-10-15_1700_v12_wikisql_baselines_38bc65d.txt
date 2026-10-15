@@ -18,3 +18,4 @@ clustering data (ABLATION: the 1000 training questions only): 7324 sequences fro
 clustering data (ABLATION: the 5000 training questions only): 36954 sequences from 5000 training questions only; dev/test/val not used (8384 word types).
   BoW + LR                                 [dev ] sel 0.495 agg 0.811 cond1  —    FULL(sel+agg only) 0.405
   BoW + LR                                 [test] sel 0.496 agg 0.810 cond1  —    FULL(sel+agg only) 0.405
+  ours (path+bigram+chainL) n=5000 seed 0 [117s] [dev ] sel 0.751 agg 0.777 cond1 0.555 FULL 0.288 cos 0.519 | pairs model: same 0.725 diff 0.424 sep 0.301 AUC 0.903 | H1 0.404 | H2 0.584

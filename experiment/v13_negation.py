@@ -59,11 +59,6 @@ class NegWorld(v5.BigWorld):
 class NegRoleWorld(v7.NestedRoleWorld):
     def __init__(self, F, world, rng):
         super().__init__(F, world, rng); self.R["neg"] = np.exp(1j * rng.uniform(-np.pi, np.pi, F.shape[1]))
-    def fillers(self, ev):
-        """the fillers actually asserted by the world (indefinite under negation replaces the identity)"""
-        neg = ev[-1]; A, B, C = ev[1], ev[2], ev[3]
-        if neg == "A" and "nobody" in self.form_hint: A = "someone"
-        return A, B, C
     def state(self, ev, toks=None):
         neg = ev[-1]; kind, A, B, C = ev[:4]; speakers = [x for x in ev[4:7] if x is not None]
         toks = toks or []
@@ -128,6 +123,7 @@ if __name__ == "__main__":
             cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt()); opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): m.theta[0] = 0
         torch.cuda.synchronize(); t_train = time.time() - t0
+        per_form = {}
         def run(depth, neg, n=60):
             roles, pres, scope, full = [], [], [], []
             scs = ["S", "A", "B", "C"] if neg else [None]
@@ -144,8 +140,13 @@ if __name__ == "__main__":
                         if sc == "B": B = "something"
                         ok_roles = [fill["A"] == A, fill["B"] == B, fill["C"] == C]; roles.extend(ok_roles)
                         pres.append((h != "none") == (sc is not None)); scope.append(h == (sc or "none")); full.append(all(ok_roles) and h == (sc or "none"))
+                        if neg: per_form.setdefault((depth, sc, t), []).append((h == sc, h))
             return float(np.mean(roles)), float(np.mean(pres)), float(np.mean(scope)), float(np.mean(full))
         aff0 = run(0, False); neg0 = run(0, True); aff3 = run(3, False, n=30); neg1 = run(1, True, n=40); neg2 = run(2, True, n=30)
+        if seed == 0:
+            for (d, sc, t), v in sorted(per_form.items()):
+                hs = dict(zip(*[list(x) for x in np.unique([h for _, h in v], return_counts=True)]))
+                print(f"     depth {d} scope {sc} form {t} '{NEG_PATTERNS[sc][t]}': scope acc {np.mean([o for o, _ in v]):.2f}  decoded as {hs}")
         # pair separation: same event, affirmative vs negated (scope S), model vs bag of identities
         evs = [w.event(trP, trO, depth=0) for _ in range(80)]; cs_m, cs_bag, cs_w = [], [], []
         for ev in evs:

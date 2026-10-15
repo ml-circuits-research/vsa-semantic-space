@@ -1,0 +1,35 @@
+# 2026-10-15T17:05:58+02:00  commit=a622582  cmd: python3 frame_roundtrip.py
+# Python 3.12.3  NVIDIA GB10
+frame_roundtrip: reference world, learned gates, 3 seeds, 100 fresh sentences per depth 0-3 (3 unseen); depth estimated from S
+  text:   p5 sells o11 , to p10 .
+  frame:  {'depth': 0, 'depth_scores': [np.float64(0.518), np.float64(0.051), np.float64(0.048), np.float64(0.042)], 'A': 'p5', 'B': 'o11', 'C': 'p10', 'says': []}
+  world:  {'depth': 0, 'A': np.str_('p5'), 'B': np.str_('o11'), 'C': np.str_('p10'), 'says': []}
+  diff:   {'missing': {}, 'extra': {}, 'different': {}}
+  prolog: event(e, gives(p5, o11, p10)). agent(e, p5). theme(e, o11). recipient(e, p10). depth(e, 0).
+  query recipient(e,R), agent(e,A) -> [{'R': 'p10', 'A': 'p5'}]
+  smt:    (declare-sort Entity 0) (declare-sort Event 0) (declare-const e Event) (declare-const o11 Entity) (declare-const p10 Entity) (declare-const p5 Entity) (declare- ...  check(recipient = world) = sat, check(recipient != world) = unsat
+  text:   p7 sells o9 , to p3 .
+  frame:  {'depth': 0, 'depth_scores': [np.float64(0.523), np.float64(0.066), np.float64(0.038), np.float64(0.035)], 'A': 'p7', 'B': 'o9', 'C': 'p3', 'says': []}
+  world:  {'depth': 0, 'A': np.str_('p7'), 'B': np.str_('o9'), 'C': np.str_('p3'), 'says': []}
+  diff:   {'missing': {}, 'extra': {}, 'different': {}}
+  prolog: event(e, gives(p7, o9, p3)). agent(e, p7). theme(e, o9). recipient(e, p3). depth(e, 0).
+  query recipient(e,R), agent(e,A) -> [{'R': 'p3', 'A': 'p7'}]
+  smt:    (declare-sort Entity 0) (declare-sort Event 0) (declare-const e Event) (declare-const o9 Entity) (declare-const p3 Entity) (declare-const p7 Entity) (declare-fu ...  check(recipient = world) = sat, check(recipient != world) = unsat
+  seed 0 depth 0: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 0 depth 1: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 0 depth 2: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  text:   p7 says that p1 claims that p4 says that p9 offers o8 , to p2 .
+  frame:  {'depth': 3, 'depth_scores': [np.float64(0.13), np.float64(0.042), np.float64(0.042), np.float64(0.234)], 'A': 'p9', 'B': 'o8', 'C': 'p2', 'says': ['p7', 'p1', 'p4']}
+  world:  {'depth': 3, 'A': np.str_('p9'), 'B': np.str_('o8'), 'C': np.str_('p2'), 'says': [np.str_('p7'), np.str_('p1'), np.str_('p4')]}
+  diff:   {'missing': {}, 'extra': {}, 'different': {}}
+  prolog: event(e, says(p7, says(p1, says(p4, gives(p9, o8, p2))))). agent(e, p9). theme(e, o8). recipient(e, p2). depth(e, 3). speaker(e, 1, p7). speaker(e, 2, p1). speaker(e, 3, p4).
+  query recipient(e,R), agent(e,A) -> [{'R': 'p2', 'A': 'p9'}]
+  smt:    (declare-sort Entity 0) (declare-sort Event 0) (declare-const e Event) (declare-const o8 Entity) (declare-const p1 Entity) (declare-const p2 Entity) (declare-co ...  check(recipient = world) = sat, check(recipient != world) = unsat
+  text:   p0 says that p3 says that p7 says that p5 shows o2 , to p10 .
+  frame:  {'depth': 3, 'depth_scores': [np.float64(0.141), np.float64(0.042), np.float64(0.048), np.float64(0.237)], 'A': 'p5', 'B': 'o2', 'C': 'p10', 'says': ['p0', 'p3', 'p7']}
+  world:  {'depth': 3, 'A': np.str_('p5'), 'B': np.str_('o2'), 'C': np.str_('p10'), 'says': [np.str_('p0'), np.str_('p3'), np.str_('p7')]}
+  diff:   {'missing': {}, 'extra': {}, 'different': {}}
+  prolog: event(e, says(p0, says(p3, says(p7, gives(p5, o2, p10))))). agent(e, p5). theme(e, o2). recipient(e, p10). depth(e, 3). speaker(e, 1, p0). speaker(e, 2, p3). speaker(e, 3, p7).
+  query recipient(e,R), agent(e,A) -> [{'R': 'p10', 'A': 'p5'}]
+  smt:    (declare-sort Entity 0) (declare-sort Event 0) (declare-const e Event) (declare-const o2 Entity) (declare-const p0 Entity) (declare-const p10 Entity) (declare-c ...  check(recipient = world) = sat, check(recipient != world) = unsat
+  seed 0 depth 3 (UNSEEN): full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
