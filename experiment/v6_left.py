@@ -1,6 +1,5 @@
 """
-v6_left: §5.1b — RETROACTIVE RE-PLACEMENT through LEFTWARD expectations (union then restriction), for identical prefixes with different roles.
-Problem (round 5, diag. 2): '{X1} spune ca {A} V ..' and '{X1} spune ca {X2} zice ca ..' have an identical prefix; any address from the prefix
+v6_left: §5.1b — RETROACTIVE RE-PLACEMENT through LEFTWARD expectations (Problem (round 5, diag. 2): '{X1} spune ca {A} V ..' and '{X1} spune ca {X2} zice ca ..' have an identical prefix; any address from the prefix
 is identical for A and X2. The role is decided by the NEXT word.
 Mechanism (the same step for every word; no rule for the verb or for 'ca'/'that'):
   - as in v2: a word takes the most recent unconsumed expectation for its category; an EMITTER (open gate) emits rightward expectations

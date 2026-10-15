@@ -131,6 +131,29 @@ def split_templates(w):
         a, b = new[0]; print(f"  T{t} '{PATTERNS[t]}': new transitions (GIVE) {sorted(a)}, new categories {sorted(b)}")
     return held_seen, held_new
 
+def split_templates_rolecues(w):
+    """Stricter axis (judgment 2026-10-15): a new formulation is 'role cues seen' iff for EVERY role slot (A, B, C) both local cues —
+    (previous category, role) and (role, next category) — occur in some training formulation with the SAME role. This tests the
+    mechanism (can seen local cues be recombined?) rather than the redundancy of the formulation set ('seen transitions' only asks
+    that each category pair was seen, with any role). Returns (role_cues_seen, role_cues_unseen) over the non-training templates."""
+    def cues(kind, t):
+        toks = w.frames[kind][t].format(A="{A}", B="{B}", C="{C}").split(); out = set()
+        for i, x in enumerate(toks):
+            if x in ("{A}", "{B}", "{C}"):
+                prev = w.cat[toks[i - 1]] if i > 0 and not toks[i - 1].startswith("{") else ("^" if i == 0 else "ID")
+                nxt = w.cat[toks[i + 1]] if i + 1 < len(toks) and not toks[i + 1].startswith("{") else ("$" if i + 1 == len(toks) else "ID")
+                out.add((prev, x)); out.add((x, nxt))
+        return out
+    seen = set()
+    for k in w.frames:
+        for t in TRAIN_T: seen |= cues(k, t)
+    ok, bad = [], []
+    for t in range(len(PATTERNS)):
+        if t in TRAIN_T: continue
+        new = set().union(*[cues(k, t) - seen for k in w.frames])
+        (ok if not new else bad).append(t)
+    return ok, bad
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)

@@ -297,8 +297,9 @@ a regularity true in all training formulations and false in a test one.
 Mechanism: an emitter also emits LEFT expectations; the most recent non-emitter of each category before it, not yet re-addressed, is
 re-addressed to address(emitter) (x) L[c_emitter, c]; one re-addressing per word, by the first emitter that follows it; emitters anchor.
 Trace ('p0 says that p1 claims that p2 gives o0 to p3 .'): p1 = says:that+that:claims+L(claims:P); p2 = ...+that:gives+L(gives:P); at
-depth 1 p1 = says:that+that:gives+L(gives:P). The identical prefix no longer matters; what follows decides. Union-then-restriction
-(write at all candidates, subtract the losers) equals address replacement on the final state, which is what is trained.
+depth 1 p1 = says:that+that:gives+L(gives:P). The identical prefix no longer matters; what follows decides. As implemented, this is a
+RE-ADDRESSING: the word's address list is replaced when the first following emitter arrives (the final state is what is trained). A
+union-then-restriction variant (write at all candidates, subtract the losers) is NOT implemented; if it is, this text changes.
 | code | seen | new id. | seen trans. | UNSEEN trans. | depth 1 | depth 2 (seen) | depth 3 (A,B,C,X1,X2) |
 |---|---|---|---|---|---|---|---|
 | chain | 1.000 | 1.000 | 0.102 | 0.415 | 1.000 | 0.859 | 0.784 |

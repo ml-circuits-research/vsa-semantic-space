@@ -65,3 +65,14 @@ Changed in code: v5_scale.set_lang(en|ro) (English BigWorld: 16 patterns, prefix
   English on disk, Romanian in chat); RESULTS ROUND 6 (a, b, c); 00_READ_FIRST §4 (positive on unseen construction; precise negative), §5 (1b done, 1c new).
 Next: 1c (clause-level retroactive displacement for right-announced structure), then §5.2 gates by gradient on the compositional world.
   Decision requested: is the compositional world the reference world from now on (it matches the original "fibre" idea; flat was ours)?
+
+## 2026-10-15 (DGX) — decisions after the round-6 judgment
+Decided (author + reviewing session): (1) the COMPOSITIONAL world (v7_nested) is the reference world from now on; the flat world is kept only
+to reproduce rounds 5-6b. (2) Next is §5.2, gates by gradient, on the compositional world; §5.1c (postposed / right-announced structure)
+is postponed and will be declared in the first paper as a known limit of causal addressing, with the demonstration of why.
+Also requested, before or alongside §5.2: (a) a control on test 6c — small transformer (torch, minimally tuned: lr sweep, dropout),
+trained on depths 1-2, tested on depth 3, same data, same fixed identities, same objective; per role, with margin, 5 seeds;
+(b) rebuild the "new formulations, seen transitions" axis with formulations whose ROLE-BEARING transitions were all seen; keep it reported;
+(c) describe chainL as the code does (re-addressing), not as union-then-restriction — done in RESULTS 6b and v6_left.py.
+Criterion for §5.2: gates learned by gradient converge to the same set as by search (identities closed, verbs/prepositions open) on >= 3
+worlds/seeds, with no loss in the round-6c table.
