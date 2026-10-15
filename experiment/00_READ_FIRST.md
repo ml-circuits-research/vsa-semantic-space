@@ -105,8 +105,9 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
   4. Control "associative memory with a bottleneck": if it aligns equally well, "generative necessary" narrows to "limited capacity necessary".
   5. TUNED transformer (+ dropout, weight decay, lr sweep) and small BERT, at 1k/5k/50k examples: a data-efficiency curve, not a point.
   6. Capacity: 64-1000 identities at D = 4096-16384; sparse block codes; cleanup at large vocabulary.
-  7. Real text with executable consequence: WikiSQL with v4 (all 4 codes) + learned gates + discovered categories + the table visible.
-     Mandatory baseline: bag of words + logistic regression. Then Spider (nested SQL).
+  7. [STARTED, round 8b, v11_wikisql.py] WikiSQL with the full model + learned gates + distributional categories: selected column 0.824
+     without the table vs 0.494 BoW+LR (criterion met); aggregator 0.813 vs 0.867 BoW+LR (NOT met); separation 0.28 (NOT met); table at
+     the input HURTS (0.67). Next: 3 seeds, test split, tuned neural baselines at 1k/5k/56k, aggregator readout. Then Spider.
   8. Consequence signal without a synthetic world: next sentence / multiple captions per image (COCO) / translations (OPUS) with hard negatives.
 
 ## 6. Concrete steps on the DGX (torch)

@@ -451,3 +451,39 @@ inner roles at chance). Capacity is not what is missing: rank 128 = rank 1024. "
 necessary" stands against this control; it does not narrow to "limited capacity is necessary". (The per-position linear map could in
 principle implement 'unbind pos_k, bind R_role' as a diagonal complex map, but only for FIXED positions; free word order and nesting break
 the position-role correspondence, which is the point of the displacement codes.)
+
+## 8b. WikiSQL with the full model (v11_wikisql.py; logs/2026-10-15_1534_v11_wikisql_2fb26b9.txt; seed 0; D = 512, 3 epochs, batch 32)
+Train 56,355 questions, dev 8,421 (all), vocabulary 33,320 word types. Identities fixed random per word type. Categories: 42 frequent tokens
+as singletons + 48 skip-gram clusters (k-means on skip-gram vectors trained on the same questions and headers) = 90 categories (the
+round-8a lesson applied: distributional clustering is an honest source of categories). Codes: path + bigram + soft chainL with gates
+learned by gradient (start closed). World: S_sql = SEL (x) bundle(selected column) + AGG (x) f(agg) + sum_k COND_k (x) [COL (x) bundle(col)
++ OP (x) f(op) + VAL (x) bundle(value)]. Decoding with the world's addresses; the selected / condition column is chosen among the TABLE's
+columns (as in round 1); the table is otherwise NOT seen in input mode 'q'. Mode 'qh' = header tokens + SEP + question at the input.
+| input | selected column | aggregator | condition-1 column | cos(S, S_sql) | same-table pairs: same skeleton / different / HARD (same sel) | separation |
+|---|---|---|---|---|---|---|
+| chance / majority | 0.166 | 0.715 | — | — | — | — |
+| trivial: token overlap only | 0.484 | — | — | — | — | — |
+| BASELINE BoW + logistic regression | 0.494 | **0.867** | — | — | — | — |
+| round 1 (position code, numpy, 2 epochs) | 0.494 | 0.586 | 0.249 | 0.126 | 0.651 / 0.233 | 0.42 (n=121 pairs) |
+| **full model, question only (q), epoch 2** | **0.824** | 0.813 | **0.631** | 0.638 | 0.764 / 0.484 / 0.559 (n = 336 / 12,227 / 1,866) | 0.280 |
+| full model, header + question (qh), epoch 2 | 0.673 | 0.799 | 0.484 | 0.625 | 0.907 / 0.762 / 0.779 | 0.146 |
+Epoch curve (q): sel 0.792 -> 0.813 -> 0.824; cond1 0.574 -> 0.622 -> 0.631; agg 0.798 -> 0.811 -> 0.813. 104 s / epoch (GPU).
+Learned gates on real text (q, most open): than 1.00, and 1.00, has 1.00, the 0.96, what 0.91, which 0.79, of 0.71, is 0.69; all 48 content
+clusters <= 0.52 (most ~0): the same partition as on the synthetic world — relation markers / wh-words open, content closed — found again
+without any supervision on real questions.
+Reading:
+- Selected column WITHOUT seeing the table: 0.824 vs 0.494 for BoW + LR and for the token-overlap control — the model recovers the column
+  from how the question is phrased around the content words, which the bag of words cannot. The round-1 criterion (README_DGX: sel > 0.7
+  without the table) is met; condition column 0.63 (round 1: 0.25).
+- Aggregator: 0.813 vs 0.867 for BoW + LR — BELOW the baseline. The aggregator is a lexical signal ('how many', 'total', 'average', 'highest')
+  that a bag of words captures directly; in our state it is one term among many (AGG (x) f_agg) and competes with the column and condition
+  terms. The criterion agg > 0.85 is NOT met. Equivalence separation 0.28 (criterion > 0.3): not met either; the HARD pairs (same selected
+  column, different aggregator or condition) at 0.56 vs same-skeleton 0.76 shows the state does separate them, by 0.2.
+- Table visible at the INPUT hurts: the header tokens enter the bundle with their own identities and dominate the state (all same-table
+  questions share them: same-table cosines rise to 0.76-0.91, separation falls to 0.15), and sel drops to 0.67. The right place for the
+  table in this formulation is the decoder (candidate columns), where it already is; a header-aware model would need the header bound to
+  a role (zoom-in), not added.
+- Honest status for "is there an empirical paper": the selected-column result is a real, large advantage over the mandatory baseline on
+  real text with executable consequence, at a single seed and without a tuned neural baseline. Before any claim: 3 seeds; the test split
+  (15,878); a tuned small transformer / BERT-small at 1k / 5k / 56k; and the aggregator weakness addressed (a dedicated code or a
+  separate readout) or reported as is. Spider (nested SQL) only after that.

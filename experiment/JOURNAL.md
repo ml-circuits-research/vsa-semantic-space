@@ -104,3 +104,18 @@ WikiSQL (decides whether there is an empirical paper) before capacity (a curve t
 those axes, a declared limit with demonstration (postposed structure), the thread of the two retractions; with the caveats (own world,
 small control, two reporting verbs). In the gates section: a concrete TRACE — the same sentence with hand gates and with learned gates,
 addresses word by word.
+
+## 2026-10-15 (DGX, evening) — round 8: controls on "emergent", WikiSQL with the full model, principle note started
+Ran: run.sh v10_controls.py (5 seeds) -> logs/2026-10-15_1530_v10_controls_727aecb.txt ; run.sh v11_wikisql.py -> logs/2026-10-15_1534_v11_wikisql_2fb26b9.txt
+     trace_gates.py -> logs/trace_gates_hand_vs_learned.txt ; WikiSQL downloaded to corp/wikisql (gitignored)
+Result: (8a) word2vec recovers the categories as perfectly as the learned displacements (both 1.000): "emergent categories" RETRACTED as a
+  contribution, kept as a consistency check. Bottleneck associative map: new ids ~0.24 (chance), depth 3 0.25-0.39 with the transformer's
+  signature at every rank 8-1024: "generative with a fixed operation is necessary" stands. (8b) WikiSQL, question only: selected column
+  0.824 vs 0.494 BoW+LR (and 0.484 overlap-only), condition column 0.631, aggregator 0.813 vs 0.867 BoW+LR (below), separation 0.28;
+  header at the input hurts (sel 0.67). Learned gates on real text: than/and/has/the/what/which/of/is open, content clusters closed — the
+  synthetic partition reappears on real questions.
+Surprise / problem: the aggregator is lexical and the bag of words beats us on it; the table as input dominates the bundle (needs a role, not a sum).
+Changed in code: v10_controls.py, v11_wikisql.py, trace_gates.py. Docs: RESULTS ROUND 8 (a, b); PAPER_NOTE.md (draft with §6 filled, trace in §3.1);
+  POSITIONING contributions updated; 00_READ_FIRST §4 (retraction), §5.7 started; current_status rewritten.
+Next (for judgment): WikiSQL 3 seeds + test split + tuned neural baselines (transformer, BERT-small) at 1k/5k/56k + an aggregator readout;
+  write the empirical paper outline only if the advantage survives the tuned baselines. Principle note: tighten prose, add figure 1.

@@ -104,8 +104,8 @@ rule (EVALUATION_PRINCIPLES 1-15) that the next round had to pass.
 ## 8. Caveats (to state, not to hide)
 Own synthetic world (two reporting verbs, prefixed reporting only in the positive result, 6 frames, 18 identities); the "seen transitions"
 axis measures formulation-set redundancy (replaced by "role cues seen", kept for comparison); the control is small and minimally tuned;
-D = 1024 and 36 identities (capacity not yet measured at scale); no real text yet (SICK negative, WikiSQL a single point) — nothing here
-is a claim about general text.
+D = 1024 and 36 identities (capacity not yet measured at scale); real text: WikiSQL selected column 0.82 vs 0.49 BoW+LR without seeing the
+table (round 8b, one seed), aggregator below the baseline — reported in the empirical paper, not here; nothing here is a claim about general text.
 
 ## 9. Related work to cite (verify each before citing)
 Plate 1995/2003 (HRR); Kanerva 2009 (HDC); Gayler 2003 (VSA); Smolensky 1990 (TPR); Eliasmith 2012 (SPA); Frady, Kleyko, Sommer 2018-2022

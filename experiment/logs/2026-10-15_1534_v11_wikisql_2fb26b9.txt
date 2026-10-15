@@ -17,3 +17,13 @@ BASELINE BoW + logistic regression: selected column 0.494  aggregator 0.867
   model q seed 0 epoch 1                       sel 0.813  agg 0.811  cond1-col 0.622 | cos(S, S_sql) 0.628 | same-table pairs: same skeleton 0.767 (n=336), different 0.495 (n=12227), HARD (same sel) 0.567 (n=1866) | separation 0.272
   [q seed 0] epoch 2 done (388s), last loss 0.796
   model q seed 0 epoch 2                       sel 0.824  agg 0.813  cond1-col 0.631 | cos(S, S_sql) 0.638 | same-table pairs: same skeleton 0.764 (n=336), different 0.484 (n=12227), HARD (same sel) 0.559 (n=1866) | separation 0.280
+  learned gates (q): most open [('than', 1.0), ('and', 1.0), ('has', 1.0), ('the', 0.96), ('what', 0.91), ('which', 0.79), ('of', 0.71), ('is', 0.69), ('cluster47', 0.52), ('cluster36', 0.44), ('cluster14', 0.42), ('cluster30', 0.22), ('cluster40', 0.2), ('cluster18', 0.18), ('<sep>', 0.12), ('cluster23', 0.12)]
+  [qh seed 0] epoch 0 done (346s), last loss 0.660
+  model qh seed 0 epoch 0                      sel 0.618  agg 0.781  cond1-col 0.437 | cos(S, S_sql) 0.602 | same-table pairs: same skeleton 0.927 (n=336), different 0.817 (n=12227), HARD (same sel) 0.831 (n=1866) | separation 0.110
+  [qh seed 0] epoch 1 done (702s), last loss 0.574
+  model qh seed 0 epoch 1                      sel 0.649  agg 0.791  cond1-col 0.481 | cos(S, S_sql) 0.621 | same-table pairs: same skeleton 0.915 (n=336), different 0.779 (n=12227), HARD (same sel) 0.794 (n=1866) | separation 0.136
+  [qh seed 0] epoch 2 done (1057s), last loss 0.711
+  model qh seed 0 epoch 2                      sel 0.673  agg 0.799  cond1-col 0.484 | cos(S, S_sql) 0.625 | same-table pairs: same skeleton 0.907 (n=336), different 0.762 (n=12227), HARD (same sel) 0.779 (n=1866) | separation 0.146
+  learned gates (qh): most open [('<sep>', 1.0), ('and', 1.0), ('than', 1.0), ('the', 0.51), ('1', 0.43), ('<bar>', 0.42), ('2', 0.26), ('cluster1', 0.0), ('cluster23', 0.0), ('cluster10', 0.0), ('cluster35', 0.0), ('cluster0', 0.0), ('cluster43', 0.0), ('cluster30', 0.0), ('away', 0.0), ('cluster37', 0.0)]
+
+checklist: [x] world addresses [x] fixed identities [x] chance + majority printed [x] BoW+LR baseline [x] hard pairs reported separately [ ] >=3 seeds (see --seeds) [x] no test calibration
