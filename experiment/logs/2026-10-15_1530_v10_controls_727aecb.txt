@@ -1,0 +1,23 @@
+# 2026-10-15T15:30:53+02:00  commit=727aecb  cmd: python3 v10_controls.py
+# Python 3.12.3  NVIDIA GB10
+v10_controls: device=cuda, D=1024, N=30000, seeds=5; reference world (en, prefixed reporting), training [0, 1, 2, 3, 6, 9, 12, 15], depths 0-2
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+Control A: 54 content words in 5 classes {np.str_('O'): np.int64(18), np.str_('P'): np.int64(18), np.str_('V'): np.int64(6), np.str_('VP'): np.int64(6), np.str_('VR'): np.int64(6)}; chance purity = 0.333; NN chance ~ 0.245
+  seed 0 A model (untied displacements)           purity 1.000  ARI 1.000  NN-category 1.000   (  56s)
+  seed 0 A word2vec (skip-gram, same sentences)   purity 1.000  ARI 1.000  NN-category 1.000   (   2s)
+  seed 0 B bottleneck r=    8 (   5s) 0.30 (m -0.02) | 0.16 (m -0.03) | 0.26 (m -0.02) | 0.21 (m -0.04) | 0.32 (m -0.02) | 0.35 (m 0.05) | 0.32 (m 0.03) | 0.24 (m 0.01)  || depth 3: A 0.08 B 0.08 C 0.07 X1 1.00 X2 0.13 X3 0.08
+  seed 0 B bottleneck r=   32 (   5s) 0.66 (m 0.20) | 0.21 (m -0.02) | 0.68 (m 0.13) | 0.52 (m 0.06) | 0.70 (m 0.14) | 0.74 (m 0.20) | 0.68 (m 0.14) | 0.34 (m 0.07)  || depth 3: A 0.12 B 0.11 C 0.14 X1 1.00 X2 0.58 X3 0.10
+  seed 0 B bottleneck r=  128 (   5s) 0.74 (m 0.23) | 0.21 (m -0.02) | 0.83 (m 0.24) | 0.38 (m 0.01) | 0.86 (m 0.27) | 0.83 (m 0.26) | 0.87 (m 0.27) | 0.40 (m 0.08)  || depth 3: A 0.11 B 0.11 C 0.12 X1 1.00 X2 1.00 X3 0.07
+  seed 0 B bottleneck r= 1024 (  23s) 0.74 (m 0.23) | 0.21 (m -0.02) | 0.83 (m 0.22) | 0.37 (m 0.01) | 0.86 (m 0.27) | 0.83 (m 0.26) | 0.87 (m 0.27) | 0.40 (m 0.08)  || depth 3: A 0.10 B 0.12 C 0.12 X1 1.00 X2 1.00 X3 0.06
+  seed 1 A model (untied displacements)           purity 1.000  ARI 1.000  NN-category 1.000   (  54s)
+  seed 1 A word2vec (skip-gram, same sentences)   purity 1.000  ARI 1.000  NN-category 1.000   (   2s)
+  seed 1 B bottleneck r=    8 (   5s) 0.31 (m -0.01) | 0.17 (m -0.03) | 0.27 (m -0.02) | 0.23 (m -0.03) | 0.29 (m -0.02) | 0.36 (m 0.05) | 0.30 (m 0.03) | 0.25 (m 0.01)  || depth 3: A 0.10 B 0.07 C 0.10 X1 0.99 X2 0.13 X3 0.10
+  seed 1 B bottleneck r=   32 (   6s) 0.68 (m 0.21) | 0.24 (m -0.02) | 0.65 (m 0.12) | 0.50 (m 0.06) | 0.70 (m 0.17) | 0.73 (m 0.19) | 0.68 (m 0.14) | 0.34 (m 0.07)  || depth 3: A 0.13 B 0.10 C 0.10 X1 1.00 X2 0.57 X3 0.13
+  seed 1 B bottleneck r=  128 (   8s) 0.75 (m 0.23) | 0.24 (m -0.02) | 0.83 (m 0.23) | 0.35 (m 0.00) | 0.85 (m 0.29) | 0.83 (m 0.26) | 0.87 (m 0.27) | 0.41 (m 0.08)  || depth 3: A 0.11 B 0.08 C 0.09 X1 1.00 X2 1.00 X3 0.16
