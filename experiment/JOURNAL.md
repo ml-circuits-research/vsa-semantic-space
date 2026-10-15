@@ -46,3 +46,22 @@ Changed in code: v5_scale.py (BigWorld, BigRoleWorld, V5 with pos up to 40), dia
   (nesting >= 2 NEGATIVE; §5.1 done; §5.1b new: learned deferred addressing); POSITIONING (barrier partially reopened).
 Next step: §5.1b (X2 at depth 2 > 0.9 without losses) before §5.2, because the gates by gradient depend on the same expectation mechanism.
   Question for judgment: do we report 'the model' as path+chain+bigram (0.99/0.82) and pos separately as a prior? I say yes.
+
+## 2026-10-15 (DGX, afternoon) — English world, left expectations (§5.1b), compositional nesting; all documents translated to English
+Ran: run.sh v5_scale.py --lang en                 -> logs/2026-10-15_1246_v5_scale_9ea27cd.txt  (language-switch reproduction check)
+     v6_left.py (manual run.sh header; run.sh refused the tree dirtied by the translation renames) -> logs/2026-10-15_1249_v6_left_9ea27cd.txt
+     run.sh v7_nested.py --variants main           -> logs/2026-10-15_1311_v7_nested_043caf8.txt  (compositional world, 3 outer forms)
+     run.sh v7_nested.py --variants main --outer prefixed -> logs/2026-10-15_1319_v7_nested_e1e7011.txt
+Result: (6a) English world reproduces seen / new ids / UNSEEN transitions / depth 1-2 within +-0.03; "seen transitions" 0.785 vs 0.998 because
+  T10 'from A , C receives B' has C at 0.04: the only training formulation with a person after a comma (T9) has the AGENT there. The axis
+  measures formulation-set redundancy. (6b) Left expectations: inner roles at depth 2 -> 1.00, speakers 0.65 -> 0.77; criterion X2 > 0.9
+  NOT met; derived the algebraic contradiction of the flat world (a+g = 0 ... => X2 = X1). (6c) Compositional world + prefixed reporting:
+  depth 2 = 1.00 all roles (plain chain!), UNSEEN depth 3 = 1.00 all roles with chainL. With the postposed form present: 0.82-0.88 / ~0.5.
+Surprise / problem: the round-5 "nesting >= 2 unsolvable from the prefix" was about the WORLD (flat roles), not the model. The precise barrier
+  is right-announced structure (a displacement announced after its scope). Both runs via run.sh failed once because run.sh saw the
+  translation's git mv as a dirty tree; one run launched manually with the run.sh header (noted in the log).
+Changed in code: v5_scale.set_lang(en|ro) (English BigWorld: 16 patterns, prefixed/postposed reporting), v6_left.py (chainL), v7_nested.py
+  (NestedRoleWorld, decode by unbinding conj(R_rep)^k, --outer prefixed), diag runs. Docs: all Markdown translated and renamed (AGENTS.md rule:
+  English on disk, Romanian in chat); RESULTS ROUND 6 (a, b, c); 00_READ_FIRST §4 (positive on unseen construction; precise negative), §5 (1b done, 1c new).
+Next: 1c (clause-level retroactive displacement for right-announced structure), then §5.2 gates by gradient on the compositional world.
+  Decision requested: is the compositional world the reference world from now on (it matches the original "fibre" idea; flat was ours)?

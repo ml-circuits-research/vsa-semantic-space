@@ -1,41 +1,47 @@
-# Current status (updated at every judgment point; last: 2026-10-15 evening, commit 965332d)
+# Current status (rewritten at every judgment point; last: 2026-10-15 afternoon, round 6)
 
-## What was done today on the DGX
-- Environment: .venv with numpy 2.5.4 and torch 2.14.1+cu130 (aarch64 + CUDA, GPU GB10 visible).
-- Document cleanup (a1ff20b): alignment to rounds 2-3; "algebraic impossibility" and "deferred addressing" retracted; confidence level corrected.
-- Round 4: v4.py numpy on the DGX CPU reproduces round 3 EXACTLY (3 decimals). v4_torch.py (GPU) gives scores IDENTICAL to numpy on all 24 runs.
-  Time/variant: old CPU ~77 s -> DGX CPU 24.8 s -> GPU batch=1 28.5 s (no gain: Python) -> GPU encoding once + batch 32: 2.2 s.
-  Batch 8-32 preserves the conclusions for "all 4" (+-0.03); the weak codes lose at batch 32.
-- Round 5 (§5.1): v5_scale.py, 3x world (6 frames x 16 formulations, 18+18 identities, nesting 0-3), 5 seeds, D=1024, 30k, batch 8.
+## Since the last judgment (round 5)
+- Process: run.sh ignores logs/; depth-3 column reports only roles that were training targets; "0.60 -> 0.82 (model); 0.90 only with the
+  position prior" wording applied. Author decisions applied: model = path+chain+bigram, pos = separate prior; §5.1b before §5.2.
+- Language: all Markdown translated to English and renamed (00_READ_FIRST, RESULTS, EVALUATION_PRINCIPLES, JOURNAL, POSITIONING,
+  INTERPRETATION, INITIAL_ANALYSIS_DGX); number multisets verified identical per file. AGENTS.md: English on disk, Romanian in chat.
+  Advanced tests now run on the English synthetic world (v5_scale.set_lang("en")).
 
-## Round 5 results (5 seeds)
-| code | seen | new id. | new form. seen trans. | UNseen trans. | nesting depth 1-2 | depth 3 |
-|---|---|---|---|---|---|---|
-| path+chain+bigram | 1.000 | 1.000 | 0.998 | 0.821 | 0.938 | 0.673 |
-| all 4 | 1.000 | 1.000 | 0.841 | 0.984 | 0.943 | 0.687 |
-| (small world, round 3) path+chain+bigram | 1.000 | 1.000 | 0.987 | 0.824 | — | — |
-| (small world, round 3) all 4 | 1.000 | 1.000 | 0.942 | 0.901 | — | — |
+## Round 6 results (5 seeds, D=1024, 30k sentences, batch 8; full tables in experiment/RESULTS.md ROUND 6)
+6a. Language switch: seen 1.00, new identities 1.00, UNSEEN transitions 0.788 (vs 0.821 ro), depth 1-2 0.935 (vs 0.938) => reproduced.
+    "Seen transitions" 0.785 vs 0.998: T10 'from A , C receives B' has C at 0.04 because the only training formulation with a person
+    after a comma (T9 'to C , A gives B') has the AGENT there. That axis measures how redundant the formulation set is, not the mechanism.
+6b. Left expectations (§5.1b, chainL): depth 2 inner roles A, C 0.96 -> 1.00; speakers X1/X2 0.65 -> 0.77. Criterion X2 > 0.9 NOT met.
+    Cause: the FLAT world (depth-indexed speakers, depth-invariant A,B,C) is an algebraic contradiction for any cumulative addressing
+    (a+g = 0, b+g = 0, d+b = 0, c+a = 0 => X2 - X1 = a+d = 0). The world was wrong, not the model.
+6c. Compositional world (reported speech = R_rep (x) inner state, one speaker role, depth = number of R_rep; no new role at a new depth):
+    | outer forms | code | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) |
+    |---|---|---|---|---|
+    | prefixed only | path+chain+bigram | 0.982 | 0.997 | 0.979 (X3 0.90) |
+    | prefixed only | path+chainL+bigram | 1.000 | 1.000 | **1.000 on all six roles** (margin 0.23) |
+    | all 3 (incl. postposed '<P> , says X') | path+chainL+bigram | 0.980 | 0.881 | 0.538 |
+    => FIRST CLEAN POSITIVE ON AN UNSEEN CONSTRUCTION: depth 3 never trained, decoded at 1.00. The world's algebra (R_rep applied d times)
+    and the model's (displacements summed along the chain) coincide, so composition one level further is by construction once training
+    lands on the consistent solution. Left expectations close the last gap (X3 0.90 -> 1.00).
+    => The precise remaining barrier: structure announced AFTER its scope (postposed reporting; comma constructions). The clause is already
+    written when 'says' arrives; no causal address can displace it. This is the exact, data-forced form of "deferred addressing is
+    necessary": a displacement applied retroactively to a whole clause (the round-1 zoom-in), and only for right-announced structure.
 
 ## Conclusions relative to the goal
-1. REPRODUCED: path+chain+bigram is stable across worlds (0.99 / 0.82). New identities 1.00. This is the model that holds.
-2. NOT reproduced: "all 4" inverts. Cause: the pos code = absolute position prior. It learns from T1 "person at position 5 = agent";
-   in T10 the recipient is at 5 => pos votes completely wrong (A->C, 0.15) and beats the overlapping addresses of the first word. Its gain on
-   unseen transitions comes from new categories ('catre', 'il') where the other codes have nothing. Both belong to the set of formulations, not to the mechanism.
-   PROPOSAL: we report the model = path+chain+bigram; pos separately, as a prior.
-3. NEGATIVE AND CLEAN (the most important): nesting of depth >= 2 is unsolvable with addresses from the prefix.
-   '{X1} spune ca {A} V ...' and '{X1} spune ca {X2} zice ca ...' have the identical prefix 'P spune ca P' => any causal code gives the same place for
-   A (depth 1) and X2 (depth 2), the world requires different roles => ~0.5 (X2 0.28-0.53 for any code, confused with A), EVEN on seen data.
-   D does not help, data does not help. Round 2 retracted "deferred addressing" too much: there is no need for "the verb writes the buffer", but there IS a need for a
-   word to be re-addressable by what follows. The first proof forced by data. It changes figure 1 and the article's contributions.
-4. Design flaw caught: at depth 3 the role X3 appears, never a target in training => at chance by construction (0.08 ~ 1/12);
-   the "depth 3" figure mixes it with the real degradation of A/X1/X2. Became rule 14 in EVALUATION_PRINCIPLES.
-   New rules: 13 (same optimization regime in comparisons), 15 (breakdown per formulation x role before interpretation).
+1. The thesis gains its strongest evidence so far: different formulations AND a deeper construction than ever seen converge to the same
+   decodable state, role by role, from one generative objective, with no rule for 'that' or for verbs.
+2. The round-5 negative is now sharper and partly withdrawn: not "nesting >= 2 is unsolvable from the prefix" but "a flat world is
+   contradictory, and right-announced structure is unaddressable causally". Our world design produced the first; the second is real.
+3. Two evaluation lessons became rules or proposals: a new depth must not add a role (rule 14, satisfied by the compositional world);
+   the "seen transitions" axis must be redesigned to test mechanism rather than redundancy (00_READ_FIRST §5.1c).
 
-## Questions for the other session's judgment
-1. Do we accept path+chain+bigram as "the model" and pos as a separate prior?
-2. Next step: §5.1b (retroactive re-addressing: a placed word can be moved when a new emitter appears; criterion X2 > 0.9 at depth 2
-   without losses elsewhere) BEFORE §5.2 (gates by gradient)? Argument: the gates depend on the same expectation mechanism.
+## Decisions requested
+1. Make the compositional world the reference world from now on? (It matches the original "fibre / copy of the space" idea; the flat
+   world was our construction.) The flat world stays for reproducing rounds 5-6b.
+2. Next: §5.1c (clause-level retroactive displacement for right-announced structure, criterion depth 2 > 0.95 with all 3 outer forms)
+   before §5.2 (gates by gradient, now on the compositional world)? Or go to §5.2 directly and treat right-announced structure as a
+   declared limit of causal addressing for the first paper?
 
-## Relevant files
-experiment/RESULTS.md (rounds 4, 5) | experiment/JOURNAL.md | experiment/EVALUATION_PRINCIPLES.md (13-15) | experiment/00_READ_FIRST.md §4-5
-experiment/v4_torch.py, v5_scale.py, diag_v5.py | experiment/logs/2026-10-15_1128_v5_scale_0defffd.txt
+## Files
+experiment/RESULTS.md (ROUND 6) | experiment/JOURNAL.md | experiment/00_READ_FIRST.md §4-5 | experiment/v5_scale.py (set_lang), v6_left.py, v7_nested.py
+logs: 2026-10-15_1246_v5_scale_9ea27cd, _1249_v6_left_9ea27cd, _1311_v7_nested_043caf8, _1319_v7_nested_e1e7011

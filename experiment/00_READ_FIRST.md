@@ -63,9 +63,17 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
   CERTAIN (3-5 seeds, correct evaluation; round 5 on a 3x world): factorization necessary; generative objective necessary; aligned roles
     (11 formulations x 2 frames; 16 x 6); new identities 1.00; redundancy of the STRUCTURAL codes (path+chain+bigram) helps on new constructions:
     0.58 -> 0.82, stable across worlds; nesting of DEPTH 1 = 1.00 without rules.
-  CERTAIN and NEGATIVE (round 5): nesting of depth >= 2 is NOT solvable with addresses computed from the prefix (identical prefix, different roles;
-    ~0.5 on the inner speaker, even when seen in training) => a form of deferred addressing IS necessary there. The pos code is an absolute
-    position prior: it helps on new categories, hurts on free order; its contribution depends on the set of formulations, not on the mechanism.
+  CERTAIN (round 6c, 5 seeds, English world): with a COMPOSITIONAL world (reported speech = R_rep (x) inner state, one speaker role) and
+    the reporting announced before its clause, nesting of depth 2 is solved exactly (1.00 on every role) by the plain chain code, and the
+    learned displacements compose one level further than seen: depth 3, never trained, decodes at 1.00 on all roles (path+chainL+bigram).
+    First clean positive on an unseen CONSTRUCTION.
+  CERTAIN and NEGATIVE (rounds 5-6): (i) a FLAT world (depth-indexed speakers X1..X3, depth-invariant A,B,C) is unsolvable by any
+    cumulative address scheme — an algebraic contradiction (RESULTS 6b), softened by argmax to ~0.77; the world was wrong, not the model.
+    (ii) structure announced AFTER its scope (postposed '<P> , says X'; the English 'from A , C receives B') cannot be addressed causally:
+    the clause is already written. This is the precise form of "deferred addressing is necessary": a displacement applied retroactively to
+    a whole clause (the round-1 zoom-in), forced by data for right-announced structure only. The pos code is an absolute position prior:
+    it helps on new categories, hurts on free order; its contribution depends on the set of formulations, not on the mechanism.
+    "Seen transitions" as an axis measures the redundancy of the formulation set (RESULTS 6a), not the mechanism.
   PROBABLE (1-2 seeds or a single set): gates can be learned by search (gates.py: a single world); emergent categories on real text;
     learned gates = the same set on other worlds.
   WEAK / TO BE VALIDATED: the advantage over the transformer (untuned control); WikiSQL 0.49; any claim about general text.
@@ -74,9 +82,13 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
 ## 5. What must be VALIDATED at scale (in order of importance)
   1. [DONE, round 5, v5_scale.py] Reproduction with 5 seeds, 3x world: path+chain+bigram reproduced (+-0.03); all 4 NOT (pos);
      nesting >= 2 NEGATIVE (identical prefix). See RESULTS.md ROUND 5.
-  1b. NEW, priority: deferred addressing / retroactive re-addressing for identical prefixes with different roles (nesting >= 2). Candidates:
-     (a) v2 with moving already-placed words when a new emitter appears; (b) minimal non-causal code (the next category); (c) state
-     with a one-step delay. Criterion: X2 at depth 2 > 0.9 without lowering anything else.
+  1b. [DONE, round 6] Left expectations (v6_left.py, chainL): fix inner roles at depth 2 (A, C -> 1.00), speakers only to 0.77 in the FLAT
+     world (algebraic limit, RESULTS 6b). Compositional world (v7_nested.py): depth 2 = 1.00, unseen depth 3 = 1.00 with prefixed reporting.
+  1c. NEW: retroactive displacement of a whole clause for RIGHT-announced structure (postposed reporting; comma constructions). Candidate:
+     a clause-level union-then-restriction — when 'says' arrives after a complete clause, S <- S_outside + R (x) S_clause; the clause
+     boundary itself from expectations (',' as emitter). Criterion: depth 2 > 0.95 on all roles with all 3 outer forms, nothing else lower.
+     Also: redesign the "seen transitions" axis so that it tests mechanism, not redundancy (hold out formulations whose every LOCAL role
+     cue has been seen with the SAME role).
   2. Gates learned BY GRADIENT (sigmoid + soft mix of provisional/expected address). Criterion: they converge to "identities closed,
      actions/relations open" on >=3 different worlds. If so => "everything emerges from a single objective" is supported.
   3. The word2vec control for categories (same data): if it gives equally clean clusters, the emergence of categories is not the architecture's merit.

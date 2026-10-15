@@ -314,3 +314,35 @@ X1's. Writing a = says:that, b = claims:that, c = that:says, d = that:claims, g 
 d+b = 0 and c+a = 0; X2 - X1 = a+d = 0. Exact equality is impossible; argmax decoding softens it to ~0.77 (round-1 lesson: rule 10 —
 measured, not only argued). The flat world (depth-indexed speaker roles X1..X3, depth-invariant A,B,C) asks a compositional address
 scheme for something no compositional scheme can give. The model is not what is wrong here; the world is.
+
+## 6c. Nesting with a COMPOSITIONAL world (v7_nested.py): S_world(X says that P) = R_X f_X + R_rep (x) S_world(P); one speaker role; depth = number of R_rep
+The flat world of rounds 5-6b asked for depth-invariant inner roles and depth-indexed speakers through the same prefix (impossible, 6b). The
+compositional world defines reported speech the way the model addresses: entering a clause binds the inner state with a fixed R_rep (a fibre).
+Decoding A at depth d: unbind conj(R_rep)^d conj(R_A). No new role at a new depth (rule 14): depth 3 is a fair unseen-construction test.
+Model unchanged, no rule for 'that'. Same regime. Logs: all 3 outer forms logs/2026-10-15_1311_v7_nested_043caf8.txt; prefixed forms only
+('{X} says that <P>', '{X} claims that <P>'; the postposed '<P> , says {X}' dropped) logs/2026-10-15_1319_v7_nested_e1e7011.txt.
+| world / code | seen | new id. | seen trans. | UNSEEN trans. | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) |
+|---|---|---|---|---|---|---|---|
+| all 3 outer forms, path+chain+bigram | 1.000 | 1.000 | 0.735 | 0.751 | 0.971 | 0.815 | 0.457 |
+| all 3 outer forms, path+chainL+bigram | 1.000 | 1.000 | 0.715 | 0.760 | 0.980 | 0.881 | 0.538 |
+| PREFIXED only, path+chain+bigram | 1.000 | 1.000 | 0.757 | 0.740 | 0.982 | **0.997** | **0.979** |
+| PREFIXED only, path+chainL+bigram | 1.000 | 1.000 | 0.793 | 0.745 | **1.000** | **1.000** | **1.000** |
+Per role, prefixed only: depth 2: both variants 1.00 on A, B, C, X1, X2 (chain alone: C 0.987). Depth 3 UNSEEN: path+chain+bigram A 0.999,
+B 1.000, C 0.976, X1 1.000, X2 1.000, X3 0.898±0.044; path+chainL+bigram 1.000 on all six roles, margin 0.23.
+Per role, all 3 forms: depth 2 X1/X2 0.66-0.78 (as in the flat world); depth 3 0.34-0.67.
+Conclusions:
+- With a compositional world and reporting announced BEFORE the clause, nesting of depth 2 is solved exactly (1.00 on every role) by the
+  plain chain code — no rule, no buffer — and the learned displacements COMPOSE ONE LEVEL FURTHER THAN SEEN: depth 3, never in training,
+  decodes at 1.00 on all roles including the third speaker. This is the first clean positive on an unseen CONSTRUCTION (not identities,
+  not formulations): the algebra of the world (R_rep applied d times) and the algebra of the model (displacements summed along the chain)
+  coincide, so the generalization is by construction once the parameters land on the consistent solution (6b derivation: a+g = rho etc.).
+- Left expectations (chainL) are what closes the last gap at the unseen depth (X3 0.90 -> 1.00, C 0.976 -> 1.000) and raise the margin.
+- What remains impossible for ANY causal address: a displacement announced AFTER the clause it applies to (postposed '<P> , says X'):
+  the inner clause is already written at depth 0 when 'says' arrives. With the postposed form present, depth 2 falls to 0.82-0.88 and depth 3
+  to ~0.5. This replaces the round-5 statement "nesting >= 2 is unsolvable from the prefix" by the precise one: nesting is solvable from the
+  prefix exactly when the world is compositional and the structure is announced before its scope; right-announced structure (postposed
+  reporting, and by the same logic the English T10 comma construction) needs either retroactive re-addressing of a whole clause
+  (a displacement applied to a bundle: S <- S_outside + R (x) S_clause, i.e. the zoom-in of round 1, now forced by data for THIS case only)
+  or a world that does not demand it.
+- Cost of the compositional world on flat axes: none on seen / new identities; "seen transitions" 0.74-0.79 and "unseen transitions" 0.74-0.76
+  (vs 0.785 / 0.788 flat): within +-0.05, same T10 failure as 6a.
