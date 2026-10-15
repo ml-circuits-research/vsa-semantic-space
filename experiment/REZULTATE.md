@@ -211,3 +211,57 @@ tranzitii nevazute cu toate 4) raman la batch 8-32; batch 128 incepe sa coste. P
 La D=512 si batch=1, GPU-ul NU castiga nimic: costul e Python (encodare, 10k pasi mici), nu aritmetica. Castigul (10x) vine din encodarea
 o singura data + batch. Din cele 2.2 s la batch 32, 1 s e encodarea in Python (structura adreselor din v2/v4) — urmatorul loc de optimizat
 daca lumea creste; GPU-ul devine decisiv abia la D >= 4096 si vocabular mare.
+
+# RUNDA 5 (DGX, v5_scale.py, diag_v5.py): §5.1 — lume de 3x, 5 seed-uri, model v4 NESCHIMBAT
+Lume: 6 cadre x 16 formulari (16 tipare comune, verbe diferite; fiecare forma verbala = categorie proprie), 18+18 identitati (12 antrenare),
+imbricare 0-3 ('{X} spune ca <P>', '{X} zice ca <P>', '<P> , spune {X}', alese aleator pe nivel; vorbitorii X1 exterior..X3 = roluri in lume).
+Antrenare: formulari T0,1,2,3,6,12,14; adancimi 0-2; 30k propozitii, batch 8, lr 0.02, D=1024. Log: logs/2026-10-15_1128_v5_scale_0defffd.txt.
+Formulari noi cu TOATE tranzitiile vazute: T9, T10; cu tranzitii/categorii NEvazute: T4, T5, T7, T8, T11, T13, T15. Sansa 1/12 = 0.083 (id. noi 1/6).
+
+| cod | vazute | id. noi | form. noi, tranz. vazute | tranz. NEvazute | imbricare ad.1-2 (vazuta) | ad.3 (NEvazuta) |
+|---|---|---|---|---|---|---|
+| path | 0.950 (m .23) | 0.952 | 0.829±0.017 | 0.575±0.006 | 0.832 | 0.581 |
+| chain | 1.000 (m .48) | 1.000 | 0.232±0.018 | 0.386±0.010 | 0.925 | 0.661 |
+| bigram | 0.956 (m .47) | 0.984 | 0.918±0.036 | 0.623±0.022 | 0.907 | 0.651 |
+| pos | 0.889 | 0.895 | 0.695 | 0.705 | 0.805 | 0.555 |
+| path+bigram | 0.993 | 1.000 | 0.994±0.005 | 0.816±0.009 | 0.920 | 0.652 |
+| path+chain+bigram | 1.000 (m .51) | 1.000 | **0.998±0.003** (m .23) | 0.821±0.006 (m .16) | 0.938 | 0.673 |
+| toate 4 | 1.000 (m .51) | 1.000 | **0.841±0.002** (m .24) | **0.984±0.006** (m .19) | 0.943 | 0.687 |
+
+## Criteriul §5.1 (medii in +-0.03 fata de runda 3)
+- path+chain+bigram: 0.998 / 0.821 (lume mare) vs 0.987 / 0.824 (lume mica) => REPRODUS, stabil intre lumi.
+- toate 4: 0.841 / 0.984 vs 0.942 / 0.901 => NU se reproduce; cele doua coloane se INVERSEAZA. Cauza (diag_v5.py, mai jos): codul pos.
+- Identitati noi 1.00 pentru orice bundle: confirmat si pe lume mare. path singur cade la 0.95 pe vazute (mai multe categorii la D=1024).
+
+## Diagnostic 1 (diag_v5.py, seed 0, per formulare x rol): de ce 'toate 4' pierde pe T10 si castiga pe tranzitii nevazute
+T10 '{A} ii V {B} lui {C}': pos singur A 0.00 (toate 240 confuziile A->C); toate 4: A 0.15 (A->C); path+chain+bigram: A 0.96. T9: toti 1.00.
+Mecanism: in antrenare, singurul tipar cu o persoana la pozitia 5 e T1 '{C} VR {B} de la {A}' (acolo e AGENTUL). pos invata "persoana de la
+pozitia 5 = A". In T10 la pozitia 5 e C: pos voteaza cu potrivire COMPLETA ca C e agentul; primul cuvant (A) are in TOATE codurile adresa
+suprapusa A/C (T0 vs T1 incep amandoua cu o persoana), deci jumatate de vot. Un vot complet gresit bate patru jumatati corecte.
+Pe tranzitii NEvazute (per formulare, A/B/C): path+chain+bigram esueaza exact unde apare o CATEGORIE noua sau o tranzitie noua la final:
+  T4 'de catre {A}' A 0.07 ('catre' nou) | T11 '{A} il V' A 0.06 ('il' nou) | T8 '{A} V lui {C} {B}' B 0.32 (P->O nou) | T13 '... {A} {B}' B 0.18 (P->O nou);
+  toate 4 le ridica la 0.72 / 0.93 / 1.00 / 1.00 prin pos.
+Concluzie: pos = PRIOR DE POZITIE ABSOLUTA. Ajuta cand celelalte coduri au zero informatie (categorie noua) si strica cand regularitatea
+de pozitie din antrenare e falsa (T10). Ambele efecte sunt proprietati ale SETULUI DE FORMULARI, nu ale mecanismului. Cifra de raportat ca
+"modelul" e path+chain+bigram; pos se raporteaza separat, ca prior.
+
+## Diagnostic 2: imbricarea. Adancime 1 = 1.00; adancime 2 (VAZUTA la antrenare) ~0.85; adancime 3 NEvazuta
+Per rol, seed 0, T0, path+chain+bigram: ad.1: A 1.00 B 1.00 C 1.00 X1 1.00 | ad.2: A 0.84 B 1.00 C 1.00 X1 0.80 X2 0.45 (X2->A 175/240, A->X2, X1->X2)
+  | ad.3: A 0.59 B 1.00 C 1.00 X1 0.74 X2 0.30 X3 0.09. Niciun cod singur nu separa X2: path 0.28, chain 0.38, bigram 0.33, toate 4 0.53.
+Cauza (logica, confirmata empiric): '{X1} spune ca {A} V ...' (ad.1) si '{X1} spune ca {X2} zice ca {A} V ...' (ad.2) au PREFIX IDENTIC
+pana la al patrulea cuvant ('P spune ca P'). Orice adresa calculata din prefix (path, chain, bigram, pos, orice bundle) e identica pentru
+A la ad.1 si X2 la ad.2, iar lumea cere R_A, respectiv R_X2 => adresa suprapusa => ~0.5. Rolul e decis de cuvantul URMATOR ('zice' vs verb).
+Asta e, in forma curata, problema "adresarii amanate" din runda 1, retrasa in runda 2: pentru adancime 1 si cadre simple NU e necesara
+(confirmat din nou: ad.1 = 1.00 fara reguli); pentru imbricare >= 2 informatia NU e in prefix, deci e necesara o forma de amanare /
+reasezare retroactiva / privire inainte. Niciun cod cauzal nu o poate rezolva, indiferent de D sau de date.
+Adancime 3: X3 nu a fost NICIODATA tinta la antrenare (adancimea maxima de antrenare e 2) => la sansa PRIN CONSTRUCTIE (0.08-0.09 ~ 1/12);
+cifra "ad.3" din tabel amesteca aceasta imposibilitate cu degradarea reala a lui A, X1, X2 (0.59 / 0.74 / 0.30). O adancime noua = un rol
+nou; se raporteaza separat (regula noua in PRINCIPII_EVALUARE).
+
+## Ce ramane / ce se schimba fata de §4
+- RAMANE SIGUR (acum 5 seed-uri, lume de 3x): factorizare + obiectiv generativ => roluri aliniate; identitati noi 1.00; path+chain+bigram
+  0.99 / 0.82 stabil intre lumi; bariera = tranzitii/categorii cu adevarat noi (acolo doar un prior de pozitie mai ajuta).
+- SE CORECTEAZA: "redundanta 0.60 -> 0.90" devine "0.58 -> 0.82 (coduri structurale) + prior de pozitie dependent de date";
+  "imbricare 1.00 fara reguli" devine "adancime 1 = 1.00; adancime >= 2 NU e rezolvabila cu adrese din prefix".
+- NOU: prima dovada curata ca o forma de adresare amanata E necesara (nu pentru verb/cadre, ci pentru prefixe identice cu roluri diferite).
+Timp: 21.7 s/varianta (30k propozitii, D=1024, batch 8), din care ~13 s encodare Python; rulare completa (7 variante x 5 seed-uri) 12.7 min.

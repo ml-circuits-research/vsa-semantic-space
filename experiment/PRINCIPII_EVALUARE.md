@@ -24,3 +24,11 @@ Greselile deja facute in acest proiect, si regula care le previne:
 
 Checklist la finalul fiecarui script de evaluare (tiparit in log):
   [ ] adrese din lume   [ ] F comun   [ ] sansa tiparita   [ ] axe vazut/nevazut separate   [ ] marja   [ ] >=3 seed-uri   [ ] control trivial
+
+Adaugate pe DGX (2026-10-15, runda 4-5):
+13. **Variantele de model se compara la ACELASI regim de optimizare** (batch, numar de pasi, lr). Schimbarea batch-ului 1 -> 32 a mutat
+    path de la 0.60 la 0.52 fara nicio schimbare de model; altfel confundam optimizarea cu arhitectura.
+14. **O constructie noua care introduce un ROL nou (ex. o adancime de imbricare nevazuta => un vorbitor in plus) se raporteaza pe roluri**:
+    rolul nou e la sansa prin constructie (n-a fost niciodata tinta); amestecat cu celelalte roluri ascunde ce se generalizeaza si ce nu.
+15. **Un bundle de coduri se interpreteaza abia dupa detalierea per formulare x rol** (diag_v5.py): media pe formulari a aratat 0.84 vs
+    0.998 fara sa spuna ca e UN rol intr-O formulare, cu o cauza precisa (pos: regularitate falsa de pozitie). Media ascunde mecanismul.

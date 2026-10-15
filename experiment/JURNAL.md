@@ -29,3 +29,20 @@ Schimbat in cod: v4_torch.py NOU (structura adreselor ramane din v2/v4 numpy; fa
   --seeds, --n_pers, --D, --device); .gitignore radacina (.venv). Mediu: .venv cu numpy 2.5.4, torch 2.14.1+cu130.
 Urmatorul pas: 00_CITESTE_INTAI §5.1 — lume de 2-3x (4-6 cadre, 10-20 formulari, imbricare), 5 seed-uri, cu v4_torch batch 8-32;
   apoi §5.2 porti prin gradient.
+
+## 2026-10-15 (DGX, seara) — §5.1: lume de 3x, 5 seed-uri (v5_scale.py) + diagnostic (diag_v5.py)
+Rulat: run.sh v5_scale.py (5 seed-uri, 7 variante, D=1024, 30k, batch 8) -> logs/2026-10-15_1128_v5_scale_0defffd.txt (12.7 min)
+       diag_v5.py + detaliere per formulare x rol si per cod la adancime 2 (seed 0; iesirile in REZULTATE.md runda 5)
+Rezultat: path+chain+bigram REPRODUS intre lumi (0.998/0.821 vs 0.987/0.824). toate 4 NU: 0.841 / 0.984 (inversat fata de 0.942 / 0.901).
+  Imbricare: ad.1 1.00; ad.2 (vazuta!) ~0.85, X2 0.45 confundat cu A; ad.3: X3 la sansa prin constructie (niciodata tinta).
+Surpriza / problema: (1) pos = prior de pozitie absoluta: T1 e singurul tipar de antrenare cu persoana la poz. 5 (agent) => in T10 (destinatar
+  la 5) pos voteaza complet gresit si bate adresele suprapuse ale primului cuvant. Castigul lui pe tranzitii nevazute vine din categorii noi
+  ('catre', 'il') unde celelalte coduri n-au nimic. Ambele sunt proprietati ale setului de formulari.
+  (2) MAI IMPORTANT: '{X1} spune ca {A} V..' si '{X1} spune ca {X2} zice ca..' au prefix identic ('P spune ca P') => orice adresa din prefix
+  da acelasi loc pentru A (ad.1) si X2 (ad.2) => suprapunere ~0.5. Imbricarea >= 2 e nerezolvabila cu coduri cauzale, indiferent de D/date.
+  "Adresarea amanata" retrasa in runda 2 revine, in alta forma: reasezarea unui cuvant de catre ce urmeaza. Prima dovada curata ca e necesara.
+Schimbat in cod: v5_scale.py (BigWorld, BigRoleWorld, V5 cu pos pana la 40), diag_v5.py. Documente: REZULTATE runda 5; PRINCIPII 13-15
+  (acelasi regim de optimizare; rol nou => raportare pe roluri; detaliere per formulare x rol inainte de interpretare); 00_CITESTE §4-5
+  (imbricare >= 2 NEGATIV; §5.1 facut; §5.1b nou: adresare amanata invatata); POZITIONARE (bariera redeschisa partial).
+Urmatorul pas: §5.1b (X2 la ad.2 > 0.9 fara pierderi) inainte de §5.2, pentru ca portile prin gradient depind de acelasi mecanism de asteptari.
+  Intrebare pentru judecata: raportam 'modelul' ca path+chain+bigram (0.99/0.82) si pos separat ca prior? Eu zic da.

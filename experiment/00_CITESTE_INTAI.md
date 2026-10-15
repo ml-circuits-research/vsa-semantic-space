@@ -59,16 +59,23 @@ RUNDA 3 (v4.py, PRINCIPII_EVALUARE.md)
   - Redundanta (bundle de coduri) o ridica de la 0.60 la 0.90; bigram singur = 1.00 pe formulari noi din tranzitii vazute.
 
 ## 4. Ce indica experimentele (cu nivelul de incredere)
-  SIGUR (3 seed-uri, evaluare corecta): factorizare necesara; obiectiv generativ necesar; roluri aliniate pe 11 formulari x 2 cadre;
-    identitati noi 1.00; redundanta ajuta la constructii noi.
-  PROBABIL (1-2 seed-uri sau un singur set): imbricare 1.00 fara reguli (nest2: 2 seed-uri drum singur, 1 seed dual); portile se pot
-    invata prin cautare (gates.py: o singura lume); categorii emergente pe text real; porti invatate = acelasi set pe alte lumi.
+  SIGUR (3-5 seed-uri, evaluare corecta; runda 5 pe lume de 3x): factorizare necesara; obiectiv generativ necesar; roluri aliniate
+    (11 formulari x 2 cadre; 16 x 6); identitati noi 1.00; redundanta codurilor STRUCTURALE (path+chain+bigram) ajuta la constructii noi:
+    0.58 -> 0.82, stabil intre lumi; imbricare de ADANCIME 1 = 1.00 fara reguli.
+  SIGUR si NEGATIV (runda 5): imbricarea de adancime >= 2 NU e rezolvabila cu adrese calculate din prefix (prefix identic, roluri diferite;
+    ~0.5 pe vorbitorul interior, chiar vazuta la antrenare) => o forma de adresare amanata E necesara acolo. Codul pos e un prior de pozitie
+    absoluta: ajuta pe categorii noi, strica pe ordine libera; contributia lui depinde de setul de formulari, nu de mecanism.
+  PROBABIL (1-2 seed-uri sau un singur set): portile se pot invata prin cautare (gates.py: o singura lume); categorii emergente pe text real;
+    porti invatate = acelasi set pe alte lumi.
   SLAB / DE VALIDAT: avantajul fata de transformer (control netunat); WikiSQL 0.49; orice afirmatie despre text general.
   NEGATIV: SICK; v2 singur pe constructii noi; predictia asociativa pentru echivalenta.
 
 ## 5. Ce trebuie VALIDAT la scalare (in ordinea importantei)
-  1. Reproducere cu 5 seed-uri a tabelelor din RUNDA 2-3 (v2.py, v4.py), lume de 2-3x mai mare (4-6 cadre, 10-20 formulari, 3-4 nivele de
-     imbricare). Criteriu: medii in +-0.03 fata de cele de aici.
+  1. [FACUT, runda 5, v5_scale.py] Reproducere cu 5 seed-uri, lume de 3x: path+chain+bigram reprodus (+-0.03); toate 4 NU (pos);
+     imbricare >= 2 NEGATIV (prefix identic). Vezi REZULTATE.md RUNDA 5.
+  1b. NOU, prioritar: adresare amanata / reasezare retroactiva pentru prefixe identice cu roluri diferite (imbricare >= 2). Candidati:
+     (a) v2 cu mutarea cuvintelor deja plasate cand apare un emitator nou; (b) cod ne-cauzal minimal (categoria urmatoare); (c) stare
+     cu intarziere de un pas. Criteriu: X2 la adancime 2 > 0.9 fara sa scada nimic altceva.
   2. Porti invatate PRIN GRADIENT (sigmoid + amestec moale adresa provizorie/asteptata). Criteriu: converg la "identitatile inchise,
      actiunile/relatiile deschise" pe >=3 lumi diferite. Daca da => "totul emerge dintr-un singur obiectiv" e sustinut.
   3. Controlul word2vec pentru categorii (aceleasi date): daca da clustere la fel de curate, emergenta categoriilor nu e meritul arhitecturii.

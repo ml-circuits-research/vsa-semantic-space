@@ -34,9 +34,11 @@ arata ca ingredientele nu sunt alese arbitrar, ci fortate.
 ## Unde e bariera, cinstit
 - Pe text fara lume (SICK) am pierdut fata de sacul de cuvinte. Nu publica nimic pe text general inainte de a avea un set unde echivalenta
   e data de executie/imagine si unde negativele grele (roluri inversate) sunt masurate separat.
-- [RETRAS dupa runda 2] Declansatoarele (verb -> flush, "ca" -> cadru) puse de mana nu erau necesare: drumul pe categorii rezolva
-  formularile vazute si imbricarea fara ele; portile (cine emite asteptari) se invata prin cautare (gates.py). Ramane de aratat ca se invata
-  si prin gradient, pe >=3 lumi (00_CITESTE_INTAI.md §5.2).
+- [RETRAS dupa runda 2, REDESCHIS PARTIAL in runda 5] Declansatoarele de mana (verb -> flush, "ca" -> cadru) nu erau necesare pentru
+  formularile vazute si imbricarea de adancime 1. DAR la adancime >= 2 doua propozitii cu prefix identic cer roluri diferite pentru acelasi
+  cuvant; nicio adresa din prefix nu le poate separa (REZULTATE.md runda 5, diag. 2). Deci O forma de adresare amanata e necesara — nu
+  "verbul scrie bufferul", ci "un cuvant poate fi reasezat de ce urmeaza". Formularea corecta pentru articol: amanarea e fortata de date
+  (prefixe identice), nu aleasa; si trebuie aratat ca se invata (00_CITESTE_INTAI.md §5.1b, §5.2).
 - Capacitatea: 64 identitati -> 0.66 la D=1024. Standard pentru HDC; se rezolva cu D mare si coduri rare, dar trebuie aratat.
 - Controlul cu transformer e slab (netunat). Pana nu e tunat, formularea permisa e "la acest regim de date, un transformer mic antrenat
   identic nu generalizeaza", nu "transformerele nu pot".
