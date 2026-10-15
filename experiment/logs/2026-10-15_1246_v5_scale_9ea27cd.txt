@@ -1,0 +1,63 @@
+# 2026-10-15T12:46:09+02:00  commit=9ea27cd  cmd: python3 v5_scale.py --lang en
+# Python 3.12.3  NVIDIA GB10
+v5_scale: device=cuda (NVIDIA GB10), torch 2.14.1+cu130, D=1024, N=30000, batch=8, lr=0.02, seeds=5
+lume (en): 6 cadre x 16 formulari; 18+18 identitati (12 antrenare); imbricare 0-2 antrenare, 3 test; forme exterioare ['{X} says that <P>', '{X} claims that <P>', '<P> , says {X}']
+formulari de antrenare: [0, 1, 2, 3, 6, 9, 12, 15]
+  T4 '{A} V {C} {B} .': tranzitii noi (GIVE) [('P', 'O'), ('gives', 'P')], categorii noi []
+  T5 '{C} is VP {B} by {A} .': tranzitii noi (GIVE) [('O', 'by'), ('given', 'O')], categorii noi []
+  T7 'it is {B} that {A} V to {C} .': tranzitii noi (GIVE) [('O', 'that'), ('that', 'P')], categorii noi ['that']
+  T8 '{B} , {A} V to {C} .': tranzitii noi (GIVE) [], categorii noi []
+  T10 'from {A} , {C} VR {B} .': tranzitii noi (GIVE) [], categorii noi []
+  T11 '{C} VR from {A} {B} .': tranzitii noi (GIVE) [('P', 'O'), ('receives', 'from')], categorii noi []
+  T13 '{B} is what {A} V to {C} .': tranzitii noi (GIVE) [('COP', 'what')], categorii noi []
+  T14 'by {A} , {B} is VP to {C} .': tranzitii noi (GIVE) [(',', 'O')], categorii noi []
+  => formulari noi cu TOATE tranzitiile vazute: [8, 10]; cu tranzitii/categorii NEVAZUTE: [4, 5, 7, 11, 13, 14]
+  exemplu adancime 3: p3 claims that p6 claims that p5 lends o9 to p9 , says p2 .
+sansa: identitati vazute 1/12 = 0.083; identitati noi 1/6 = 0.167. Control trivial: 'toate la origine' (fara coduri) = sansa.
+
+  seed 0 path               ( 14.5s antr.,  1.5s enc.,  0.9s eval) 0.97 (m 0.23) | 0.98 (m 0.24) | 0.52 (m 0.07) | 0.39 (m -0.00) | 0.84 (m 0.11) | 0.69 (m 0.05)
+  seed 0 chain              ( 21.3s antr.,  9.7s enc.,  2.0s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.18 (m -0.03) | 0.41 (m 0.13) | 0.93 (m 0.28) | 0.79 (m 0.12)
+  seed 0 bigram             ( 13.2s antr.,  1.2s enc.,  0.6s eval) 0.98 (m 0.47) | 0.99 (m 0.48) | 0.76 (m 0.27) | 0.68 (m 0.18) | 0.90 (m 0.31) | 0.75 (m 0.17)
+  seed 0 pos                ( 11.1s antr.,  1.3s enc.,  0.6s eval) 0.79 (m 0.20) | 0.79 (m 0.20) | 0.66 (m 0.08) | 0.77 (m 0.13) | 0.70 (m 0.12) | 0.56 (m 0.04)
+  seed 0 path+bigram        ( 21.6s antr.,  2.6s enc.,  0.9s eval) 0.99 (m 0.44) | 1.00 (m 0.46) | 0.77 (m 0.22) | 0.77 (m 0.12) | 0.91 (m 0.29) | 0.74 (m 0.18)
+  seed 0 path+chain+bigram  ( 38.2s antr., 12.3s enc.,  2.6s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.79 (m 0.16) | 0.79 (m 0.16) | 0.94 (m 0.33) | 0.78 (m 0.20)
+  seed 0 toate 4            ( 45.6s antr., 13.4s enc.,  2.9s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.71 (m 0.19) | 0.99 (m 0.21) | 0.94 (m 0.33) | 0.82 (m 0.19)
+  seed 1 path               ( 13.7s antr.,  1.4s enc.,  0.6s eval) 0.96 (m 0.23) | 0.98 (m 0.24) | 0.48 (m 0.06) | 0.35 (m -0.01) | 0.83 (m 0.11) | 0.68 (m 0.05)
+  seed 1 chain              ( 21.2s antr.,  9.7s enc.,  2.0s eval) 1.00 (m 0.47) | 1.00 (m 0.49) | 0.09 (m -0.03) | 0.40 (m 0.13) | 0.93 (m 0.28) | 0.78 (m 0.12)
+  seed 1 bigram             ( 13.2s antr.,  1.2s enc.,  7.4s eval) 0.97 (m 0.47) | 0.99 (m 0.48) | 0.77 (m 0.27) | 0.66 (m 0.17) | 0.90 (m 0.31) | 0.75 (m 0.17)
+  seed 1 pos                ( 18.6s antr.,  1.5s enc.,  0.7s eval) 0.79 (m 0.20) | 0.79 (m 0.21) | 0.64 (m 0.08) | 0.80 (m 0.14) | 0.70 (m 0.12) | 0.55 (m 0.03)
+  seed 1 path+bigram        ( 40.2s antr.,  2.5s enc.,  2.5s eval) 0.98 (m 0.45) | 1.00 (m 0.46) | 0.80 (m 0.22) | 0.73 (m 0.12) | 0.90 (m 0.29) | 0.75 (m 0.19)
+  seed 1 path+chain+bigram  ( 68.0s antr., 12.2s enc.,  8.0s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.80 (m 0.15) | 0.78 (m 0.16) | 0.94 (m 0.33) | 0.78 (m 0.20)
+  seed 1 toate 4            ( 79.3s antr., 13.6s enc.,  3.1s eval) 1.00 (m 0.51) | 1.00 (m 0.52) | 0.69 (m 0.18) | 1.00 (m 0.21) | 0.94 (m 0.34) | 0.81 (m 0.20)
+  seed 2 path               ( 19.6s antr.,  1.5s enc.,  7.4s eval) 0.97 (m 0.23) | 0.99 (m 0.24) | 0.51 (m 0.06) | 0.45 (m 0.00) | 0.83 (m 0.11) | 0.69 (m 0.05)
+  seed 2 chain              ( 30.6s antr.,  9.7s enc.,  8.9s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.10 (m -0.03) | 0.42 (m 0.13) | 0.93 (m 0.28) | 0.79 (m 0.12)
+  seed 2 bigram             ( 11.5s antr.,  1.2s enc.,  0.5s eval) 0.97 (m 0.46) | 0.99 (m 0.48) | 0.75 (m 0.26) | 0.71 (m 0.18) | 0.91 (m 0.31) | 0.74 (m 0.16)
+  seed 2 pos                ( 15.9s antr.,  1.2s enc.,  7.4s eval) 0.78 (m 0.19) | 0.79 (m 0.20) | 0.65 (m 0.08) | 0.81 (m 0.14) | 0.71 (m 0.12) | 0.55 (m 0.03)
+  seed 2 path+bigram        ( 42.7s antr.,  3.0s enc.,  1.1s eval) 0.98 (m 0.45) | 1.00 (m 0.45) | 0.76 (m 0.22) | 0.79 (m 0.13) | 0.91 (m 0.29) | 0.74 (m 0.18)
+  seed 2 path+chain+bigram  ( 69.0s antr., 12.2s enc.,  4.9s eval) 1.00 (m 0.51) | 1.00 (m 0.51) | 0.78 (m 0.15) | 0.80 (m 0.16) | 0.93 (m 0.34) | 0.77 (m 0.20)
+  seed 2 toate 4            ( 67.3s antr., 13.7s enc.,  9.6s eval) 1.00 (m 0.51) | 1.00 (m 0.51) | 0.71 (m 0.18) | 1.00 (m 0.21) | 0.94 (m 0.33) | 0.80 (m 0.19)
+  seed 3 path               ( 17.1s antr.,  1.7s enc.,  0.6s eval) 0.97 (m 0.23) | 0.99 (m 0.24) | 0.50 (m 0.07) | 0.41 (m -0.00) | 0.83 (m 0.11) | 0.68 (m 0.05)
+  seed 3 chain              ( 33.0s antr.,  9.8s enc.,  8.8s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.08 (m -0.04) | 0.42 (m 0.13) | 0.93 (m 0.28) | 0.78 (m 0.12)
+  seed 3 bigram             ( 21.3s antr.,  1.5s enc.,  3.2s eval) 0.98 (m 0.47) | 1.00 (m 0.48) | 0.78 (m 0.27) | 0.68 (m 0.17) | 0.91 (m 0.31) | 0.75 (m 0.16)
+  seed 3 pos                ( 11.3s antr.,  1.2s enc.,  0.6s eval) 0.79 (m 0.20) | 0.79 (m 0.20) | 0.65 (m 0.09) | 0.78 (m 0.14) | 0.71 (m 0.12) | 0.56 (m 0.04)
+  seed 3 path+bigram        ( 45.0s antr.,  2.7s enc.,  7.5s eval) 0.99 (m 0.45) | 1.00 (m 0.45) | 0.76 (m 0.22) | 0.75 (m 0.12) | 0.91 (m 0.29) | 0.74 (m 0.19)
+  seed 3 path+chain+bigram  ( 58.9s antr., 12.6s enc.,  2.7s eval) 1.00 (m 0.51) | 1.00 (m 0.51) | 0.80 (m 0.15) | 0.80 (m 0.16) | 0.93 (m 0.33) | 0.79 (m 0.21)
+  seed 3 toate 4            ( 59.5s antr., 14.5s enc.,  9.6s eval) 1.00 (m 0.51) | 1.00 (m 0.51) | 0.74 (m 0.19) | 1.00 (m 0.21) | 0.94 (m 0.33) | 0.80 (m 0.19)
+  seed 4 path               ( 27.5s antr.,  1.6s enc.,  5.9s eval) 0.97 (m 0.23) | 0.98 (m 0.24) | 0.50 (m 0.06) | 0.43 (m -0.00) | 0.83 (m 0.11) | 0.68 (m 0.05)
+  seed 4 chain              ( 33.2s antr.,  9.8s enc.,  8.9s eval) 1.00 (m 0.47) | 1.00 (m 0.48) | 0.08 (m -0.04) | 0.41 (m 0.12) | 0.93 (m 0.28) | 0.79 (m 0.13)
+  seed 4 bigram             ( 21.3s antr.,  1.5s enc.,  3.0s eval) 0.97 (m 0.47) | 0.97 (m 0.48) | 0.78 (m 0.27) | 0.64 (m 0.16) | 0.91 (m 0.31) | 0.75 (m 0.16)
+  seed 4 pos                ( 11.2s antr.,  1.2s enc.,  0.6s eval) 0.78 (m 0.20) | 0.79 (m 0.20) | 0.65 (m 0.09) | 0.80 (m 0.14) | 0.71 (m 0.12) | 0.56 (m 0.04)
+  seed 4 path+bigram        ( 39.8s antr.,  2.7s enc.,  1.0s eval) 0.97 (m 0.44) | 0.98 (m 0.45) | 0.73 (m 0.22) | 0.73 (m 0.12) | 0.91 (m 0.29) | 0.74 (m 0.18)
+  seed 4 path+chain+bigram  ( 50.7s antr., 12.9s enc.,  2.6s eval) 1.00 (m 0.50) | 1.00 (m 0.51) | 0.76 (m 0.15) | 0.76 (m 0.16) | 0.93 (m 0.33) | 0.78 (m 0.20)
+  seed 4 toate 4            ( 70.5s antr., 14.0s enc.,  2.9s eval) 1.00 (m 0.50) | 1.00 (m 0.51) | 0.69 (m 0.18) | 0.99 (m 0.20) | 0.94 (m 0.33) | 0.80 (m 0.19)
+
+== MEDII pe 5 seed-uri: acuratete (marja) ==  coloane: vazute (ad.0) | id. noi (ad.0) | form. noi, tranz. vazute | form. noi, tranz. NEvazute | imbricare ad.1-2 (vazuta) | imbricare ad.3 (NEvazuta; doar A,B,C,X1,X2 — X3 n-a fost tinta)
+  path               0.970±0.005 (m 0.23) | 0.984±0.004 (m 0.24) | 0.501±0.011 (m 0.06) | 0.406±0.034 (m -0.00) | 0.834±0.003 (m 0.11) | 0.681±0.004 (m 0.05)
+  chain              1.000±0.000 (m 0.47) | 1.000±0.000 (m 0.48) | 0.104±0.038 (m -0.03) | 0.411±0.008 (m 0.13) | 0.930±0.002 (m 0.28) | 0.784±0.006 (m 0.12)
+  bigram             0.973±0.005 (m 0.47) | 0.989±0.009 (m 0.48) | 0.768±0.011 (m 0.27) | 0.674±0.021 (m 0.17) | 0.904±0.006 (m 0.31) | 0.749±0.005 (m 0.16)
+  pos                0.788±0.003 (m 0.20) | 0.791±0.002 (m 0.20) | 0.648±0.005 (m 0.09) | 0.790±0.017 (m 0.14) | 0.705±0.003 (m 0.12) | 0.556±0.005 (m 0.04)
+  path+bigram        0.980±0.007 (m 0.44) | 0.995±0.005 (m 0.45) | 0.764±0.022 (m 0.22) | 0.755±0.025 (m 0.12) | 0.910±0.003 (m 0.29) | 0.741±0.004 (m 0.18)
+  path+chain+bigram  1.000±0.000 (m 0.51) | 1.000±0.000 (m 0.52) | 0.785±0.016 (m 0.15) | 0.788±0.014 (m 0.16) | 0.935±0.002 (m 0.33) | 0.780±0.006 (m 0.20)
+  toate 4            1.000±0.000 (m 0.51) | 1.000±0.000 (m 0.51) | 0.709±0.019 (m 0.18) | 0.993±0.005 (m 0.21) | 0.939±0.002 (m 0.33) | 0.807±0.007 (m 0.19)
+
+checklist: [x] adrese din lume [x] F comun (assert) [x] sansa tiparita [x] axe separate (identitati / tranzitii vazute / NEvazute / adancime) [x] marja [x] >=3 seed-uri [x] control trivial = sansa
