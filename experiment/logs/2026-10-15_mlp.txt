@@ -1,0 +1,5 @@
+MLP pe bundle fara ordine (2098176 parametri, 164s):
+  identitati vazute, formulari vazute:      0.662
+  identitati NEVAZUTE, formulari vazute:    0.254
+  identitati vazute, formulare NEVAZUTA:    0.668
+  identitati NEVAZUTE, formulare NEVAZUTA:  0.255

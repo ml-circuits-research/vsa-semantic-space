@@ -1,0 +1,32 @@
+=== v2 (asteptari) vs v1 (drum + buffer declansat de verb), lume cu roluri explicite, decodare cu adresele lumii ===
+    antrenare: formularile 0-3, 8 persoane/8 obiecte; test: formulari 0-3 si 4 (nevazuta), identitati vazute/nevazute (sansa 1/8, 1/4)
+  seed 0 v1 (6s): [1.0, 1.0, 0.565, 0.632]
+  seed 0 v2 porti de mana (29s): [1.0, 1.0, 0.103, 0.303]
+  seed 0 v2 toate portile deschise (33s): [0.77, 0.795, 0.127, 0.28]
+  seed 0 v2 toate inchise (sac) (27s): [0.069, 0.132, 0.065, 0.208]
+  seed 1 v1 (6s): [1.0, 1.0, 0.573, 0.792]
+  seed 1 v2 porti de mana (33s): [1.0, 1.0, 0.202, 0.592]
+  seed 1 v2 toate portile deschise (36s): [0.8, 0.865, 0.182, 0.373]
+  seed 1 v2 toate inchise (sac) (27s): [0.173, 0.295, 0.17, 0.262]
+  seed 2 v1 (6s): [1.0, 1.0, 0.693, 0.725]
+  seed 2 v2 porti de mana (34s): [1.0, 1.0, 0.237, 0.308]
+  seed 2 v2 toate portile deschise (32s): [0.792, 0.842, 0.055, 0.155]
+  seed 2 v2 toate inchise (sac) (27s): [0.145, 0.243, 0.172, 0.248]
+
+  MEDII pe 3 seed-uri  [vazute | identitati noi | formulare noua | ambele noi]
+    v1                           1.000±0.000  1.000±0.000  0.611±0.059  0.716±0.066
+    v2 porti de mana             1.000±0.000  1.000±0.000  0.181±0.056  0.401±0.135
+    v2 toate portile deschise    0.787±0.013  0.834±0.029  0.121±0.052  0.269±0.089
+    v2 toate inchise (sac)       0.129±0.044  0.223±0.068  0.136±0.050  0.239±0.023
+
+  v2 porti de mana, seed 0, pe formulari (T4 nevazuta la antrenare):
+    GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+    GIVE T1 '{C} primeste {B} de la {A} .': agent 1.00 obiect 1.00 dest 1.00
+    GIVE T2 '{B} e dat lui {C} de {A} .': agent 1.00 obiect 1.00 dest 1.00
+    GIVE T3 'lui {C} {A} ii da {B} .': agent 1.00 obiect 1.00 dest 1.00
+    GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.12 obiect 0.08 dest 0.07
+    SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+    SELL T1 '{C} cumpara {B} de la {A} .': agent 1.00 obiect 1.00 dest 1.00
+    SELL T2 '{B} e vandut lui {C} de {A} .': agent 1.00 obiect 1.00 dest 1.00
+    SELL T3 'lui {C} {A} ii vinde {B} .': agent 1.00 obiect 1.00 dest 1.00
+    SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.09 obiect 0.11 dest 0.03

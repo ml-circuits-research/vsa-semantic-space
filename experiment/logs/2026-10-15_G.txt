@@ -1,0 +1,51 @@
+=== G0: factorizat, FARA adresare amanata, fara invatare (sansa agent/dest 1/8, obiect 1/8)
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.00 obiect 0.18 dest 0.18
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.07 obiect 0.06 dest 0.20
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.08 obiect 0.01 dest 0.12
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.10 obiect 0.14 dest 0.14
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.00 obiect 0.19 dest 0.17
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.15 obiect 0.27 dest 0.12
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.14 obiect 0.01 dest 0.15
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.07 obiect 0.19 dest 0.12
+  MEDIA pe toate formularile si rolurile: 0.295
+
+=== G1: factorizat, FARA adresare amanata, invatat
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.00 obiect 0.24 dest 0.00
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.06 obiect 0.43 dest 0.54
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.34 obiect 0.51 dest 0.66
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.14 obiect 0.28 dest 0.38
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.00 obiect 0.35 dest 0.00
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.06 obiect 0.39 dest 0.81
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.37 obiect 0.81 dest 0.84
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.06 obiect 0.39 dest 0.51
+  MEDIA pe toate formularile si rolurile: 0.473
+
+=== G2: factorizat + adresare amanata (subiectul se scrie la verb), invatat
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.28 obiect 0.15 dest 0.00
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.19 obiect 0.14 dest 0.43
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.48 obiect 0.82 dest 0.26
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.28 obiect 0.15 dest 0.34
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.34 obiect 0.42 dest 0.00
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.23 obiect 0.24 dest 0.68
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.45 obiect 0.91 dest 0.38
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.47 obiect 0.27 dest 0.71
+  MEDIA pe toate formularile si rolurile: 0.488
+
+=== G3: ca G2, dar NE-factorizat (deplasare per cuvant), invatat
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 0.48 dest 0.29
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.09 obiect 0.20 dest 0.03
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.14 obiect 0.12 dest 0.20
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.52 obiect 0.14 dest 0.32
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.11 obiect 0.04 dest 0.21
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 0.39 dest 0.39
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.14 obiect 0.13 dest 0.20
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.11 obiect 0.18 dest 0.21
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.47 obiect 0.14 dest 0.12
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.14 obiect 0.18 dest 0.20
+  MEDIA pe toate formularile si rolurile: 0.263

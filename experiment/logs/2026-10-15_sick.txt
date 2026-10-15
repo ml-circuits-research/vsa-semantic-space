@@ -1,0 +1,16 @@
+propozitii unice: 6077, vocabular: 2309, perechi antrenare: 5000, test: 4927
+
+== TEST SICK (4927 perechi), corelatie intre cosinusul starilor si scorul uman 1-5 ==
+  Jaccard (suprapunere de cuvinte)                 Pearson 0.582  Spearman 0.575
+  sac de cuvinte (bundle fara deplasari)           Pearson 0.560  Spearman 0.536  | sim medie: entailment 0.777, contradictie 0.783
+  deplasari aleatoare per cuvant, neantrenate      Pearson 0.223  Spearman 0.197  | sim medie: entailment 0.279, contradictie 0.168
+  [antrenat 685s]
+  deplasari per cuvant, antrenate (echivalenta)    Pearson 0.425  Spearman 0.433  | sim medie: entailment 0.397, contradictie 0.446
+
+  clustere descoperite (din 400 cuvinte frecvente): 386; cele mai mari:
+     ['man', 'person', 'woman', 'lady', 'cyclist']
+     ['a', 'the', 'one']
+     ['boy', 'kid', 'child']
+     ['children', 'boys', 'kids']
+  [antrenat 682s]
+  deplasari pe categorii descoperite, antrenate    Pearson 0.448  Spearman 0.453  | sim medie: entailment 0.441, contradictie 0.484

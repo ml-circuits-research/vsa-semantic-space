@@ -1,0 +1,5 @@
+intrebari antrenare 56355, dev 8421, vocabular 33318
+sansa: col.selectata ~0.153, agregator majoritar 0.719
+  bow (0s antrenare)                 col.selectata 0.190  agregator 0.168  col.conditie 0.152 | cos(pred, sql) -0.001 | perechi acelasi tabel: acelasi schelet 0.770 (n=121), schelet diferit 0.425 (n=4725)
+  pos (66s antrenare)                col.selectata 0.494  agregator 0.586  col.conditie 0.249 | cos(pred, sql) 0.126 | perechi acelasi tabel: acelasi schelet 0.651 (n=121), schelet diferit 0.233 (n=4725)
+  word (73s antrenare)               col.selectata 0.365  agregator 0.761  col.conditie 0.141 | cos(pred, sql) 0.236 | perechi acelasi tabel: acelasi schelet 0.594 (n=121), schelet diferit 0.282 (n=4725)

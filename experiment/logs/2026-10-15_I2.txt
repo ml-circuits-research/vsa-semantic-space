@@ -1,0 +1,19 @@
+iteratia 0: media decodare = 0.562
+   clustere: [['ana', 'ioana', 'ion', 'vlad', 'radu', 'dan', 'elena', 'maria'], ['bani', 'cheie', 'mar', 'tort', 'pahar', 'pix', 'ceas', 'carte'], ['cumpara', 'primeste', 'da', 'vinde'], ['dat', 'vandut'], ['e', 'este']]
+iteratia 1: media decodare = 0.936
+   clustere: [['ana', 'dan', 'elena', 'ioana', 'ion', 'maria', 'radu', 'vlad'], ['bani', 'carte', 'ceas', 'cheie', 'mar', 'pahar', 'pix', 'tort'], ['cumpara', 'da', 'primeste', 'vinde'], ['dat', 'vandut'], ['e', 'este']]
+iteratia 2: media decodare = 0.970
+   clustere: [['ana', 'dan', 'elena', 'ioana', 'ion', 'maria', 'radu', 'vlad'], ['bani', 'carte', 'ceas', 'cheie', 'mar', 'pahar', 'pix', 'tort'], ['cumpara', 'da', 'primeste', 'vinde'], ['dat', 'vandut'], ['e', 'este']]
+
+FINAL (categorii descoperite iterativ): media decodare = 0.956
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 1.00 obiect 1.00 dest 0.74
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 1.00 obiect 1.00 dest 0.92
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 1.00 obiect 1.00 dest 0.91
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 1.00 obiect 1.00 dest 0.86
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 1.00 obiect 1.00 dest 0.45
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.99 obiect 1.00 dest 0.97
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 1.00 obiect 1.00 dest 0.99
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 1.00 obiect 1.00 dest 0.85
+  MEDIA pe toate formularile si rolurile: 0.956

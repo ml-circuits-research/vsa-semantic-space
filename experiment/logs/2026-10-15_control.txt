@@ -1,0 +1,13 @@
+gradient check (eroare relativa maxima): 4.34e-10
+
+VSA (40000 propozitii, 29s, 10240 parametri):
+  identitati vazute, formulari vazute:      1.000
+  identitati NEVAZUTE, formulari vazute:    1.000
+  identitati vazute, formulare NEVAZUTA:    0.637
+  identitati NEVAZUTE, formulare NEVAZUTA:  0.742
+
+Transformer d=128, 3 straturi (120000 propozitii, 235s, 854272 parametri):
+  identitati vazute, formulari vazute:      1.000
+  identitati NEVAZUTE, formulari vazute:    0.258
+  identitati vazute, formulare NEVAZUTA:    0.417
+  identitati NEVAZUTE, formulare NEVAZUTA:  0.240

@@ -1,0 +1,42 @@
+categorii: ['.', 'COP', 'O', 'P', 'are', 'catre', 'cumpara', 'da', 'dat', 'de', 'ii', 'la', 'lui', 'nu', 'primeste', 'vandut', 'vinde']
+
+== marjele de decodare (cat de 'curata' e adresa): drum singur vs asteptari (porti de mana) vs dual ==
+  drum singur                  marja T0-T3: 0.154   predictie cos: 0.531
+  asteptari, porti de mana     marja T0-T3: 0.496   predictie cos: 0.954
+  dual                         marja T0-T3: 0.480   predictie cos: 0.943
+
+== cautarea portilor (dual; criteriu: cos held-out al predictiei) ==
+  start (toate inchise): 0.477
+  sweep 0: deschide .        -> 0.822  ACCEPTAT
+  sweep 0: deschide COP      -> 0.841  ACCEPTAT
+  sweep 0: deschide O        -> 0.795
+  sweep 0: deschide P        -> 0.828
+  sweep 0: deschide are      -> 0.852  ACCEPTAT
+  sweep 0: deschide catre    -> 0.859  ACCEPTAT
+  sweep 0: deschide cumpara  -> 0.866  ACCEPTAT
+  sweep 0: deschide da       -> 0.876  ACCEPTAT
+  sweep 0: deschide dat      -> 0.865
+  sweep 0: deschide de       -> 0.891  ACCEPTAT
+  sweep 0: deschide ii       -> 0.941  ACCEPTAT
+  sweep 0: deschide la       -> 0.942
+  sweep 0: deschide lui      -> 0.929
+  sweep 0: deschide nu       -> 0.934
+  sweep 0: deschide primeste -> 0.937
+  sweep 0: deschide vandut   -> 0.937
+  sweep 0: deschide vinde    -> 0.947  ACCEPTAT
+  sweep 1: inchide .        -> 0.919
+  sweep 1: inchide COP      -> 0.948
+  sweep 1: deschide O        -> 0.898
+  sweep 1: deschide P        -> 0.869
+  sweep 1: inchide are      -> 0.948
+  sweep 1: inchide catre    -> 0.948
+  sweep 1: inchide cumpara  -> 0.951
+  sweep 1: inchide da       -> 0.938
+  sweep 1: deschide dat      -> 0.942
+  sweep 1: inchide de       -> 0.939
+  sweep 1: inchide ii       -> 0.909
+  sweep 1: deschide la       -> 0.952  ACCEPTAT
+  sweep 1: deschide lui      -> 0.944
+  sweep 1: deschide nu       -> 0.949
+  sweep 1: deschide primeste -> 0.946
+  sweep 1: deschide vandut   -> 0.950

@@ -1,0 +1,49 @@
+G2' (buffer cu drum relativ): dupa 10000 propozitii, media = 0.770
+G2' (buffer cu drum relativ): dupa 20000 propozitii, media = 0.849
+G2' (buffer cu drum relativ): dupa 30000 propozitii, media = 0.880
+G2' (buffer cu drum relativ): dupa 40000 propozitii, media = 0.880
+G2' (buffer cu drum relativ): dupa 50000 propozitii, media = 0.858
+
+=== G2' pe identitati VAZUTE (8 persoane, 8 obiecte; sansa 1/8)
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.84 obiect 0.97 dest 0.61
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.63 obiect 1.00 dest 0.68
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.79 obiect 1.00 dest 0.89
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.77 obiect 0.95 dest 0.73
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.75 obiect 1.00 dest 0.67
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.64 obiect 1.00 dest 0.88
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.63 obiect 1.00 dest 0.87
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.68 obiect 1.00 dest 0.81
+  MEDIA pe toate formularile si rolurile: 0.860
+
+=== H: aceleasi ponderi, identitati NEVAZUTE la antrenare (4 persoane, 4 obiecte noi; sansa 1/4)
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 1.00 obiect 0.93 dest 0.63
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 1.00 obiect 1.00 dest 0.83
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 1.00 obiect 1.00 dest 0.99
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 1.00 obiect 1.00 dest 0.85
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.97 obiect 1.00 dest 0.69
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.84 obiect 1.00 dest 0.82
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.92 obiect 1.00 dest 0.97
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.84 obiect 1.00 dest 0.89
+  MEDIA pe toate formularile si rolurile: 0.939
+
+=== H': toate 12+12, amestecate (sansa 1/12)
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.77 obiect 0.78 dest 0.58
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.44 obiect 0.92 dest 0.70
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.52 obiect 0.97 dest 0.71
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.52 obiect 0.83 dest 0.67
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.61 obiect 0.79 dest 0.63
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.47 obiect 0.93 dest 0.73
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.39 obiect 1.00 dest 0.72
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.63 obiect 0.81 dest 0.74
+  MEDIA pe toate formularile si rolurile: 0.762
+Traceback (most recent call last):
+  File "/tmp/claude-0/-home-claude/b829d1cc-3db1-519f-a5a5-7dc6f2233a0c/scratchpad/gh.py", line 16, in <module>
+    import pickle; pickle.dump(m, open("model_G2.pkl","wb"))
+                   ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: Can't get local object 'Model.__init__.<locals>.<lambda>'

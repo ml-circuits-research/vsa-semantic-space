@@ -1,0 +1,17 @@
+J1: dimensiunea D si numarul de identitati (sansa = 1/n)
+   8 persoane/obiecte, D=256: media decodare = 0.852
+   8 persoane/obiecte, D=512: media decodare = 0.949
+   8 persoane/obiecte, D=1024: media decodare = 0.967
+   24 persoane/obiecte, D=256: media decodare = 0.614
+   24 persoane/obiecte, D=512: media decodare = 0.743
+   24 persoane/obiecte, D=1024: media decodare = 0.833
+   64 persoane/obiecte, D=256: media decodare = 0.445
+   64 persoane/obiecte, D=512: media decodare = 0.555
+   64 persoane/obiecte, D=1024: media decodare = 0.657
+
+J2: zgomot din adjuncte (adverbe inserate aleator), 16 identitati, D=512; antrenat cu 0-2 adjuncte
+   0 adjuncte inserate: media decodare = 0.773
+   1 adjuncte inserate: media decodare = 0.767
+   2 adjuncte inserate: media decodare = 0.755
+   3 adjuncte inserate: media decodare = 0.738
+   5 adjuncte inserate: media decodare = 0.702

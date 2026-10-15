@@ -1,0 +1,28 @@
+  seed 0 v3 = lant de asteptari (+) drum pe categorii (36s): [1.0, 1.0, 0.507, 0.687]
+    GIVE T0: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T1: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T2: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T3: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T4: agent 0.10 obiect 1.00 dest 0.37
+    SELL T0: agent 1.00 obiect 1.00 dest 1.00
+    SELL T1: agent 1.00 obiect 1.00 dest 1.00
+    SELL T2: agent 1.00 obiect 1.00 dest 1.00
+    SELL T3: agent 1.00 obiect 1.00 dest 1.00
+    SELL T4: agent 0.08 obiect 1.00 dest 0.33
+  seed 0 drum pe categorii singur (fara buffer, fara verb) (28s): [1.0, 1.0, 0.522, 0.598]
+    GIVE T0: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T1: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T2: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T3: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T4: agent 0.07 obiect 1.00 dest 0.40
+    SELL T0: agent 1.00 obiect 1.00 dest 1.00
+    SELL T1: agent 1.00 obiect 1.00 dest 0.98
+    SELL T2: agent 1.00 obiect 1.00 dest 1.00
+    SELL T3: agent 1.00 obiect 1.00 dest 1.00
+    SELL T4: agent 0.07 obiect 1.00 dest 0.28
+  seed 1 v3 = lant de asteptari (+) drum pe categorii (34s): [1.0, 1.0, 0.522, 0.692]
+  seed 1 drum pe categorii singur (fara buffer, fara verb) (28s): [1.0, 1.0, 0.458, 0.548]
+  seed 2 v3 = lant de asteptari (+) drum pe categorii (36s): [1.0, 1.0, 0.482, 0.563]
+  seed 2 drum pe categorii singur (fara buffer, fara verb) (28s): [1.0, 1.0, 0.658, 0.713]
+  MEDIE v3 = lant de asteptari (+) drum pe categorii     1.000±0.000  1.000±0.000  0.503±0.016  0.647±0.059
+  MEDIE drum pe categorii singur (fara buffer, fara verb) 1.000±0.000  1.000±0.000  0.546±0.083  0.620±0.069

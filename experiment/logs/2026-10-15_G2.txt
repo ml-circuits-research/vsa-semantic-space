@@ -1,0 +1,45 @@
+G1 factorizat, fara amanare: dupa 10000 propozitii, media decodare = 0.666
+G1 factorizat, fara amanare: dupa 20000 propozitii, media decodare = 0.667
+G1 factorizat, fara amanare: dupa 30000 propozitii, media decodare = 0.708
+G1 factorizat, fara amanare: dupa 40000 propozitii, media decodare = 0.689
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.00 obiect 0.89 dest 0.09
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.49 obiect 0.63 dest 0.89
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.40 obiect 1.00 dest 0.97
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.48 obiect 0.63 dest 0.85
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.00 obiect 1.00 dest 0.13
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.49 obiect 0.85 dest 0.81
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.33 obiect 1.00 dest 0.89
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.43 obiect 0.79 dest 0.81
+  MEDIA pe toate formularile si rolurile: 0.695
+G2 factorizat + amanare: dupa 10000 propozitii, media decodare = 0.800
+G2 factorizat + amanare: dupa 20000 propozitii, media decodare = 0.874
+G2 factorizat + amanare: dupa 30000 propozitii, media decodare = 0.858
+G2 factorizat + amanare: dupa 40000 propozitii, media decodare = 0.853
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.79 obiect 1.00 dest 0.79
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.67 obiect 1.00 dest 0.83
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.51 obiect 1.00 dest 0.55
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.73 obiect 1.00 dest 0.82
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 1.00 dest 1.00
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.75 obiect 1.00 dest 0.81
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.74 obiect 1.00 dest 0.89
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.52 obiect 1.00 dest 0.52
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.90 obiect 1.00 dest 0.74
+  MEDIA pe toate formularile si rolurile: 0.852
+G3 ne-factorizat + amanare: dupa 10000 propozitii, media decodare = 0.442
+G3 ne-factorizat + amanare: dupa 20000 propozitii, media decodare = 0.438
+G3 ne-factorizat + amanare: dupa 30000 propozitii, media decodare = 0.460
+G3 ne-factorizat + amanare: dupa 40000 propozitii, media decodare = 0.496
+  GIVE T0 '{A} da {B} lui {C} .': agent 1.00 obiect 0.71 dest 0.96
+  GIVE T1 '{C} primeste {B} de la {A} .': agent 0.60 obiect 0.12 dest 0.39
+  GIVE T2 '{B} e dat lui {C} de {A} .': agent 0.54 obiect 0.12 dest 0.44
+  GIVE T3 'lui {C} {A} ii da {B} .': agent 0.49 obiect 0.33 dest 0.49
+  GIVE T4 '{B} ii este dat lui {C} de catre {A} .': agent 0.54 obiect 0.15 dest 0.43
+  SELL T0 '{A} vinde {B} lui {C} .': agent 1.00 obiect 0.97 dest 0.91
+  SELL T1 '{C} cumpara {B} de la {A} .': agent 0.45 obiect 0.22 dest 0.49
+  SELL T2 '{B} e vandut lui {C} de {A} .': agent 0.51 obiect 0.27 dest 0.47
+  SELL T3 'lui {C} {A} ii vinde {B} .': agent 0.45 obiect 0.51 dest 0.42
+  SELL T4 '{B} ii este vandut lui {C} de catre {A} .': agent 0.48 obiect 0.11 dest 0.39
+  MEDIA pe toate formularile si rolurile: 0.498

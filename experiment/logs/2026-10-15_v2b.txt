@@ -1,0 +1,14 @@
+  seed 0 (7s): [1.0, 1.0, 0.102, 0.228]
+    GIVE T0: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T1: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T2: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T3: agent 1.00 obiect 1.00 dest 1.00
+    GIVE T4: agent 0.09 obiect 0.02 dest 0.08
+    SELL T0: agent 1.00 obiect 1.00 dest 1.00
+    SELL T1: agent 1.00 obiect 1.00 dest 1.00
+    SELL T2: agent 1.00 obiect 1.00 dest 1.00
+    SELL T3: agent 1.00 obiect 1.00 dest 1.00
+    SELL T4: agent 0.10 obiect 0.06 dest 0.03
+  seed 1 (7s): [1.0, 1.0, 0.042, 0.132]
+  seed 2 (7s): [1.0, 1.0, 0.237, 0.365]
+  MEDIE: 1.000±0.000  1.000±0.000  0.127±0.082  0.242±0.096

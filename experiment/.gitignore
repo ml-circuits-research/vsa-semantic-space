@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+*.pkl
+*.pt
+*.npz
+corp/wikisql/
+corp/*.bz2
+corp/*.zip
+corp/*.bin
+.DS_Store

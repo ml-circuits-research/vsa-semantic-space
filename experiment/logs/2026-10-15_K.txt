@@ -1,0 +1,13 @@
+K: dupa 10000 propozitii, media = 0.781
+K: dupa 20000 propozitii, media = 0.850
+K: dupa 30000 propozitii, media = 0.846
+K: dupa 40000 propozitii, media = 0.877
+
+K: decodare pe 2 cadre x 3 forme exterioare x 5 forme interioare (sansa 1/8):
+   medii pe rol: agent 0.68 obiect 1.00 destinatar 0.86 vorbitor(X) 0.98
+   forma exterioara '{X} spune ca': media 0.83
+   forma exterioara '{X} zice ca': media 0.94
+   forma exterioara 'lui {Y} {X} ii spune ca': media 0.86
+   cel mai slab: {X} spune ca + {B} e dat lui {C} de {A} . -> {'A': 0.025, 'B': 1.0, 'C': 0.9125, 'X': 1.0}
+   cel mai slab: {X} spune ca + {C} primeste {B} de la {A} . -> {'A': 0.125, 'B': 1.0, 'C': 0.85, 'X': 1.0}
+   cel mai slab: {X} spune ca + {C} cumpara {B} de la {A} . -> {'A': 0.1625, 'B': 1.0, 'C': 0.825, 'X': 1.0}

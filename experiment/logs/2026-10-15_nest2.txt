@@ -1,0 +1,5 @@
+=== 'X spune ca <prop>' (3 forme exterioare x 5 interioare x 2 cadre), 8 identitati (sansa 0.125), D=1024 ===
+  seed 0 drum singur (comutativ) (176s): vorbitor 1.00 agent 0.99 obiect 1.00 dest 0.99 | T4 interioara nevazuta 0.76
+  seed 1 drum singur (comutativ) (155s): vorbitor 1.00 agent 1.00 obiect 1.00 dest 1.00 | T4 interioara nevazuta 0.83
+  MEDIE drum singur (comutativ): 1.000 0.997 1.000 0.993 0.796
+  seed 0 dual: asteptari + drum (porti: tot ce nu e P/O) (187s): vorbitor 1.00 agent 1.00 obiect 1.00 dest 1.00 | T4 interioara nevazuta 0.78
