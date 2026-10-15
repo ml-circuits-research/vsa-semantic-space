@@ -144,6 +144,13 @@ after a comma that in every training formulation preceded an agent. With the pos
 to 0.54. This is the precise, data-forced form of "deferred addressing is necessary": a displacement applied retroactively to a whole
 clause, and only for right-announced structure. We declare it as a limit here; the remedy (clause-level re-addressing) is future work.
 
+## 6b. The state is a frame: mechanical translation and round trip
+frame(S) reads the nested {role: filler} from the state by unbinding with the world's role vectors and cleaning up over the candidates, with
+the nesting depth estimated from the state itself (the depth at which the inner roles decode best). The frame translates mechanically to
+Prolog facts (a nested term plus role facts) and to SMT-LIB assertions checked by z3; on fresh sentences at depths 0-3, three seeds, the
+full frame (all roles and the depth at once), the Prolog query for agent and recipient and the SMT consistency are all 1.000, including at
+the unseen depth (RESULTS 9a). Nothing after the state is learned.
+
 ## 7. Negative results and what they fixed
 We report our negative results because they are what makes the remaining claims credible: each one became an evaluation rule that the
 later experiments had to pass. Decoding with the model's own addresses masks legitimate overlapping addresses — two formulations may

@@ -548,3 +548,21 @@ Reading:
   test roles; where such pairs exist (H2), the role state separates them 0.15 better than the lexicon". Metric unchanged.
 - FULL-query accuracy 0.37 is far below text-to-SQL systems with the table at the input and pretrained encoders (~0.9); this is a model with
   ~2.5M phases, no pretraining, no table, trained in 2.5 minutes — the comparison that matters here is the same-input one.
+
+# ROUND 9 (DGX): the verifier / formalizer programme — canonical frame (R1), mechanical translation (R2), operators as roles (R3-R4)
+## 9a. frame(S), diff, to_prolog, to_smt and the round trip (frame.py, frame_roundtrip.py; logs/2026-10-15_1705_frame_roundtrip_a622582.txt)
+frame(S): for each depth k = 0..3, unbind conj(R_rep)^k conj(R_role) and clean up over the candidates; the depth is ESTIMATED as the one at
+which the three inner roles decode best (not given); speakers read at levels 0..d-1. diff(fa, fb) -> missing / extra / different.
+to_prolog: valid SWI-Prolog facts (nested term event(e, says(p4, says(p11, says(p8, gives(p2, o1, p3))))) + role facts), executed by a
+minimal built-in evaluator (no SWI-Prolog on the machine). to_smt: SMT-LIB 2 declarations and assertions, checked with z3 5.3.0 (the world's
+recipient asserted: sat; its negation: unsat). Model: v8 bundle, learned gates, reference world, trained on depths 0-2; 100 fresh sentences
+per depth, 3 seeds.
+| depth | full-frame accuracy (all roles + depth at once) | Prolog query recipient(e,R), agent(e,A) correct | SMT consistency (z3) |
+|---|---|---|---|
+| 0 | 1.000±0.000 | 1.000 | 1.000 |
+| 1 | 1.000±0.000 | 1.000 | 1.000 |
+| 2 | 1.000±0.000 | 1.000 | 1.000 |
+| 3 (UNSEEN) | **1.000±0.000** | 1.000 | 1.000 |
+The depth estimate separates cleanly (depth scores e.g. [0.10, 0.04, 0.06, 0.22] for a depth-3 sentence). From now on every evaluation
+reports full-frame accuracy (R1). This is the product skeleton in minimal form: text -> state -> frame -> Prolog / SMT -> answer, no learning
+anywhere after the state.

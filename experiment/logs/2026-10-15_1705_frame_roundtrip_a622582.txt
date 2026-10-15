@@ -33,3 +33,19 @@ frame_roundtrip: reference world, learned gates, 3 seeds, 100 fresh sentences pe
   query recipient(e,R), agent(e,A) -> [{'R': 'p10', 'A': 'p5'}]
   smt:    (declare-sort Entity 0) (declare-sort Event 0) (declare-const e Event) (declare-const o2 Entity) (declare-const p0 Entity) (declare-const p10 Entity) (declare-c ...  check(recipient = world) = sat, check(recipient != world) = unsat
   seed 0 depth 3 (UNSEEN): full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 1 depth 0: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 1 depth 1: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 1 depth 2: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 1 depth 3 (UNSEEN): full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 2 depth 0: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 2 depth 1: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 2 depth 2: full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+  seed 2 depth 3 (UNSEEN): full-frame 1.000  prolog-query 1.000  smt-consistent 1.000
+
+== MEANS: depth | full-frame accuracy | Prolog query (recipient & agent) | SMT consistency (z3)
+  depth 0          1.000±0.000 | 1.000±0.000 | 1.000±0.000
+  depth 1          1.000±0.000 | 1.000±0.000 | 1.000±0.000
+  depth 2          1.000±0.000 | 1.000±0.000 | 1.000±0.000
+  depth 3 (UNSEEN)  1.000±0.000 | 1.000±0.000 | 1.000±0.000
+
+checklist: [x] world addresses [x] shared F [x] depth estimated, not given [x] full-frame (R1) [x] round trip Prolog + SMT (R2) [x] >=3 seeds [x] unseen depth
