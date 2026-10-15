@@ -37,3 +37,5 @@ chance: fillers 1/13 (12 + the indefinite) = 0.077; scope among 5 hypotheses = 0
      depth 2 scope S form 0 '{A} does not V {B} to {C} .': scope acc 0.53  decoded as {np.str_('B'): np.int64(8), np.str_('C'): np.int64(6), np.str_('S'): np.int64(16)}
      depth 2 scope S form 1 '{A} never V3 {B} to {C} .': scope acc 0.13  decoded as {np.str_('B'): np.int64(23), np.str_('C'): np.int64(3), np.str_('S'): np.int64(4)}
   seed 0 (453s) 0.999 | 1.000 | 1.000 | 1.000 | 1.000 | 0.988 | 0.588 | 0.528 | 0.508  || cos(aff, neg): model 0.22, bag 0.72, world 0.06  || gates OPEN: ['.', 'anything', 'by', 'does', 'never', 'not', 'nothing', 'that', 'to', 'who']
+  seed 1 (239s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.603 | 0.516 | 0.525  || cos(aff, neg): model 0.14, bag 0.72, world 0.04  || gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'not', 'nothing', 'that', 'to', 'who']
+  seed 2 (234s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.996 | 0.431 | 0.372 | 0.492  || cos(aff, neg): model 0.18, bag 0.72, world 0.03  || gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'not', 'nothing', 'that', 'to', 'who']

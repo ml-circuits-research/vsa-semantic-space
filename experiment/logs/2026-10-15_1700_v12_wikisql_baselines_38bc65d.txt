@@ -20,3 +20,7 @@ clustering data (ABLATION: the 5000 training questions only): 36954 sequences fr
   BoW + LR                                 [test] sel 0.496 agg 0.810 cond1  —    FULL(sel+agg only) 0.405
   ours (path+bigram+chainL) n=5000 seed 0 [117s] [dev ] sel 0.751 agg 0.777 cond1 0.555 FULL 0.288 cos 0.519 | pairs model: same 0.725 diff 0.424 sep 0.301 AUC 0.903 | H1 0.404 | H2 0.584
   ours (path+bigram+chainL) n=5000 seed 0 [117s] [test] sel 0.747 agg 0.778 cond1 0.555 FULL 0.289 cos 0.515
+  transformer (same input) n=5000 ep=20 seed 0 [81s] [dev ] sel 0.516 agg 0.864 cond1 0.404 FULL 0.163 cos 0.565 | pairs model: same 0.869 diff 0.579 sep 0.290 AUC 0.892 | H1 0.806 | H2 0.713
+  transformer (same input) n=5000 ep=20 seed 0 [81s] [test] sel 0.514 agg 0.864 cond1 0.392 FULL 0.156 cos 0.560
+
+checklist: [x] same input (fixed identities + same categories, no table) [x] same objective and decoder [x] BoW+LR on every size [x] FULL-query accuracy [x] hard pairs with the lexical bag on the same row [x] validation from train only [x] no extra tuning for ours [x] test split reported

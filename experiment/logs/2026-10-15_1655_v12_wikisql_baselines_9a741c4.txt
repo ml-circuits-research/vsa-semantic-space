@@ -11,3 +11,7 @@ dev same-table pairs: same skeleton 336, different 12227; HARD H1 'different wor
 
 == training size 56355 (30 epochs) ==
   BoW + LR                                 [dev ] sel 0.505 agg 0.871 cond1  —    FULL(sel+agg only) 0.445
+  transformer (same input) n=56355 ep=30 seed 0 [961s] [dev ] sel 0.649 agg 0.883 cond1 0.558 FULL 0.299 cos 0.648 | pairs model: same 0.885 diff 0.537 sep 0.347 AUC 0.916 | H1 0.801 | H2 0.675
+  transformer (same input) n=56355 ep=30 seed 0 [961s] [test] sel 0.641 agg 0.882 cond1 0.546 FULL 0.285 cos 0.643
+
+checklist: [x] same input (fixed identities + same categories, no table) [x] same objective and decoder [x] BoW+LR on every size [x] FULL-query accuracy [x] hard pairs with the lexical bag on the same row [x] validation from train only [x] no extra tuning for ours [x] test split reported

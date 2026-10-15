@@ -526,7 +526,14 @@ Curve (dev; test at 56k in brackets; means of 3 seeds, std <= 0.005 everywhere):
 | 56k | BoW + LR | 0.499 | 0.870 | — | 0.441 (sel+agg only) |
 | 56k | **ours** | **0.816** [test 0.821] | 0.801 [0.803] | **0.626** [0.629] | **0.368** [0.374] |
 | 56k | transformer, same input, 3 epochs (23 s) | 0.543 [0.544] | **0.893** [0.893] | 0.450 [0.433] | 0.196 [0.190] |
-Robustness check (same-input transformer with 4x and 10x the training budget at 56k): see the lines appended below this section.
+Robustness check (same-input transformer at 56k, seed 0; logs/2026-10-15_1652_... and _1655_v12_wikisql_baselines): 3 epochs (23 s) sel 0.543;
+12 epochs (72 s) 0.631 dev / 0.626 test, FULL 0.281; 30 epochs (961 s) 0.649 dev / 0.641 test, FULL 0.299, agg 0.883, cond-1 0.558.
+The gate set in advance (0.75+ at 10x would narrow the claim to 1k-5k) is NOT reached: the data-efficiency claim stands at every size.
+Ablation — categories from the SUBSET only (skip-gram clusters trained on the 1k / 5k training questions and their headers, both models; seed 0;
+logs/2026-10-15_1700_v12_wikisql_baselines_38bc65d.txt): ours 1k sel 0.654 (vs 0.632 with whole-corpus categories), FULL 0.174; 5k 0.751 (vs
+0.760), FULL 0.288; transformer 1k 0.414 (vs 0.415), 5k 0.516 (vs 0.510); BoW+LR 0.459 / 0.495. The gap is unchanged: the data-efficiency
+claim does not depend on categories from the whole corpus; the condition can be stated as "with distributional categories from the training
+questions themselves" at every size.
 Hard pairs (dev, same table): H1 "different words, same SQL" (Jaccard < 0.3): 26 pairs; H2 "same words, different SQL" (Jaccard >= 0.5): 1,353 pairs.
 | representation | same skeleton | different | separation | AUC same-vs-different | H1 (want HIGH) | H2 (want LOW) |
 |---|---|---|---|---|---|---|

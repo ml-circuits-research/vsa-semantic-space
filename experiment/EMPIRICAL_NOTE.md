@@ -5,7 +5,7 @@ identities + distributional categories from the whole unlabelled training corpus
 decoder, a displacement-addressed vector-symbolic model recovers the selected column far better than a small transformer and a bag-of-words
 baseline at every training size from 1k to 56k, while exposing a readable role state; it loses the aggregator, a lexical decision, to the
 neural classifiers; its equivalence separation is lexical overall and role-based only on hard pairs. Every number cites RESULTS.md 8b-8d
-and a log with a commit hash. [BUDGET CHECK: fill from logs/2026-10-15_1652 and _1655 — gate for the claim, section 4.]
+and a log with a commit hash. Budget check (gate for the claim): section 4 — passed.
 
 ## 1. Task and world
 WikiSQL (Zhong et al. 2017): 56,355 training questions, 8,421 dev, 15,878 test, each with a table and a SQL query (SELECT agg(col) WHERE
@@ -29,8 +29,9 @@ frequent tokens as singletons plus 48 k-means clusters of skip-gram vectors trai
   (token overlap, overlap fraction, header length, position).
 Epochs scaled for comparable gradient steps: 60 / 20 / 3 at 1k / 5k / 56k. Three seeds. No tuning of ours beyond the values used on the
 synthetic worlds. The skip-gram categories are trained on the whole training pool at every size, for both sequence models — the data-
-efficiency claim therefore reads "with distributional categories from the whole unlabelled training corpus" [ABLATION: categories from the
-1k/5k subset only — fill from the ablation log].
+efficiency claim therefore reads "with distributional categories from the unlabelled training corpus". Ablation: with the categories
+trained on the 1k / 5k training questions ONLY (both models), ours gives 0.654 / 0.751 on the selected column (vs 0.632 / 0.760 with
+whole-corpus categories) and the transformer 0.414 / 0.516 (vs 0.415 / 0.510): the gap does not depend on where the categories come from.
 
 ## 3. Results (RESULTS 8d; logs/2026-10-15_1628_v12_wikisql_baselines_ed24ce4.txt)
 Figure 1 (to draw): selected-column accuracy vs training size, three curves. Table 1 (dev; test at 56k in brackets; std <= 0.005):
@@ -52,9 +53,10 @@ variant of ours (header tokens + question) drops to 0.67 on the selected column:
 belongs in the decoder (as here) or bound to a role, not summed (RESULTS 8b).
 
 ## 4. Budget check for the transformer (gate for the claim)
-With steps matched to ours (3 epochs at 56k, 23 s), the transformer reaches 0.543. With 4x the budget (12 epochs): 0.631 dev / 0.626 test,
-FULL 0.281 / 0.267. With 10x (30 epochs): [FILL]. Decision rule stated in advance: if the transformer reaches 0.75+ at 10x, the claim narrows
-to data efficiency at 1k-5k; otherwise it stands at every size.
+With steps matched to ours (3 epochs at 56k, 23 s), the transformer reaches 0.543. With 4x the budget (12 epochs, 72 s): 0.631 dev / 0.626 test,
+FULL 0.281 / 0.267. With 10x (30 epochs, 961 s): 0.649 dev / 0.641 test, FULL 0.299 / 0.285 (aggregator 0.883, condition-1 0.558).
+Decision rule stated in advance: if the transformer reached 0.75+ at 10x, the claim would narrow to data efficiency at 1k-5k; it did not
+(0.649 vs our 0.816 at 3 epochs), so the claim stands at every size. Logs: 2026-10-15_1652 and _1655_v12_wikisql_baselines.
 
 ## 5. Equivalence and hard pairs (RESULTS 8d)
 Pairs of dev questions on the same table, same SQL skeleton (sel, agg, condition columns) vs different; and two hard sets built from SQL and
@@ -76,8 +78,7 @@ decoder of section 1 is already that function; the same frame is what a verifier
 
 ## 7. Caveats
 Single dataset; the table is not used at the input by any model here (the state of the art, ~0.9 full query, uses it with pretrained
-encoders); three seeds; the transformer is small and tuned minimally [budget check in section 4]; distributional categories from the whole
-training corpus [ablation]; dev and test agree to the third decimal.
+encoders); three seeds; the transformer is small and tuned minimally (budget check, section 4: 10x the steps gives 0.65, not 0.82); distributional categories from the training corpus (ablation in section 2: the gap is the same with categories from the 1k/5k subset only); dev and test agree to the third decimal.
 
 ## 8. Related work
 Zhong et al. 2017 (WikiSQL, Seq2SQL); Xu et al. 2017 (SQLNet); Hwang et al. 2019 (SQLova); Kleyko et al. 2022 (VSA survey); Plate 2003;
