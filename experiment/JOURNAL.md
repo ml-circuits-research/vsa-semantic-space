@@ -175,3 +175,11 @@ Result: nouns 1.00, determiners 0.97, scope 0.95 with one quantifier / 0.81 with
 Depth 2: everything collapses (nouns 0.31) because NO depth-2 sentence of any kind was in training ('that:that' untrained) — a protocol error,
 not a quantifier result; the composition rule is not tested by this run. Fix: affirmative sentences at depths 0-2 in training (as in E1b).
 Figure 1 drawn (figures/fig1_wikisql_curve.png); E3 script written (v15_modality.py), not yet run (sequential launches).
+
+## 2026-10-16 (DGX, morning) — the interrupted E2 re-run: a NaN bug, not the machine
+The 2026-10-15 18:37 E2 re-run (logs/2026-10-15_1837_v14_quantifiers_387cf99.txt, kept as a record) died with the terminal session after 3 seeds
+— and those 3 seeds were garbage (nouns 0.08 = chance, all else 0, nan, no gate open, identical across seeds): the affirmative sentences
+added by the E1b protocol have an empty scope list and the world divided by sqrt(0) => NaN targets => NaN training. The machine was fine
+(GPU idle, no leftover process, 114 GB free). Fix: no scope term when no quantifier; plus an assertion in E1/E2/E3 training that the loss is
+finite (a silent garbage log must be impossible). Lesson for the process: a run that keeps going with a constant, chance-level output is a
+bug, not a result; the guard makes it stop. Background runs die with the terminal: long runs go under tmux or are relaunched next morning.

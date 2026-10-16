@@ -83,7 +83,7 @@ class QRoleWorld(v7.NestedRoleWorld):
             slot = self.F[w.idx[noun]]
             if det != DET_DEF: slot = slot + self.R["Q"] * self.det_vec(det)
             S = S + self.R[r] * slot
-        S = S + sum(self.R["sc"] * self.Frole[r] for r in scope) / np.sqrt(len(scope))
+        if scope: S = S + sum(self.R["sc"] * self.Frole[r] for r in scope) / np.sqrt(len(scope))     # no quantifier => no scope term (empty scope gave 0/0 = NaN on 2026-10-15)
         for x in reversed(speakers): S = self.R["X"] * self.F[w.idx[x]] + self.R["rep"] * S
         return S
 
@@ -128,7 +128,9 @@ if __name__ == "__main__":
         opt = torch.optim.Adam([m.theta, m.logits], lr=a.lr)
         for i in range(0, N, a.batch):
             sl = slice(i, i + a.batch); S = m.states(cats[sl], ids[sl], mask[sl]); tgt = tgt_all[sl]
-            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt()); opt.zero_grad(); (-cos.mean()).backward(); opt.step()
+            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
+            assert torch.isfinite(cos).all(), f"non-finite loss at step {i}: a target or state is NaN (check the world)"
+            opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): m.theta[0] = 0
         torch.cuda.synchronize(); t_train = time.time() - t0
         def run(depth, ambiguous, NP, NO, n=60):

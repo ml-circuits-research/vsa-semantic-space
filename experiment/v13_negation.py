@@ -120,7 +120,9 @@ if __name__ == "__main__":
         opt = torch.optim.Adam([m.theta, m.logits], lr=a.lr)
         for i in range(0, N, a.batch):
             sl = slice(i, i + a.batch); S = m.states(cats[sl], ids[sl], mask[sl]); tgt = tgt_all[sl]
-            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt()); opt.zero_grad(); (-cos.mean()).backward(); opt.step()
+            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
+            assert torch.isfinite(cos).all(), f"non-finite loss at step {i}: a target or state is NaN (check the world)"
+            opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): m.theta[0] = 0
         torch.cuda.synchronize(); t_train = time.time() - t0
         per_form = {}
