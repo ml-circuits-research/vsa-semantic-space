@@ -31,6 +31,17 @@ def frame(S, m, world, w, persons, objects, max_depth=3, tau=0.15):
     f["says"] = [best(R["X"], k, "P")[0] for k in range(d)]
     return f
 
+def residual(S, m, world, f):
+    """reconstruction residual (rule 18 / external review A1): ||S - sum over recognised roles of R_r (x) R_rep^k (x) f_best|| / ||S||.
+    Occupancy cannot be read from the norm after unbinding (isometry); this is the quantity reported instead."""
+    R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}; d = f["depth"]
+    rec = 0
+    for r in ROLES_INNER: rec = rec + R["rep"] ** d * R[r] * m.F[m.w.idx[f[r]]]
+    for k, x in enumerate(f["says"]): rec = rec + R["rep"] ** k * R["X"] * m.F[m.w.idx[x]]
+    # the model's state is a sum of unit terms; scale the reconstruction to the state's norm per term before subtracting
+    scale = (S.abs().pow(2).sum().sqrt() / (rec.abs().pow(2).sum().sqrt() + 1e-9))
+    return float((S - scale * rec).abs().pow(2).sum().sqrt() / (S.abs().pow(2).sum().sqrt() + 1e-9))
+
 def frame_from_event(ev, w):
     """the WORLD's frame for an event tuple (kind, A, B, C, X1, X2, X3|None...)"""
     speakers = [x for x in ev[4:] if x is not None]

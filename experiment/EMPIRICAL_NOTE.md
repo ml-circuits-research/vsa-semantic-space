@@ -77,6 +77,9 @@ frame(S): unbinding with the world's roles and cleanup over the table's columns 
 decoder of section 1 is already that function; the same frame is what a verifier compares (future work, FRAME module).
 
 ## 7. Caveats
+Structural: commutative binding records the multiset of roles on a path, not their order (no claim of arbitrary tree representation);
+occupancy is not readable from the norm after unbinding — the reconstruction residual is reported instead; supervision is structured
+(per-sentence SQL targets with pre-set roles; the model learns the assignment), not unsupervised.
 Single dataset; the table is not used at the input by any model here (the state of the art, ~0.9 full query, uses it with pretrained
 encoders); three seeds; the transformer is small and tuned minimally (budget check, section 4: 10x the steps gives 0.65, not 0.82); distributional categories from the training corpus (ablation in section 2: the gap is the same with categories from the 1k/5k subset only); dev and test agree to the third decimal.
 

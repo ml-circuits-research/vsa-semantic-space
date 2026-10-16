@@ -28,7 +28,8 @@ Address = BUNDLE OF SEVERAL CODES (round 3, v4.py):
            category) emit expectations relative to their own address (precise, large margin, fragile on new material)
   pos    = absolute position (x) category
 World: explicit roles S_world = sum_role R_role (x) f_filler, with the SAME f as the model.
-Single objective: maximize cos(S, S_world). Generative, no paraphrase labels, no negatives. Adam, lr 0.02, 10-15k sentences.
+Single objective: maximize cos(S, S_world). Generative, no paraphrase labels, no negatives. Supervision stated exactly (rule 20): structured
+per-sentence targets with pre-set roles — roles, identities and categories are GIVEN; moves, relative addresses and gates are LEARNED. Adam, lr 0.02, 10-15k sentences.
 Evaluation: decode role r from S with the WORLD's address R_r: argmax_x cos(S (x) conj(R_r), f_x). Report accuracy + margin.
 
 ## 3. History, by round, with the mistakes

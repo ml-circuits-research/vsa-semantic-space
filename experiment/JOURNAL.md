@@ -163,11 +163,11 @@ E1b (same night): negation seen at depths 0-1 -> depth 2 unseen FULL 0.972±0.04
 composes once seen inside a clause (E1: 0.0-0.5 -> 1.00). Data limit, not mechanism. Rule for E2-E3: operators trained at depths 0-1, tested at 2.
 
 ## 2026-10-15 (DGX, night) — decisions after the round-9 judgment
-Working rule accepted with an explicit reserve (written in RESULTS 9b-bis): operators compose after one exposure inside each other; E2-E3
+Working rule accepted with an explicit reserve (written in RESULTS 9b-bis): operators compose when seen at the shallower depth in training (stated share) inside each other; E2-E3
 trained at depths 0-1, tested at 2. EMPIRICAL_NOTE to be read by the reviewing session; figure 1 = PNG from the log, three curves with seed
 bars. Launches sequential from now on (times go into reports). E2 addition: scope ambiguity ("every child reads a book") reported separately;
 the model is NOT trained on ambiguous sentences — the world holds both hypotheses; the test is whether the state decodes both with near-equal
-strength on ambiguous sentences and one on disambiguated ones ("knows when it does not know", by composition).
+strength on ambiguous sentences and one on disambiguated ones ("reports both hypotheses / reports margin and residual", by composition).
 
 ## 2026-10-15 (DGX, night) — E2 quantifiers: protocol error found by the diagnostic; re-run with the E1b protocol
 Ran: run.sh v14_quantifiers.py (5 seeds) -> logs/2026-10-15_1815_v14_quantifiers_4ec4ecc.txt ; diag_v14.py (seed 0, inline).
@@ -190,12 +190,20 @@ allocations (tested: a 3 GB cuda tensor survived a 2 GB cap), so the cap is in-p
 memory (a 70 GB allocation is refused with an OOM error, tested), a watchdog that exits when MemAvailable < 16 GB, a 6 h wall-clock limit;
 run.sh refuses a second concurrent run and refuses to start under 40 GB available. The session now runs under tmux.
 E2 corrected run (09:00): nouns compose to the unseen depth (1.00), quantifier terms do not (dets 0.46-0.64, scope 0.52): the composition
-rule FAILS for quantifiers after one exposure — reserve applied, reported as such. Decoder gap fixed ('none' scope hypothesis). Hypothesis
+rule FAILS for quantifiers when seen at the shallower depth in training (stated share) — reserve applied, reported as such. Decoder gap fixed ('none' scope hypothesis). Hypothesis
 for judgment: the world's scope filler is a ROLE identity (not a word) => not representable by address (x) f_word; propose R_sc (x) f_noun.
 
-## 2026-10-16 (DGX, morning) — E3 modality/conditionals: composes to the unseen depth (1.000); right-announced form at the limit; zero-exposure mix fails
+## 2026-10-16 (DGX, morning) — E3 modality/conditionals: composes to the unseen depth (1.000); right-announced form at the limit; zero-occurrence mix fails
 Ran: run.sh v15_modality.py (5 seeds) -> logs/2026-10-16_0902_v15_modality_b2b8f34.txt. E3b (mixed construction seen at depth 0, --p_mixed 0.15) launched.
-Tally of the composition rule (one exposure, test one level deeper): reporting YES (6c), negation YES (E1b), modality YES, conditional YES,
-quantifiers NO (9c-bis; world-side hypothesis for judgment). Zero-exposure combinations fail every time (E1 sentential, E3 mixed).
-E3b (09:50): the mixed modal-in-consequent construction, one exposure at depth 0 -> inside reporting (unseen) 1.000 (5 seeds). Rule holds
+Tally of the composition rule (seen at the shallower depth (stated share), test one level deeper): reporting YES (6c), negation YES (E1b), modality YES, conditional YES,
+quantifiers NO (9c-bis; world-side hypothesis for judgment). Zero-occurrence combinations fail every time (E1 sentential, E3 mixed).
+E3b (09:50): the mixed modal-in-consequent construction, seen at the shallower depth (stated share) at depth 0 -> inside reporting (unseen) 1.000 (5 seeds). Rule holds
 on five operator cases; quantifiers the single exception. Awaiting judgment on E2c (world correction R_sc (x) f_noun) and on the rule as a claim.
+
+## 2026-10-16 (DGX, late morning) — consolidated judgment received; process commit (Part I-II B + Part III A docs + rules 18-24 + STATUS.md)
+Saved the judgment as experiment/JUDGMENT_2026-10-16_consolidated.md (the referenced files were never in the repo). Applied: A1 residual()
+in frame.py and "occupancy not by norm"; A2 commutative-binding limit in PAPER_NOTE §8 / EMPIRICAL_NOTE §7; A3 supervision wording
+(PAPER_NOTE abstract, 00_READ_FIRST §2); A5 "knows when it does not know" -> "reports both hypotheses / margin and residual" (grep, 0 left);
+A6 memory figure; rules 18-24 (24 = name the regime exactly); P2 rename "one exposure" -> "seen at depth d (share p), tested at d+1" with
+shares; P3 current_status rewritten whole with labels; P4 pid-file lock in run.sh; N0 STATUS.md at the root; Q2 both ambiguity numbers
+labelled with n. Next: E2c (rule-11 trace first), then round 10 A2.

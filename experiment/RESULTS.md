@@ -608,7 +608,7 @@ no 'that' precedes it; seen once inside a reported clause, it should compose one
 the negation operators join the relation markers; the emergent partition is unchanged in kind.
 ### 9b-bis. E1b — negation seen inside reporting at depth 1, tested at depth 2 (UNSEEN) (logs/2026-10-15_1736_v13_negation_8e2b30e.txt; 5 seeds)
 Same as E1 except the negated forms are sampled at depths 0-1 in training (--neg_depth_train 1).
-| axis | E1 (negation seen at depth 0 only) | E1b (seen at depths 0-1) | criterion |
+| axis | E1 (negation seen at depth 0 only; share 0.4) | E1b (seen at depths 0-1; share 0.4, i.e. 0.2 at depth 1) | criterion |
 |---|---|---|---|
 | negated, depth 0: FULL frame | 1.000 | 0.973±0.048 | > 0.95 MET |
 | negation inside reporting, depth 1: scope / FULL | 0.559 / 0.451 (unseen) | 0.979 / 0.979 (seen) | — |
@@ -618,11 +618,11 @@ Per form at depth 2 (seed 0): all eight forms, including sentential 'does not V'
 at 0.88-0.91 on the negated axes (one form unstable), the other four at 0.98-1.00. Gates: that, to, never, anything 1.00; by 0.94; does 0.77; '.'
 0.67; who 0.55; not 0.46 (borderline); nobody, verbs ~0.
 Reading: the E1 failure was a DATA limit, not a mechanism limit — exactly the pattern of reporting itself (6c): an operator that displaces a
-whole clause composes one level further than trained once it has been seen inside another operator at least once. Rule to carry into E2-E3:
+whole clause is read one level deeper than trained once it has been seen inside another operator at the shallower depth (stated share). Regime to carry into E2-E3:
 train every operator at depths 0-1, test at 2; report the unseen depth as the composition test.
-Reserve (judgment 2026-10-15, written here on purpose): the rule "operators compose one level further after one exposure inside each other"
+Reserve (judgment 2026-10-15, written here on purpose): the rule "an operator combination seen at depth d in training (stated share) is read at depth d+1"
 is EMPIRICAL, observed on two operators (reporting, 6c; negation, 9b-bis). It becomes a claim only if it also holds on the next two
-(quantifiers, modality/conditionals). If one of them does not compose after one exposure, that is a result of equal weight and is not
+(quantifiers, modality/conditionals). If one of them is not read at depth d+1 after being seen at depth d (stated share), that is a result of equal weight and is not
 "repaired" with more data without saying so.
 
 ## 9c. E2 — QUANTIFIERS as roles, scope ambiguity as a superposition (v14_quantifiers.py; logs/2026-10-15_1815_v14_quantifiers_4ec4ecc.txt; 5 seeds)
@@ -651,7 +651,7 @@ determiner (one quantifier): every 0.95, each 1.00, some 0.87, a 1.00, a certain
 Learned gates: that 1.00, '.' 0.87, to 0.80, and — new — the RECIPIENT verbs (sees, buys, accepts, borrows, receives, gets 0.54-0.63) open,
 while the active verbs stay closed; determiners (every, each, some, a, the) closed, 'from' 0.40, 'by' 0.32.
 Reading: (i) quantifier = role on the argument holds for nouns and determiners (1.00 / 0.97) and for scope with ONE quantifier (0.95);
-(ii) with TWO quantifiers the scope decision is the weak point (0.81), a real result to keep; (iii) "knows when it does not know": on never-seen
+(ii) with TWO quantifiers the scope decision is the weak point (0.81), a real result to keep; (iii) "reports both hypotheses / reports margin and residual": on never-seen
 ambiguous sentences the state reports both scope hypotheses in 46-50% of cases and sits at 0.86 cosine from the superposed world state —
 partial, by composition, with no training on ambiguity; (iv) the depth-2 result is void (protocol), re-run pending.
 
@@ -664,14 +664,14 @@ logs/2026-10-16_0833_v14_quantifiers_c5333dc.txt; 5 seeds) + diagnostic (diag_v1
 | FULL frame, unambiguous, depth 0 / 1 | 0.798 / 0.724 | 0.665 / 0.562 | — |
 | depth 2 (UNSEEN): SCOPE / FULL | 0.469 / 0.047 (void) | **0.603±0.030 / 0.362±0.031** | > 0.9 NOT met |
 | new nouns, depth 0, FULL | 0.800 | 0.657 | — |
-| AMBIGUOUS (never trained): both reported / cos to superposed world / surface-first | 0.458 / 0.858 / 0.322 | 0.425±0.031 / 0.843±0.017 / 0.259 | reported |
+| AMBIGUOUS (never trained; n = 360 sentences per seed = 6 patterns x 60): "both hypotheses reported" (main) / cos to the superposed world / forced choice = surface-first ("what a reasoner receives when forced to pick") | 0.458 / 0.858 / 0.322 | 0.425±0.031 / 0.843±0.017 / 0.259±0.048 | reported, observed, partial |
 Diagnostic per case x depth (seed 0; nouns | determiners | scope): one quantifier d0 1.00 | 0.81 | 0.89; d1 1.00 | 0.84 | 0.87; d2 (UNSEEN)
 **1.00** | 0.64 | 0.52. Two marked: d0 1.00 | 0.77 | 0.62; d2 1.00 | 0.46 | 0.52. Affirmative (all 'the'): nouns and determiners 1.00 at every
 depth (scope 0.000 by construction: the decoder had no "no quantifier" hypothesis — an EVALUATION gap, fixed in decode_q with a 'none'
 threshold, affects only affirmative sentences, not the table above). Per determiner (one quantifier, d0): a 1.00, a certain 0.98, every 0.93,
 each 0.86, some 0.75. Per pattern (d0): determiners 0.70-0.95, scope 0.60-0.88.
 Reading, with the reserve of 9b-bis APPLIED:
-- The composition rule does NOT hold for quantifiers after one exposure: at the unseen depth the NOUNS compose (1.00 — reporting itself
+- The composition regularity does NOT hold for quantifiers (quantified sentences seen at depths 0-1, share 0.6; tested at depth 2): at the unseen depth the NOUNS compose (1.00 — reporting itself
   composes, so the 9c protocol error is gone) while the quantifier-specific terms do not (determiners 0.46-0.64, scope 0.52 against chance
   0.33). This is the first operator for which the rule fails, and it is reported as such; it is not repaired with more data.
 - The weakness is already visible at SEEN depths: scope 0.80 (one quantifier 0.89, two 0.62) and determiners 0.92 — the quantifier is only
@@ -684,7 +684,7 @@ Reading, with the reserve of 9b-bis APPLIED:
   "scope as a role": R_sc (x) f_noun_wide — the wide-scope quantified NOUN's identity, which is in the sentence. This is a correction of my
   world definition, not of the model; it is NOT applied here. The determiner term R_Q (x) f_det inside the slot is representable (f_det is a
   word), and its 0.92 / 0.64 suggests a second, smaller issue: two identities bundled in one slot halve each other's strength.
-- "Knows when it does not know": unchanged — ~0.43 of never-trained ambiguous sentences get both hypotheses, cosine 0.84 to the superposed
+- "Reports both hypotheses": unchanged — ~0.43 of never-trained ambiguous sentences get both hypotheses, cosine 0.84 to the superposed
   world state; partial, by composition.
 
 ## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
@@ -699,7 +699,7 @@ MIXED "if P then Q may ..." NEVER trained. Model unchanged (v8 bundle, learned g
 | conditional d1 / **d2 UNSEEN** FULL | 1.000 / **1.000** | MET |
 | conditional **'Q if P' (right-announced)** d0 FULL | **0.203±0.088** | the declared limit (RESULTS 6c), confirmed |
 | separation cos(P, may P) / (P, must P) / (may P, must P) | **0.119 / 0.094 / 0.132** ; lexical bag 0.772 / 0.773 / 0.857 | gaps > 0.5: MET |
-| MIXED "if P then Q may" — ZERO exposures — d0: operator+scope / FULL ; d1 FULL | 0.035 / 0.000 ; 0.000 | the zero-exposure case: fails, as E1 did |
+| MIXED "if P then Q may" — ZERO occurrences in training — d0: operator+scope / FULL ; d1 FULL | 0.035 / 0.000 ; 0.000 | zero occurrences in training: not read, as E1's sentential forms |
 Learned gates: that, if, ',', has, perhaps, may, must 1.00; to 0.80; '.' 0.24; **then 0.17** (closed: 'if' and the comma carry the
 structure); verbs ~0.12.
 Reading. (i) Modality and conditionals are operators-as-roles that compose one level further than trained: 1.000 at the unseen depth, five
@@ -707,17 +707,17 @@ seeds, no rule — the third and fourth operators for which the empirical rule h
 remain the one failure (9c-bis), with the world-side hypothesis pending judgment. (ii) The right-announced form fails exactly as predicted
 (0.20): the consequent is already written when 'if' arrives; this is the limit of causal addressing and is reported as such. (iii) A
 combination with ZERO exposures (a modal inside a consequent, never seen in any form) does not compose — the same finding as E1's sentential
-negation inside reporting; the rule is "after one exposure", and E3b (running) gives this pair its one exposure at depth 0 and tests it
+negation inside reporting; the regularity is "seen at depth d (stated share), read at d+1", and E3b gives this pair a share of 0.15 at depth 0 and tests it
 inside reporting. (iv) Two modals that the world distinguishes (may vs must) are separated by the state (0.13) although the lexical bag
 cannot (0.86): the modal word's displacement, not its identity, carries the distinction.
-### 9d-bis. E3b — the mixed construction given ONE exposure at depth 0 (--p_mixed 0.15), tested inside reporting (logs/2026-10-16_0925_v15_modality_f31f4e5.txt; 5 seeds)
-| axis | E3 (zero exposures) | E3b (one exposure at depth 0) |
+### 9d-bis. E3b — the mixed construction seen at depth 0 in training (share 0.15 of the training sentences, --p_mixed 0.15), tested inside reporting (depth 1) (logs/2026-10-16_0925_v15_modality_f31f4e5.txt; 5 seeds)
+| axis | E3 (zero occurrences in training) | E3b (seen at depth 0, share 0.15) |
 |---|---|---|
 | MIXED "if P then Q may" d0: operator+scope / FULL | 0.035 / 0.000 | **1.000 / 1.000** (seen) |
 | MIXED inside reporting, d1 (UNSEEN combination) FULL | 0.000 | **1.000±0.000** |
 | everything else (modals, conditionals, unseen depth 2) | 1.000 | 1.000 (unchanged) |
 | 'Q if P' (right-announced) | 0.203 | 0.440±0.121 (still at the limit; high variance) |
 | separation (P, may P) / (P, must P) / (may, must) | 0.12 / 0.09 / 0.13 | 0.15 / 0.13 / 0.17 (bag 0.77 / 0.77 / 0.86) |
-Gates: that, ',', has, may, must, perhaps 1.00; to 0.69; if 0.60; then closed. Same pattern as E1 -> E1b: zero exposures of a combination
-fail, one exposure composes to the unseen level. The empirical rule now holds on reporting, negation, modality, conditionals and the
+Gates: that, ',', has, may, must, perhaps 1.00; to 0.69; if 0.60; then closed. Same pattern as E1 -> E1b: zero occurrences in training of a combination
+fail; seen at depth 0 (share 0.15), the combination is read at depth 1. The empirical regularity now holds on reporting, negation, modality, conditionals and the
 modal-in-conditional pair; quantifiers remain the single exception (9c-bis, world-side hypothesis pending).

@@ -38,3 +38,20 @@ Added on the DGX (2026-10-15, rounds 4-5):
     acts on — separately from its presence.** A negation attached to the wrong argument is worse for a reasoner than a missed negation.
     Operators are ROLES in the world; the model stays uniform (same step for every word). If an operator needs a special rule, that is a
     finding to report, not a fix to hide.
+
+Added 2026-10-16 (external review of the positioning document; round 10):
+18. **Every accuracy is accompanied by: the margin distribution, the confident-wrong rate at a stated threshold, and the reconstruction
+    residual** ||S - sum_r R_r (x) f_best(r)|| / ||S||. "The model knows when it does not know" is never written; "the model reports X and Y,
+    calibrated as follows" is.
+19. **Any claim of the form "the geometry produces / guarantees ..." is either a proof or is replaced by "we observed ... (round, seeds)".**
+20. **The world's roles are an input.** Documents say what is given (roles, identities, categories) and what is learned (moves, relative
+    addresses, gates) in the same sentence whenever either is mentioned. Supervision wording: "structured per-sentence targets with
+    pre-set roles; the model learns the assignment" — never "no semantic labels" or "unsupervised".
+21. **Every run logs memory (RSS and device) and is resumable from a checkpoint; a run without a memory curve in its log is not a result.**
+22. **Every experiment in a status carries one of three labels — BUILT (code and measurement exist, numbers reported), PLANNED (criterion
+    written, not run), HYPOTHESIS (mechanism described, no criterion yet)** — and the positioning document uses the same three. When a label
+    changes, say which paragraph of the document changes with it.
+23. **For every table from now on: the predicate role is present, and the calibration numbers of rule 18 are present.** A table without
+    them is a draft, not a result.
+24. **The regime of a composition test is named exactly**: "seen at depth d in training (share p), tested at depth d+1" — never "one
+    exposure" (nothing was shown once; the combination was a stated share of the training sentences at the shallow depth).

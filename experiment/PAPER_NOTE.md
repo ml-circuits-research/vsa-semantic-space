@@ -8,8 +8,9 @@ Figure 1 to be drawn (three panels, section 2). The caveats of section 8 are par
 We study a sequence model in which a word is a pair: a fixed random identity vector and a displacement computed from context by codes
 learned per category. The state of a sentence is the bundle of identities bound to the addresses reached by integrating displacements
 along the sentence (a vector-symbolic architecture with fractional power encoding: complex unit vectors, bind = phase addition, bundle =
-sum). The only training signal is generative: the state must match, under cosine, the state of a world with explicit roles, built from
-the same identities. We report three results on a synthetic English world with reported-speech nesting. (1) Trained on nesting depths
+sum). The training signal is generative and structured: per-sentence targets with pre-set roles (the roles, the identities and the
+categories are given; the moves, the relative addresses and the gates are learned); the state must match, under cosine, the state of a
+world with explicit roles, built from the same identities. No paraphrase labels, no negatives. We report three results on a synthetic English world with reported-speech nesting. (1) Trained on nesting depths
 0-2, the model decodes every role at depth 3 — a construction it has never seen — at 1.000 on all six roles over 5 seeds; the learned
 displacements compose one level further than trained because the world's algebra (a fixed role vector applied once per clause) and the
 model's (displacements summed along the chain) coincide. (2) The gates — which categories emit expectations, i.e. open a frame — are
@@ -167,7 +168,11 @@ cluster the content words into their five classes perfectly, and so does a skip-
 model consumes rather than something it produces; the gating structure, by contrast, is not recoverable from co-occurrence and does emerge
 from the objective (section 4). Finally, a retracted claim is corrected in every document in the same commit as the retraction.
 
-## 8. Caveats (part of the claims)
+## 8. Caveats and structural limits (part of the claims)
+Commutative binding records the MULTISET of roles on a path, not their order: two operator chains that differ only in order can collide
+("X says that not P" vs "not (X says that P)"); we claim no arbitrary tree representation (remedies — permutation binding, level-indexed
+roles — are planned, X1/B7). Occupancy cannot be read from the norm after unbinding (unbinding is an isometry); what is reported instead
+is the reconstruction residual (rule 18). Memory: of the order of D x rows x 4 bytes, i.e. a megabyte at D ~ 1k, not less.
 The world is ours: synthetic, six frames, two reporting verbs, 36 identities, D = 1024; the positive nesting result holds for reporting
 announced before its clause. The control is small (0.79M parameters) and minimally tuned; larger models, more data and learned embeddings
 (which would remove the fixed-identity constraint and with it the zero-shot test) are not covered. The old "seen transitions" axis measures

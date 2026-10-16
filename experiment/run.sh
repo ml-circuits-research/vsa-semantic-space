@@ -7,6 +7,10 @@ if [ -n "$(git status --porcelain 2>/dev/null | grep -v "logs/")" ]; then
   echo "There are uncommitted changes. Commit first (git add -A && git commit), so that the log corresponds to a commit."; exit 1
 fi
 # protection (2026-10-16, after the machine hung on 2026-10-15): one run at a time, enough free memory, a wall-clock cap
+LOCK=logs/.run.lock
+if [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; then
+  echo "Another run.sh is active (pid $(cat "$LOCK"), lock $LOCK). Runs are sequential; wait for it or stop it first."; exit 1
+fi
 if pgrep -f "python3? v[0-9]+_|python3? frame_roundtrip|python3? diag_" >/dev/null; then
   echo "Another experiment process is running (pgrep). Runs are sequential on this machine; wait for it or stop it first."; pgrep -af "python3? v[0-9]+_" | head -3; exit 1
 fi
@@ -14,6 +18,7 @@ avail_gb=$(awk '/MemAvailable/ {printf "%d", $2/1024/1024}' /proc/meminfo)
 if [ "$avail_gb" -lt 40 ]; then echo "Only ${avail_gb} GB available; refusing to start (need 40)."; exit 1; fi
 export VSA_MEM_FRACTION=${VSA_MEM_FRACTION:-0.5} VSA_MIN_AVAILABLE_GB=${VSA_MIN_AVAILABLE_GB:-16} VSA_MAX_HOURS=${VSA_MAX_HOURS:-6}
 mkdir -p logs
+echo $$ > "$LOCK"; trap 'rm -f "$LOCK"' EXIT
 hash=$(git rev-parse --short HEAD 2>/dev/null || echo nogit)
 name=$(basename "$1" .py)
 out="logs/$(date +%Y-%m-%d_%H%M)_${name}_${hash}.txt"

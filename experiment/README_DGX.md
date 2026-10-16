@@ -59,3 +59,9 @@ Batch: group the sentences by length (or pad + mask). D=4096-16384 fits easily i
 > 2. Gates learned by gradient (sigmoid + soft mix between the provisional and the expected address) instead of discrete search; check
 >    whether they converge to the same set (identities closed, verbs/prepositions open).
 > 3. WikiSQL with v3 (dual) + learned gates + discovered categories; report the margin, not just the accuracy.
+
+## Memory protection on the DGX Spark (2026-10-16)
+Unified memory: a runaway process starves the OS (the machine hung on 2026-10-15, no SSH, hard reset). cgroup MemoryMax does NOT bound
+CUDA unified-memory allocations here (tested: a 3 GB cuda tensor survived a 2 GB cap). Protection is in-process (experiment/guard.py):
+torch allocator capped at 50% of the unified total, MemAvailable watchdog, wall-clock limit; run.sh: one run at a time (pid lock),
+40 GB free required, timeout. Checkpoints with --resume (round 10 A2) so that a hard exit costs steps, not a run.
