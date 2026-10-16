@@ -721,3 +721,81 @@ cannot (0.86): the modal word's displacement, not its identity, carries the dist
 Gates: that, ',', has, may, must, perhaps 1.00; to 0.69; if 0.60; then closed. Same pattern as E1 -> E1b: zero occurrences in training of a combination
 fail; seen at depth 0 (share 0.15), the combination is read at depth 1. The empirical regularity now holds on reporting, negation, modality, conditionals and the
 modal-in-conditional pair; quantifiers remain the single exception (9c-bis, world-side hypothesis pending).
+
+## 10a. Round 10 A2 — the memory curve of one short reference training (trainer.py; logs/2026-10-16_1115_v16_reference_8fc1fcc.txt; 1 seed, D = 1024, 30k sentences, batch 8)
+Memory is now logged every 500 steps in every operator script (process RSS, torch allocated / reserved, MemAvailable), losses are read with
+.item(), no graph-carrying tensor survives a step, the loss is asserted finite, checkpoints every 2000 steps with --resume (tested on CPU).
+| step | sentences | RSS (GB) | torch allocated / reserved (GB) | MemAvailable (GB) |
+|---|---|---|---|---|
+| start | 0 | 1.32 | 0.50 / 0.53 | 113.8 |
+| 500 | 4,000 | 2.46 | 0.64 / 0.96 | 112.2 |
+| 1,000-3,500 | 8,000-28,000 | 2.46 (constant) | 0.64 / 0.96 (constant) | 112.2-112.3 |
+| end | 30,000 | 2.46 | 0.64 / 0.69 | 111.9 |
+Reading: the curve is flat after the first 500 steps (the first-step jump is the CUDA context and the encoded batch tensors); no growth per
+step. The same flat profile holds in the 5-seed run (RSS 2.6 GB at seed 4) and in the WikiSQL verifier (RSS 2.06 GB constant across three
+epochs, reserved 3.5-4.2 GB during an epoch, released between epochs; log 2026-10-16_1130). The 2026-10-15 hang is therefore not
+reproduced by these scripts; the protection (guard.py cap, watchdog, run.sh lock and timeout) stays in place regardless.
+
+## 10b. B1 + B2 — predicate role, occupancy marker, calibration (v16_reference.py; logs/2026-10-16_1118_v16_reference_c142b57.txt; 5 seeds, D = 1024, 30k)
+World: S = R_pred (x) f_lemma + sum_r R_r (x) (f_filler + m), with m a fixed occupancy marker shared by every slot; reporting R_X (x) (f_X + m)
++ R_rep (x) S. Predicate filler = the SURFACE verb lemma (option (a): give / receive / sell / buy ... are 12 distinct identities); the event
+type (transfer / sale / shipment / loan / display / proposal) is read at READOUT through a per-world synonym table, not learned. Recipient-less
+forms ("A sells B .", "B is sold by A .", "it is A who sells B .") with share 0.2 give the "not given" occupancy case. Model unchanged (v8
+bundle, learned gates). Calibration on every readout: margin = top1 - top2 cosine; tau = 0.05 fixed BEFORE the run; confident-wrong = wrong
+with margin >= tau; abstention split into right/wrong; accuracy-vs-coverage at thresholds 0, 0.02, 0.05, 0.10, 0.15.
+| axis (5 seeds) | result | criterion |
+|---|---|---|
+| seen formulations FULL (A, B, C + predicate) | 1.000±0.000 | > 0.95 MET |
+| predicate, surface lemma / event type (via table) | 1.000 / 1.000 | > 0.95 MET (23) |
+| new identities FULL / role cues FULL | 1.000 / 1.000 | MET |
+| new formulations, UNSEEN transitions FULL | 0.638±0.015 | — (as before: 0.6-0.7 in rounds 3-6; no loss from the predicate role) |
+| depth 2 (seen) FULL / depth 3 UNSEEN FULL | 1.000 / 0.813±0.030 | depth 3 > 0.9 NOT met with the predicate role (6c without it: 1.000) |
+| occupancy: known filler / UNKNOWN filler / NOT GIVEN | 1.000 / 1.000 / 1.000 | three cases > 0.95 MET (A1: by marker, not by norm) |
+| presence cosine on the marker: known 0.38, unknown 0.38, absent 0.06 (threshold 0.22 = midpoint, fixed per seed) | separation 0.32 | — |
+Calibration (seed 0, tau = 0.05; the same shape on the other seeds): seen roles and predicate: accuracy 1.000, margin mean 0.22-0.33, p10
+0.13-0.29, coverage 1.00, confident-wrong 0.000. New identities: 1.000, confident-wrong 0.000. Depth 3 (unseen): accuracy 0.90 (A) /
+0.875 (C) at full coverage, margins mean 0.06 / 0.04 — at tau 0.05 coverage drops to 0.59 / 0.33 and the covered accuracy is 1.000 / 0.975,
+confident-wrong 0.000 / 0.008; abstention right/wrong 0.31/0.10 and 0.55/0.12. Unseen transitions: accuracy 0.87 (A) / 0.75 (C), at tau 0.05
+coverage 0.69 / 0.67 with covered accuracy 1.000 / 0.938, confident-wrong 0.000 / 0.042. B2 criterion (confident-wrong < 2% at coverage >
+80%): MET on every seen axis and on new identities; at depth 3 and on unseen transitions the model reaches < 1% confident-wrong (A) only by
+abstaining on 30-40% — the margin is informative (wrong answers have small margins), the coverage criterion is NOT met there; reported, not tuned.
+Learned gates: 'that' and '.' 1.00; the recipient-less verbs (accepts, gets, sees, buys, receives, borrows) 0.55-0.62 (open: they must emit
+the next slot when no 'to' follows); object marker and participles closed (0.17-0.20).
+Reading. (i) The predicate role costs nothing on the seen axes and gives 12 distinguishable events where GIVE and SELL used to share a target;
+the event type is a readout convention (option (a)), stated as such. (ii) Occupancy is read from the marker (0.38 vs 0.06), not from the
+norm — the A1 correction holds at 1.000 in all three cases. (iii) The one regression: depth 3 unseen is 0.81 instead of 1.000 (6c). The
+predicate term R_pred (x) f_lemma at depth k is addressed by R_rep^k (x) R_pred; the verb's displacement must now land on a role address of
+its own, one more term per level that competes with the two or three role terms — the reduction is on A and C (0.90 / 0.875 at full
+coverage), the predicate itself stays correct. Under rule 10 this is first an evaluation of the world (one more term per level), not of the
+model; the margin reports it (abstention 0.3-0.5 at depth 3) rather than hiding it. The 6c table (1.000 at depth 3) stands for the
+predicate-less world; this one is the reference table from here on.
+
+## 10c. B4 — verifier with injected errors on WikiSQL (v17_verifier.py; logs/2026-10-16_1130_v17_verifier_c142b57.txt; seed 0; D = 512; 3 epochs on the 56,355 training questions; dev 8,421)
+Controlled version: the "formalization to verify" is the GOLD frame with ONE injected error (drop a condition column, swap the selected and a
+condition column, change the selected column, flip the aggregator, add a condition column, change a value); the LLM-produced formalizations
+of the judgment are PLANNED (no API). Reader = the v11 full model (question only, no table) decoding selected column, aggregator and the
+condition-column set (presence threshold 0.101 = midpoint of present 0.158 / absent 0.043, fixed before scoring); 'unverifiable' = the
+reader's margin on the disputed slot below tau = 0.05; otherwise 'detected' (reader disagrees with the injected frame) or 'missed'
+(reader agrees with the error, with margin >= tau = confident-wrong). Lexical baseline (BoW + LR for the selected column and the aggregator
+on the same rows; no condition model) scored identically.
+| error type | n | reader: detected / unverifiable / missed | lexical: detected / unverifiable / missed |
+|---|---|---|---|
+| change_sel (selected column) | 8,393 | **0.764** / 0.232 / **0.004** | 0.400 / 0.585 / 0.015 |
+| swap_sel_cond | 8,357 | **0.740** / 0.257 / **0.003** | 0.322 / 0.386 / 0.292 |
+| flip_agg | 8,421 | **0.805** / 0.183 / 0.013 | 0.623 / 0.362 / 0.014 |
+| drop_cond | 8,357 | 0.159 / 0.690 / 0.151 | 0.214 / 0.361 / 0.425 |
+| add_cond | 8,393 | 0.162 / 0.837 / 0.001 | 0.214 / 0.358 / 0.428 |
+| change_value | 8,357 | 0.159 / 0.532 / 0.310 | 0.214 / 0.361 / 0.425 |
+| no error (gold) | 8,421 | FALSE ALARM **0.162** / unverifiable 0.529 / confirmed 0.309 | 0.213 / 0.359 / 0.427 |
+Precision of the 'error' verdict on ROLE errors (change_sel, swap, flip_agg) against the gold false-alarm rate: 0.942; recall on role errors
+0.527 (the rest is 'unverifiable', not 'missed'). Criterion (judgment B4: detection > 0.9 on role errors): NOT met — 0.74-0.81 detected,
+0.18-0.26 unverifiable, confident-wrong 0.3-1.3%.
+Stated limits. change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values): 0.159 "detected" there is the
+false-alarm rate, as on gold. Condition errors (drop / add) are read only through the column SET at a presence threshold, and the condition
+model is weak (0.16 detected, 0.5-0.8 unverifiable): the condition slot was already the weak part of the full-query number (8c, 0.37).
+Reading. The reader catches the errors in the roles it decodes well (which column, which aggregator, which column is the selected one) with
+a confident-wrong rate below 1.3% and a false-alarm rate of 16% on gold; the lexical baseline on the same rows either misses them with
+confidence (swap: 0.29 missed) or cannot decide (change_sel: 0.59 unverifiable). What the model does not decode (values) it cannot verify,
+and it says so through the margin rather than through a wrong verdict — in B4's terms, the verifier is useful on the role part of a
+formalization and silent on the lexical part. The 16% false alarm on gold (the reader's own wrong decodings with margin >= tau) is the number
+to reduce before the LLM version.

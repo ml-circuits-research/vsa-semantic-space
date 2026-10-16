@@ -211,3 +211,19 @@ Round 10 A2 code (10:35): trainer.py = the one training loop for E1/E2/E3 — me
 steps, .item() losses, no graph after a step, finite-loss assertion, checkpoints every 2000 steps with --resume (tested on CPU: resume at
 step 800 works); run.sh: expandable_segments, log-advance watchdog (kill after 30 min without log growth), pid lock. The memory curve of a
 short reference GPU run is reported after E2c finishes (sequential launches).
+
+## 2026-10-16 (DGX, midday) — E2c both targets, A2 memory curve, B1+B2 reference table, B4 verifier; a queue deadlock
+E2c (v14 --scope_target slot / noun; logs 2026-10-16_1031_..._7f2b6b7, _1052_..._8fc1fcc; 5 seeds each): depth 0 scope 0.784 (slot) /
+0.873 (noun) — the noun target is the best scope number so far at the seen depth (9c-bis 0.795) but still below 0.9; depth 2 (unseen)
+scope 0.03 for BOTH targets, below chance 0.33 — suspected artefact of the ABSOLUTE 'none' threshold (tau_none = 0.08) added to decode_q
+after 9c-bis: scope scores shrink with depth, so at depth 2 the decoder says 'none' everywhere. Rule 10 (evaluation first): diag_e2c.py
+re-scores the same regime under three 'none' rules (absolute / none / relative) before any interpretation; written in RESULTS 9c-ter.
+A2 memory curve (log 2026-10-16_1115): flat after step 500 (RSS 2.46 GB, torch 0.64 GB allocated), reported in RESULTS 10a.
+B1+B2 (log 2026-10-16_1118, 5 seeds): predicate role (surface lemma, option (a)) and occupancy marker at 1.000 on every seen axis, three
+occupancy cases 1.000, confident-wrong 0.000 where seen; depth 3 unseen drops to 0.813 (6c: 1.000 without the predicate term) — the margin
+reports it (coverage 0.33-0.59 at tau 0.05). RESULTS 10b; this is the reference table from now on.
+B4 verifier (log 2026-10-16_1130; 67 min, three epochs on 56k questions): role errors detected 0.74-0.81 with confident-wrong < 1.3%, false
+alarm on gold 0.162; condition and value errors mostly 'unverifiable' (values invisible to the reader, stated). Criterion (> 0.9) NOT met.
+Process lesson: the two queued launches (diag_e2c, v18) waited on `pgrep -f "v16_reference|v17_verifier"` — a pattern that matches the
+waiting shell's OWN command line, so both loops waited forever (found at 12:40, one hour after the lock was free). Rule for queues: wait on
+the pid lock (logs/.run.lock) only, never on a pgrep pattern that appears in the waiting command. Both runs relaunched sequentially at 12:40.

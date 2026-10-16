@@ -1,0 +1,84 @@
+# 2026-10-16T11:18:16+02:00  commit=c142b57  cmd: python3 v16_reference.py --seeds 5  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v16_reference (B1 + B2): device=cuda, D=1024, N=30000, seeds=5, tau=0.05; predicate role (surface lemma, option a) + occupancy marker m; calibration on every readout
+world: R_pred x f_lemma + sum_r R_r x (f + m); reporting R_X x (f_X + m) + R_rep x S; recipient-less forms (share 0.2) ['{A} V3 {B} .', '{B} is VP by {A} .', 'it is {A} who V3 {B} .']; synonym table {'give': 'transfer', 'receive': 'transfer', 'sell': 'sale', 'buy': 'sale', 'send': 'shipment', 'get': 'shipment', 'lend': 'loan', 'borrow': 'loan', 'show': 'display', 'see': 'display', 'offer': 'proposal', 'accept': 'proposal'}
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+predicate candidates (12): ['accept', 'borrow', 'buy', 'get', 'give', 'lend', 'offer', 'receive', 'see', 'sell', 'send', 'show']; chance 1/12; roles: chance 1/12 (new ids 1/6)
+
+[train seed 0] start: RSS 1.32 GB | torch alloc 0.50 GB reserved 0.53 GB | MemAvailable 113.4 GB
+[train seed 0] step 500 sent 4000/30000 loss -0.845 (19s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.1 GB
+[train seed 0] step 1000 sent 8000/30000 loss -0.878 (38s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 1500 sent 12000/30000 loss -0.897 (57s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 2000 sent 16000/30000 loss -0.912 (76s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 2500 sent 20000/30000 loss -0.920 (95s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 3000 sent 24000/30000 loss -0.921 (114s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 3500 sent 28000/30000 loss -0.918 (132s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] end: RSS 2.46 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.6 GB (142s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:104: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (143s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.617 | 1.000 | 0.825 | 1.000 | 1.000 | 1.000  || presence cos: known 0.38 unknown 0.38 absent 0.06 (thr 0.22) || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+  calibration (seed 0, tau = 0.05):
+     seen:A     acc 1.000 | margin mean 0.221 p10 0.151 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@0.90
+     seen:B     acc 1.000 | margin mean 0.326 p10 0.287 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@1.00
+     seen:C     acc 1.000 | margin mean 0.215 p10 0.125 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.004/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@0.95 0.15:1.000@0.87
+     seen:pred  acc 1.000 | margin mean 0.288 p10 0.252 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@1.00
+     newid:A    acc 1.000 | margin mean 0.219 p10 0.152 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@0.99 0.15:1.000@0.90
+     d3:A       acc 0.900 | margin mean 0.058 p10 0.018 | tau 0.05: coverage 0.59, confident-wrong 0.000, abstain right/wrong 0.308/0.100 | acc@coverage: 0.00:0.900@1.00 0.02:0.953@0.89 0.05:1.000@0.59 0.10:1.000@0.07 0.15:nan@0.00
+     d3:C       acc 0.875 | margin mean 0.040 p10 0.010 | tau 0.05: coverage 0.33, confident-wrong 0.008, abstain right/wrong 0.550/0.117 | acc@coverage: 0.00:0.875@1.00 0.02:0.955@0.74 0.05:0.975@0.33 0.10:nan@0.00 0.15:nan@0.00
+     unseen:A   acc 0.867 | margin mean 0.077 p10 0.015 | tau 0.05: coverage 0.69, confident-wrong 0.000, abstain right/wrong 0.175/0.133 | acc@coverage: 0.00:0.867@1.00 0.02:0.961@0.86 0.05:1.000@0.69 0.10:1.000@0.32 0.15:1.000@0.03
+     unseen:C   acc 0.750 | margin mean 0.083 p10 0.013 | tau 0.05: coverage 0.67, confident-wrong 0.042, abstain right/wrong 0.125/0.208 | acc@coverage: 0.00:0.750@1.00 0.02:0.822@0.84 0.05:0.938@0.67 0.10:1.000@0.39 0.15:1.000@0.13
+[train seed 1] start: RSS 2.57 GB | torch alloc 0.56 GB reserved 1.18 GB | MemAvailable 111.9 GB
+[train seed 1] step 500 sent 4000/30000 loss -0.831 (18s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 1000 sent 8000/30000 loss -0.877 (37s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 1500 sent 12000/30000 loss -0.911 (55s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 2000 sent 16000/30000 loss -0.906 (74s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 2500 sent 20000/30000 loss -0.899 (92s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 3000 sent 24000/30000 loss -0.915 (111s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] step 3500 sent 28000/30000 loss -0.922 (129s) | RSS 2.57 GB | torch alloc 0.64 GB reserved 1.19 GB | MemAvailable 111.9 GB
+[train seed 1] end: RSS 2.57 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.5 GB (138s)
+  seed 1 (139s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.633 | 1.000 | 0.758 | 1.000 | 1.000 | 1.000  || presence cos: known 0.37 unknown 0.38 absent 0.05 (thr 0.21) || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train seed 2] start: RSS 2.65 GB | torch alloc 0.56 GB reserved 1.12 GB | MemAvailable 111.9 GB
+[train seed 2] step 500 sent 4000/30000 loss -0.830 (18s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 112.0 GB
+[train seed 2] step 1000 sent 8000/30000 loss -0.861 (37s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 112.0 GB
+[train seed 2] step 1500 sent 12000/30000 loss -0.901 (56s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.9 GB
+[train seed 2] step 2000 sent 16000/30000 loss -0.905 (74s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.9 GB
+[train seed 2] step 2500 sent 20000/30000 loss -0.915 (93s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.9 GB
+[train seed 2] step 3000 sent 24000/30000 loss -0.910 (111s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.9 GB
+[train seed 2] step 3500 sent 28000/30000 loss -0.923 (130s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.9 GB
+[train seed 2] end: RSS 2.62 GB | torch alloc 0.64 GB reserved 0.72 GB | MemAvailable 112.3 GB (139s)
+  seed 2 (139s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.650 | 1.000 | 0.842 | 1.000 | 1.000 | 1.000  || presence cos: known 0.39 unknown 0.39 absent 0.06 (thr 0.22) || gates OPEN: ['.', 'accepts', 'that']
+[train seed 3] start: RSS 2.53 GB | torch alloc 0.56 GB reserved 1.14 GB | MemAvailable 112.0 GB
+[train seed 3] step 500 sent 4000/30000 loss -0.823 (19s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 1000 sent 8000/30000 loss -0.877 (37s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 1500 sent 12000/30000 loss -0.900 (56s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 2000 sent 16000/30000 loss -0.910 (74s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 2500 sent 20000/30000 loss -0.916 (92s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 3000 sent 24000/30000 loss -0.927 (111s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] step 3500 sent 28000/30000 loss -0.907 (130s) | RSS 2.53 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.0 GB
+[train seed 3] end: RSS 2.53 GB | torch alloc 0.64 GB reserved 0.72 GB | MemAvailable 112.4 GB (139s)
+  seed 3 (140s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.658 | 1.000 | 0.808 | 1.000 | 1.000 | 1.000  || presence cos: known 0.39 unknown 0.39 absent 0.05 (thr 0.22) || gates OPEN: ['.', 'accepts', 'borrows', 'gets', 'sees', 'that']
+[train seed 4] start: RSS 2.62 GB | torch alloc 0.56 GB reserved 1.14 GB | MemAvailable 111.9 GB
+[train seed 4] step 500 sent 4000/30000 loss -0.847 (19s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 1000 sent 8000/30000 loss -0.874 (37s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 1500 sent 12000/30000 loss -0.887 (55s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 2000 sent 16000/30000 loss -0.908 (74s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 2500 sent 20000/30000 loss -0.917 (92s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 3000 sent 24000/30000 loss -0.935 (111s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] step 3500 sent 28000/30000 loss -0.928 (129s) | RSS 2.62 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 111.9 GB
+[train seed 4] end: RSS 2.62 GB | torch alloc 0.64 GB reserved 0.71 GB | MemAvailable 112.4 GB (139s)
+  seed 4 (139s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.633 | 1.000 | 0.833 | 1.000 | 1.000 | 1.000  || presence cos: known 0.39 unknown 0.39 absent 0.07 (thr 0.23) || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'that']
+
+== MEANS over 5 seeds: seen FULL(roles) | pred (surface) | pred (event) | new ids FULL | role cues FULL | unseen trans. FULL | depth 2 FULL | depth 3 UNSEEN FULL | occupancy: known | unknown filler | not given
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.638±0.015 | 1.000±0.000 | 0.813±0.030 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 .=1.00 accepts=0.62 gets=0.59 sees=0.59 buys=0.58 receives=0.56 borrows=0.55 O=0.20 given=0.17 shown=0.17 sold=0.17 offered=0.17 lent=0.17
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] predicate role present (23) [x] occupancy by marker, not norm (A1) [x] calibration: margin, confident-wrong, abstention, acc-vs-coverage (18) [x] memory logged (21) [x] >=3 seeds [x] given vs learned stated (20)

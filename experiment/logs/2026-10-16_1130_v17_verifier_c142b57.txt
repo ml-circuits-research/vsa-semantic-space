@@ -1,0 +1,39 @@
+# 2026-10-16T11:30:16+02:00  commit=c142b57  cmd: python3 v17_verifier.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v17_verifier (B4): device=cuda, D=512; train 56355, dev 8421, vocabulary 33318; tau=0.05; controlled version (gold frame + one injected error; no LLM)
+clustering data: 194596 TRAIN sequences only; dev not used.
+[train ep 0] start: RSS 1.77 GB | torch alloc 0.69 GB reserved 0.92 GB | MemAvailable 112.7 GB
+[train ep 0] step 500 sent 16000/56355 loss -0.523 (381s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.4 GB
+[train ep 0] step 1000 sent 32000/56355 loss -0.616 (762s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.4 GB
+[train ep 0] step 1500 sent 48000/56355 loss -0.644 (1143s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.4 GB
+[train ep 0] end: RSS 2.06 GB | torch alloc 0.86 GB reserved 0.94 GB | MemAvailable 112.7 GB (1343s)
+[train ep 1] start: RSS 2.06 GB | torch alloc 0.77 GB reserved 0.94 GB | MemAvailable 112.7 GB
+[train ep 1] step 500 sent 16000/56355 loss -0.667 (381s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 1] step 1000 sent 32000/56355 loss -0.754 (763s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 1] step 1500 sent 48000/56355 loss -0.698 (1144s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 1] end: RSS 2.06 GB | torch alloc 0.86 GB reserved 0.92 GB | MemAvailable 112.7 GB (1343s)
+[train ep 2] start: RSS 2.07 GB | torch alloc 0.77 GB reserved 0.92 GB | MemAvailable 112.7 GB
+[train ep 2] step 500 sent 16000/56355 loss -0.650 (381s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 2] step 1000 sent 32000/56355 loss -0.629 (762s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 2] step 1500 sent 48000/56355 loss -0.586 (1144s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.0 GB
+[train ep 2] end: RSS 2.07 GB | torch alloc 0.86 GB reserved 0.94 GB | MemAvailable 112.7 GB (1343s)
+reader trained (4030s)
+condition-slot presence threshold (midpoint of present 0.158 / absent 0.043): 0.101
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v17_verifier.py:125: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return {"sel": (int(t2.indices[0]), float(t2.values[0] - (t2.values[1] if len(sc) > 1 else 0))), "agg": (int(ta.indices[0]), float(ta.values[0] - ta.values[1])), "conds": []}
+
+== VERIFIER on dev (8421 questions), one injected error per instance; reader = v11 full model (no table), lex = BoW+LR frame (no condition model)
+error type | n | reader: detected (recall) / unverifiable / missed(confident-wrong) | lex: detected / unverifiable / missed
+  drop_cond      |  8357 | reader 0.159 / 0.690 / 0.151 | lex 0.214 / 0.361 / 0.425
+  swap_sel_cond  |  8357 | reader 0.740 / 0.257 / 0.003 | lex 0.322 / 0.386 / 0.292
+  change_sel     |  8393 | reader 0.764 / 0.232 / 0.004 | lex 0.400 / 0.585 / 0.015
+  flip_agg       |  8421 | reader 0.805 / 0.183 / 0.013 | lex 0.623 / 0.362 / 0.014
+  add_cond       |  8393 | reader 0.162 / 0.837 / 0.001 | lex 0.214 / 0.358 / 0.428
+  change_value   |  8357 | reader 0.159 / 0.532 / 0.310 | lex 0.214 / 0.361 / 0.425
+  no_error (gold) |  8421 | reader FALSE-ALARM 0.162 / unverifiable 0.529 / ok 0.309 | lex false-alarm 0.213 / 0.359 / 0.427
+  precision of the 'error' verdict on ROLE errors vs gold (reader): 0.942  (false-alarm rate on gold 0.162); recall on role errors 0.527
+  stated: change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values); conditions are detected by column set only.
+
+checklist: [x] world addresses [x] fixed identities [x] no table at the input [x] one error per instance, per-type rates [x] lexical baseline on the same rows [x] unverifiable = margin < tau (18) [x] false-alarm rate on gold [x] invisible error types stated [x] memory logged (21) [ ] LLM-produced formalizations (follow-up)

@@ -1,0 +1,65 @@
+# 2026-10-16T12:40:40+02:00  commit=c142b57  cmd: python3 diag_e2c.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+[train role] start: RSS 1.53 GB | torch alloc 0.67 GB reserved 0.72 GB | MemAvailable 112.8 GB
+[train role] step 2000 sent 16000/40000 loss -0.818 (103s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 111.8 GB
+[train role] step 4000 sent 32000/40000 loss -0.844 (205s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 111.8 GB
+[train role] end: RSS 2.66 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.1 GB (256s)
+
+==== target role: case | depth | nouns | dets | scope(abs 0.08) | scope(no none) | scope(relative) | raw: true-wide | other | affirmative-max
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/diag_e2c.py:41: RuntimeWarning: Mean of empty slice
+  r = np.array(rows, dtype=float); print(f"  {name:14s} | {depth} | " + " | ".join(f"{np.nanmean(r[:, i]):.3f}" for i in range(8)))
+  affirmative    | 0 | 1.000 | 1.000 | 0.361 | 0.000 | 0.722 | nan | 0.046 | 0.097
+  one quantifier | 0 | 1.000 | 0.806 | 0.894 | 0.894 | 0.894 | 0.281 | 0.059 | nan
+  two, marked    | 0 | 1.000 | 0.767 | 0.622 | 0.622 | 0.622 | 0.317 | 0.129 | nan
+  ambiguous      | 0 | 1.000 | 0.672 | 0.411 | 0.411 | 0.411 | 0.245 | 0.091 | nan
+  affirmative    | 1 | 1.000 | 1.000 | 0.628 | 0.000 | 0.722 | nan | 0.034 | 0.074
+  one quantifier | 1 | 1.000 | 0.839 | 0.867 | 0.867 | 0.867 | 0.212 | 0.056 | nan
+  two, marked    | 1 | 1.000 | 0.772 | 0.656 | 0.656 | 0.656 | 0.268 | 0.117 | nan
+  ambiguous      | 1 | 1.000 | 0.689 | 0.539 | 0.539 | 0.539 | 0.208 | 0.098 | nan
+  affirmative    | 2 | 1.000 | 1.000 | 0.989 | 0.000 | 0.956 | nan | 0.001 | 0.028
+  one quantifier | 2 | 1.000 | 0.644 | 0.483 | 0.522 | 0.478 | 0.093 | 0.030 | nan
+  two, marked    | 2 | 1.000 | 0.456 | 0.517 | 0.517 | 0.517 | 0.143 | 0.062 | nan
+  ambiguous      | 2 | 1.000 | 0.461 | 0.333 | 0.333 | 0.333 | 0.109 | 0.063 | nan
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:104: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  gates OPEN: ['accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that', 'to']
+[train slot] start: RSS 2.74 GB | torch alloc 0.73 GB reserved 1.52 GB | MemAvailable 111.4 GB
+[train slot] step 2000 sent 16000/40000 loss -0.808 (102s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.52 GB | MemAvailable 111.4 GB
+[train slot] step 4000 sent 32000/40000 loss -0.831 (204s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.52 GB | MemAvailable 111.4 GB
+[train slot] end: RSS 2.72 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.0 GB (255s)
+
+==== target slot: case | depth | nouns | dets | scope(abs 0.08) | scope(no none) | scope(relative) | raw: true-wide | other | affirmative-max
+  affirmative    | 0 | 1.000 | 1.000 | 0.967 | 0.000 | 1.000 | nan | 0.028 | 0.049
+  one quantifier | 0 | 1.000 | 0.850 | 0.961 | 0.978 | 0.850 | 0.167 | 0.034 | nan
+  two, marked    | 0 | 1.000 | 0.822 | 0.683 | 0.683 | 0.683 | 0.194 | 0.074 | nan
+  ambiguous      | 0 | 1.000 | 0.700 | 0.467 | 0.483 | 0.411 | 0.116 | 0.034 | nan
+  affirmative    | 1 | 1.000 | 1.000 | 0.978 | 0.000 | 0.983 | nan | 0.024 | 0.043
+  one quantifier | 1 | 1.000 | 0.856 | 0.706 | 0.861 | 0.683 | 0.110 | 0.029 | nan
+  two, marked    | 1 | 1.000 | 0.783 | 0.767 | 0.767 | 0.767 | 0.142 | 0.055 | nan
+  ambiguous      | 1 | 1.000 | 0.678 | 0.356 | 0.411 | 0.289 | 0.084 | 0.033 | nan
+  affirmative    | 2 | 1.000 | 1.000 | 1.000 | 0.000 | 0.994 | nan | 0.007 | 0.025
+  one quantifier | 2 | 1.000 | 0.672 | 0.006 | 0.333 | 0.033 | 0.024 | 0.015 | nan
+  two, marked    | 2 | 1.000 | 0.483 | 0.033 | 0.250 | 0.083 | 0.034 | 0.029 | nan
+  ambiguous      | 2 | 1.000 | 0.456 | 0.000 | 0.150 | 0.033 | 0.031 | 0.021 | nan
+  gates OPEN: ['from', 'that', 'to']
+[train noun] start: RSS 2.88 GB | torch alloc 0.73 GB reserved 1.42 GB | MemAvailable 111.3 GB
+[train noun] step 2000 sent 16000/40000 loss -0.808 (102s) | RSS 2.88 GB | torch alloc 0.85 GB reserved 1.43 GB | MemAvailable 111.4 GB
+[train noun] step 4000 sent 32000/40000 loss -0.835 (204s) | RSS 2.88 GB | torch alloc 0.85 GB reserved 1.43 GB | MemAvailable 111.4 GB
+[train noun] end: RSS 2.88 GB | torch alloc 0.85 GB reserved 0.90 GB | MemAvailable 111.9 GB (255s)
+
+==== target noun: case | depth | nouns | dets | scope(abs 0.08) | scope(no none) | scope(relative) | raw: true-wide | other | affirmative-max
+  affirmative    | 0 | 1.000 | 1.000 | 0.911 | 0.000 | 0.994 | nan | 0.029 | 0.055
+  one quantifier | 0 | 1.000 | 0.856 | 0.994 | 0.994 | 0.989 | 0.206 | 0.034 | nan
+  two, marked    | 0 | 1.000 | 0.806 | 0.772 | 0.772 | 0.772 | 0.247 | 0.100 | nan
+  ambiguous      | 0 | 1.000 | 0.706 | 0.733 | 0.733 | 0.733 | 0.161 | 0.044 | nan
+  affirmative    | 1 | 1.000 | 1.000 | 0.828 | 0.000 | 0.850 | nan | 0.047 | 0.067
+  one quantifier | 1 | 1.000 | 0.856 | 0.872 | 0.878 | 0.833 | 0.140 | 0.052 | nan
+  two, marked    | 1 | 1.000 | 0.772 | 0.528 | 0.528 | 0.528 | 0.170 | 0.088 | nan
+  ambiguous      | 1 | 1.000 | 0.661 | 0.561 | 0.561 | 0.561 | 0.123 | 0.059 | nan
+  affirmative    | 2 | 1.000 | 1.000 | 0.950 | 0.000 | 0.839 | nan | 0.031 | 0.051
+  one quantifier | 2 | 1.000 | 0.661 | 0.028 | 0.206 | 0.067 | 0.035 | 0.039 | nan
+  two, marked    | 2 | 1.000 | 0.467 | 0.039 | 0.194 | 0.106 | 0.046 | 0.044 | nan
+  ambiguous      | 2 | 1.000 | 0.428 | 0.000 | 0.111 | 0.050 | 0.043 | 0.044 | nan
+  gates OPEN: ['.', 'from', 'that', 'to']
