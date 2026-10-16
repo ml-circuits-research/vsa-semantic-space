@@ -15,3 +15,30 @@ predicate candidates (12): ['accept', 'borrow', 'buy', 'get', 'give', 'lend', 'o
 
 [train seed 0] start: RSS 1.32 GB | torch alloc 0.50 GB reserved 0.53 GB | MemAvailable 113.8 GB
 [train seed 0] step 500 sent 4000/30000 loss -0.845 (19s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.2 GB
+[train seed 0] step 1000 sent 8000/30000 loss -0.878 (38s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.2 GB
+[train seed 0] step 1500 sent 12000/30000 loss -0.897 (57s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 2000 sent 16000/30000 loss -0.912 (76s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 2500 sent 20000/30000 loss -0.920 (95s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.3 GB
+[train seed 0] step 3000 sent 24000/30000 loss -0.921 (113s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.2 GB
+[train seed 0] step 3500 sent 28000/30000 loss -0.918 (132s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 111.6 GB
+[train seed 0] end: RSS 2.46 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 111.9 GB (142s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:104: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (143s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.617 | 1.000 | 0.825 | 1.000 | 1.000 | 1.000  || presence cos: known 0.38 unknown 0.38 absent 0.06 (thr 0.22) || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+  calibration (seed 0, tau = 0.05):
+     seen:A     acc 1.000 | margin mean 0.221 p10 0.151 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@0.90
+     seen:B     acc 1.000 | margin mean 0.326 p10 0.287 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@1.00
+     seen:C     acc 1.000 | margin mean 0.215 p10 0.125 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.004/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@0.95 0.15:1.000@0.87
+     seen:pred  acc 1.000 | margin mean 0.288 p10 0.252 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@1.00 0.15:1.000@1.00
+     newid:A    acc 1.000 | margin mean 0.219 p10 0.152 | tau 0.05: coverage 1.00, confident-wrong 0.000, abstain right/wrong 0.000/0.000 | acc@coverage: 0.00:1.000@1.00 0.02:1.000@1.00 0.05:1.000@1.00 0.10:1.000@0.99 0.15:1.000@0.90
+     d3:A       acc 0.900 | margin mean 0.058 p10 0.018 | tau 0.05: coverage 0.59, confident-wrong 0.000, abstain right/wrong 0.308/0.100 | acc@coverage: 0.00:0.900@1.00 0.02:0.953@0.89 0.05:1.000@0.59 0.10:1.000@0.07 0.15:nan@0.00
+     d3:C       acc 0.875 | margin mean 0.040 p10 0.010 | tau 0.05: coverage 0.33, confident-wrong 0.008, abstain right/wrong 0.550/0.117 | acc@coverage: 0.00:0.875@1.00 0.02:0.955@0.74 0.05:0.975@0.33 0.10:nan@0.00 0.15:nan@0.00
+     unseen:A   acc 0.867 | margin mean 0.077 p10 0.015 | tau 0.05: coverage 0.69, confident-wrong 0.000, abstain right/wrong 0.175/0.133 | acc@coverage: 0.00:0.867@1.00 0.02:0.961@0.86 0.05:1.000@0.69 0.10:1.000@0.32 0.15:1.000@0.03
+     unseen:C   acc 0.750 | margin mean 0.083 p10 0.013 | tau 0.05: coverage 0.67, confident-wrong 0.042, abstain right/wrong 0.125/0.208 | acc@coverage: 0.00:0.750@1.00 0.02:0.822@0.84 0.05:0.938@0.67 0.10:1.000@0.39 0.15:1.000@0.13
+
+== MEANS over 1 seeds: seen FULL(roles) | pred (surface) | pred (event) | new ids FULL | role cues FULL | unseen trans. FULL | depth 2 FULL | depth 3 UNSEEN FULL | occupancy: known | unknown filler | not given
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.617±0.000 | 1.000±0.000 | 0.825±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 .=1.00 sees=0.68 accepts=0.64 receives=0.63 buys=0.62 gets=0.59 borrows=0.58 sent=0.25 shown=0.23 given=0.23 O=0.20 sold=0.18 lent=0.18
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] predicate role present (23) [x] occupancy by marker, not norm (A1) [x] calibration: margin, confident-wrong, abstention, acc-vs-coverage (18) [x] memory logged (21) [ ] >=3 seeds [x] given vs learned stated (20)
