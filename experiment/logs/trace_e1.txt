@@ -1,0 +1,55 @@
+
+== (i) 10b learned gates: that, '.', recipient verbs open; participles closed
+  T0 active: p0 says that p1 says that p2 says that p3 gives o0 to p4 .
+     A    p3       <- that:that + that:that + that:. + .:P
+     pred gives    <- that:that + that:that + that:. + L[.:gives]
+     B    o0       <- that:that + that:that + that:. + L[.:O]
+     C    p4       <- that:that + that:that + that:. + L[.:P]
+     shared keys C/pred: 2 of 3 / 3  distinct in C: ['L[.:P]']
+     shared keys A/pred: 2 of 3 / 3  distinct in A: ['.:P']
+     shared keys A/C: 2 of 3 / 3  distinct in A: ['.:P']
+  T2 passive: p0 says that p1 says that p2 says that o0 is given to p4 by p3 .
+     B    o0       <- that:that + that:that + that:. + L[.:O]
+     pred given    <- that:that + that:that + that:. + L[.:given]
+     C    p4       <- that:that + that:that + that:. + .:P
+     A    p3       <- that:that + that:that + that:. + L[.:P]
+     shared keys C/pred: 2 of 3 / 3  distinct in C: ['.:P']
+     shared keys A/pred: 2 of 3 / 3  distinct in A: ['L[.:P]']
+     shared keys A/C: 2 of 3 / 3  distinct in A: ['L[.:P]']
+  T3 passive: p0 says that p1 says that p2 says that o0 is given by p3 to p4 .
+     B    o0       <- that:that + that:that + that:. + L[.:O]
+     pred given    <- that:that + that:that + that:. + L[.:given]
+     A    p3       <- that:that + that:that + that:. + .:P
+     C    p4       <- that:that + that:that + that:. + L[.:P]
+     shared keys C/pred: 2 of 3 / 3  distinct in C: ['L[.:P]']
+     shared keys A/pred: 2 of 3 / 3  distinct in A: ['.:P']
+     shared keys A/C: 2 of 3 / 3  distinct in A: ['.:P']
+
+== (ii) E1: participle gates GIVEN open
+  T0 active: p0 says that p1 says that p2 says that p3 gives o0 to p4 .
+     A    p3       <- that:that + that:that + that:. + .:P
+     pred gives    <- that:that + that:that + that:. + L[.:gives]
+     B    o0       <- that:that + that:that + that:. + L[.:O]
+     C    p4       <- that:that + that:that + that:. + L[.:P]
+     shared keys C/pred: 2 of 3 / 3  distinct in C: ['L[.:P]']
+     shared keys A/pred: 2 of 3 / 3  distinct in A: ['.:P']
+     shared keys A/C: 2 of 3 / 3  distinct in A: ['.:P']
+  T2 passive: p0 says that p1 says that p2 says that o0 is given to p4 by p3 .
+     B    o0       <- that:that + that:that + that:given + L[given:O]
+     pred given    <- that:that + that:that + that:given
+     C    p4       <- that:that + that:that + that:given + given:P
+     A    p3       <- that:that + that:that + that:given + given:. + L[.:P]
+     shared keys C/pred: 2 of 3 / 2  distinct in C: ['given:P']
+     shared keys A/pred: 2 of 4 / 2  distinct in A: ['L[.:P]', 'given:.']
+     shared keys A/C: 2 of 4 / 3  distinct in A: ['L[.:P]', 'given:.']
+  T3 passive: p0 says that p1 says that p2 says that o0 is given by p3 to p4 .
+     B    o0       <- that:that + that:that + that:given + L[given:O]
+     pred given    <- that:that + that:that + that:given
+     A    p3       <- that:that + that:that + that:given + given:P
+     C    p4       <- that:that + that:that + that:given + given:. + L[.:P]
+     shared keys C/pred: 2 of 4 / 2  distinct in C: ['L[.:P]', 'given:.']
+     shared keys A/pred: 2 of 3 / 2  distinct in A: ['given:P']
+     shared keys A/C: 2 of 3 / 4  distinct in A: ['given:P']
+
+Reading of the trace is written in RESULTS 10b-quater after the run (the trace is the evidence; the verdict is read from the shared-key counts:
+if C's address in the passive is reached through 'to' alone and shares its 'that' prefix with the predicate's carrier while in T0 it carries the

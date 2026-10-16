@@ -8,6 +8,6 @@ cd "$(dirname "$0")"
 for spec in "$@"; do
   while [ -f logs/.run.lock ] && kill -0 "$(cat logs/.run.lock 2>/dev/null)" 2>/dev/null; do sleep 30; done
   echo "# queue $(date +%H:%M) start: $spec"
-  ./run.sh $spec 2>&1 | grep -v "^\[train" | tail -n "${QUEUE_TAIL:-14}" | cut -c1-"${QUEUE_CUT:-300}"
+  eval "./run.sh $spec" 2>&1 | grep -v "^\[train" | tail -n "${QUEUE_TAIL:-14}" | cut -c1-"${QUEUE_CUT:-300}"    # eval: a spec may carry quoted arguments with spaces (judgment 3b4f837 C3)
   echo "# queue $(date +%H:%M) end: $spec"
 done

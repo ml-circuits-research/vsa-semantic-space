@@ -1,0 +1,41 @@
+
+  p0 says that p1 says that each child gives a book to the teacher .
+  p0 says that p1 says that every child gives a book to the teacher .
+     .                      | that:that + that:to + to:.                              | that:that + that:to + to:.                              | same
+     a                      | that:that + that:to + L[to:a]                           | that:that + that:to + L[to:a]                           | same
+     book                   | that:that + that:to + L[to:NO]                          | that:that + that:to + L[to:NO]                          | same
+     child                  | that:that + that:to + L[to:NP]                          | that:that + that:to + L[to:NP]                          | same
+     each                   | that:that + that:to + L[to:each]                        | -                                                       | DIFFERENT
+     every                  | -                                                       | that:that + that:to + L[to:every]                       | DIFFERENT
+     gives                  | that:that + that:to + L[to:gives]                       | that:that + that:to + L[to:gives]                       | same
+     p0                     | L[that:P]                                               | L[that:P]                                               | same
+     p1                     | that:that + L[that:P]                                   | that:that + L[that:P]                                   | same
+     says                   | that:that + L[that:says]                                | that:that + L[that:says]                                | same
+     teacher                | that:that + that:to + to:NP                             | that:that + that:to + to:NP                             | same
+     that                   | that:that                                               | that:that                                               | same
+     the                    | that:that + that:to + to:the                            | that:that + that:to + to:the                            | same
+     to                     | that:that + that:to                                     | that:that + that:to                                     | same
+     book (2nd drawing)     | [that:that + that:to + L[to:NO]] + REL[a]               | [that:that + that:to + L[to:NO]] + REL[a]               | same
+     child (2nd drawing)    | [that:that + that:to + L[to:NP]] + REL[each]            | [that:that + that:to + L[to:NP]] + REL[every]           | DIFFERENT
+
+  each child gives every book to the teacher .
+  a child gives a certain book to the teacher .
+     .                      | to:.                                                    | to:.                                                    | same
+     a                      | -                                                       | L[to:a]                                                 | DIFFERENT
+     book                   | L[to:NO]                                                | L[to:NO]                                                | same
+     certain                | -                                                       | L[to:certain]                                           | DIFFERENT
+     child                  | L[to:NP]                                                | L[to:NP]                                                | same
+     each                   | L[to:each]                                              | -                                                       | DIFFERENT
+     every                  | L[to:every]                                             | -                                                       | DIFFERENT
+     gives                  | L[to:gives]                                             | L[to:gives]                                             | same
+     teacher                | root                                                    | root                                                    | same
+     the                    | to:the                                                  | to:the                                                  | same
+     to                     | root                                                    | root                                                    | same
+     book (2nd drawing)     | [L[to:NO]] + REL[every]                                 | [L[to:NO]] + REL[certain]                               | DIFFERENT
+     child (2nd drawing)    | [L[to:NP]] + REL[each]                                  | [L[to:NP]] + REL[a]                                     | DIFFERENT
+
+Checks: (a) the wide noun's 2nd drawing = [its own address, which contains that:that + that:to] + REL[each] -> contains the determiner's key
+and the 'that' re-addressing; (b) every other word (the narrow noun, the third noun, the verb) is 'same' under each / every — the probe is untouched;
+(c) two quantifiers: each determiner's REL is added to ITS OWN noun's address (A's slot for 'each', B's slot for 'every'), not to a shared
+cumulative position. What the trace cannot settle: whether the gradient makes REL[each] = rho_sc and what it does with REL[every] (wide in a
+one-quantifier sentence, narrow next to 'each'): that conflict is H-b and the run measures it.

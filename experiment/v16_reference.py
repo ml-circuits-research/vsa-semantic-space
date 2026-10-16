@@ -26,6 +26,7 @@ import guard, trainer, v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
 
 LEMMA = {"gives": "give", "given": "give", "receives": "receive", "sells": "sell", "sold": "sell", "buys": "buy", "sends": "send", "sent": "send",
          "gets": "get", "lends": "lend", "lent": "lend", "borrows": "borrow", "shows": "show", "shown": "show", "sees": "see", "offers": "offer", "offered": "offer", "accepts": "accept"}
+PARTICIPLES = [k for k in LEMMA if not k.endswith("s")]          # given, sold, sent, lent, shown, offered
 EVENT = {"give": "transfer", "receive": "transfer", "sell": "sale", "buy": "sale", "send": "shipment", "get": "shipment", "lend": "loan", "borrow": "loan",
          "show": "display", "see": "display", "offer": "proposal", "accept": "proposal"}
 OMIT_C = ["{A} V3 {B} .", "{B} is VP by {A} .", "it is {A} who V3 {B} ."]        # forms WITHOUT a recipient: the "not given" occupancy case
@@ -90,6 +91,7 @@ if __name__ == "__main__":
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18)
     ap.add_argument("--verb_gates", default="learned", choices=["learned", "closed"], help="E4 (c): verb gates GIVEN closed (rule 20)")
+    ap.add_argument("--part_gates", default="learned", choices=["learned", "open"], help="E1 (ii) (judgment 3b4f837): PARTICIPLE gates GIVEN open (rule 20): the participle is an emitter by construction")
     ap.add_argument("--tau", type=float, default=0.05); ap.add_argument("--p_omit", type=float, default=0.2); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="ref")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v16_reference (B1 + B2): device={a.device}, D={D}, N={N}, seeds={a.seeds}, tau={a.tau}; predicate role (surface lemma, option a) + occupancy marker m; calibration on every readout")
@@ -104,6 +106,7 @@ if __name__ == "__main__":
         F = np.exp(1j * np.random.default_rng(300 + seed).uniform(-np.pi, np.pi, (len(w.vocab), D))); world = RefRoleWorld(F, w, np.random.default_rng(100 + seed))
         m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
         if a.verb_gates == "closed": print(f"  verb gates GIVEN closed (rule 20, not learned; E4 c): {m.fix_gates([c for c in m.cats if c in LEMMA], False)}")
+        if a.part_gates == "open": print(f"  PARTICIPLE gates GIVEN open (rule 20, not learned; E1 ii): {m.fix_gates(PARTICIPLES, True)}")
         trng = np.random.default_rng(200 + seed); sents, targets, meta = [], [], []
         for n in range(N):
             d = int(trng.integers(3)); ev = w.event(trP, trO, depth=d)
@@ -111,7 +114,7 @@ if __name__ == "__main__":
             else: toks = w.render(ev, int(trng.choice(v5.TRAIN_T))); targets.append(world.state(ev, toks)); meta.append((d, False))
             sents.append(toks)
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
-        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=f"logs/.ckpt_v16_{a.tag}_D{D}_omit{a.p_omit}_{a.verb_gates}_{seed}.pt", resume=a.resume, tag=f" seed {seed}")
+        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=f"logs/.ckpt_v16_{a.tag}_D{D}_omit{a.p_omit}_{a.verb_gates}_{a.part_gates}_{seed}.pt", resume=a.resume, tag=f" seed {seed}")
         if a.device == "cuda": torch.cuda.synchronize()
         t_train = time.time() - t0; cal = Calib()
         def run(templs, P, O, depth, n=30, axis="x"):

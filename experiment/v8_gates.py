@@ -84,6 +84,11 @@ class V8(v6.V6):
                 addrL = torch.stack(addrLs, 1)
                 gk = g.unsqueeze(-1).to(EA.dtype); addr = gk * addr + (1 - gk) * addrL
             terms = terms + addr
+        if getattr(self, "rel", None) is not None:                                       # C2b: second drawing of the taker, relative to its own address
+            B, T = cats.shape; z1 = torch.zeros(B, 1, dtype=self.dtype, device=self.device)
+            sel = torch.cat([z1, (self.rel_mask[cats] * mask)[:, :-1] * self.taker_mask[cats][:, 1:]], 1)      # word k takes if k-1 is an emitter and k a taker
+            relph = torch.cat([torch.zeros(B, 1, self.rel.shape[1], dtype=self.dtype, device=self.device), self.rel[cats[:, :-1]]], 1)
+            terms = terms + sel.unsqueeze(-1).to(terms.dtype) * terms * E(relph)
         return (terms * self.F[ids] * mask.unsqueeze(-1)).sum(1)
 
     def train(self, world, n_sent, lr=0.02, templates=None, persons=None, objects=None, batch=1, depth_train=2):
@@ -100,6 +105,19 @@ class V8(v6.V6):
             cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
             opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): self.theta[0] = 0
+
+    def set_rel_emitters(self, emitters, takers):
+        """C2b (judgment 3b4f837 E2): a BEACON-RELATIVE emitter. A word of an emitter category draws the NEXT word (if its category is a taker)
+        a second time at (the taker's own address) (x) exp(i REL[c_emitter]) (x) f_taker — one learned displacement per emitter category,
+        relative to the taker's slot; the probe's cumulative position is untouched (the emitter's gate is whatever it is). Not a new term type:
+        a word star at an address. Returns the emitter categories found."""
+        K = len(self.cats); self.rel = torch.nn.Parameter(torch.zeros(K, self.theta.shape[1], dtype=self.dtype, device=self.device))
+        self.rel_mask = torch.zeros(K, dtype=self.dtype, device=self.device); self.taker_mask = torch.zeros(K, dtype=self.dtype, device=self.device)
+        for c in emitters:
+            if c in self.cat_id: self.rel_mask[self.cat_id[c]] = 1
+        for c in takers:
+            if c in self.cat_id: self.taker_mask[self.cat_id[c]] = 1
+        return [c for c in emitters if c in self.cat_id]
 
     def fix_gates(self, cats, open_):
         """rule 20: gates GIVEN for these categories (not learned): logit +8 (open) or -8 (closed), gradient masked. Returns the categories fixed."""

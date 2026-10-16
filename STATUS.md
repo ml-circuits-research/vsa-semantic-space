@@ -44,8 +44,9 @@ predicate role and calibration (round 10 B1-B2, RESULTS 10b); the WikiSQL rows s
 - Quantifier scope term: three definitions tried (role identity 9c-bis; wide slot and wide noun, E2c 9c-ter). The corrected targets are
   reachable and better at the seen depth (0.96-0.99 one-quantifier scope) but carry NO signal at the unseen depth (determiner gates closed;
   the scope difference rides on position-local terms). Open: relation-vs-envelope hypothesis, C1/C2 tests (PLANNED).
-- Decoder: the 'no quantifier' hypothesis uses a RELATIVE threshold from now on (an absolute one read 'none' everywhere at depth 2 — the
-  evaluation artefact behind the 0.03 in E2c, found and stated in 9c-ter; old numbers not re-run).
+- Decoder (quantifiers): NO 'none' rule. PRESENCE (quantifier present / absent) is its own axis, thresholded on calibration sentences (rule
+  25); SCOPE is the argmax (or 'both') on GOLD-quantified sentences; FULL is the joint. The absolute threshold of E2c read 'none' everywhere
+  at depth 2 (the artefact behind the 0.03, 9c-ter) and a relative one carried the same artefact; every quantifier cell names its decoder rule.
 - Predicate role: DONE (10b), option (a) surface lemma + synonym table at readout; the depth-3 claim is stated per world (6c predicate-less
   1.000; 10b with predicate 0.813 at full coverage, 1.000 at coverage 0.59 (A) / 0.975 at 0.33 (C)); E4 (b)-(d) show the loss is on the
   passive forms at depth, neither gating nor capacity (10b-ter); a remedy (participle as emitter, given) is proposed, not built.
