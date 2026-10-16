@@ -1,0 +1,77 @@
+
+== 9c-bis learned gates (that, to, '.', recipient verbs)
+  each child gives a book to the teacher .
+     each     <- L[to:each]
+     child    <- L[to:NP]
+     gives    <- L[to:gives]
+     a        <- L[to:a]
+     book     <- L[to:NO]
+     to       <- root
+     the      <- to:. + L[.:the]
+     teacher  <- to:. + L[.:NP]
+     .        <- to:.
+  the child gives each book to a teacher .
+     the      <- L[to:the]
+     child    <- L[to:NP]
+     gives    <- L[to:gives]
+     each     <- L[to:each]
+     book     <- L[to:NO]
+     to       <- root
+     a        <- to:. + L[.:a]
+     teacher  <- to:. + L[.:NP]
+     .        <- to:.
+  every child gives a certain book to the teacher .
+     every    <- L[to:every]
+     child    <- L[to:NP]
+     gives    <- L[to:gives]
+     a        <- L[to:a]
+     certain  <- L[to:certain]
+     book     <- L[to:NO]
+     to       <- root
+     the      <- to:. + L[.:the]
+     teacher  <- to:. + L[.:NP]
+     .        <- to:.
+
+== same + wide-scope determiners 'each', 'certain' as emitters
+  each child gives a book to the teacher .
+     each     <- root
+     child    <- each:to + L[to:NP]
+     gives    <- each:to + L[to:gives]
+     a        <- each:to + L[to:a]
+     book     <- each:to + L[to:NO]
+     to       <- each:to
+     the      <- each:to + to:. + L[.:the]
+     teacher  <- each:to + to:. + L[.:NP]
+     .        <- each:to + to:.
+  the child gives each book to a teacher .
+     the      <- L[each:the]
+     child    <- L[each:NP]
+     gives    <- L[each:gives]
+     each     <- root
+     book     <- each:to + L[to:NO]
+     to       <- each:to
+     a        <- each:to + to:. + L[.:a]
+     teacher  <- each:to + to:. + L[.:NP]
+     .        <- each:to + to:.
+  every child gives a certain book to the teacher .
+     every    <- L[certain:every]
+     child    <- L[certain:NP]
+     gives    <- L[certain:gives]
+     a        <- L[certain:a]
+     certain  <- root
+     book     <- certain:to + L[to:NO]
+     to       <- certain:to
+     the      <- certain:to + to:. + L[.:the]
+     teacher  <- certain:to + to:. + L[.:NP]
+     .        <- certain:to + to:.
+
+Targets per world (phases add; rho_x = phase vector of x):
+  role (9c-bis):  rho_sc + rho_fA              — fA is a ROLE identity, not any word: no word term address (x) f_word can produce it.
+  slot (E2c):     rho_sc + rho_A + f_child     — the noun 'child' drawn a second time at address rho_sc + rho_A: the chain term of 'child'
+                  must reach rho_sc + rho_A while its path/bigram terms stay at rho_A (the plain slot). With 'each' as an emitter, 'child'
+                  takes L[each:NP] (a per-category displacement) => its chain address = address(each) + L[each:NP], a product of
+                  per-category vectors; the determiner category differs from 'every' (L[every:NP]) => the two addresses can differ.
+  noun (secondary): rho_sc + f_child           — reachable the same way but collides when the same noun fills two roles.
+Verdict of the trace: the E2c target IS a product of per-category vectors the model has (the wide determiner's emitted slot), PROVIDED the
+gate of 'each' / 'certain' opens; with the 9c-bis gates (determiners closed) the noun's only chain address comes from 'to' / '.', the same
+for 'each' and 'every' => the scope difference must then be carried by path/bigram (bg:each:NP vs bg:every:NP — also per-category) => reachable.

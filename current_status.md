@@ -1,83 +1,51 @@
-# Current status (rewritten at every judgment point; last: 2026-10-16 09:50, E3 and E3b done; nothing running)
+# Current status (rewritten whole at every judgment point; last: 2026-10-16, process commit applied, E2c launched)
 
-## Deliverables requested in the post-8d judgment (section F) — status
-- EMPIRICAL_NOTE.md: full draft; curve as figure 1 (to draw), same-input table, hard-pair table with n, budget check (gate PASSED: 10x
-  transformer 0.649 < 0.75, claim stands at every size), header-at-input row, data-efficiency condition sentence + ablation (categories from
-  the 1k/5k subset only: ours 0.654 / 0.751 vs transformer 0.414 / 0.516 — gap unchanged). DONE.
-- PAPER_NOTE §7 in the approved tone ("Negative results and what they fixed", reason first, lessons not rounds); §6b round trip. DONE.
-- frame()/diff()/to_prolog()/to_smt() in experiment/frame.py with the round-trip test (frame_roundtrip.py): 1.000 full-frame / Prolog /
-  SMT(z3) at depths 0-3 (3 unseen), depth estimated from S, 3 seeds. DONE (RESULTS 9a).
-- E1 run with its criterion table. DONE (RESULTS 9b); E1b follow-up DONE (RESULTS 9b-bis).
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Every table so far is a DRAFT under rule 23 until the predicate role and calibration land (B1, B2).
+Source files: experiment/JUDGMENT_2026-10-16_consolidated.md (the programme), experiment/RESULTS.md (numbers), STATUS.md (public summary).
 
-## E1 — negation as a role (5 seeds)
-| axis | result | criterion |
+## A. Process commit (Part I-II B) — BUILT (commit 1d598e5)
+- P1: external-review corrections A1-A3, A5, A6 applied (PAPER_NOTE: supervision wording, commutative-binding limit, residual instead of
+  norm, memory figure; EMPIRICAL_NOTE caveats; 00_READ_FIRST §2); frame.residual() implemented; "knows when it does not know" replaced
+  everywhere (grep: 0 left); rules 18-24 appended. A4 (predicate role) is code and comes with B1.
+- P2: "one exposure" renamed everywhere to "seen at depth d in training (share p), tested at depth d+1"; shares stated (E1b: negation
+  share 0.4 over depths 0-1 = 0.2 at depth 1; E3b: 0.15 at depth 0; E2: quantified share 0.6 over depths 0-1).
+- P3: this file rewritten whole. P4: run.sh pid-file lock (logs/.run.lock) in addition to pgrep. N0: STATUS.md at the root.
+- Q2: both ambiguity numbers labelled, n per cell (360 sentences per seed) in RESULTS 9c-bis.
+
+## B. BUILT (numbers in RESULTS; logs with commit hash)
+| item | result | section |
 |---|---|---|
-| negated frame at depth 0 (8 forms, scopes S/A/B/C): roles / presence / SCOPE / FULL | 1.000 / 1.000 / **1.000** / **1.000** | > 0.95, > 0.9: MET |
-| pair separation cos(affirmed, negated) | model **0.18** (gap 0.82); lexical bag 0.72; world 0.03 | gap > 0.5: MET |
-| negation INSIDE reporting (unseen combination), depth 1: scope / FULL | 0.56 / 0.45 | > 0.9: NOT met |
-Per form at the unseen combination: argument-scoped negation composes ('nobody', 'to nobody' 1.00; 'it is not X who' 0.85; 'nothing' 0.90),
-SENTENTIAL negation does not ('does not V' 0.20, 'never' 0.00: it attaches to the theme instead of the clause). Learned gates: never, not,
-nothing, anything, does, who OPEN (operators become emitters like 'that'); nobody closed (the indefinite lives in the filler).
-E1b (done): negation seen at depths 0-1, tested at depth 2 (UNSEEN): FULL frame **0.972±0.049**, all eight forms at scope 1.00 (seed 0),
-sentential negation included (E1: 0.0-0.5 -> 1.00). A DATA limit, not a mechanism limit — the same pattern as reporting in 6c: an operator
-composes one level further than trained once it has been seen inside another operator once.
+| composition to an unseen depth (reporting) | 1.000 all six roles, 5 seeds | 6c |
+| gates emerge by gradient (identities closed, relation markers open, verbs closed) | identical in 5/5 seeds; no loss | 7c |
+| same-input transformer / bottleneck map fail on new identities and unseen depth | 0.215 / 0.390 ; 0.24 / 0.25-0.39 | 7b, 8a |
+| categories "emerge" | RETRACTED (skip-gram 1.000 = 1.000) | 8a |
+| WikiSQL selected column, no table, same input | 0.82 vs 0.54 (transformer; 0.65 at 10x) vs 0.50 (BoW+LR); full query 0.37 vs 0.19 | 8c-8d |
+| WikiSQL aggregator (lexical) / equivalence separation | lost (0.80 vs 0.89) / lexical overall; role-based on H2 (0.62 vs 0.77, n 1,353) | 8d |
+| frame -> Prolog / SMT round trip, depth estimated from S | 1.000 at depths 0-3 | 9a |
+| negation as a role: scope / separation | 1.000 / 0.18 vs bag 0.72 | 9b |
+| regularity "seen at depth d (share p), read at d+1": reporting, negation (0.2 at d1), modality, conditional, modal-in-conditional (0.15 at d0) | 1.000 / 0.972 / 1.000 / 1.000 / 1.000 | 6c, 9b-bis, 9d, 9d-bis |
+| the same for quantifiers, role-identity world | 0.362 at depth 2 (nouns 1.00; quantifier terms ~0.5) — world error (Q1) | 9c-bis |
+| zero occurrences of a combination in training | not read (E1 sentential 0.0-0.5; E3 mixed 0.000) | 9b, 9d |
+| ambiguity: both hypotheses reported (never trained) / forced choice surface-first | 0.43 / 0.26 (n = 360 per seed) | 9c-bis |
+| right-announced structure | declared limit: postposed reporting 0.88 at depth 2; 'Q if P' 0.20-0.44 | 6c, 9d |
+| machine protection after the 2026-10-15 hang | guard.py (allocator cap 50% tested; MemAvailable watchdog; wall-clock), run.sh lock + timeout | README_DGX |
 
-## Overnight: the machine hung (no SSH, hard reset) and the E2 re-run had a NaN bug
-The 18:37 re-run produced NaN targets (empty scope list => 0/0) and the machine hung later in the evening. Protection now in place
-(experiment/guard.py, imported first by every training script; run.sh): torch allocator capped at 50% of the unified memory (a 70 GB
-allocation is refused in-process, tested), MemAvailable watchdog (exit < 16 GB), 6 h wall-clock limit, finite-loss assertion, one run at a
-time, 40 GB free required to start; cgroup caps do NOT bound CUDA unified memory (tested). Session under tmux.
+## C. RUNNING / PLANNED, in the order of the judgment
+1. E2c (RUNNING) — quantifier world correction. Rule-11 trace written and run before training (experiment/trace_e2c.py, logs/trace_e2c.txt):
+   the primary target R_sc (x) (R_role (x) f_noun) IS a product of per-category vectors the model has — the wide determiner's slot
+   (L[each:NP], or bg:each:NP when the determiner's gate stays closed) differs from 'every''s; the role-identity target of 9c-bis is not.
+   Primary target 'slot', secondary 'noun', 5 seeds each, same regime (--p_aff 0.4). Criterion: scope > 0.9 at depth 0, FULL > 0.9 at the
+   unseen depth 2; n per cell. 9c-bis stays as the role-identity-world result.
+2. Round 10 A2 (PLANNED, code next) — memory (RSS + device) every N steps in every log; no graph-carrying tensor survives a step;
+   expandable_segments; empty_cache between phases; checkpoints every M steps with --resume; log-advance watchdog; the memory curve of
+   one short reference training reported before anything larger.
+3. B1 (PLANNED) — predicate role R_pred (x) f_verb_lemma, option (a): surface-verb identity with a per-world synonym table at readout
+   (decision: (a) first; (b) event-type identity only as a stated change of principle) + occupancy marker m; reference table re-run.
+   B2 (PLANNED) — calibration in evaluate(): margin distribution, confident-wrong at a stated threshold, abstention split, accuracy-vs-
+   coverage; WikiSQL dev too. Then B3, B4, B5-B7, N3, N1, N2, B8-B9, N4.
 
-## E2 — quantifiers as roles: first run (9c, protocol error), corrected run (9c-bis), diagnostic
-| axis | corrected run (5 seeds) | criterion |
-|---|---|---|
-| nouns / determiners, depth 0 | 0.999 / 0.923 | nouns MET; determiners just below |
-| scope, unambiguous, depth 0 (one quantifier 0.89 / two marked 0.62, diag) | 0.795 | > 0.9 NOT met |
-| depth 2 UNSEEN: scope / FULL | **0.603 / 0.362** | > 0.9 NOT met |
-| diag at depth 2: nouns / determiners / scope | **1.00** / 0.64 / 0.52 | nouns compose; quantifier terms do not |
-| ambiguous (never trained): both reported / cos to superposed world | 0.43 / 0.84 | reported; partial, by composition |
-=> The composition rule FAILS for quantifiers after one exposure (reserve of 9b-bis applied; reported, not repaired). Reporting itself
-composes (nouns 1.00 at the unseen depth — the 9c protocol error is gone). The quantifier is only approximately represented even at seen
-depths. Evaluation gap fixed (decoder had no "no quantifier" hypothesis; affects only affirmative sentences).
-Hypothesis for judgment: the world's scope term R_sc (x) f_role has a ROLE identity as filler — not any word in the sentence — so no
-address (x) f_word term can carry it exactly (the same class of mismatch as the flat world of round 5). Representable alternative that
-keeps "scope as a role": R_sc (x) f_noun_wide (the wide-scope quantified noun, present in the sentence). A world-definition correction, NOT applied.
+## D. HYPOTHESIS
+Pronouns by search over stored frames (B8); instruction-injection detection (B9); affect from tone / irony — out of scope and said so (N2).
 
-## E3 — modality and conditionals as roles (5 seeds; RESULTS 9d)
-| axis | result | criterion |
-|---|---|---|
-| modal FULL d0 / d1 / d2 UNSEEN | 1.000 / 1.000 / **1.000** | MET |
-| conditional 'if P, then Q' / 'if P, Q' d0; d1; d2 UNSEEN | 1.000 / 1.000; 1.000; **1.000** | MET |
-| conditional 'Q if P' (right-announced) | **0.203** | the declared limit, confirmed |
-| separation cos(P, may P) / (P, must P) / (may, must) | 0.12 / 0.09 / 0.13 (bag 0.77 / 0.77 / 0.86) | MET |
-| MIXED modal-inside-consequent, ZERO exposures: d0 / d1 | 0.00 / 0.00 | zero-exposure case fails, as E1 did |
-Gates: if, may, must, perhaps, has, ',' open; 'then' closed. E3b (done, RESULTS 9d-bis): the mixed construction given ONE exposure at depth 0
--> inside reporting (unseen combination) **1.000** (5 seeds), from 0.000 with zero exposures. Same pattern as E1 -> E1b.
-Tally of the empirical composition rule (one exposure inside another operator, test one level deeper): reporting YES, negation YES, modality
-YES, conditional YES, modal-in-conditional YES (E3b), quantifiers NO. Zero-exposure combinations fail every time; one exposure suffices.
-
-## Conclusions relative to the new programme
-1. "Operator = role" holds for negation on its own, every scope, no rule, scope right 100%: Prolog/Z3 is a plan, not a promise, for
-   single operators AND for negation inside reporting after one exposure (E1b): operators compose one level further than trained, as
-   reporting did. Rule for E2-E3: train each operator at depths 0-1, test at depth 2.
-2. The product skeleton exists and is exact on the synthetic world: text -> state -> frame (depth estimated) -> Prolog / SMT -> answer.
-3. The short empirical paper is complete as a draft with its gate passed and its condition ablated.
-
-## Questions for judgment
-0. The rule held on 4 of 5 operators after one exposure (the reserve asked for "the next two": both held). Does it now become a claim in
-   the principle note — "operators compose one level further than trained after one exposure inside each other; quantifiers are the
-   exception, see 1" — or wait for E2c?
-1. E2: the composition rule fails for quantifiers (0.36 full frame at the unseen depth; nouns 1.00, quantifier terms ~0.5). Two readings:
-   (a) a genuine limit of "operator = role" for quantifiers — report and move on; (b) my world asserts a term with a ROLE identity as filler
-   (R_sc (x) f_A) that no word term can carry — correct the world to R_sc (x) f_noun_wide and re-run once (E2c). I favour (b) because it is the
-   same mistake as the flat world, found by the same argument; if (b) also fails, (a) is established. Decision requested before E2c.
-2. Ambiguity: "both reported" at ~0.5 by composition, never trained. Is that the number to keep (honest, partial), or do we also report the
-   forced-choice distribution (surface-first 0.32) as the default the state would give a reasoner?
-3. Figure 1 is drawn (figures/fig1_wikisql_curve.png); EMPIRICAL_NOTE references it. E3 (modality/conditionals, with the right-announced 'Q if P'
-   form reported separately) is written and waits for the GPU (sequential launches).
-2. EMPIRICAL_NOTE: ready for a read-through? Figure 1 (the curve) still to draw — as a PNG from the log, or a table only for the findings format?
-3. Process: four runs shared the GPU (4-8x slower each). Sequential launches from now on unless told otherwise.
-
-## Files
-experiment/RESULTS.md (8d additions, ROUND 9a-9b) | experiment/EMPIRICAL_NOTE.md | experiment/PAPER_NOTE.md | experiment/frame.py, frame_roundtrip.py, v13_negation.py, v12_wikisql_baselines.py
-logs: 2026-10-15_1705_frame_roundtrip_a622582, _1709_v13_negation_5b9e933, _1652/_1655_v12 (budget), _1700_v12 (ablation)
+## E. Open decisions for the reviewing session
+None pending. The next status reports E2c (both targets, trace), the A2 memory curve, and the predicate-filler decision (option (a)) in use.

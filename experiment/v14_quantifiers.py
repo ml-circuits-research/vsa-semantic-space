@@ -71,6 +71,8 @@ class QWorld(v5.BigWorld):
         for lvl in range(len(speakers) - 1, -1, -1): s = v5.OUTER[int(rng.integers(len(v5.OUTER)))].replace("<P>", s).format(X=speakers[lvl])
         return (s + " .").split()
 
+SCOPE_TARGET = "role"      # set from --scope_target: 'role' (9c-bis), 'slot' (E2c primary), 'noun' (E2c secondary)
+
 class QRoleWorld(v7.NestedRoleWorld):
     def __init__(self, F, world, rng):
         super().__init__(F, world, rng); D = F.shape[1]
@@ -84,7 +86,12 @@ class QRoleWorld(v7.NestedRoleWorld):
             slot = self.F[w.idx[noun]]
             if det != DET_DEF: slot = slot + self.R["Q"] * self.det_vec(det)
             S = S + self.R[r] * slot
-        if scope: S = S + sum(self.R["sc"] * self.Frole[r] for r in scope) / np.sqrt(len(scope))     # no quantifier => no scope term (empty scope gave 0/0 = NaN on 2026-10-15)
+        if scope:                                                   # no quantifier => no scope term (empty scope gave 0/0 = NaN on 2026-10-15)
+            nouns = {r: w.idx[n] for r, (d_, n) in zip(("A", "B", "C"), ev[1:4])}
+            if SCOPE_TARGET == "role": terms = [self.R["sc"] * self.Frole[r] for r in scope]                                  # 9c-bis: a ROLE identity as filler (unreachable)
+            elif SCOPE_TARGET == "slot": terms = [self.R["sc"] * self.R[r] * self.F[nouns[r]] for r in scope]               # E2c primary: the scope operator wraps the quantified SLOT
+            else: terms = [self.R["sc"] * self.F[nouns[r]] for r in scope]                                                   # E2c secondary: the noun's identity under R_sc
+            S = S + sum(terms) / np.sqrt(len(scope))
         for x in reversed(speakers): S = self.R["X"] * self.F[w.idx[x]] + self.R["rep"] * S
         return S
 
@@ -99,7 +106,13 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none=0.08)
         sc = torch.real((Sn * torch.conj(R[r]) * rep) @ torch.conj(Fn[cid]).T); out[r] = cands[int(sc.argmax())]
         sd = torch.real((Sn * torch.conj(R[r]) * torch.conj(R["Q"]) * rep) @ torch.conj(dvec).T); j = int(sd.argmax())
         out["d" + r] = dets[j] if float(sd[j]) > 0.5 * float(sc.max()) else "the"           # no quantifier term => definite
-    ssc = {r: float(torch.real((Sn * torch.conj(R["sc"]) * rep * torch.conj(Fr[r])).sum()) / Fr[r].abs().pow(2).sum().sqrt()) for r in ("A", "B", "C")}
+    if SCOPE_TARGET == "role":
+        ssc = {r: float(torch.real((Sn * torch.conj(R["sc"]) * rep * torch.conj(Fr[r])).sum()) / Fr[r].abs().pow(2).sum().sqrt()) for r in ("A", "B", "C")}
+    else:                                                                 # the scope term carries the NOUN: read it with the decoded noun of each role
+        ssc = {}
+        for r in ("A", "B", "C"):
+            key = torch.conj(R["sc"]) * rep * (torch.conj(R[r]) if SCOPE_TARGET == "slot" else 1)
+            ssc[r] = float(torch.real((Sn * key * torch.conj(Fn[w.idx[out[r]]])).sum()))
     top = sorted(ssc, key=lambda r: -ssc[r]); both = ssc[top[1]] >= (1 - delta) * ssc[top[0]] and ssc[top[1]] > 0.5 * ssc[top[0]]
     none = ssc[top[0]] < tau_none                                 # "no quantifier" hypothesis (evaluation gap found 2026-10-16: affirmative sentences always got a scope)
     out["scope_scores"] = ssc; out["scope"] = [] if none else (sorted(top[:2]) if both else [top[0]]); out["scope_choice"] = None if none else top[0]
@@ -108,8 +121,10 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none=0.08)
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run")
+    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run"); ap.add_argument("--scope_target", default="role", choices=["role", "slot", "noun"], help="world definition of the wide-scope term: role = 9c-bis (R_sc x f_role), slot = E2c primary (R_sc x R_role x f_noun), noun = E2c secondary (R_sc x f_noun)")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
+    SCOPE_TARGET = a.scope_target; globals()["SCOPE_TARGET"] = a.scope_target
+    print(f"scope target = {a.scope_target}")
     print(f"v14_quantifiers (E2): device={a.device}, D={D}, N={N}, seeds={a.seeds}; quantifier = role on the argument (R_Q (x) f_det inside the slot); scope = R_sc (x) f_role; ambiguity = superposition in the WORLD")
     print(f"training: affirmative (all definite) at depths 0-2 (share {a.p_aff}) + UNAMBIGUOUS quantified sentences (one quantifier, or two with a wide-scope marker) at depths 0-1; 12 nouns per class (6 new at test)")
     print(f"test: unambiguous depth 0 / 1 / 2 (UNSEEN depth), new nouns, AMBIGUOUS (never trained) depth 0; 'both' reported when the top-2 scope scores are within delta={a.delta}")
