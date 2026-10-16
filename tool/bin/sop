@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+# the `sop` entry script. Python: $SOP_PYTHON, else the repository venv (.venv at the repository root, or at the main checkout when this is
+# a git worktree under .claude/worktrees/), else python3. numpy is enough for formalize/check/diff/stats; `sop train` needs torch.
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"; TOOL="$(dirname "$HERE")"; REPO="$(dirname "$TOOL")"
+PY="${SOP_PYTHON:-}"
+if [ -z "$PY" ]; then
+  for c in "$REPO/.venv/bin/python3" "$REPO/../../../.venv/bin/python3"; do
+    if [ -x "$c" ]; then PY="$c"; break; fi
+  done
+fi
+PY="${PY:-python3}"
+PYTHONPATH="$TOOL${PYTHONPATH:+:$PYTHONPATH}" exec "$PY" -m sop "$@"

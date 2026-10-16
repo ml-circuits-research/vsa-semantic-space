@@ -5,3 +5,6 @@ experiment/logs/.ckpt_*
 experiment/logs/.run.lock
 experiment/logs/*.pt
 experiment/logs/*.npz
+# tool: generated world folders (tool/export_worlds.py) and test scratch
+tool/worlds/
+tool/tests/out/
