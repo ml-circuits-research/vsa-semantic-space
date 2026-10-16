@@ -266,3 +266,15 @@ the one-quantifier case joins the regularity; two-quantifier marked 0.46-0.48 at
 proposed for judgment (a8a8fab condition met). Strict re-scoring of C2 (log _1814): depth-2 presence 0.81 -> 0.26 with the depth-1
 threshold. E3 (log _1715): sel confident-wrong 0.169 when the gold column's name is not in the question vs 0.023; 50-case audit file written.
 N5-N7 criteria in STATUS. Push = judgment point.
+
+## 2026-10-16 (DGX, night) — indications 013c490 applied: E1b, C2c, N5, 4c, P0 tool
+E1b (log _1905, 10b-quinquies): relation-marker gates to / by / from given open -> depth 3 0.968, passives 1.000; the regression was the
+gate set; new reference table. C2c (log _1918, 9c-sexies; trace logs/trace_c2c.txt): category-local quantifier terms, wide/narrow derived at
+readout -> two-quantifier scope at the UNSEEN depth 0.966 (every seed > 0.9), one-quantifier 0.992, nouns 0.999, false-both 0.000, both on
+ambiguous 0.993 — criterion MET; the named exception is removed, H-b retired, the permuted-filler term withdrawn. N5 (log _1941, 10e):
+superposition of the two kinds with readout by fit loses 0.09 on the noun uses (0.907 vs ref 1.000; majority-kind baseline 0.989) — NOT
+met, recorded as negative. 4c (logs _2033-_2038, 10c-quinquies): confident-wrong on the selected column flat with data (0.05-0.08) while
+accuracy 0.38 -> 0.81; the lexical-mismatch confident-wrong grows 0.07 -> 0.17. P0 (RESULTS 11): the sop tool built by a separate agent
+in a worktree and merged (tool/; 6 tests PASS; round trip within seed variance at 1 seed; spec section 6 missing). Process: run.sh now
+ignores *.md and excludes its own process tree from the lock check; queue.sh waits on the pid lock only (rule 26); an accidentally
+committed worktree gitlink made three runs refuse at 19:17 (fixed, .claude/ ignored). Push = judgment point.

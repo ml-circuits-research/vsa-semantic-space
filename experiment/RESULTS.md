@@ -1156,3 +1156,98 @@ C 0.04 -> 0.10) and the abstention falls from 0.4-0.7 to 0.07-0.12. The remainin
 0.968 at full coverage; at tau 0.05 coverage 0.93 (A) / 0.88 (C) with covered accuracy 1.000, confident-wrong 0.000", gate choice recorded as
 given (like 'that'). 10b, 10b-bis, 10b-ter, 10b-quater stay as the history of the learned-gate world. The 10b-quater sentence on right-announced
 structure stays withdrawn: the markers announce their fillers before them, and with them open the passive is read.
+
+### 9c-sexies. C2c — quantifier scope as CATEGORY-LOCAL terms, wide/narrow derived at readout (v14_quantifiers.py --scope_target c2c --rel; logs/2026-10-16_1918_v14_quantifiers_baf4703.txt; 5 seeds, regime of 9c-bis; gates LEARNED, determiners closed; trace logs/trace_c2c.txt)
+Why (indications 013c490 §2): C2b composes the one-quantifier scope because the term is category-local and relative to the slot; the
+two-quantifier case failed because its target was CONDITIONAL ('every' emits the scope term alone, not next to 'each') — a relation. C2c
+removes the relation from the reader. World correction (rule 16, rows that change): 'a' and 'the' draw nothing; marked determiners
+('each', 'a certain') draw their noun a second time at R_wide (x) R_role (x) f_noun; unmarked quantifiers ('every', 'some') at R_q (x) R_role
+(x) f_noun; both unconditional, one learned relative displacement per determiner category (the C2b emitter). Readout rule (printed next to
+every number): an R_wide term present -> that slot is wide and the R_q slot narrow; one R_q term alone -> the only quantifier; two R_q and no
+R_wide -> "both". Term threshold per depth from calibration rows (rule 25; d0 0.16, d1 0.14-0.15, d2 0.09-0.11 across seeds); presence as
+in 9c-quater; STRICT depth-2 columns with the depth-1 threshold. Trace (rule 11, one two-quantifier sentence at depth 2): the two second
+drawings sit at distinct addresses, both carrying the 'that' prefix. Chance: noun 1/12, determiner 1/6, scope 1/3.
+| axis (5 seeds; mean ± sd, per-seed list where a criterion applies) | C2c | C2b (slot target, 9c-quinquies) | criterion |
+|---|---|---|---|
+| depth 0: nouns / determiners | **0.999**±0.002 / 0.950±0.013 | 0.998 / 0.919 | nouns >= 0.99: MET |
+| depth 0: PRESENCE / affirmative read ABSENT | 1.000 / 1.000 | 0.996 / 1.000 | — |
+| depth 0: SCOPE|gold-q ONE quantifier (per seed) | 0.995 (1.000, 0.974, 1.000, 1.000, 1.000) | 0.993 | >= 0.99: MET on the mean; seed 1 at 0.974 |
+| **depth 0: SCOPE|gold-q TWO quantifiers (marked)** (per seed) | **0.996** (1.000, 1.000, 0.994, 0.988, 1.000) | 0.685 | > 0.9: **MET, 5/5 seeds** |
+| depth 1: SCOPE one / two | 0.998 / 1.000 | — | — |
+| depth 0 FULL (joint) / depth 1 FULL | 0.887±0.027 / 0.834±0.027 | 0.686 / 0.599 | — |
+| **depth 2 (UNSEEN): SCOPE|gold-q ONE quantifier** (per seed) | **0.992** (0.990, 0.980, 1.000, 1.000, 0.990) | 0.998 | >= 0.99: MET on the mean; seeds 0, 1, 4 at 0.98-0.99 |
+| **depth 2 (UNSEEN): SCOPE|gold-q TWO quantifiers (marked)** (per seed) | **0.966** (0.988, 0.927, 0.976, 0.951, 0.988) | 0.481 | > 0.9: **MET, 5/5 seeds** |
+| depth 2: PRESENCE (d2 threshold) / STRICT (d1 threshold, per seed) / aff ABSENT | 0.983 / **0.924** (0.967, 0.850, 0.967, 0.889, 0.950) / 1.000 | 0.978 / 0.867 / 1.000 | reported |
+| depth 2 FULL (d2 threshold) / STRICT | 0.603±0.076 / 0.536±0.102 | 0.472 / 0.409 | — (the determiner identity is the bottleneck; not a criterion axis) |
+| new nouns d0 FULL | 0.856 | 0.608 | — |
+| ambiguous (never trained): both reported (rule: two R_q, no R_wide) / cos superposed / forced surface-first | **0.993**±0.010 / 0.866 / 0.517 | 0.655 / 0.837 / 0.622 | C3: both > 0.9 AND one reading > 0.9 on unambiguous: MET |
+| FALSE-BOTH on unambiguous sentences, d0 / d2 | **0.000 / 0.000** (every seed) | not printed | reported (C3) |
+Gates (learned): that 1.00, to 0.80, '.' 0.64, from / by 0.60; three seeds open the relation markers (to, by, from), two seeds (1, 3) open the
+recipient verbs instead — seed 1 is the one below 0.99 on the one-quantifier scope. Determiners stay closed (0.1-0.2).
+Reading, by the criterion and decision rule stated before the run (indications §2): **MET**. With the relation removed from the reader — each
+determiner category emits its own term, and wide/narrow is a rule the legend applies to the two terms — the two-quantifier scope composes at
+the unseen depth (0.966, every seed above 0.9) as the one-quantifier scope did in C2b, with no false "both" on unambiguous sentences and the
+never-trained ambiguous sentences read as "both" at 0.993. Consequences: (i) quantifiers join the regularity ENTIRELY ("seen at depths 0-1,
+share 0.6, tested at depth 2"); (ii) the two-quantifier exception row is REMOVED from STATUS; (iii) H-b is RETIRED as "a relation the legend
+computes from category-local terms" — the reader never needed to represent it; (iv) the permuted-filler term (current_status E1 of 3b4f837) is
+NOT built: the condition for it no longer holds; (v) the correction history role (9c-bis) -> slot / noun (9c-ter) -> C2 (9c-quater) -> C2b
+(9c-quinquies) -> C2c stays here as the record; (vi) the C2c world is the quantifier reference world from now on (slot target, judgment Q2).
+Costs to report: determiners 0.950 at depth 0 (the three terms in one slot compete), FULL at depth 2 0.60 for the same reason; the strict
+presence at depth 2 (0.924) is now above the labelled one of C2 (0.81) with no depth-2 information.
+
+## 10e. N5 — kind ambiguity: noun/verb homographs in the reference world (v19_kinds.py --seeds 5; logs/2026-10-16_1941_v19_kinds_90c44df.txt; 5 seeds, D = 1024, 30k sentences, predicate role present)
+Definition (judgment 013c490 Q3, addendum N5): three homographs h0-h2 are objects o15-o17 AND the V3 form of GIVE / SELL / SEND; the context
+decides the kind. Variants, same regime: ref = unambiguous world (distinct words); (a) one category per token = the MAJORITY kind in training
+(verb, 9,000 vs 5,500 uses); (b) SUPERPOSITION: the token's state is the mean of the two kind assignments' states (every category-dependent key
+becomes the half-way key, in all codes); the kind is resolved at READOUT by fit — noun hypothesis cos with R_B (x) (f_h + marker), verb
+hypothesis with R_pred (x) f_lemma — resolved if margin > tau = 0.05, else both reported. Bag control: cos between the bag of a noun use and
+the bag of a verb use of the same word vs the same cosine between states. Chance: objects 1/18, verbs 1/12. Kinds are an input (rule 20);
+the half-way key is a definition, not learned.
+| variant (5 seeds) | FULL h-as-noun (per seed) | FULL h-as-verb | FULL no homograph | kind by fit: acc noun / verb | margin | resolved (margin > tau) / both | cos(noun use, verb use): bag / state |
+|---|---|---|---|---|---|---|---|
+| ref (unambiguous) | 1.000 | 1.000 | 1.000 | — | — | — | — |
+| (a) majority kind (verb) | **0.989**±0.014 (0.991, 1.000, 0.963, 1.000, 0.994) | 1.000 | 1.000 | 0.923 / 0.535 | 0.135 | 0.540 / 0.460 | 0.866 / 0.807 |
+| (b) superposition, readout by fit | **0.907**±0.026 (0.950, 0.900, 0.909, 0.869, 0.906) | 1.000 | 0.999 | 0.967 / 0.374 | 0.149 | 0.555 / 0.445 | 0.866 / 0.821 |
+Criterion (addendum N5): (b) FULL on sentences with an ambiguous word within 0.02 of the reference. (b) averages 0.953 over the two uses vs
+1.000 (gap 0.047); on the noun uses alone 0.907 (gap 0.093, every seed below 0.98): **NOT met**. Reading: the verb use is read perfectly under
+both variants (the predicate slot takes the lemma; the half-way drawing costs nothing there), the NOUN use loses 0.09 under the superposition and
+0.01 under the majority-kind baseline — the baseline (a) is the better of the two, because the noun slot is reached through the determiner's
+and the verb's beacons regardless of the token's own category key, while the half-way drawing halves the noun term in the slot. The kind by fit
+reads the noun correctly (0.97) but the verb hypothesis fits only 0.37 of the verb uses with margin > tau: the lemma readout competes with the
+noun readout and leaves 0.45 of the tokens as "both". The state separates the two uses barely more than the bag (0.82 vs 0.87). Decision rule
+stated before the run (not met -> report, propose nothing without judgment): (a) stays the status quo; (b) as defined is recorded as a
+negative result; no remedy proposed here (candidates for judgment: resolve the kind BEFORE drawing from the first open emitter's preference,
+the diagnostic the indications named, which this run did not print — PLANNED).
+
+## 10c-quinquies. 4c — the reader's confident-wrong against training size, with the lexical-mismatch split at every point (v17_verifier.py --n_train 1000 / 5000: logs/2026-10-16_2033 and _2035_v17_verifier_90c44df.txt; rescore_v17_e3.py on the saved frames: logs/2026-10-16_2034 and _2038_rescore_v17_e3_90c44df.txt; the 56,355 point is 10c-bis / 10c-quater; seed 0, D = 512, 3 epochs; presence threshold on the even half of dev, every number on the odd half, 4,210 questions, tau 0.05)
+| training questions | sel accuracy / confident-wrong / abstain | agg accuracy / confident-wrong | sel confident-wrong, gold column name IN the question / NOT in (sel accuracy) | verifier: role-error recall / precision / false alarm on gold | reader training (s) |
+|---|---|---|---|---|---|
+| 1,000 | 0.384 / 0.056 / 0.837 | 0.742 / 0.247 | 0.052 (0.415) / 0.069 (0.266) | 0.207 / 0.891 / 0.127 | 18 |
+| 5,000 | 0.587 / 0.082 / 0.569 | 0.756 / 0.227 | 0.065 (0.654) / 0.147 (0.336) | 0.378 / 0.906 / 0.197 | 161 |
+| 56,355 (10c-bis) | 0.814 / 0.053 / 0.243 | 0.824 / 0.137 | 0.023 (0.910) / 0.169 (0.449) | 0.522 / 0.942 / 0.162 | 4,030 |
+Reading (no criterion; the curve the indications asked for): the selected-column confident-wrong rate at tau 0.05 does NOT fall with data
+(0.056 -> 0.082 -> 0.053) while accuracy rises 0.38 -> 0.81 and abstention falls 0.84 -> 0.24: more data converts abstentions into right
+answers, not confident-wrong into right. The lexical-mismatch split explains where the confident-wrong stays: with the column name in the
+question it falls 0.052 -> 0.023, without it it RISES 0.069 -> 0.169 — the full reader is confident on mismatched questions it still gets
+wrong 0.55 of the time. The aggregator's confident-wrong falls with data (0.25 -> 0.14) but stays the larger of the two (8d: a lexical
+decision). The verifier's role-error recall grows with the reader (0.21 -> 0.52); its false alarm on gold does not improve (0.13-0.20), as
+10c-ter said: a reader property. The 8d data curve itself (other sizes) was not re-scored; these are three new points.
+
+## 11. P0 — the reader packaged for the tool (tool/; built by a separate agent in a worktree from docs/specs/SPEC_worlds_server_sop_cli.md; merged at commit ed73f41; tests tool/tests/run_all.sh; results in tool/README.md "P0 results")
+Engineering, no new measurement (indications §5). Delivered: `sop` package (SOP Lang reader/writer, check with per-world legends and `_world`,
+numpy formalize, diff with four verdicts, stats, train on V8 + trainer.train_loop, export of the three constructed worlds), `server.js`
+(stdlib only), skill `skills/train-world/`, six tests (all PASS on CPU), README with the spec-v2 conformance table and the choices where the
+spec was silent. Nothing under experiment/ was modified. Acceptance round trip (1 seed, CPU, full sizes; runs not committed):
+| world | axis | package (1 seed) | RESULTS (5 seeds) | reading |
+|---|---|---|---|---|
+| reference | seen / predicate / new ids / cues | 1.000 | 1.000 (10b) | reproduced |
+| reference | unseen transitions (roles) / depth 3 | 0.633 / 0.792 | 0.638±0.015 / 0.813±0.030 (10b, learned gates) | within seed variance |
+| commands | depth 0 FULL / new patients / depth 2 FULL | 0.998 / 1.000 / 0.790 | 0.999 / 1.000 / 0.854±0.031 (10d) | depth 2 about two sd low (1 seed) |
+| quantifiers | nouns d0 / d2; noun+determiner d0 / d2 | 0.997 / 0.993; 0.878 / 0.726 | 0.999 / 1.00; determiners 0.923 / 0.46-0.64 (9c-bis) | nouns reproduced; the v1 export emits NO scope term, so this is not the 9c-bis world (scope not compared) |
+The tool's own FULL is lower where it must also estimate the reporting depth and negation from the state (the scripts are given the depth).
+Missing-role recovery (test 5b, offline, oracle annotator): with `destination` removed from the commands legend the only novel supported
+`_unplaced` cluster is {archive, cloud, folder, trash} (225 sentences), proposed, migrated, retrained, accepted (FULL 0.860 -> 0.871). Small vs
+large annotator: "API unavailable" (PLANNED, as expected). Model sizes: reference 12 MB, quantifiers 15 MB (above the spec's "a few MB"),
+commands 2.9 MB. Not done: spec section 6 (never received; marked TODO), LLM steps (behind `llm_call`), decoding of if / must / may / and,
+mood as a role, the "two legends with the same questions are one world" check. The 5-seed GPU round trip is a command in tool/README.md,
+not run (PLANNED).

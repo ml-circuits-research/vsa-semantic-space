@@ -176,7 +176,10 @@ with it: a signal at the unseen depth (0.63-0.67 against chance 0.33), no compos
 learned displacement RELATIVE to the noun's own address, with the probe untouched, composes: one-quantifier scope 0.998 at the unseen depth
 (five seeds), nouns 0.998, affirmative sentences read as unquantified 1.000. Two quantifiers with a wide-scope marker do not compose (0.46-0.48
 at the unseen depth, 0.69-0.87 at the seen one): one displacement per determiner cannot mark 'every' wide alone and narrow next to 'each' —
-which phrase is wide is a relation between two determiners, and that is where the exception now sits. Finally, a retracted
+which phrase is wide is a relation between two determiners. The last step removed the relation from the reader: each determiner
+category emits its own unconditional term (a wide-marker term or a plain quantifier term), and the legend derives wide/narrow from the two
+terms at readout; the two-quantifier scope then composes at the unseen depth (0.966, every seed above 0.9; 9c-sexies), so quantifiers join
+the regularity entirely and no exception remains. Finally, a retracted
 claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats and structural limits (part of the claims)

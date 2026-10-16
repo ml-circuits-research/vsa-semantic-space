@@ -1,0 +1,19 @@
+# 2026-10-16T20:34:53+02:00  commit=90c44df  cmd: python3 rescore_v17_e3.py logs/.ckpt_v17_reader_frames_n1000.pt  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+frames: logs/.ckpt_v17_reader_frames_n1000.pt (reader trained on 1000 questions)
+rescore_v17_e3: odd half of dev, 4210 questions, tau 0.05. Selected column: accuracy 0.384, confident-wrong 0.056, abstain 0.837. Aggregator: accuracy 0.742, confident-wrong 0.247
+
+(a) by number of columns: bucket | n | sel accuracy | confident-wrong rate | share of all confident-wrong
+   1-  5 |  1657 | 0.401 | 0.062 | 0.436
+   6-  8 |  2114 | 0.381 | 0.058 | 0.521
+   9- 12 |   409 | 0.347 | 0.022 | 0.038
+  13-100 |    30 | 0.133 | 0.033 | 0.004
+
+(b) by whether the gold column's name appears verbatim in the question: case | n | sel accuracy | confident-wrong rate | share of all confident-wrong
+  name in question       |  3328 | 0.415 | 0.052 | 0.739
+  name NOT in question   |   882 | 0.266 | 0.069 | 0.261
+
+50 confident-wrong selected-column cases (seed 0) written to logs/audit_confident_wrong_sel_50.jsonl for the hand audit (fields: question, gold_col, pred_col, margin; audit_verdict to fill: 'reader wrong' | 'gold noise / ambiguous')
+
+checklist: [x] re-scoring only, saved frames [x] odd half (report rows) [x] breakdown by table size and lexical match [x] audit sample of stated size and seed [x] confident-wrong at the stated tau (18)

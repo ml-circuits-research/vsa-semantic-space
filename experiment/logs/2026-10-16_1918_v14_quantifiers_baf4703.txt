@@ -38,3 +38,64 @@ Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pyto
 [train seed 1] step 2500 sent 20000/40000 loss -0.823 (129s) | RSS 2.78 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
 [train seed 1] step 3000 sent 24000/40000 loss -0.839 (155s) | RSS 2.78 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.1 GB
 [train seed 1] step 3500 sent 28000/40000 loss -0.831 (182s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
+[train seed 1] step 4000 sent 32000/40000 loss -0.854 (208s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
+[train seed 1] step 4500 sent 36000/40000 loss -0.861 (236s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
+[train seed 1] step 5000 sent 40000/40000 loss -0.864 (262s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
+[train seed 1] end: RSS 2.76 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 111.8 GB (263s)
+  seed 1 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.193 (0.357 / 0.028); d1: 0.166 (0.304 / 0.028); d2: 0.117 (0.210 / 0.024); C2c term thresholds: d0 0.163, d1 0.141, d2 0.092
+  seed 1 SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 0.974 / 1.000; d1 0.992 / 1.000; d2 UNSEEN 0.980 / 0.927; presence on ambiguous d0 1.000; FALSE-BOTH on unambiguous d0 / d2: 0.000 / 0.000
+  seed 1 (263s) 0.994 | 0.927 | 1.000 | 0.986 | 0.847 | 1.000 | 0.808 | 0.961 | 0.956 | 0.467 | 1.000 | 0.817 | 0.975 | 0.835 | 0.511 | 0.850 | 0.367 | 1.000  || ambiguous: nouns 0.99 dets 0.88 || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+  C2b beacon-relative emitters (given set, learned displacement): ['every', 'each', 'some', 'certain'] -> takers NP, NO
+[train seed 2] start: RSS 2.86 GB | torch alloc 0.73 GB reserved 1.51 GB | MemAvailable 111.1 GB
+[train seed 2] step 500 sent 4000/40000 loss -0.643 (27s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.1 GB
+[train seed 2] step 1000 sent 8000/40000 loss -0.755 (52s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.6 GB
+[train seed 2] step 1500 sent 12000/40000 loss -0.815 (78s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.6 GB
+[train seed 2] step 2000 sent 16000/40000 loss -0.854 (103s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.6 GB
+[train seed 2] step 2500 sent 20000/40000 loss -0.850 (129s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.5 GB
+[train seed 2] step 3000 sent 24000/40000 loss -0.865 (154s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.5 GB
+[train seed 2] step 3500 sent 28000/40000 loss -0.886 (180s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.6 GB
+[train seed 2] step 4000 sent 32000/40000 loss -0.874 (205s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.6 GB
+[train seed 2] step 4500 sent 36000/40000 loss -0.879 (231s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.0 GB
+[train seed 2] step 5000 sent 40000/40000 loss -0.893 (258s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.1 GB
+[train seed 2] end: RSS 2.90 GB | torch alloc 0.85 GB reserved 0.88 GB | MemAvailable 111.7 GB (258s)
+  seed 2 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.194 (0.367 / 0.021); d1: 0.175 (0.324 / 0.026); d2: 0.131 (0.241 / 0.022); C2c term thresholds: d0 0.169, d1 0.148, d2 0.107
+  seed 2 SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 1.000 / 0.994; d1 1.000 / 1.000; d2 UNSEEN 1.000 / 0.976; presence on ambiguous d0 1.000; FALSE-BOTH on unambiguous d0 / d2: 0.000 / 0.000
+  seed 2 (259s) 1.000 | 0.946 | 1.000 | 0.997 | 0.875 | 1.000 | 0.833 | 0.989 | 0.989 | 0.622 | 1.000 | 0.838 | 1.000 | 0.876 | 0.517 | 0.967 | 0.589 | 1.000  || ambiguous: nouns 1.00 dets 0.92 || gates OPEN: ['by', 'from', 'that', 'to']
+  C2b beacon-relative emitters (given set, learned displacement): ['every', 'each', 'some', 'certain'] -> takers NP, NO
+[train seed 3] start: RSS 2.69 GB | torch alloc 0.73 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 500 sent 4000/40000 loss -0.612 (27s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.3 GB
+[train seed 3] step 1000 sent 8000/40000 loss -0.709 (53s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 1500 sent 12000/40000 loss -0.769 (80s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 2000 sent 16000/40000 loss -0.765 (107s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 2500 sent 20000/40000 loss -0.844 (134s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 3000 sent 24000/40000 loss -0.835 (161s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 3500 sent 28000/40000 loss -0.855 (188s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.1 GB
+[train seed 3] step 4000 sent 32000/40000 loss -0.871 (214s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.6 GB
+[train seed 3] step 4500 sent 36000/40000 loss -0.859 (240s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.6 GB
+[train seed 3] step 5000 sent 40000/40000 loss -0.893 (265s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.6 GB
+[train seed 3] end: RSS 2.73 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.3 GB (266s)
+  seed 3 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.196 (0.365 / 0.027); d1: 0.172 (0.316 / 0.027); d2: 0.131 (0.236 / 0.025); C2c term thresholds: d0 0.169, d1 0.148, d2 0.107
+  seed 3 SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 1.000 / 0.988; d1 1.000 / 1.000; d2 UNSEEN 1.000 / 0.951; presence on ambiguous d0 1.000; FALSE-BOTH on unambiguous d0 / d2: 0.000 / 0.000
+  seed 3 (266s) 1.000 | 0.955 | 1.000 | 0.994 | 0.878 | 1.000 | 0.804 | 0.989 | 0.978 | 0.589 | 1.000 | 0.850 | 0.992 | 0.855 | 0.525 | 0.889 | 0.472 | 1.000  || ambiguous: nouns 1.00 dets 0.91 || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that', 'to']
+  C2b beacon-relative emitters (given set, learned displacement): ['every', 'each', 'some', 'certain'] -> takers NP, NO
+[train seed 4] start: RSS 2.85 GB | torch alloc 0.73 GB reserved 1.47 GB | MemAvailable 111.6 GB
+[train seed 4] step 500 sent 4000/40000 loss -0.665 (26s) | RSS 2.85 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.1 GB
+[train seed 4] step 1000 sent 8000/40000 loss -0.784 (54s) | RSS 2.85 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.6 GB
+[train seed 4] step 1500 sent 12000/40000 loss -0.838 (82s) | RSS 2.85 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.5 GB
+[train seed 4] step 2000 sent 16000/40000 loss -0.840 (111s) | RSS 2.85 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.5 GB
+[train seed 4] step 2500 sent 20000/40000 loss -0.867 (140s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.5 GB
+[train seed 4] step 3000 sent 24000/40000 loss -0.853 (169s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.5 GB
+[train seed 4] step 3500 sent 28000/40000 loss -0.876 (197s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.4 GB
+[train seed 4] step 4000 sent 32000/40000 loss -0.893 (226s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.6 GB
+[train seed 4] step 4500 sent 36000/40000 loss -0.884 (255s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.5 GB
+[train seed 4] step 5000 sent 40000/40000 loss -0.887 (283s) | RSS 2.89 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 109.7 GB
+[train seed 4] end: RSS 2.89 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 110.0 GB (283s)
+  seed 4 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.191 (0.361 / 0.021); d1: 0.172 (0.319 / 0.025); d2: 0.134 (0.242 / 0.026); C2c term thresholds: d0 0.164, d1 0.147, d2 0.109
+  seed 4 SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 1.000 / 1.000; d1 1.000 / 1.000; d2 UNSEEN 0.990 / 0.988; presence on ambiguous d0 1.000; FALSE-BOTH on unambiguous d0 / d2: 0.000 / 0.000
+  seed 4 (284s) 1.000 | 0.961 | 1.000 | 1.000 | 0.914 | 1.000 | 0.879 | 0.994 | 0.989 | 0.694 | 1.000 | 0.904 | 1.000 | 0.881 | 0.517 | 0.950 | 0.639 | 1.000  || ambiguous: nouns 1.00 dets 0.93 || gates OPEN: ['by', 'from', 'that', 'to']
+
+== MEANS over 5 seeds: unamb d0: nouns | dets | PRESENCE | SCOPE|gold-q | FULL (joint) | aff d0: ABSENT | unamb d1: FULL | unamb d2 UNSEEN: PRESENCE | SCOPE|gold-q | FULL | aff d2: ABSENT | new nouns d0: FULL | AMBIG d0: both reported | ambig: cos to superposed world | ambig: forced surface-first | STRICT d2 (d1 threshold): PRESENCE | FULL | aff d2 ABSENT
+  0.999±0.002 | 0.950±0.013 | 1.000±0.000 | 0.996±0.005 | 0.887±0.027 | 1.000±0.000 | 0.834±0.027 | 0.983±0.012 | 0.980±0.013 | 0.603±0.076 | 1.000±0.000 | 0.856±0.030 | 0.993±0.010 | 0.866±0.018 | 0.517±0.004 | 0.924±0.047 | 0.536±0.102 | 1.000±0.000
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 to=0.80 .=0.64 from=0.60 by=0.60 receives=0.40 buys=0.40 borrows=0.40 accepts=0.40 sees=0.40 gets=0.40 the=0.17 O=0.12 it=0.12 no=0.12 what=0.12
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] presence and scope as separate axes, scope conditional on presence (17) [x] presence threshold set on calibration rows, not the scored rows [x] one- and two-quantifier scope reported separately [x] params saved for re-scoring [x] given vs learned gates stated (20) [x] ambiguity reported separately, never trained [x] FULL frame (R1) [x] unseen depth 2 (composition rule, with reserve) [x] new nouns [x] >=3 seeds [x] model unchanged

@@ -1,0 +1,32 @@
+# 2026-10-16T20:33:53+02:00  commit=90c44df  cmd: python3 v17_verifier.py --n_train 1000  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v17_verifier (B4): device=cuda, D=512; train 1000, dev 8421, vocabulary 9826; tau=0.05; controlled version (gold frame + one injected error; no LLM)
+clustering data: 8007 TRAIN sequences only; dev not used.
+[train ep 0] start: RSS 1.57 GB | torch alloc 0.12 GB reserved 0.15 GB | MemAvailable 114.1 GB
+[train ep 0] end: RSS 1.87 GB | torch alloc 0.29 GB reserved 0.34 GB | MemAvailable 113.6 GB (6s)
+[train ep 1] start: RSS 1.87 GB | torch alloc 0.20 GB reserved 0.34 GB | MemAvailable 113.6 GB
+[train ep 1] end: RSS 1.87 GB | torch alloc 0.29 GB reserved 0.36 GB | MemAvailable 113.6 GB (6s)
+[train ep 2] start: RSS 1.87 GB | torch alloc 0.20 GB reserved 0.36 GB | MemAvailable 113.6 GB
+[train ep 2] end: RSS 1.87 GB | torch alloc 0.29 GB reserved 0.34 GB | MemAvailable 113.7 GB (6s)
+reader trained (18s)
+condition-slot presence threshold set on the calibration half of dev (even rows; midpoint of present 0.052 / absent 0.039): 0.045  (the same-rows midpoint of 10c would be 0.045)
+reader params and dev frames saved to logs/.ckpt_v17_reader_frames_n1000.pt (re-scoring without retraining: C4 / C5 / 4c)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v17_verifier.py:134: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return {"sel": (int(t2.indices[0]), float(t2.values[0] - (t2.values[1] if len(sc) > 1 else 0))), "agg": (int(ta.indices[0]), float(ta.values[0] - ta.values[1])), "conds": []}
+
+== VERIFIER on the REPORT half of dev (odd rows, 4210 questions; the even half set the presence threshold), one injected error per instance; reader = v11 full model (no table), lex = BoW+LR frame (no condition model)
+error type | n | reader: detected (recall) / unverifiable / missed(confident-wrong) | lex: detected / unverifiable / missed
+  drop_cond      |  4177 | reader 0.125 / 0.852 / 0.023 | lex 0.229 / 0.444 / 0.327
+  swap_sel_cond  |  4177 | reader 0.183 / 0.808 / 0.009 | lex 0.252 / 0.506 / 0.242
+  change_sel     |  4195 | reader 0.188 / 0.807 / 0.005 | lex 0.271 / 0.699 / 0.030
+  flip_agg       |  4210 | reader 0.413 / 0.586 / 0.001 | lex 0.537 / 0.444 / 0.019
+  add_cond       |  4195 | reader 0.127 / 0.868 / 0.005 | lex 0.233 / 0.442 / 0.325
+  change_value   |  4177 | reader 0.125 / 0.857 / 0.018 | lex 0.229 / 0.444 / 0.327
+  no_error (gold) |  4210 | reader FALSE-ALARM 0.127 / unverifiable 0.855 / ok 0.018 | lex false-alarm 0.232 / 0.443 / 0.324
+  precision of the 'error' verdict on ROLE errors vs gold (reader): 0.891  (false-alarm rate on gold 0.127); recall on role errors 0.207
+  stated: change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values); conditions are detected by column set only.
+  stated: on GOLD frames the verifier confirms 0.018 and says 'unverifiable' on 0.855 — it is a filter on the role part of a formalization, not a judge of it.
+
+checklist: [x] world addresses [x] fixed identities [x] no table at the input [x] one error per instance, per-type rates [x] lexical baseline on the same rows [x] unverifiable = margin < tau (18) [x] false-alarm rate on gold [x] invisible error types stated [x] presence threshold set on the calibration half, reported on the other half [x] reader and frames saved for re-scoring [x] memory logged (21) [ ] LLM-produced formalizations (follow-up)

@@ -1,0 +1,172 @@
+# 2026-10-16T19:41:53+02:00  commit=90c44df  cmd: python3 v19_kinds.py --seeds 5  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 113 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v19_kinds (N5): device=cuda, D=1024, N=30000, seeds=5, tau=0.05; homographs {'h0': ('GIVE', 'gives', 'give'), 'h1': ('SELL', 'sells', 'sell'), 'h2': ('SEND', 'sends', 'send')} (object o15..o17 AND the V3 form of GIVE / SELL / SEND)
+variants: ref = unambiguous world; a = one category per token (majority kind in training); b = superposition (mean of the two kind assignments' states), kind resolved at readout by fit (margin > tau)
+criterion (addendum N5): (b) FULL on ambiguous sentences within 0.02 of ref; resolved share and both-share reported; (a) the baseline; bag control
+
+[train ref seed 0] start: RSS 1.34 GB | torch alloc 0.51 GB reserved 0.53 GB | MemAvailable 111.8 GB
+[train ref seed 0] step 500 sent 4000/30000 loss -0.840 (22s) | RSS 2.46 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.5 GB
+[train ref seed 0] step 1000 sent 8000/30000 loss -0.877 (43s) | RSS 2.46 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.5 GB
+[train ref seed 0] step 1500 sent 12000/30000 loss -0.896 (64s) | RSS 2.46 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.6 GB
+[train ref seed 0] step 2000 sent 16000/30000 loss -0.913 (85s) | RSS 2.46 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.4 GB
+[train ref seed 0] step 2500 sent 20000/30000 loss -0.920 (106s) | RSS 2.49 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.5 GB
+[train ref seed 0] step 3000 sent 24000/30000 loss -0.922 (127s) | RSS 2.49 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.3 GB
+[train ref seed 0] step 3500 sent 28000/30000 loss -0.916 (148s) | RSS 2.49 GB | torch alloc 0.65 GB reserved 0.96 GB | MemAvailable 110.3 GB
+[train ref seed 0] end: RSS 2.49 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 110.6 GB (159s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:129: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 ref (162s; majority kind in training: noun 0 / verb 0): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun nan verb nan, margin nan, resolved nan, both nan || bag cos(noun use, verb use) nan vs state nan || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train a seed 0] start: RSS 2.57 GB | torch alloc 0.57 GB reserved 1.16 GB | MemAvailable 110.0 GB
+[train a seed 0] step 500 sent 4000/30000 loss -0.838 (21s) | RSS 2.57 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.7 GB
+[train a seed 0] step 1000 sent 8000/30000 loss -0.871 (43s) | RSS 2.57 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.6 GB
+[train a seed 0] step 1500 sent 12000/30000 loss -0.887 (65s) | RSS 2.57 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.8 GB
+[train a seed 0] step 2000 sent 16000/30000 loss -0.896 (88s) | RSS 2.57 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.6 GB
+[train a seed 0] step 2500 sent 20000/30000 loss -0.917 (110s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.7 GB
+[train a seed 0] step 3000 sent 24000/30000 loss -0.909 (132s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.6 GB
+[train a seed 0] step 3500 sent 28000/30000 loss -0.906 (155s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.6 GB
+[train a seed 0] end: RSS 2.60 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 110.5 GB (166s)
+  seed 0 a   (168s; majority kind in training: noun 5461 / verb 9032): FULL h-as-noun 0.991 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.922 verb 0.510, margin 0.129, resolved 0.516, both 0.484 || bag cos(noun use, verb use) 0.87 vs state 0.81 || gates OPEN: ['.', 'accepts', 'sees', 'that']
+[train b seed 0] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.08 GB | MemAvailable 110.1 GB
+[train b seed 0] step 500 sent 4000/30000 loss -0.848 (40s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.6 GB
+[train b seed 0] step 1000 sent 8000/30000 loss -0.876 (80s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.7 GB
+[train b seed 0] step 1500 sent 12000/30000 loss -0.892 (119s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.8 GB
+[train b seed 0] step 2000 sent 16000/30000 loss -0.904 (159s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.7 GB
+[train b seed 0] step 2500 sent 20000/30000 loss -0.916 (199s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 110.1 GB
+[train b seed 0] step 3000 sent 24000/30000 loss -0.909 (238s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 110.9 GB
+[train b seed 0] step 3500 sent 28000/30000 loss -0.908 (274s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.7 GB
+[train b seed 0] end: RSS 2.65 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 109.4 GB (294s)
+  seed 0 b   (297s; majority kind in training: noun 5461 / verb 9032): FULL h-as-noun 0.950 | h-as-verb 1.000 | no homograph 0.994 || kind by fit: acc noun 0.956 verb 0.460, margin 0.143, resolved 0.526, both 0.474 || bag cos(noun use, verb use) 0.87 vs state 0.82 || gates OPEN: ['.', 'sees', 'that']
+[train ref seed 1] start: RSS 2.55 GB | torch alloc 0.57 GB reserved 1.18 GB | MemAvailable 109.1 GB
+[train ref seed 1] step 500 sent 4000/30000 loss -0.824 (22s) | RSS 2.55 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.2 GB
+[train ref seed 1] step 1000 sent 8000/30000 loss -0.876 (43s) | RSS 2.55 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.2 GB
+[train ref seed 1] step 1500 sent 12000/30000 loss -0.912 (64s) | RSS 2.55 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.3 GB
+[train ref seed 1] step 2000 sent 16000/30000 loss -0.904 (86s) | RSS 2.55 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.3 GB
+[train ref seed 1] step 2500 sent 20000/30000 loss -0.895 (107s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.7 GB
+[train ref seed 1] step 3000 sent 24000/30000 loss -0.915 (129s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.1 GB
+[train ref seed 1] step 3500 sent 28000/30000 loss -0.920 (150s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.2 GB
+[train ref seed 1] end: RSS 2.58 GB | torch alloc 0.65 GB reserved 0.74 GB | MemAvailable 109.6 GB (161s)
+  seed 1 ref (163s; majority kind in training: noun 0 / verb 9541): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun nan verb nan, margin nan, resolved nan, both nan || bag cos(noun use, verb use) nan vs state nan || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train a seed 1] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.18 GB | MemAvailable 109.1 GB
+[train a seed 1] step 500 sent 4000/30000 loss -0.818 (22s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.1 GB
+[train a seed 1] step 1000 sent 8000/30000 loss -0.882 (43s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.5 GB
+[train a seed 1] step 1500 sent 12000/30000 loss -0.910 (64s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.2 GB
+[train a seed 1] step 2000 sent 16000/30000 loss -0.891 (85s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.3 GB
+[train a seed 1] step 2500 sent 20000/30000 loss -0.890 (107s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.8 GB
+[train a seed 1] step 3000 sent 24000/30000 loss -0.915 (128s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.2 GB
+[train a seed 1] step 3500 sent 28000/30000 loss -0.918 (148s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.19 GB | MemAvailable 109.6 GB
+[train a seed 1] end: RSS 2.66 GB | torch alloc 0.65 GB reserved 0.72 GB | MemAvailable 110.1 GB (159s)
+  seed 1 a   (161s; majority kind in training: noun 5501 / verb 9015): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.912 verb 0.545, margin 0.131, resolved 0.537, both 0.463 || bag cos(noun use, verb use) 0.87 vs state 0.81 || gates OPEN: ['.', 'that', 'to']
+[train b seed 1] start: RSS 2.52 GB | torch alloc 0.57 GB reserved 1.08 GB | MemAvailable 109.2 GB
+[train b seed 1] step 500 sent 4000/30000 loss -0.836 (40s) | RSS 2.52 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.4 GB
+[train b seed 1] step 1000 sent 8000/30000 loss -0.883 (78s) | RSS 2.52 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.9 GB
+[train b seed 1] step 1500 sent 12000/30000 loss -0.916 (117s) | RSS 2.52 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.4 GB
+[train b seed 1] step 2000 sent 16000/30000 loss -0.900 (157s) | RSS 2.52 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.4 GB
+[train b seed 1] step 2500 sent 20000/30000 loss -0.897 (195s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.8 GB
+[train b seed 1] step 3000 sent 24000/30000 loss -0.921 (233s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.9 GB
+[train b seed 1] step 3500 sent 28000/30000 loss -0.925 (270s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.9 GB
+[train b seed 1] end: RSS 2.54 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 110.4 GB (289s)
+  seed 1 b   (292s; majority kind in training: noun 5501 / verb 9015): FULL h-as-noun 0.900 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.966 verb 0.355, margin 0.144, resolved 0.554, both 0.446 || bag cos(noun use, verb use) 0.87 vs state 0.83 || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train ref seed 2] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.14 GB | MemAvailable 109.8 GB
+[train ref seed 2] step 500 sent 4000/30000 loss -0.835 (20s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.8 GB
+[train ref seed 2] step 1000 sent 8000/30000 loss -0.864 (40s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.9 GB
+[train ref seed 2] step 1500 sent 12000/30000 loss -0.903 (60s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.8 GB
+[train ref seed 2] step 2000 sent 16000/30000 loss -0.903 (79s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train ref seed 2] step 2500 sent 20000/30000 loss -0.911 (100s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.3 GB
+[train ref seed 2] step 3000 sent 24000/30000 loss -0.914 (121s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.4 GB
+[train ref seed 2] step 3500 sent 28000/30000 loss -0.922 (142s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.3 GB
+[train ref seed 2] end: RSS 2.65 GB | torch alloc 0.65 GB reserved 0.72 GB | MemAvailable 109.7 GB (153s)
+  seed 2 ref (155s; majority kind in training: noun 0 / verb 9695): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun nan verb nan, margin nan, resolved nan, both nan || bag cos(noun use, verb use) nan vs state nan || gates OPEN: ['.', 'that']
+[train a seed 2] start: RSS 2.65 GB | torch alloc 0.57 GB reserved 1.16 GB | MemAvailable 109.3 GB
+[train a seed 2] step 500 sent 4000/30000 loss -0.830 (21s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 2] step 1000 sent 8000/30000 loss -0.857 (43s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.2 GB
+[train a seed 2] step 1500 sent 12000/30000 loss -0.895 (64s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 2] step 2000 sent 16000/30000 loss -0.893 (84s) | RSS 2.65 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 2] step 2500 sent 20000/30000 loss -0.902 (106s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.2 GB
+[train a seed 2] step 3000 sent 24000/30000 loss -0.909 (128s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 2] step 3500 sent 28000/30000 loss -0.910 (149s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 2] end: RSS 2.67 GB | torch alloc 0.65 GB reserved 0.72 GB | MemAvailable 109.7 GB (160s)
+  seed 2 a   (162s; majority kind in training: noun 5552 / verb 9165): FULL h-as-noun 0.963 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.916 verb 0.535, margin 0.133, resolved 0.568, both 0.432 || bag cos(noun use, verb use) 0.86 vs state 0.81 || gates OPEN: ['.', 'that']
+[train b seed 2] start: RSS 2.59 GB | torch alloc 0.57 GB reserved 1.14 GB | MemAvailable 109.3 GB
+[train b seed 2] step 500 sent 4000/30000 loss -0.834 (40s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train b seed 2] step 1000 sent 8000/30000 loss -0.869 (80s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train b seed 2] step 1500 sent 12000/30000 loss -0.903 (120s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train b seed 2] step 2000 sent 16000/30000 loss -0.898 (161s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train b seed 2] step 2500 sent 20000/30000 loss -0.906 (201s) | RSS 2.61 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train b seed 2] step 3000 sent 24000/30000 loss -0.910 (240s) | RSS 2.61 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train b seed 2] step 3500 sent 28000/30000 loss -0.911 (280s) | RSS 2.61 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train b seed 2] end: RSS 2.61 GB | torch alloc 0.65 GB reserved 0.72 GB | MemAvailable 109.8 GB (299s)
+  seed 2 b   (302s; majority kind in training: noun 5552 / verb 9165): FULL h-as-noun 0.909 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.972 verb 0.420, margin 0.151, resolved 0.603, both 0.397 || bag cos(noun use, verb use) 0.86 vs state 0.82 || gates OPEN: ['.', 'accepts', 'that']
+[train ref seed 3] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.16 GB | MemAvailable 109.3 GB
+[train ref seed 3] step 500 sent 4000/30000 loss -0.817 (21s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.2 GB
+[train ref seed 3] step 1000 sent 8000/30000 loss -0.877 (42s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train ref seed 3] step 1500 sent 12000/30000 loss -0.893 (63s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train ref seed 3] step 2000 sent 16000/30000 loss -0.907 (84s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train ref seed 3] step 2500 sent 20000/30000 loss -0.913 (106s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train ref seed 3] step 3000 sent 24000/30000 loss -0.924 (127s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.2 GB
+[train ref seed 3] step 3500 sent 28000/30000 loss -0.906 (147s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.2 GB
+[train ref seed 3] end: RSS 2.66 GB | torch alloc 0.65 GB reserved 0.74 GB | MemAvailable 109.7 GB (159s)
+  seed 3 ref (160s; majority kind in training: noun 0 / verb 9408): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun nan verb nan, margin nan, resolved nan, both nan || bag cos(noun use, verb use) nan vs state nan || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train a seed 3] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.14 GB | MemAvailable 109.2 GB
+[train a seed 3] step 500 sent 4000/30000 loss -0.800 (21s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.3 GB
+[train a seed 3] step 1000 sent 8000/30000 loss -0.877 (42s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.4 GB
+[train a seed 3] step 1500 sent 12000/30000 loss -0.891 (64s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.4 GB
+[train a seed 3] step 2000 sent 16000/30000 loss -0.898 (85s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.3 GB
+[train a seed 3] step 2500 sent 20000/30000 loss -0.900 (106s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.2 GB
+[train a seed 3] step 3000 sent 24000/30000 loss -0.916 (128s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.3 GB
+[train a seed 3] step 3500 sent 28000/30000 loss -0.897 (149s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.15 GB | MemAvailable 109.4 GB
+[train a seed 3] end: RSS 2.66 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 109.7 GB (160s)
+  seed 3 a   (162s; majority kind in training: noun 5555 / verb 8878): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.919 verb 0.590, margin 0.135, resolved 0.538, both 0.462 || bag cos(noun use, verb use) 0.87 vs state 0.80 || gates OPEN: ['.', 'that']
+[train b seed 3] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.08 GB | MemAvailable 109.3 GB
+[train b seed 3] step 500 sent 4000/30000 loss -0.812 (40s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.2 GB
+[train b seed 3] step 1000 sent 8000/30000 loss -0.876 (80s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.3 GB
+[train b seed 3] step 1500 sent 12000/30000 loss -0.889 (119s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.3 GB
+[train b seed 3] step 2000 sent 16000/30000 loss -0.902 (159s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.4 GB
+[train b seed 3] step 2500 sent 20000/30000 loss -0.905 (199s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.3 GB
+[train b seed 3] step 3000 sent 24000/30000 loss -0.919 (238s) | RSS 2.62 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.4 GB
+[train b seed 3] step 3500 sent 28000/30000 loss -0.900 (277s) | RSS 2.62 GB | torch alloc 0.65 GB reserved 1.11 GB | MemAvailable 109.5 GB
+[train b seed 3] end: RSS 2.65 GB | torch alloc 0.65 GB reserved 0.69 GB | MemAvailable 109.6 GB (297s)
+  seed 3 b   (300s; majority kind in training: noun 5555 / verb 8878): FULL h-as-noun 0.869 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.963 verb 0.385, margin 0.147, resolved 0.510, both 0.490 || bag cos(noun use, verb use) 0.87 vs state 0.82 || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'sees', 'that']
+[train ref seed 4] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.12 GB | MemAvailable 109.5 GB
+[train ref seed 4] step 500 sent 4000/30000 loss -0.846 (21s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.2 GB
+[train ref seed 4] step 1000 sent 8000/30000 loss -0.879 (42s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.3 GB
+[train ref seed 4] step 1500 sent 12000/30000 loss -0.886 (64s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.5 GB
+[train ref seed 4] step 2000 sent 16000/30000 loss -0.908 (85s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.3 GB
+[train ref seed 4] step 2500 sent 20000/30000 loss -0.919 (107s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.2 GB
+[train ref seed 4] step 3000 sent 24000/30000 loss -0.933 (128s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.2 GB
+[train ref seed 4] step 3500 sent 28000/30000 loss -0.928 (150s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.13 GB | MemAvailable 109.2 GB
+[train ref seed 4] end: RSS 2.66 GB | torch alloc 0.65 GB reserved 0.74 GB | MemAvailable 109.7 GB (161s)
+  seed 4 ref (163s; majority kind in training: noun 0 / verb 9490): FULL h-as-noun 1.000 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun nan verb nan, margin nan, resolved nan, both nan || bag cos(noun use, verb use) nan vs state nan || gates OPEN: ['.', 'accepts', 'borrows', 'buys', 'gets', 'receives', 'sees', 'that']
+[train a seed 4] start: RSS 2.54 GB | torch alloc 0.57 GB reserved 1.16 GB | MemAvailable 109.3 GB
+[train a seed 4] step 500 sent 4000/30000 loss -0.851 (21s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.5 GB
+[train a seed 4] step 1000 sent 8000/30000 loss -0.848 (43s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 4] step 1500 sent 12000/30000 loss -0.872 (64s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train a seed 4] step 2000 sent 16000/30000 loss -0.893 (85s) | RSS 2.54 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train a seed 4] step 2500 sent 20000/30000 loss -0.913 (106s) | RSS 2.56 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train a seed 4] step 3000 sent 24000/30000 loss -0.921 (128s) | RSS 2.56 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.3 GB
+[train a seed 4] step 3500 sent 28000/30000 loss -0.919 (149s) | RSS 2.56 GB | torch alloc 0.65 GB reserved 1.17 GB | MemAvailable 109.4 GB
+[train a seed 4] end: RSS 2.56 GB | torch alloc 0.65 GB reserved 0.76 GB | MemAvailable 110.1 GB (159s)
+  seed 4 a   (161s; majority kind in training: noun 5561 / verb 8958): FULL h-as-noun 0.994 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.947 verb 0.495, margin 0.146, resolved 0.540, both 0.460 || bag cos(noun use, verb use) 0.87 vs state 0.80 || gates OPEN: ['.', 'that']
+[train b seed 4] start: RSS 2.63 GB | torch alloc 0.57 GB reserved 1.22 GB | MemAvailable 110.2 GB
+[train b seed 4] step 500 sent 4000/30000 loss -0.854 (35s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.1 GB
+[train b seed 4] step 1000 sent 8000/30000 loss -0.859 (71s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.1 GB
+[train b seed 4] step 1500 sent 12000/30000 loss -0.875 (106s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.1 GB
+[train b seed 4] step 2000 sent 16000/30000 loss -0.896 (141s) | RSS 2.63 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.1 GB
+[train b seed 4] step 2500 sent 20000/30000 loss -0.914 (177s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.0 GB
+[train b seed 4] step 3000 sent 24000/30000 loss -0.923 (212s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.0 GB
+[train b seed 4] step 3500 sent 28000/30000 loss -0.920 (247s) | RSS 2.66 GB | torch alloc 0.65 GB reserved 1.24 GB | MemAvailable 112.0 GB
+[train b seed 4] end: RSS 2.66 GB | torch alloc 0.65 GB reserved 0.74 GB | MemAvailable 112.6 GB (265s)
+  seed 4 b   (268s; majority kind in training: noun 5561 / verb 8958): FULL h-as-noun 0.906 | h-as-verb 1.000 | no homograph 1.000 || kind by fit: acc noun 0.981 verb 0.250, margin 0.159, resolved 0.583, both 0.417 || bag cos(noun use, verb use) 0.87 vs state 0.82 || gates OPEN: ['.', 'that']
+
+== MEANS over seeds, per variant: FULL h-as-noun | FULL h-as-verb | FULL no homograph | kind acc (noun) | kind acc (verb) | kind margin | resolved share (margin > tau) | both share | bag cos noun/verb use | state cos noun/verb use
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v19_kinds.py:140: RuntimeWarning: Mean of empty slice
+  r = np.array(res[variant]); print(f"  {variant:3s} " + " | ".join(f"{np.nanmean(r[:, i]):.3f}±{np.nanstd(r[:, i]):.3f}" for i in range(len(cols))))
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/.venv/lib/python3.12/site-packages/numpy/lib/_nanfunctions_impl.py:1997: RuntimeWarning: Degrees of freedom <= 0 for slice.
+  var = nanvar(a, axis=axis, dtype=dtype, out=out, ddof=ddof,
+  ref 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | nan±nan | nan±nan | nan±nan | nan±nan | nan±nan | nan±nan | nan±nan
+  a   0.989±0.014 | 1.000±0.000 | 1.000±0.000 | 0.923±0.012 | 0.535±0.033 | 0.135±0.006 | 0.540±0.016 | 0.460±0.016 | 0.866±0.001 | 0.807±0.003
+  b   0.907±0.026 | 1.000±0.000 | 0.999±0.002 | 0.967±0.009 | 0.374±0.071 | 0.149±0.006 | 0.555±0.035 | 0.445±0.035 | 0.866±0.001 | 0.821±0.005
+== criterion N5: (b) FULL on ambiguous sentences 0.953 vs reference 1.000: gap +0.047 -> NOT met (within 0.02)
+
+checklist: [x] world addresses [x] shared F [x] chance printed (objects 1/18, verbs 1/12) [x] predicate role present (23) [x] three variants, same regime [x] kind resolved at readout by fit, margin > tau stated (18) [x] resolved / both shares [x] bag control [x] memory logged (21) [x] >=3 seeds [x] given vs learned stated (20: kinds are an input; the half-way key is a definition, not learned)
