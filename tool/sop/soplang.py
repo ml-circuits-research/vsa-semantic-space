@@ -44,6 +44,12 @@ class Line:
     def refs(self): return [a.text for a in self.atoms if a.kind == "ref"]
 
 
+def line(key, value):
+    """a Line built from a python value (quoted on output when needed), never from raw text"""
+    if key in FREE_TEXT_KEYS: return Line(key, str(value).replace("\n", " "))
+    atoms, sep = to_atoms(value); return Line(key, None, atoms, sep)
+
+
 class Wire:
     __slots__ = ("id", "type", "lines", "lineno")
     def __init__(self, id, type, lines=None, lineno=None): self.id, self.type, self.lines, self.lineno = id, type, lines or [], lineno

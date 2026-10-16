@@ -313,7 +313,7 @@ class Reader:
         else:
             top.set("_margin", "0")
         top.set("_status", status)
-        top.lines.insert(next((i + 1 for i, l in enumerate(top.lines) if l.key == "_sentence"), 0), soplang.Line("_world", self.cfg.get("world", "?")))
+        top.lines.insert(next((i + 1 for i, l in enumerate(top.lines) if l.key == "_sentence"), 0), soplang.line("_world", self.cfg.get("world", "?")))
         res = self.residual(S, wires, tokens) if f["shape"] == "ok" else 1.0
         top.set("_residual", fmt(res))
         if unplaced: top.set("_unplaced", ",".join(tokens[i] for i in unplaced))
