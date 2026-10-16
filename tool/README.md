@@ -175,6 +175,10 @@ Reference reproduced within seed variance on every roles column; commands depth 
 estimates depth and negation, the script is given the depth — C3: the 5-seed run reports both); quantifier v1 nouns reproduced, determiners
 not comparable (no scope term in v1, see the REPORT of that run).
 
+**The two quantifier rows are not comparable on scope.** The committed CPU runs (`tool/runs/p0_cpu_1seed_60f284d/`) were made by code
+commit f759d93 with the quantifier world VERSION 1 (no scope term in the targets, no `_scope`); the GPU round trip below uses VERSION 2 (the
+C2c world, `_scope`). Only the noun rows of the two runs measure the same thing.
+
 **GPU, 5 seeds** (PLANNED, prepared, not run): `tool/tests/p0_full_gpu.sh` — reference, commands, quantifiers VERSION 2 (C2c); full sizes,
 `--seeds 5 --vary_stars --device cuda --no_ckpt`; it takes the repository's GPU lock (`experiment/logs/.run.lock`, the pid lock of run.sh /
 queue.sh; `--wait` polls it, rule 26), refuses an unclean code tree, and writes `tool/runs/p0_gpu_5seed_<commit>/<world>/` (train.log,
