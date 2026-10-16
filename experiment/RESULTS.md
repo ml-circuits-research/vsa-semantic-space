@@ -1128,3 +1128,31 @@ picks the CONDITION column (the one the question names a value for) instead of t
 gold 'Away team score'), garbled questions. Consequence for the operating point: of the 0.162 false alarm on gold, about 0.11 is the reader's
 and about 0.05 is the data's; the reader's part is mostly the asked-vs-condition column confusion, a decision the question's syntax carries
 ('what X has a Y of ...'): a reader property, as 10c-ter said. No operating point is chosen on this; C5 and 4c follow.
+
+## 10b-quinquies. E1b — relation-marker gates GIVEN open: the reference table (v16_reference.py --rel_gates open; logs/2026-10-16_1905_v16_reference_1713d10.txt; 5 seeds, same seeds and regime as 10b; trace logs/trace_e1.txt part (iii))
+Why (indications 013c490 §1): 7c learned 'to' 1.00 and 'by' 0.91 open and had the passives at 1.000 at depth 3; 10b learned 'to' and 'by'
+closed (the predicate term and the recipient-less forms pulled them shut), and the E1 trace showed the A/C address collision on T2 comes from
+both persons hanging off the period. Given (rule 20): 'to', 'by', 'from' open; participles and verbs learned; recipient-less forms kept.
+Trace (iii), depth 3: T0 A <- ... that:to + L[to:P], C <- ... that:to + to:. + L[.:P]; T2 C <- ... that:to + to:by + L[by:P], A <- ... that:to +
+to:by + by:. + L[.:P]; T3 A <- ... that:by + by:to + L[to:P], C <- ... by:to + to:. + L[.:P] — A and C land at DISTINCT addresses that both carry
+the 'that' prefix, in every form. The emitter test was therefore the right one with the right emitters.
+| axis (5 seeds) | 10b (gates learned: to, by closed) | **E1b (to, by, from given open)** | criterion |
+|---|---|---|---|
+| seen FULL / predicate / new ids / cues / depth 2 | 1.000 everywhere | 1.000 everywhere | seen axes 1.000: MET |
+| occupancy known / unknown / not given | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 | unchanged: MET |
+| unseen transitions FULL | 0.638±0.015 | 0.627±0.024 | reported; no loss beyond seed noise (E1 (ii) had lost 0.07) |
+| **depth 3 UNSEEN FULL** | 0.813±0.030 | **0.968±0.020** | > 0.9: MET |
+| depth 3 per form A / C: T2 passive | 0.81 / 0.52 | **1.00 / 1.00** | C > 0.9: MET |
+| T3 passive | 0.84 / 0.76 | **1.00 / 1.00** | MET |
+| T0, T1, T6, T12, T15 | 0.94-1.00 / 0.91-0.99 | 1.00 / 1.00 | — |
+| T9 "to C , A V B ." (fronted recipient) | 0.99 / 0.77 | 0.99 / **0.84** | the one form below 0.9 (the comma construction: a declared limit of 6b) |
+| calibration, depth 3 (seed 0): A / C accuracy at full coverage; at tau 0.05 coverage, confident-wrong | 0.90 / 0.875; 0.59 / 0.33, 0.000 / 0.008 | **1.000 / 0.967; 0.93 / 0.88, 0.000 / 0.000** | — |
+| unseen transitions, calibration (seed 0): A / C accuracy; coverage at tau 0.05; confident-wrong | 0.867 / 0.750; 0.69 / 0.67; 0.000 / 0.042 | 0.850 / 0.842; 0.84 / 0.74; 0.008 / 0.000 | — |
+Gates: that, by, from, to 1.00 (given for the last three), '.' 0.53; everything else closed (the recipient verbs no longer need to open).
+Reading, by the decision rule stated before the run: MET. The depth-3 regression of the predicate-role world was the GATE SET, not the form:
+with the relation markers open, the passives compose at depth 3 like the active forms (1.000), the margins at depth 3 triple (A 0.06 -> 0.12,
+C 0.04 -> 0.10) and the abstention falls from 0.4-0.7 to 0.07-0.12. The remaining loss is the comma construction T9 (C 0.84), consistent with
+6b. This table is the REFERENCE TABLE from now on (10b-quinquies); the depth-3 claim is restated without "but the passives": "depth 3 unseen
+0.968 at full coverage; at tau 0.05 coverage 0.93 (A) / 0.88 (C) with covered accuracy 1.000, confident-wrong 0.000", gate choice recorded as
+given (like 'that'). 10b, 10b-bis, 10b-ter, 10b-quater stay as the history of the learned-gate world. The 10b-quater sentence on right-announced
+structure stays withdrawn: the markers announce their fillers before them, and with them open the passive is read.

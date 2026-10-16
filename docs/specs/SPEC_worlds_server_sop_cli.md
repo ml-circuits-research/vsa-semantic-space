@@ -285,3 +285,8 @@ sop stats     --model <dir>                                                     
 Exit codes: 0 ok; 1 input/validation error; 2 model missing or legend mismatch. Output is deterministic for the same model and input.
 `--json` emits the same content as JSON (one object per wire) for programs. Every wire written by `formalize` has `_margin`, `_status`,
 `_empty` [... the paste ended here; section 6 (training skill) not received]
+
+## Addendum (author, 2026-10-16, after version 2)
+A top-level wire may carry `_world="..."` (a reserved line naming the world it belongs to). Nowhere may the tool assume that one `.sop` file
+has a single legend: `check` validates each top-level wire against the legend of its `_world` (several legends per call), the legend hash is
+per world, `diff` compares wires within the same `_world` only, `formalize` writes `_world` on every top-level wire it emits.

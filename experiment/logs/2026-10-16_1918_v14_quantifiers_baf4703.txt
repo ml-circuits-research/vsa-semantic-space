@@ -20,3 +20,21 @@ decoder (rule 17, from judgment a8a8fab C1): PRESENCE = best scope score >= a th
 [train seed 0] step 3000 sent 24000/40000 loss -0.860 (154s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.1 GB
 [train seed 0] step 3500 sent 28000/40000 loss -0.878 (179s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.1 GB
 [train seed 0] step 4000 sent 32000/40000 loss -0.880 (205s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.1 GB
+[train seed 0] step 4500 sent 36000/40000 loss -0.897 (232s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.1 GB
+[train seed 0] step 5000 sent 40000/40000 loss -0.891 (257s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.1 GB
+[train seed 0] end: RSS 2.69 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.4 GB (258s)
+  seed 0 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.190 (0.363 / 0.017); d1: 0.168 (0.317 / 0.020); d2: 0.130 (0.240 / 0.019); C2c term thresholds: d0 0.164, d1 0.144, d2 0.106
+  seed 0 SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 1.000 / 1.000; d1 1.000 / 1.000; d2 UNSEEN 0.990 / 0.988; presence on ambiguous d0 1.000; FALSE-BOTH on unambiguous d0 / d2: 0.000 / 0.000
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:129: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (259s) 1.000 | 0.962 | 1.000 | 1.000 | 0.919 | 1.000 | 0.846 | 0.983 | 0.989 | 0.644 | 1.000 | 0.871 | 1.000 | 0.883 | 0.517 | 0.967 | 0.611 | 1.000  || ambiguous: nouns 1.00 dets 0.94 || gates OPEN: ['by', 'from', 'that', 'to']
+  C2b beacon-relative emitters (given set, learned displacement): ['every', 'each', 'some', 'certain'] -> takers NP, NO
+[train seed 1] start: RSS 2.73 GB | torch alloc 0.73 GB reserved 1.53 GB | MemAvailable 111.7 GB
+[train seed 1] step 500 sent 4000/40000 loss -0.633 (26s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.7 GB
+[train seed 1] step 1000 sent 8000/40000 loss -0.723 (51s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.7 GB
+[train seed 1] step 1500 sent 12000/40000 loss -0.777 (77s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.7 GB
+[train seed 1] step 2000 sent 16000/40000 loss -0.792 (102s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.1 GB
+[train seed 1] step 2500 sent 20000/40000 loss -0.823 (129s) | RSS 2.78 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB
+[train seed 1] step 3000 sent 24000/40000 loss -0.839 (155s) | RSS 2.78 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.1 GB
+[train seed 1] step 3500 sent 28000/40000 loss -0.831 (182s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.2 GB

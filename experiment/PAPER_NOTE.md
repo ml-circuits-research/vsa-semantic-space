@@ -184,10 +184,10 @@ Commutative binding records the MULTISET of roles on a path, not their order: tw
 ("X says that not P" vs "not (X says that P)"); we claim no arbitrary tree representation (remedies — permutation binding, level-indexed
 roles — are planned, X1/B7). Occupancy cannot be read from the norm after unbinding (unbinding is an isometry); what is reported instead
 is the reconstruction residual (rule 18). Memory: of the order of D x rows x 4 bytes, i.e. a megabyte at D ~ 1k, not less. Adding the
-predicate role (one more term per level) lowers the unseen-depth-3 full frame from 1.000 to 0.81 at full coverage (1.000 at coverage 0.59
-for the agent, 0.975 at 0.33 for the recipient); the loss sits on the PASSIVE forms, where the chain gives the agent and the recipient the
-addresses they have in the active form with the roles swapped, so the reader composes at depth 3 on all forms but the passives; neither
-closing the verb gates nor doubling D repairs it. The depth-3 claim of section 3 is stated for the predicate-less world.
+predicate role (one more term per level) pulled the learned gates of 'to' and 'by' shut and lowered the unseen-depth-3 full frame from 1.000 to
+0.81: with those gates closed the chain gives the passive's agent and recipient the active form's addresses with the roles swapped. With the
+relation markers 'to', 'by', 'from' given open (as the predicate-less world had learned them), the predicate-role world composes at depth 3 at
+0.968 (passives 1.000; the fronted-recipient comma form 0.84 is the remaining loss). The gate choice is recorded as given, like 'that'.
 Quantifier scope does not compose to an unseen depth in any world tried (section 7).
 The world is ours: synthetic, six frames, two reporting verbs, 36 identities, D = 1024; the positive nesting result holds for reporting
 announced before its clause. The control is small (0.79M parameters) and minimally tuned; larger models, more data and learned embeddings
