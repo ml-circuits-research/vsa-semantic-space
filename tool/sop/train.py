@@ -285,6 +285,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     os.makedirs(model_dir, exist_ok=True)
     export_routebook(m, os.path.join(model_dir, "routebook.npz"))
     shutil.copyfile(legend.path, os.path.join(model_dir, "legend.json"))
+    lexf = legend.raw.get("kinds", {}).get("lexicon", "kinds.tsv")
+    if os.path.exists(os.path.join(legend.dir, lexf)): shutil.copyfile(os.path.join(legend.dir, lexf), os.path.join(model_dir, os.path.basename(lexf)))
     catalog = {"seed": seed, "star_seed": a.star_seed, "star": "identity of a word = sha256(star_seed + ':id:' + word)[:8] little-endian -> numpy default_rng -> "
                "D uniform phases in [-pi, pi); role vectors the same with the world seed and 'role:<id>' / 'op:<name>'",
                "words": {w: ({"kind": k, "lemma": legend.lemma[w]} if w in legend.lemma else {"kind": k}) for w, k in sorted(wk.items())},

@@ -122,7 +122,7 @@ def cmd_stats(a):
     print("chance: " + ", ".join(f"{k} {v:.3f}" for k, v in m["chance"].items() if v))
     for s, cs in m["mean_over_seeds"].items():
         for c, axes in cs.items():
-            print(f"\n{s} — {c} candidates")
+            print(f"\n{s} — {c}")
             for k, v in axes.items(): print(f"  {k:44s} {v['mean']:.3f}" + (f" ± {v['std']:.3f}" if len(m['seeds']) > 1 else ""))
         cal = m["per_seed"][0][s].get("catalog candidates", {}).get("calibration", {}).get("roles (pooled)")
         if cal: print(f"  calibration roles (pooled), tau {cal['tau']}: coverage {cal['coverage']:.2f}, confident-wrong {cal['confident_wrong']:.3f}, "
@@ -150,7 +150,8 @@ def main(argv=None):
         import export_worlds; return export_worlds.main(argv[1:])
     a = ap.parse_args(argv)
     try: return {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a)
-    except BrokenPipeError: return 0
+    except BrokenPipeError:
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); return 0
 
 
 if __name__ == "__main__":

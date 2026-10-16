@@ -172,6 +172,7 @@ async function handle(req, res) {
     }
     if (m === 'DELETE') {
       checkWritable(sp);
+      if (sp.rel === 'world.json') throw new HttpError(403, 'world.json is the manifest; DELETE /worlds/{w}?confirm={w} removes the world', sp.rel);
       if (!fs.existsSync(sp.abs) || !fs.statSync(sp.abs).isFile()) throw new HttpError(404, 'no such file', sp.rel);
       fs.unlinkSync(sp.abs); return sendJSON(res, 200, { deleted: sp.rel });
     }

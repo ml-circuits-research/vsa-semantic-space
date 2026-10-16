@@ -35,14 +35,14 @@ class Legend:
         self.operators = list(d.get("operators", [])); self.moods = list(d.get("moods", ["statement"]))
         self.reader = {**READER_DEFAULTS, **d.get("reader", {})}
         self.values = [(v["kind"], re.compile("^(?:" + v["pattern"] + ")$")) for v in d.get("values", [])]
-        self.errors = self._validate()
+        self.errors = self._validate(); self.warnings = []
         self.verb_event = {v: e for e, vs in self.events.items() for v in vs}
         kinds = d.get("kinds", {}); self.kinds_source = kinds.get("source", "lexicon")
         self.lexicon, self.lemma = {}, {}
         if self.kinds_source == "lexicon":
             lp = os.path.join(self.dir, kinds.get("lexicon", "kinds.tsv"))
             if os.path.exists(lp): self._load_lexicon(lp)
-            else: self.errors.append(f"lexicon {lp} not found")
+            else: self.warnings.append(f"lexicon {lp} not found (kinds unknown; sop check does not need them, training does)")
         else:
             self.errors.append("kinds.source 'tagger' is not implemented in v1 (use a lexicon)")   # TODO(section 6 missing): tagger kinds
 
