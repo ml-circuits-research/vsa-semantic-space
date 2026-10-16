@@ -12,6 +12,8 @@ The mistakes already made in this project, and the rule that prevents each:
 5. **Report the margin, not just the accuracy**: margin = cos(correct candidate) - max cos(wrong candidate). 1.00 with margin 0.15 and 1.00 with margin
    0.50 are different states.
 6. **Minimum 3 seeds, with standard deviation**; the seed also changes the world (identities, role vectors), not just the initialization.
+   When a MEAN meets a criterion that some seeds do not, the per-seed list is printed in the cell (judgment 013c490 C3; example: the C2b
+   noun target, one-quantifier scope at the unseen depth 0.927 with 3/5 seeds above 0.9: "0.927 (0.959, 0.929, 0.898, 0.888, 0.959)").
 7. **No calibration from the test set.** Everything that is a "reference" (addresses, thresholds) comes from training or from the world.
 8. **Every model variation is evaluated with EXACTLY the same evaluation function and the same test data** (same world seeds).
 9. **The trivial control is mandatory**: for any result, ask "what would a model that ignores order / ignores identities /

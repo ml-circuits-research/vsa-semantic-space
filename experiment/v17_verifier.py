@@ -47,6 +47,7 @@ if __name__ == "__main__":
     ap.add_argument("--epochs", type=int, default=3); ap.add_argument("--D", type=int, default=512); ap.add_argument("--batch", type=int, default=32); ap.add_argument("--n_dev", type=int, default=8421)
     ap.add_argument("--n_train", type=int, default=56355); ap.add_argument("--tau", type=float, default=0.05); ap.add_argument("--device", default="cuda"); ap.add_argument("--k_clusters", type=int, default=48); ap.add_argument("--n_freq", type=int, default=40)
     ap.add_argument("--log_every", type=int, default=500)
+    ap.add_argument("--occ_marker", action="store_true", help="C5 (indications 013c490 §4b): every FILLED condition slot carries an OCCUPANCY MARKER term R_COND[k] (x) R_OCC (x) M in the world state; presence is read from the marker's cosine, not from the column cosine")
     a = ap.parse_args(); dev_ = a.device; tok, load = v11.tok, v11.load
     train, ttabs = load("train"); dev, dtabs = load("dev"); train = train[:a.n_train]; dev = dev[:a.n_dev]
     vocab = {}; vid = lambda w: vocab.setdefault(w, len(vocab))
@@ -72,6 +73,14 @@ if __name__ == "__main__":
             if len(mem): C[c] = mem.mean(0) / (mem.mean(0).norm() + 1e-8)
     asg = (X @ C.T).argmax(1).cpu().numpy(); cat_of = torch.tensor(np.array([a.k_clusters + singles.index(w) if w in singles else asg[i] for w, i in sorted(vocab.items(), key=lambda x: x[1])])); K = a.k_clusters + len(singles)
     world = v11.World(vocab, a.D, dev_, 0)
+    if a.occ_marker:   # C5: occupancy marker on the condition slots (X2 applied to the verifier world); fixed vectors, given (rule 20)
+        g2 = np.random.default_rng(7); rv = lambda: torch.tensor(np.exp(1j * g2.uniform(-np.pi, np.pi, a.D)).astype(np.complex64), device=dev_)
+        world.R["OCC"] = rv(); world.M = rv(); _sql_state = world.sql_state
+        def sql_state_occ(sql, header_ids):
+            S = _sql_state(sql, header_ids)
+            for k in range(min(4, len(sql["conds"]))): S = S + world.R["COND"][k] * world.R["OCC"] * world.M
+            return S
+        world.sql_state = sql_state_occ; print("C5: occupancy marker on the condition slots (world rows that change, rule 16: filled slot k adds R_COND[k] (x) R_OCC (x) M); presence = cosine with M after unbinding, threshold on the calibration half")
     def target(r, tabs): return world.sql_state({"sel": r["sql"]["sel"], "agg": r["sql"]["agg"], "conds": [[c, o, [vid(w) for w in tok(str(v))]] for c, o, v in r["sql"]["conds"]]}, hid(tabs, r["table_id"]))
     tgt = torch.stack([target(r, ttabs) for r in train])
     # ---- train the reader (v11 RealModel, learned gates) with the trainer loop (memory logged)
@@ -93,7 +102,8 @@ if __name__ == "__main__":
         conds = []
         for k in range(4):   # condition slots: a column is "present" if its best cosine clears a presence threshold relative to the sel readout
             s = v11.cosb((S * torch.conj(world.R["COND"][k] * world.R["COL"])).unsqueeze(0).expand(len(cols), -1), cb); t2 = torch.topk(s, min(2, len(cols)))
-            conds.append((int(t2.indices[0]), float(t2.values[0]), float(t2.values[0] - (t2.values[1] if len(cols) > 1 else 0))))
+            pscore = float(v11.cosb((S * torch.conj(world.R["COND"][k] * world.R["OCC"])).unsqueeze(0), world.M.unsqueeze(0))[0]) if a.occ_marker else float(t2.values[0])   # C5: presence from the marker
+            conds.append((int(t2.indices[0]), pscore, float(t2.values[0] - (t2.values[1] if len(cols) > 1 else 0))))
         out["conds"] = conds; return out
     frames = []; thr_pres = []
     for i in range(0, len(dev), 256):
@@ -110,7 +120,13 @@ if __name__ == "__main__":
     tp = np.array(thr_cal); pres_thr = 0.5 * (tp[tp[:, 1] == 1, 0].mean() + tp[tp[:, 1] == 0, 0].mean())
     tpa = np.array(thr_pres); thr_same = 0.5 * (tpa[tpa[:, 1] == 1, 0].mean() + tpa[tpa[:, 1] == 0, 0].mean())
     print(f"condition-slot presence threshold set on the calibration half of dev (even rows; midpoint of present {tp[tp[:,1]==1,0].mean():.3f} / absent {tp[tp[:,1]==0,0].mean():.3f}): {pres_thr:.3f}  (the same-rows midpoint of 10c would be {thr_same:.3f})")
-    sfx = "" if a.n_train >= 56355 else f"_n{a.n_train}"
+    sfx = ("" if a.n_train >= 56355 else f"_n{a.n_train}") + ("_occ" if a.occ_marker else "")
+    # C5 criterion axis (report half): condition-slot presence / absence read with the threshold, per slot
+    pa = {"present": [], "absent": []}
+    for i, r in enumerate(dev):
+        if i % 2 == 1:
+            for k, (c, top, mg) in enumerate(frames[i]["conds"]): pa["present" if k < len(r["sql"]["conds"]) else "absent"].append((top >= pres_thr) == (k < len(r["sql"]["conds"])))
+    print(f"condition-slot OCCUPANCY on the report half (odd rows; {'marker cosine' if a.occ_marker else 'column top cosine, the 10c reading'}): present read as present {np.mean(pa['present']):.3f} (n {len(pa['present'])}), absent read as absent {np.mean(pa['absent']):.3f} (n {len(pa['absent'])}); C5 criterion: both > 0.9")
     torch.save({"params": [p_.detach().cpu() for p_ in m.params], "frames": frames, "dev_ids": [r.get("table_id") for r in dev], "pres_thr": float(pres_thr), "n_train": a.n_train}, f"logs/.ckpt_v17_reader_frames{sfx}.pt")
     print(f"reader params and dev frames saved to logs/.ckpt_v17_reader_frames{sfx}.pt (re-scoring without retraining: C4 / C5 / 4c)")
     # ---- lexical baseline frame (BoW+LR of v12: sel by overlap features, agg by hashed BoW), trained on train

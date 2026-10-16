@@ -817,10 +817,10 @@ depth-1 threshold).
 |---|---|---|---|---|
 | depth 0: nouns / determiners | **0.998** / 0.919 | 0.993 / 0.867 | 0.988 / 0.968 ; 0.977 / 0.966 | nouns 1.00: slot within 0.002 |
 | depth 0: PRESENCE / aff ABSENT | 0.996 / **1.000** | 0.998 / **1.000** | 0.887 / 1.000 ; 0.933 / 1.000 | — |
-| depth 0: SCOPE|gold-q one-quantifier / two-quantifier (marked) | **0.993 / 0.685** | **0.976 / 0.867** | 0.976 / 0.761 ; 0.961 / 0.793 | one-q > 0.9 MET (both); two-q NOT met |
+| depth 0: SCOPE|gold-q one-quantifier / two-quantifier (marked wide by the determiner's category, not the unmarked ambiguous case) | **0.993 / 0.685** | **0.976 / 0.867** | 0.976 / 0.761 ; 0.961 / 0.793 | one-q > 0.9 MET (both); two-q NOT met |
 | depth 0 FULL (joint) / depth 1 FULL | 0.686 / 0.599 | 0.633 / 0.520 | 0.701 / 0.616 ; 0.763 / 0.698 | — |
 | **depth 2 (UNSEEN): SCOPE|gold-q one-quantifier** (per seed) | **0.998** (1.000, 0.990, 1.000, 1.000, 1.000) | **0.927** (0.959, 0.929, 0.898, 0.888, 0.959) | 0.667 ; 0.631 | > 0.9 **MET** (slot 5/5 seeds; noun 3/5, mean met) |
-| depth 2 (UNSEEN): SCOPE|gold-q two-quantifier | 0.481 | 0.463 | 0.529 ; 0.556 | NOT met (chance 0.33) |
+| depth 2 (UNSEEN): SCOPE|gold-q two-quantifier (marked wide by the determiner's category) | 0.481 | 0.463 | 0.529 ; 0.556 | NOT met (chance 0.33) |
 | depth 2: PRESENCE (d2 threshold) / STRICT (d1 threshold) / aff ABSENT (d2 thr; strict) | **0.978 / 0.867** / 1.000 ; 1.000 | 0.912 / **0.032** / 0.987 ; 1.000 | 0.806 / 0.257 ; 0.757 / 0.173 | — |
 | depth 2 FULL (d2 threshold) / STRICT | 0.472 / 0.409 | 0.196 / 0.009 | 0.386 / 0.150 ; 0.368 / 0.109 | — (the two-quantifier half of the sentences fails) |
 | new nouns d0 FULL | 0.608 | 0.571 | 0.623 ; 0.734 | — |
