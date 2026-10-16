@@ -192,3 +192,8 @@ run.sh refuses a second concurrent run and refuses to start under 40 GB availabl
 E2 corrected run (09:00): nouns compose to the unseen depth (1.00), quantifier terms do not (dets 0.46-0.64, scope 0.52): the composition
 rule FAILS for quantifiers after one exposure — reserve applied, reported as such. Decoder gap fixed ('none' scope hypothesis). Hypothesis
 for judgment: the world's scope filler is a ROLE identity (not a word) => not representable by address (x) f_word; propose R_sc (x) f_noun.
+
+## 2026-10-16 (DGX, morning) — E3 modality/conditionals: composes to the unseen depth (1.000); right-announced form at the limit; zero-exposure mix fails
+Ran: run.sh v15_modality.py (5 seeds) -> logs/2026-10-16_0902_v15_modality_b2b8f34.txt. E3b (mixed construction seen at depth 0, --p_mixed 0.15) launched.
+Tally of the composition rule (one exposure, test one level deeper): reporting YES (6c), negation YES (E1b), modality YES, conditional YES,
+quantifiers NO (9c-bis; world-side hypothesis for judgment). Zero-exposure combinations fail every time (E1 sentential, E3 mixed).

@@ -1,0 +1,23 @@
+# 2026-10-16T09:02:02+02:00  commit=b2b8f34  cmd: python3 v15_modality.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:104: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+v15_modality (E3): device=cuda, D=1024, N=40000, seeds=5; modality R_may/R_must (x) S, conditional R_if (x) P + R_then (x) Q; model = v8 bundle, learned gates
+training: affirmative depths 0-2; modals and conditionals (forms ['if <P> , then <Q> .', 'if <P> , <Q> .', '<Q> if <P> .']) at depths 0-1; the MIXED 'if P then Q may' and the mixed inside reporting are NEVER trained
+test: modals d0 / d1 / d2 (unseen depth); conditionals per form d0 (form 2 'Q if P' is right-announced: reported separately); mixed d0 (unseen construction) and mixed d1 (unseen construction inside reporting)
+chance: fillers 1/12; operator hypothesis 1/6
+
+  seed 0 (261s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.200 | 1.000 | 1.000 | 0.075 | 0.000 | 0.000  || cos(P,may P) 0.14 cos(P,must P) 0.09 cos(may,must) 0.14 ; bag 0.77/0.77/0.86 || gates OPEN: [',', 'has', 'if', 'may', 'must', 'perhaps', 'that', 'to']
+  seed 1 (258s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.367 | 1.000 | 1.000 | 0.000 | 0.000 | 0.000  || cos(P,may P) 0.11 cos(P,must P) 0.14 cos(may,must) 0.10 ; bag 0.77/0.78/0.86 || gates OPEN: [',', '.', 'has', 'if', 'may', 'must', 'perhaps', 'that']
+  seed 2 (259s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.167 | 1.000 | 1.000 | 0.000 | 0.000 | 0.000  || cos(P,may P) 0.12 cos(P,must P) 0.05 cos(may,must) 0.15 ; bag 0.77/0.77/0.86 || gates OPEN: [',', 'has', 'if', 'may', 'must', 'perhaps', 'that', 'to']
+  seed 3 (257s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.183 | 1.000 | 1.000 | 0.050 | 0.000 | 0.000  || cos(P,may P) 0.12 cos(P,must P) 0.09 cos(may,must) 0.13 ; bag 0.77/0.78/0.86 || gates OPEN: [',', 'has', 'if', 'may', 'must', 'perhaps', 'that', 'to']
+  seed 4 (257s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.100 | 1.000 | 1.000 | 0.050 | 0.000 | 0.000  || cos(P,may P) 0.11 cos(P,must P) 0.10 cos(may,must) 0.16 ; bag 0.78/0.77/0.86 || gates OPEN: [',', 'has', 'if', 'may', 'must', 'perhaps', 'that', 'to']
+
+== MEANS over 5 seeds: aff d0 FULL | modal d0 FULL | modal d1 FULL | modal d2 UNSEEN FULL | cond d0 'if P , then Q' FULL | cond d0 'if P , Q' FULL | cond d0 'Q if P' (right-announced) FULL | cond d1 FULL | cond d2 UNSEEN FULL | MIXED d0 (unseen): op+scope | MIXED d0 FULL | MIXED d1 FULL
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.203±0.088 | 1.000±0.000 | 1.000±0.000 | 0.035±0.030 | 0.000±0.000 | 0.000±0.000
+== separation (model | bag): cos(P, may P) 0.119 | 0.772 ; cos(P, must P) 0.094 | 0.773 ; cos(may P, must P) 0.132 | 0.857   (criterion: gaps > 0.5 for the model)
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 if=1.00 ,=1.00 has=1.00 perhaps=1.00 may=1.00 must=1.00 to=0.80 .=0.24 then=0.17 COP=0.12 accepts=0.12 borrows=0.12 buys=0.12 by=0.12 from=0.12
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] operator vs scope (17) [x] FULL frame (R1) [x] right-announced form reported separately (limit) [x] unseen depth 2 and unseen mixed construction (composition rule, reserve) [x] lexical control [x] >=3 seeds [x] model unchanged

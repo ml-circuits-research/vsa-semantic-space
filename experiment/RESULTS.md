@@ -686,3 +686,27 @@ Reading, with the reserve of 9b-bis APPLIED:
   word), and its 0.92 / 0.64 suggests a second, smaller issue: two identities bundled in one slot halve each other's strength.
 - "Knows when it does not know": unchanged — ~0.43 of never-trained ambiguous sentences get both hypotheses, cosine 0.84 to the superposed
   world state; partial, by composition.
+
+## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
+World: R_may (x) S, R_must (x) S; R_if (x) S_P + R_then (x) S_Q; reporting as before. Forms: "may V", "perhaps V3"; "must V", "has to V";
+"if P , then Q", "if P , Q", and "Q if P" (RIGHT-announced: included on purpose). Training: affirmative 0-2, modals and conditionals 0-1; the
+MIXED "if P then Q may ..." NEVER trained. Model unchanged (v8 bundle, learned gates). Decoding over six operator hypotheses (rule 17).
+| axis | result (5 seeds) | criterion |
+|---|---|---|
+| affirmative d0 FULL | 1.000 | — |
+| modal d0 / d1 / **d2 UNSEEN** FULL | 1.000 / 1.000 / **1.000** | > 0.95; unseen > 0.9: MET |
+| conditional 'if P , then Q' d0 / 'if P , Q' d0 | 1.000 / 1.000 | MET |
+| conditional d1 / **d2 UNSEEN** FULL | 1.000 / **1.000** | MET |
+| conditional **'Q if P' (right-announced)** d0 FULL | **0.203±0.088** | the declared limit (RESULTS 6c), confirmed |
+| separation cos(P, may P) / (P, must P) / (may P, must P) | **0.119 / 0.094 / 0.132** ; lexical bag 0.772 / 0.773 / 0.857 | gaps > 0.5: MET |
+| MIXED "if P then Q may" — ZERO exposures — d0: operator+scope / FULL ; d1 FULL | 0.035 / 0.000 ; 0.000 | the zero-exposure case: fails, as E1 did |
+Learned gates: that, if, ',', has, perhaps, may, must 1.00; to 0.80; '.' 0.24; **then 0.17** (closed: 'if' and the comma carry the
+structure); verbs ~0.12.
+Reading. (i) Modality and conditionals are operators-as-roles that compose one level further than trained: 1.000 at the unseen depth, five
+seeds, no rule — the third and fourth operators for which the empirical rule holds (reporting, negation, modality, conditional); quantifiers
+remain the one failure (9c-bis), with the world-side hypothesis pending judgment. (ii) The right-announced form fails exactly as predicted
+(0.20): the consequent is already written when 'if' arrives; this is the limit of causal addressing and is reported as such. (iii) A
+combination with ZERO exposures (a modal inside a consequent, never seen in any form) does not compose — the same finding as E1's sentential
+negation inside reporting; the rule is "after one exposure", and E3b (running) gives this pair its one exposure at depth 0 and tests it
+inside reporting. (iv) Two modals that the world distinguishes (may vs must) are separated by the state (0.13) although the lexical bag
+cannot (0.86): the modal word's displacement, not its identity, carries the distinction.

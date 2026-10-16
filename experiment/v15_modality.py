@@ -94,10 +94,10 @@ def decode_m(S, m, world, w, persons, objects, depth):
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18)
+    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18); ap.add_argument("--p_mixed", type=float, default=0.0, help="E3b: share of MIXED (modal inside the consequent) sentences at depth 0 in training; 0 = E3 (never seen)")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v15_modality (E3): device={a.device}, D={D}, N={N}, seeds={a.seeds}; modality R_may/R_must (x) S, conditional R_if (x) P + R_then (x) Q; model = v8 bundle, learned gates")
-    print(f"training: affirmative depths 0-2; modals and conditionals (forms {COND_FORMS}) at depths 0-1; the MIXED 'if P then Q may' and the mixed inside reporting are NEVER trained")
+    print(f"training: affirmative depths 0-2; modals and conditionals (forms {COND_FORMS}) at depths 0-1; MIXED 'if P then Q may' share in training = {a.p_mixed} (0 = never; E3b: at depth 0 only, tested inside reporting)")
     print("test: modals d0 / d1 / d2 (unseen depth); conditionals per form d0 (form 2 'Q if P' is right-announced: reported separately); mixed d0 (unseen construction) and mixed d1 (unseen construction inside reporting)")
     print(f"chance: fillers 1/12; operator hypothesis 1/6\n")
     cols = ["aff d0 FULL", "modal d0 FULL", "modal d1 FULL", "modal d2 UNSEEN FULL", "cond d0 'if P , then Q' FULL", "cond d0 'if P , Q' FULL", "cond d0 'Q if P' (right-announced) FULL", "cond d1 FULL", "cond d2 UNSEEN FULL", "MIXED d0 (unseen): op+scope", "MIXED d0 FULL", "MIXED d1 FULL"]
@@ -109,7 +109,8 @@ if __name__ == "__main__":
         trng = np.random.default_rng(200 + seed); sents, targets = [], []
         for n in range(N):
             u = trng.random()
-            if u < 0.4: ev = w.mevent(trng, trP, trO, depth=int(trng.integers(3)))
+            if u < a.p_mixed: ev = w.mevent(trng, trP, trO, depth=0, op="if", cond_form=int(trng.integers(2)), inner_modal=["may", "must"][int(trng.integers(2))])   # E3b: one exposure of the mixed construction, depth 0 only
+            elif u < 0.4: ev = w.mevent(trng, trP, trO, depth=int(trng.integers(3)))
             elif u < 0.7: ev = w.mevent(trng, trP, trO, depth=int(trng.integers(2)), op=["may", "must"][int(trng.integers(2))])
             else: ev = w.mevent(trng, trP, trO, depth=int(trng.integers(2)), op="if", cond_form=int(trng.integers(3)))
             sents.append(w.mrender(ev, trng, t=int(trng.integers(2)))); targets.append(world.state(ev))

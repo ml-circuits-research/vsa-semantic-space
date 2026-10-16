@@ -1,4 +1,4 @@
-# Current status (rewritten at every judgment point; last: 2026-10-16 09:05, E2 corrected; E3 running)
+# Current status (rewritten at every judgment point; last: 2026-10-16 09:35, E3 done; E3b running)
 
 ## Deliverables requested in the post-8d judgment (section F) — status
 - EMPIRICAL_NOTE.md: full draft; curve as figure 1 (to draw), same-input table, hard-pair table with n, budget check (gate PASSED: 10x
@@ -43,6 +43,19 @@ Hypothesis for judgment: the world's scope term R_sc (x) f_role has a ROLE ident
 address (x) f_word term can carry it exactly (the same class of mismatch as the flat world of round 5). Representable alternative that
 keeps "scope as a role": R_sc (x) f_noun_wide (the wide-scope quantified noun, present in the sentence). A world-definition correction, NOT applied.
 
+## E3 — modality and conditionals as roles (5 seeds; RESULTS 9d)
+| axis | result | criterion |
+|---|---|---|
+| modal FULL d0 / d1 / d2 UNSEEN | 1.000 / 1.000 / **1.000** | MET |
+| conditional 'if P, then Q' / 'if P, Q' d0; d1; d2 UNSEEN | 1.000 / 1.000; 1.000; **1.000** | MET |
+| conditional 'Q if P' (right-announced) | **0.203** | the declared limit, confirmed |
+| separation cos(P, may P) / (P, must P) / (may, must) | 0.12 / 0.09 / 0.13 (bag 0.77 / 0.77 / 0.86) | MET |
+| MIXED modal-inside-consequent, ZERO exposures: d0 / d1 | 0.00 / 0.00 | zero-exposure case fails, as E1 did |
+Gates: if, may, must, perhaps, has, ',' open; 'then' closed. E3b (running): the mixed construction seen at depth 0 (15%), tested inside
+reporting — the one-exposure test for this pair.
+Tally of the empirical composition rule (one exposure inside another operator, test one level deeper): reporting YES, negation YES, modality
+YES, conditional YES, quantifiers NO. Zero-exposure combinations fail every time.
+
 ## Conclusions relative to the new programme
 1. "Operator = role" holds for negation on its own, every scope, no rule, scope right 100%: Prolog/Z3 is a plan, not a promise, for
    single operators AND for negation inside reporting after one exposure (E1b): operators compose one level further than trained, as
@@ -51,6 +64,9 @@ keeps "scope as a role": R_sc (x) f_noun_wide (the wide-scope quantified noun, p
 3. The short empirical paper is complete as a draft with its gate passed and its condition ablated.
 
 ## Questions for judgment
+0. The rule held on 4 of 5 operators after one exposure (the reserve asked for "the next two": both held). Does it now become a claim in
+   the principle note — "operators compose one level further than trained after one exposure inside each other; quantifiers are the
+   exception, see 1" — or wait for E2c?
 1. E2: the composition rule fails for quantifiers (0.36 full frame at the unseen depth; nouns 1.00, quantifier terms ~0.5). Two readings:
    (a) a genuine limit of "operator = role" for quantifiers — report and move on; (b) my world asserts a term with a ROLE identity as filler
    (R_sc (x) f_A) that no word term can carry — correct the world to R_sc (x) f_noun_wide and re-run once (E2c). I favour (b) because it is the
