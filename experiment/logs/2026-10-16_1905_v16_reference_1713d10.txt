@@ -61,3 +61,56 @@ Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pyto
   seed 2 (145s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.608 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000  || presence cos: known 0.35 unknown 0.35 absent 0.04 (thr 0.20 from training rows: known 0.37 / absent 0.04; same-rows midpoint would be 0.19) || gates OPEN: ['by', 'from', 'that', 'to', 'who']
   relation-marker gates GIVEN open (rule 20, not learned; E1b): ['to', 'by', 'from']
 [train seed 3] start: RSS 2.52 GB | torch alloc 0.56 GB reserved 1.14 GB | MemAvailable 112.3 GB
+[train seed 3] step 500 sent 4000/30000 loss -0.799 (18s) | RSS 2.52 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] step 1000 sent 8000/30000 loss -0.903 (37s) | RSS 2.52 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] step 1500 sent 12000/30000 loss -0.918 (55s) | RSS 2.52 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.4 GB
+[train seed 3] step 2000 sent 16000/30000 loss -0.925 (74s) | RSS 2.52 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] step 2500 sent 20000/30000 loss -0.932 (92s) | RSS 2.54 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] step 3000 sent 24000/30000 loss -0.939 (111s) | RSS 2.54 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] step 3500 sent 28000/30000 loss -0.929 (129s) | RSS 2.54 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.3 GB
+[train seed 3] end: RSS 2.54 GB | torch alloc 0.64 GB reserved 0.73 GB | MemAvailable 112.7 GB (139s)
+  seed 3 (139s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.658 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000  || presence cos: known 0.33 unknown 0.34 absent 0.03 (thr 0.20 from training rows: known 0.37 / absent 0.03; same-rows midpoint would be 0.18) || gates OPEN: ['by', 'from', 'that', 'to']
+  relation-marker gates GIVEN open (rule 20, not learned; E1b): ['to', 'by', 'from']
+[train seed 4] start: RSS 2.63 GB | torch alloc 0.56 GB reserved 1.14 GB | MemAvailable 112.2 GB
+[train seed 4] step 500 sent 4000/30000 loss -0.853 (18s) | RSS 2.63 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 1000 sent 8000/30000 loss -0.889 (37s) | RSS 2.63 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 1500 sent 12000/30000 loss -0.908 (55s) | RSS 2.63 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 2000 sent 16000/30000 loss -0.911 (74s) | RSS 2.63 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 2500 sent 20000/30000 loss -0.936 (92s) | RSS 2.65 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 3000 sent 24000/30000 loss -0.946 (111s) | RSS 2.65 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] step 3500 sent 28000/30000 loss -0.941 (129s) | RSS 2.65 GB | torch alloc 0.64 GB reserved 1.15 GB | MemAvailable 112.2 GB
+[train seed 4] end: RSS 2.65 GB | torch alloc 0.64 GB reserved 0.71 GB | MemAvailable 112.6 GB (139s)
+  seed 4 (139s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.633 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000  || presence cos: known 0.36 unknown 0.36 absent 0.05 (thr 0.22 from training rows: known 0.38 / absent 0.05; same-rows midpoint would be 0.21) || gates OPEN: ['.', 'by', 'from', 'that', 'to']
+
+== MEANS over 5 seeds: seen FULL(roles) | pred (surface) | pred (event) | new ids FULL | role cues FULL | unseen trans. FULL | depth 2 FULL | depth 3 UNSEEN FULL | occupancy: known | unknown filler | not given
+  1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.627±0.024 | 1.000±0.000 | 0.968±0.020 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 by=1.00 from=1.00 to=1.00 .=0.53 who=0.32 SYM=0.12 O=0.07 offered=0.00 sold=0.00 what=0.00 shown=0.00 buys=0.00 sent=0.00
+== depth-3 breakdown over all seeds (E4 a): key | n | A | B | C | pred   (template keys T<i>; verb keys carry the seed-0 gate value)
+   T0                           |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T1                           |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T12                          |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T15                          |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T2                           |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T3                           |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T6                           |  100 | 1.000 | 1.000 | 1.000 | 1.000
+   T9                           |  100 | 0.990 | 1.000 | 0.840 | 1.000
+   verb accepts (gate 0.00)     |   14 | 1.000 | 1.000 | 1.000 | 1.000
+   verb borrows (gate 0.00)     |   18 | 1.000 | 1.000 | 1.000 | 1.000
+   verb buys (gate 0.00)        |   14 | 1.000 | 1.000 | 1.000 | 1.000
+   verb gets (gate 0.00)        |   19 | 1.000 | 1.000 | 1.000 | 1.000
+   verb given (gate 0.00)       |   33 | 1.000 | 1.000 | 1.000 | 1.000
+   verb gives (gate 0.00)       |   91 | 1.000 | 1.000 | 0.978 | 1.000
+   verb lends (gate 0.00)       |   88 | 1.000 | 1.000 | 0.955 | 1.000
+   verb lent (gate 0.00)        |   36 | 1.000 | 1.000 | 1.000 | 1.000
+   verb offered (gate 0.00)     |   38 | 1.000 | 1.000 | 1.000 | 1.000
+   verb offers (gate 0.00)      |   94 | 1.000 | 1.000 | 0.968 | 1.000
+   verb receives (gate 0.00)    |   18 | 1.000 | 1.000 | 1.000 | 1.000
+   verb sees (gate 0.00)        |   17 | 1.000 | 1.000 | 1.000 | 1.000
+   verb sells (gate 0.00)       |   72 | 1.000 | 1.000 | 0.972 | 1.000
+   verb sends (gate 0.00)       |   74 | 0.986 | 1.000 | 1.000 | 1.000
+   verb sent (gate 0.00)        |   28 | 1.000 | 1.000 | 1.000 | 1.000
+   verb shown (gate 0.00)       |   33 | 1.000 | 1.000 | 1.000 | 1.000
+   verb shows (gate 0.00)       |   81 | 1.000 | 1.000 | 0.938 | 1.000
+   verb sold (gate 0.00)        |   32 | 1.000 | 1.000 | 1.000 | 1.000
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] predicate role present (23) [x] occupancy threshold set on training rows, not the scored rows [x] depth-3 per-template / per-verb breakdown (E4 a) [x] params saved [x] occupancy by marker, not norm (A1) [x] calibration: margin, confident-wrong, abstention, acc-vs-coverage (18) [x] memory logged (21) [x] >=3 seeds [x] given vs learned stated (20)
