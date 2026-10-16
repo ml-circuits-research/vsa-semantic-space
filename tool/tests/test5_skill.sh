@@ -9,7 +9,7 @@ set -uo pipefail
 TOOL="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"; SOP="$TOOL/bin/sop"; OUT="$TOOL/tests/out/skill"; rm -rf "$OUT"; mkdir -p "$OUT"
 PY="${SOP_PYTHON:-}"
 for c in "$TOOL/../.venv/bin/python3" "$TOOL/../../../../.venv/bin/python3"; do [ -z "$PY" ] && [ -x "$c" ] && PY="$c"; done; PY="${PY:-python3}"
-LOOP="$TOOL/skills/train-world/scripts/loop.py"; TRAIN_ARGS="${TRAIN_ARGS:---D 256 --epochs 3 --n_eval 150 --log_every 1000}"
+LOOP="$TOOL/skills/train-world/scripts/loop.py"; TRAIN_ARGS="${TRAIN_ARGS:---D 256 --epochs 6 --n_eval 150 --log_every 1000 --seeds 1 --no_ckpt}"
 FAILS=0; ok() { if [ "$1" = "1" ]; then echo "PASS $2"; else echo "FAIL $2"; FAILS=$((FAILS+1)); fi; }
 
 make_world() {   # name drop_role
@@ -21,7 +21,9 @@ import export_worlds as ex
 wd = ex.export_commands(out, 1500, 15, 0, name=name, drop_role=drop, raw=True)
 gold = os.path.join(out, name + "_gold"); shutil.move(os.path.join(wd, "examples"), gold); os.makedirs(os.path.join(wd, "examples"))
 h = json.load(open(os.path.join(wd, "split_hints.json")))
-json.dump({"heldout_sentence_share": 0.1, "new_identities": h["new_identities"], "heldout_depth_min": 2}, open(os.path.join(wd, "split_hints.json"), "w"))
+hints = {"heldout_sentence_share": 0.1, "new_identities": h["new_identities"], "heldout_depth_min": 2}
+if drop: hints["heldout_formulations"] = "none: the evolution test measures the missing role, not formulations (stated)"
+json.dump(hints, open(os.path.join(wd, "split_hints.json"), "w"))
 wj = json.load(open(os.path.join(wd, "world.json"))); wj["min_examples"] = 500; json.dump(wj, open(os.path.join(wd, "world.json"), "w"), indent=1)
 EOF
 }
@@ -34,12 +36,35 @@ ok "$([ $? -eq 0 ] && echo 1)" "loop run (a) exit 0"
 for f in config.json legend.json catalog.json routebook.npz background.npz metrics.json REPORT.md kinds.tsv second_look.json; do
   [ -f "$W/model/$f" ] || { echo "FAIL model/$f missing"; FAILS=$((FAILS+1)); }; done
 echo "PASS model/ complete: $(ls "$W/model" | tr '\n' ' ')"
-for field in "## Given and learned" "## Data" "## Splits" "## Training" "## Thresholds" "## Results" "## Gates" "## What is weak" "## Checklist" "## Loop: annotation and second look"; do
+for field in "## Given and learned" "## Data" "## Splits" "## Kinds" "## Training" "## Thresholds" "## Results" "## Gates" "## What is weak" "## Structure given vs estimated" "## Checklist" "## Loop: annotation and second look" "## Acceptance of this training"; do
   grep -q "$field" "$W/model/REPORT.md" || { echo "FAIL REPORT.md lacks '$field'"; FAILS=$((FAILS+1)); }; done
 echo "PASS REPORT.md has every section"
 "$PY" -c "import json,sys; s=json.load(open(sys.argv[1]))['second_look']; print(f\"PASS second-look rate reported: {s['disagreement_rate']:.3f} ({s['disagreements']} of {s['rows_read']}); changed {s['changed']}; {s['note'][:120]}\")" "$OUT/loop_a.json" \
   || { echo "FAIL second look"; FAILS=$((FAILS+1)); }
 grep -q '"label": "BUILT"' "$W/status.json" && echo "PASS status.json BUILT" || { echo "FAIL status.json"; FAILS=$((FAILS+1)); }
+"$PY" - "$OUT/loop_a.json" "$W" <<'EOF'
+import json, sys, os
+log = json.load(open(sys.argv[1])); wd = sys.argv[2]; fails = 0
+def ok(c, m):
+    global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
+inv = log["inventory"]; ok(inv["stop"] is None and inv["legend"]["errors"] == [], "6.1 inventory: legend consistent, nothing to stop on")
+ok(log["seeds"].startswith("as given"), f"6.5 seeds stated: {log['seeds']}")
+sl = log["second_look"]; ok(sl["rows"].startswith("the training split"), "6b second look reads the TRAINING split only")
+ok(os.path.exists(os.path.join(wd, "audit", "disagreements.sop")), "6b audit/disagreements.sop written (both readings)")
+ok(log["package"]["n"] > 0 and all(os.path.exists(os.path.join(wd, "audit", f)) for f in ("heldout_reader.sop", "heldout_annotation.sop", "heldout_verdicts.sop")),
+   f"6.7 package: held-out slice formalized next to the annotation, verdicts {log['package']['verdicts']}")
+acc = log["acceptance_of_training"]
+for k, v in acc["checks"].items(): ok(v, f"acceptance of the training: {k}")
+sp = json.load(open(sorted(__import__('glob').glob(os.path.join(wd, "runs", "*", "splits.json")))[0]))
+ok({"train", "heldout_sentences", "new_identities"} <= set(sp["rows"]) and any(k.startswith("heldout_formulations") for k in sp["rows"]),
+   f"6.4 the four splits in splits.json: {sorted((k, len(v)) for k, v in sp['rows'].items())}")
+m = json.load(open(os.path.join(wd, "model", "metrics.json")))["per_seed"][0]["heldout_sentences"]["catalog candidates"]["acc"]
+ok("heads FULL (lexical bag baseline, trained on the same training rows)" in m and "FULL [depth given]" in m and "occupancy: not given" in m,
+   f"6.6 fields: bag baseline {m.get('heads FULL (lexical bag baseline, trained on the same training rows)'):.3f}, FULL est. / depth given "
+   f"{m['FULL']:.3f} / {m['FULL [depth given]']:.3f}, occupancy known / not given {m.get('occupancy: known filler', float('nan')):.3f} / {m['occupancy: not given']:.3f}")
+sys.exit(fails)
+EOF
+FAILS=$((FAILS+$?))
 "$SOP" stats --model "$W/model" | sed -n '1,3p'
 
 echo "== (b) evolution step: legend without 'destination', sentences kept"

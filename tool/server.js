@@ -17,7 +17,7 @@ const WRITABLE_DIRS = ['examples', 'raw', 'audit'];                  // subfolde
 const WRITABLE_TOP = /^(legend\.json|world\.json|split_hints\.json|[A-Za-z0-9_-]+\.tsv)$/;   // top-level files a person may upload
 const WORLD_DEFAULTS = {   // spec v2 section 1: models per step (small for pipeline / annotate / second_look, large for evolve), limits
   models: { pipeline: 'claude-haiku-5-5', annotate: 'claude-haiku-5-5', second_look: 'claude-haiku-5-5', evolve: 'claude-opus-5-5' },
-  min_examples: 500, max_versions_per_run: 3, second_look_escalate: 0.05 };
+  min_examples: 500, max_versions_per_run: 3, second_look_escalate: 0.05, second_look_retrain: 0.05 };
 
 class HttpError extends Error { constructor(status, error, detail) { super(error); this.status = status; this.error = error; this.detail = detail || ''; } }
 
@@ -135,7 +135,7 @@ async function handle(req, res) {
       fs.mkdirSync(wd, { recursive: true }); for (const d of LAYOUT) fs.mkdirSync(path.join(wd, d), { recursive: true });
       const wj = Object.assign({ name: w, language: meta.language || 'en', description: meta.description || '', created: new Date().toISOString(), version: 0 },
                                JSON.parse(JSON.stringify(WORLD_DEFAULTS)), meta.models ? { models: Object.assign({}, WORLD_DEFAULTS.models, meta.models) } : {});
-      for (const k of ['min_examples', 'max_versions_per_run', 'second_look_escalate']) if (meta[k] !== undefined) wj[k] = meta[k];
+      for (const k of ['min_examples', 'max_versions_per_run', 'second_look_escalate', 'second_look_retrain']) if (meta[k] !== undefined) wj[k] = meta[k];
       atomicWrite(path.join(wd, 'world.json'), JSON.stringify(wj, null, 1) + '\n');
       atomicWrite(path.join(wd, 'status.json'), JSON.stringify({ label: null, note: 'never trained' }) + '\n');
       return sendJSON(res, 201, { created: w, world: wj });

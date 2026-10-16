@@ -12,8 +12,10 @@ top-level wire with _text); SPLITS written to runs/<ts>/splits.json BEFORE train
 held-out formulations; new identities; held-out depth); trace of one row (rule 11); training; export of the route book; numpy/torch
 agreement check; thresholds set on CALIBRATION rows = a sample of the training split (rule 25); evaluation of every split with the CLI's
 own numpy reader; metrics.json, REPORT.md, background.npz, status.json.
-TODO(section 6 missing): the spec's training skill (6.1-6.7) and its split definitions were not received; the splits here are the minimum
-stated in the task (and in split_hints.json when a world provides one).
+Spec section 6 (steps 3-7) as implemented here: kinds (6.3, with the `unknown` kind and its share), the four splits (6.4) written before
+training, the lexical bag baseline on the same rows (6.4), training with the reference trainer (6.5), the evaluation fields of 6.6 (per role,
+FULL with the structure estimated and given, occupancy in three cases, calibration, held-out formulations, new identities, baselines). Steps
+1-2 and 6b-8 are the skill's (skills/train-world/scripts/loop.py).
 """
 import argparse, collections, datetime, hashlib, json, os, shutil, subprocess, sys, time
 import numpy as np
@@ -22,6 +24,8 @@ HERE = os.path.dirname(os.path.abspath(__file__)); REPO = os.path.dirname(os.pat
 
 from . import soplang, check as checkmod, world
 from .legend import Legend, tokenize
+
+UNKNOWN_KIND = "unknown"
 
 TAUS = (0.0, 0.02, 0.05, 0.1, 0.15)
 
@@ -89,7 +93,7 @@ def make_splits(rows, legend, hints, seed):
     t2split = {t: name for name, ts in hints.get("template_splits", {}).items() for t in ts}
     new_ids = set(hints.get("new_identities", [])); defs = {"seed": seed, "heldout_sentence_share": share,
                                                           "template_splits": hints.get("template_splits", {}), "source": "split_hints.json" if hints else "automatic"}
-    if not hints:      # automatic: TODO(section 6 missing)
+    if not new_ids:    # automatic (spec 6.4): new identities per kind
         by_kind = collections.defaultdict(set)
         for r in rows:
             for fl in r["frame"]["roles"].values():
@@ -98,17 +102,24 @@ def make_splits(rows, legend, hints, seed):
         for k, ws in by_kind.items():
             if len(ws) >= 6:
                 new_ids |= set(sorted(ws, key=lambda w: h01(seed, "id", w))[:max(1, len(ws) // 9)])
-        sigs = sorted({signature(r, legend) for r in rows})
-        if len(sigs) >= 7:
-            held = set(sorted(sigs, key=lambda s: h01(seed, "sig", s))[:max(1, len(sigs) * 15 // 100)])
-            for s in held: t2split["sig:" + s] = "heldout_formulations"
-            defs["heldout_signatures"] = sorted(held)
+    named = set(hints.get("template_splits", {})) | set(hints.get("file_splits", {}).values())
+    if hints.get("heldout_formulations") is not None and str(hints["heldout_formulations"]).startswith("none"):
+        defs["heldout_formulations"] = {"by": "none", "reason": hints["heldout_formulations"]}
+    elif not any(str(n).startswith("heldout_formulations") for n in named):
+        # automatic held-out FORMULATIONS (spec 6.4): by template when the examples are templated, else by role order
+        templated = any(r["template"] for r in rows)
+        keys = sorted({(r["template"] if templated else "order:" + role_order(r)) for r in rows if (r["template"] or not templated)})
+        if len(keys) >= 7:
+            held = set(sorted(keys, key=lambda s: h01(seed, "form", s))[:max(1, len(keys) * 15 // 100)])
+            for s in held: t2split[s] = "heldout_formulations"
+            defs["heldout_formulations"] = {"by": "template" if templated else "role order (the order of the roles' fillers in the sentence, with depth)",
+                                            "held_out": sorted(held)}
     defs["new_identities"] = sorted(new_ids); dmin = hints.get("heldout_depth_min"); defs["heldout_depth_min"] = dmin
     fsplit = hints.get("file_splits", {}); defs["file_splits"] = fsplit
     out = collections.defaultdict(list)
     for r in rows:
         words = {w for fl in r["frame"]["roles"].values() for w in world.filler_words(fl)} | set(r["frame"]["speakers"])
-        key = r["template"] if r["template"] in t2split else "sig:" + signature(r, legend)
+        key = r["template"] if r["template"] in t2split else "order:" + role_order(r)
         if r["file"] in fsplit: s = fsplit[r["file"]]
         elif words & new_ids: s = "new_identities"
         elif key in t2split: s = t2split[key]
@@ -117,6 +128,15 @@ def make_splits(rows, legend, hints, seed):
         else: s = "train"
         r["split"] = s; out[s].append(r["id"])
     return defs, out
+
+
+def role_order(r):
+    """the clustering key of a non-templated sentence (spec 6.4): its depth and the order in which the roles' fillers occur"""
+    pos = {}
+    for role, fl in r["frame"]["roles"].items():
+        hw = head_word(fl)
+        if hw in r["tokens"]: pos[role] = r["tokens"].index(hw)
+    return f"d{r['depth']}:" + ">".join(sorted(pos, key=pos.get)) + (":neg" if r["frame"]["neg"] else "")
 
 
 def signature(r, legend):
@@ -189,31 +209,84 @@ def lexical_baseline(train_rows, legend, schema):
     return predict, {r: v[0] for r, v in rank.items()}
 
 
-def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0):
+def bag_baseline(train_rows, legend, schema):
+    """the LEXICAL BAG baseline of spec 6.4, trained on the training rows: no order. Role presence = the share of training sentences with the
+    same bag of non-filler words that fill the role (the overall share for an unseen bag, read as present when >= 0.5); filler = the candidate
+    token (of the role's head kinds) with the highest training rate P(word fills r | word in the sentence); ties broken alphabetically
+    (no position information); a word never seen in training scores 0."""
+    fill, present, bags, rate = collections.defaultdict(collections.Counter), collections.Counter(), collections.defaultdict(lambda: collections.defaultdict(list)), collections.defaultdict(list)
+    kinds = {r: set(rs.get("head_kinds") or rs["kinds"]) for r, rs in schema["roles"].items()}
+    fillk = set().union(*kinds.values()) if kinds else set()
+    for row in train_rows:
+        toks = set(row["tokens"]); bag = frozenset(t for t in toks if legend.kind(t) not in fillk)
+        for t in toks: present[t] += 1
+        for r in schema["roles"]:
+            hw = head_word(row["frame"]["roles"].get(r)); rate[r].append(hw is not None); bags[r][bag].append(hw is not None)
+            if hw is not None: fill[r][hw] += 1
+    def predict(tokens):
+        toks = set(tokens); bag = frozenset(t for t in toks if legend.kind(t) not in fillk); out = {}
+        for r in schema["roles"]:
+            b = bags[r].get(bag); p = np.mean(b) if b else (np.mean(rate[r]) if rate[r] else 0)
+            if p < 0.5: out[r] = None; continue
+            cand = sorted(t for t in toks if legend.kind(t) in kinds[r])
+            out[r] = max(cand, key=lambda t: fill[r][t] / present[t] if present[t] else 0.0) if cand else None
+        return out
+    return predict
+
+
+STRUCT_MODES = (("estimated", {}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}))
+
+
+def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
+    """one split. FULL is reported three ways side by side (author C3): structure (reporting depth, event negation) ESTIMATED from the state
+    (what `sop formalize` does), depth GIVEN (as the repository scripts), depth and negation GIVEN. All other axes use the estimated mode."""
     rs = rows if len(rows) <= n_max else [rows[i] for i in sorted(np.random.default_rng(rng_seed).choice(len(rows), n_max, replace=False))]
     cal = Calib(); acc = collections.defaultdict(list); status = collections.Counter(); resid = []; ids = (f"e{i}" for i in range(10 ** 9))
+    pred, drop = legend.reader["predicate_role"], tuple(legend.reader.get("full_excludes") or ())
+    per_form = collections.defaultdict(list)
     for row in rs:
-        g = row["frame"]; wires, f, info = reader.formalize(row["text"], 0, ids, filt); status[info["status"]] += 1; resid.append(info["residual"])
-        f_ok = f["shape"] == "ok"
-        acc["FULL"].append(f_ok and g["shape"] == "ok" and world.canon(f, legend.reader["predicate_role"]) == world.canon(g, legend.reader["predicate_role"]))
-        acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
-        mg = f.get("margins", {})
-        if legend.reader["predicate_role"]:
-            ok = f_ok and f.get("lemma") == g.get("lemma"); acc["predicate (surface lemma)"].append(ok); cal.add("predicate", ok, mg.get("event", 0))
-            acc["event type (synonym table)"].append(f_ok and f.get("event") == g.get("event"))
-        lex = lexical(row["tokens"]); heads_m, heads_l = [], []
-        for r in schema["role_order"]:
-            gf, pf = g["roles"].get(r), f["roles"].get(r) if f_ok else None
-            ok = json.dumps(gf) == json.dumps(pf); acc[f"role {r}"].append(ok)
-            hm, hl = head_word(gf) == head_word(pf), head_word(gf) == lex.get(r); acc[f"head {r}"].append(hm); acc[f"lexical head {r}"].append(hl)
-            heads_m.append(hm); heads_l.append(hl)
-            if gf is not None: cal.add(f"role {r}", ok, mg.get(r, 0)); cal.add("roles (pooled)", ok, mg.get(r, 0))
-        for k, sp in enumerate(g["speakers"]):
-            ok = f_ok and k < len(f["speakers"]) and f["speakers"][k] == sp; acc["speakers"].append(ok); cal.add("speakers", ok, mg.get(f"speaker.{k}", 0))
-        acc["heads FULL (model)"].append(all(heads_m)); acc["heads FULL (lexical order baseline)"].append(all(heads_l))
+        g = row["frame"]
+        for mode, kw in STRUCT_MODES:
+            kk = {}
+            if kw.get("force_depth"): kk["force_depth"] = len(g["speakers"])
+            if kw.get("force"): kk["force"] = (len(g["speakers"]), g["neg"])
+            if kk and g["shape"] != "ok": kk = {}
+            wires, f, info = reader.formalize(row["text"], 0, ids, filt, **kk)
+            f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
+            label = "" if mode == "estimated" else f" [{mode}]"
+            acc["FULL" + label].append(same(drop))
+            if drop: acc["FULL incl. " + "+".join(drop) + " (previous definition)" + label].append(same(()))
+            if mode != "estimated": continue
+            status[info["status"]] += 1; resid.append(info["residual"]); per_form[signature(row, legend)].append(same(drop))
+            acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
+            mg = f.get("margins", {})
+            if pred:
+                ok = f_ok and f.get("lemma") == g.get("lemma"); acc["predicate (surface lemma)"].append(ok); cal.add("predicate", ok, mg.get("event", 0))
+                acc["event type (synonym table)"].append(f_ok and f.get("event") == g.get("event"))
+            if legend.reader.get("scope_terms"):
+                ok = f_ok and f.get("scope") == g.get("scope"); acc["_scope (wide role / both / absent)"].append(ok); cal.add("scope", ok, mg.get("scope", 0))
+                if g.get("scope") is not None: acc["_scope on two-quantifier sentences"].append(ok)
+            lex = lexical(row["tokens"]); bg = bag(row["tokens"]) if bag else {}; heads_m, heads_l, heads_b = [], [], []
+            for r in schema["role_order"]:
+                gf, pf = g["roles"].get(r), f["roles"].get(r) if f_ok else None
+                ok = json.dumps(gf) == json.dumps(pf); acc[f"role {r}"].append(ok)
+                hm, hl, hb = head_word(gf) == head_word(pf), head_word(gf) == lex.get(r), head_word(gf) == bg.get(r)
+                acc[f"head {r}"].append(hm); acc[f"lexical order head {r}"].append(hl); acc[f"lexical bag head {r}"].append(hb)
+                heads_m.append(hm); heads_l.append(hl); heads_b.append(hb)
+                if gf is not None and gf[0] == "entity" and gf[3] is not None or (pf is not None and pf[0] == "entity" and pf[3] is not None):
+                    acc["determiner identity (outside FULL when the legend excludes it)"].append(bool(gf and pf and gf[0] == pf[0] == "entity" and gf[3] == pf[3]))
+                # occupancy, three cases (spec 6.6): given with a known filler / given with an unknown filler / not given
+                case = "not given" if gf is None else ("known filler" if head_word(gf) in seen_words else "unknown filler")
+                acc[f"occupancy: {case}"].append((pf is not None) == (gf is not None))
+                if gf is not None: cal.add(f"role {r}", ok, mg.get(r, 0)); cal.add("roles (pooled)", ok, mg.get(r, 0))
+            for k, sp in enumerate(g["speakers"]):
+                ok = f_ok and k < len(f["speakers"]) and f["speakers"][k] == sp; acc["speakers"].append(ok); cal.add("speakers", ok, mg.get(f"speaker.{k}", 0))
+            acc["heads FULL (model)"].append(all(heads_m)); acc["heads FULL (lexical order baseline)"].append(all(heads_l))
+            acc["heads FULL (lexical bag baseline, trained on the same training rows)"].append(all(heads_b))
+    forms = sorted(((k, len(v), float(np.mean(v))) for k, v in per_form.items()), key=lambda x: (x[2], -x[1]))
     m = {"n": len(rs), "of": len(rows), "acc": {k: float(np.mean(v)) for k, v in acc.items()},
          "calibration": {ax: cal.report(ax, tau) for ax in cal.rows}, "residual_mean": float(np.mean(resid)) if resid else None,
-         "status": dict(status)}
+         "status": dict(status), "worst_formulations": [{"formulation": k, "n": n, "FULL": v} for k, n, v in forms[:5]]}
     return m
 
 
@@ -253,24 +326,29 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     from .infer import Reader
     torch.manual_seed(seed)
     st = world.Stars(seed, a.D, a.star_seed); comp = world.Compiler(legend, st)
-    wk = dict(legend.lexicon)
+    wk = dict(legend.lexicon); n_tok = n_unk = 0
     for r in rows:
         for t in r["tokens"]:
-            k = legend.kind(t)
-            if k is not None: wk.setdefault(t, k)
-    shim = Shim(wk)
+            k = legend.kind(t); n_tok += 1
+            if k is None: n_unk += 1; k = UNKNOWN_KIND                       # spec 6.3: no kind in the lexicon -> kind `unknown`
+            wk.setdefault(t, k)
+    wk.setdefault("<unknown>", UNKNOWN_KIND)                                 # the category exists in every route book (unseen words at inference)
+    shim = Shim(wk); kinds_report = {"tokens": n_tok, "unknown_kind_tokens": n_unk, "unknown_share": n_unk / max(1, n_tok)}
     train = [r for r in rows if r.get("split") == "train" and r["frame"]["shape"] != "unknown"]
     order = []
     rng = np.random.default_rng(seed)
     for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
     if a.max_train: order = order[:a.max_train]
-    sents = [[t for t in train[i]["tokens"] if legend.kind(t) is not None] for i in order]
+    sents = [list(train[i]["tokens"]) for i in order]
     targets = np.array([comp.wire(train[i]["wire"], train[i]["by"], train[i]["tokens"]) for i in order])
     print(f"[train] seed {seed}: {len(train)} training rows x {a.epochs} epoch(s) -> {len(sents)} steps' sentences; D={a.D}; kinds {len(set(wk.values()))}; "
           f"vocab {len(shim.vocab)}; predicate lemma not found in {comp.missing_lemma} targets", flush=True)
     F = np.array([st.id(w) for w in shim.vocab])
     m = v8.V8(shim, a.D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F)
     params = [m.theta, m.logits]
+    rel = legend.reader.get("rel_emitters")
+    if rel:      # C2b beacon-relative emitters (GIVEN set of kinds, learned displacement): part of the world's reader block (quantifier v2)
+        print(f"[train] beacon-relative emitters (given): {m.set_rel_emitters(rel['emitters'], rel['takers'])} -> takers {rel['takers']}"); params.append(m.rel)
     # trace (rule 11): one row, its kinds, and the terms of its target
     r0 = train[order[0]] if order else None
     if r0 is not None:
@@ -279,7 +357,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
         print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
     cats, ids, mask = m.encode(sents); tgt = torch.tensor(targets, dtype=m.F.dtype, device=m.device)
     t0 = time.time()
-    trainer.train_loop(m, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
+    trainer.train_loop(m, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
                        resume=a.resume, tag=f" seed {seed}")
     t_train = time.time() - t0
     os.makedirs(model_dir, exist_ok=True)
@@ -290,13 +368,14 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     catalog = {"seed": seed, "star_seed": a.star_seed, "star": "identity of a word = sha256(star_seed + ':id:' + word)[:8] little-endian -> numpy default_rng -> "
                "D uniform phases in [-pi, pi); role vectors the same with the world seed and 'role:<id>' / 'op:<name>'",
                "words": {w: ({"kind": k, "lemma": legend.lemma[w]} if w in legend.lemma else {"kind": k}) for w, k in sorted(wk.items())},
-               "schema": schema}
+               "schema": schema, "kinds_report": kinds_report}
     with open(os.path.join(model_dir, "catalog.json"), "w") as f: json.dump(catalog, f, indent=1, sort_keys=True)
     cfg = {"world": a.world_name, "D": a.D, "seed": seed, "language": a.language, "legend_sha256": legend.sha, "legend_version": legend.version,
            "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": ["path", "chainL", "bigram"],
            "gate_init": "closed", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
            "thresholds": {"tau": a.tau, "tau_source": "stated (the repository's v16 value), not fitted on any rows", "no_sense_share": 0.5,
-                          "no_sense_source": "stated", "presence": {}, "attr_presence": {}, "det_presence": {}}}
+                          "no_sense_source": "stated", "no_fit_residual": 0.9, "no_fit_source": "stated (dispatcher only, spec section 9)",
+                          "presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}}
     with open(os.path.join(model_dir, "config.json"), "w") as f: json.dump(cfg, f, indent=1)
     # numpy (inference) vs torch (training) agreement on three rows
     rd = Reader(model_dir); worst = 0.0
@@ -314,13 +393,25 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
         if g["shape"] != "ok": continue
         S, kept, _, _ = rd.chart(row["tokens"])
         f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
+        st_ = legend.reader.get("scope_terms") or {}
         for r in schema["role_order"]:
-            gf = g["roles"].get(r); stats[("presence", r)]["present" if gf is not None else "absent"].append(f["presence"].get(r, 0))
+            gf = g["roles"].get(r)
+            if st_ and gf is not None and gf[0] == "entity" and r + ".wide" in f["presence"]:
+                d = gf[3]; w_, q_ = f["presence"][r + ".wide"], f["presence"][r + ".q"]
+                if d in st_.get("wide", []): stats[("scope_term", "_")]["present"].append(w_); stats[("scope_term", "_")]["absent"].append(q_)
+                elif d in st_.get("q", []): stats[("scope_term", "_")]["present"].append(q_); stats[("scope_term", "_")]["absent"].append(w_)
+                else: stats[("scope_term", "_")]["absent"] += [w_, q_]
+            stats[("presence", r)]["present" if gf is not None else "absent"].append(f["presence"].get(r, 0))
             if gf is not None and gf[0] == "entity":
                 for part, idx in (("attr", 2), ("det", 3)):
                     if r + "." + part in f["presence"]: stats[(part + "_presence", r)]["present" if gf[idx] is not None else "absent"].append(f["presence"][r + "." + part])
     th = cfg["thresholds"]; calrep = {}
     for (kind, r), v in stats.items():
+        if kind == "scope_term":       # one threshold for every slot (ratio to the structure score), midpoint of true terms vs the others
+            th["scope_term"] = 0.5 * (float(np.mean(v["present"])) + float(np.mean(v["absent"]))) if v["present"] and v["absent"] else None
+            calrep["scope_term"] = {"mean_present": float(np.mean(v["present"])) if v["present"] else None, "mean_absent": float(np.mean(v["absent"])) if v["absent"] else None,
+                                    "threshold": th["scope_term"], "n_present": len(v["present"]), "n_absent": len(v["absent"]), "rule": "no true term in the calibration rows"}
+            continue
         if len(v["present"]) >= 5 and len(v["absent"]) >= 5:
             mp, ma = float(np.mean(v["present"])), float(np.mean(v["absent"])); th[kind][r] = 0.5 * (mp + ma)
             calrep[f"{kind}:{r}"] = {"mean_present": mp, "mean_absent": ma, "threshold": th[kind][r], "n_present": len(v["present"]), "n_absent": len(v["absent"])}
@@ -336,10 +427,10 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     np.savez(os.path.join(model_dir, "background.npz"), residual=np.array(resid), residual_mean=np.mean(resid) if resid else 1.0,
              residual_std=np.std(resid) if resid else 0.0, **{f"presence_{k}": v for k, v in pres.items()})
     gates = {c: float(g) for c, g in zip(m.cats, torch.sigmoid(m.logits).detach().cpu().numpy())}
-    return rd, {"t_train_s": round(t_train, 1), "calibration": calrep, "gates": gates, "numpy_torch_diff": worst}
+    return rd, {"t_train_s": round(t_train, 1), "calibration": calrep, "gates": gates, "numpy_torch_diff": worst, "kinds": kinds_report}
 
 
-def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids):
+def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None):
     by = collections.defaultdict(list)
     for r in rows: by[r["split"]].append(r)
     out = {}
@@ -350,10 +441,10 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids):
             new_kinds = {legend.kind(w) for w in new_ids}
             filt = set(new_ids) | {w for w in seen_words if legend.kind(w) not in new_kinds}
         else: filt = set(seen_words)
-        out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval),
-                  "experiment candidates": evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval)}
+        out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words),
+                  "experiment candidates": evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words)}
     trs = by.get("train", [])
-    out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7)}
+    out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words)}
     return out
 
 
@@ -372,8 +463,15 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
       f"{schema['unsupported_shapes'] or 'none'}.\n")
     P(f"## Splits (written to runs/{os.path.basename(a.run_dir)}/splits.json before training; source: {defs['source']})")
     for s, ids in sorted(splits.items()): P(f"- {s}: {len(ids)} sentences")
-    P(f"\nNew identities: {defs['new_identities']}. Held-out depth from {defs.get('heldout_depth_min')}. "
-      "TODO(section 6 missing): the spec's split definitions (section 6) were not received; these are the minimum stated in the task.\n")
+    P(f"\nThe four splits of spec 6.4: seen formulations = `train` (+ `heldout_sentences`, the held-out SENTENCES of the seen formulations, "
+      f"{defs['heldout_sentence_share']:.0%} by hash); held-out FORMULATIONS (by template / file when the examples are templated, else by "
+      f"signature = the sentence with its fillers replaced by their kind; splits named heldout_formulations*); new identities (fillers never in "
+      f"training: {defs['new_identities']}); plus held-out depth from {defs.get('heldout_depth_min')} when the world says so. The lexical bag "
+      "baseline and the lexical order baseline are trained on the same training rows and scored on the same rows as the reader.\n")
+    kr = extra[0].get("kinds", {})
+    if kr: P(f"## Kinds (spec 6.3)\n{kr['tokens']} tokens in the examples; {kr['unknown_kind_tokens']} with no kind in the lexicon "
+             f"(share {kr['unknown_share']:.3f}), given the kind `unknown` (placed in the chart, never a filler, listed in `_unplaced`). "
+             "Word -> kind table: model/catalog.json.\n")
     P(f"## Training\nD={a.D}, seeds {a.seeds_list}, batch {a.batch}, lr {a.lr}, epochs {a.epochs}, device {a.device}, codes path+chainL+bigram, "
       f"gates learned (closed start). Code commit {a.commit}. Memory curve: runs/{os.path.basename(a.run_dir)}/train.log (trainer.train_loop, rule 21).\n")
     P("## Thresholds (rule 25)\nAbstention tau = %.2f: stated, not fitted. Presence / attribute / determiner thresholds: midpoint of the mean "
@@ -391,7 +489,7 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
             accs = metrics[0][s][cs]["acc"]
             P(f"### {s} — {cs} (n = {metrics[0][s][cs]['n']} of {metrics[0][s][cs]['of']})")
             P("| axis | accuracy |\n|---|---|")
-            for k in accs: P(f"| {k} | {ms([mm[s][cs]['acc'].get(k, float('nan')) for mm in metrics])} |")
+            for k in sorted(accs, key=lambda k: not k.startswith("FULL")): P(f"| {k} | {ms([mm[s][cs]['acc'].get(k, float('nan')) for mm in metrics])} |")
             P(f"\nresidual mean {ms([mm[s][cs]['residual_mean'] for mm in metrics])}; status {metrics[0][s][cs]['status']}")
             cal = metrics[0][s][cs]["calibration"]
             P("\n| calibration axis (seed 0) | acc | margin mean / p10 | coverage at tau | confident-wrong | abstain right / wrong |\n|---|---|---|---|---|---|")
@@ -404,9 +502,19 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
         for k, v in metrics[0][s]["catalog candidates"]["acc"].items():
             if v < 0.9 and not k.startswith("lexical"): weak.append(f"{s}: {k} {v:.3f}")
     P("## What is weak, what to add\n" + ("\n".join(f"- {w}" for w in weak) if weak else "- nothing under 0.9 on these splits") + "\n")
+    P("Formulations with the lowest FULL on the held-out splits (add examples of these formulations):")
+    worst = sorted(((wf["FULL"], wf["n"], s, wf["formulation"]) for s in metrics[0] if not s.startswith("train")
+                    for wf in metrics[0][s]["catalog candidates"].get("worst_formulations", []) if wf["FULL"] < 0.9), key=lambda x: (x[0], -x[1]))[:8]
+    P("\n".join(f"- {s}: `{fm}` FULL {v:.3f} (n {n})" for v, n, s, fm in worst) if worst else "- none under 0.9")
+    P("")
     if len(a.seeds_list) < 3: P("- fewer than 3 seeds (rule 6): the numbers above carry no seed variance; run with --seeds 3 or more for a result.\n")
+    P("## Structure given vs estimated (author C3)\n`FULL` = the reporting depth and the event negation ESTIMATED from the state (what `sop "
+      "formalize` does); `FULL [depth given]` = the depth GIVEN (as the repository scripts), negation estimated; `FULL [depth and negation given]`.\n")
+    if legend.reader.get("full_excludes"):
+        P(f"FULL is defined over the legend's questions: {legend.reader['full_excludes']} excluded (reported as its own axis); the previous "
+          "definition (everything included) is printed once next to it (rule 16).\n")
     P("## Checklist\n[x] addresses from the world [x] shared identities (one star function) [x] chance printed [x] seen / unseen axes separated "
-      "[x] margin [%s] >=3 seeds [x] trivial control (lexical order baseline) [x] calibration (rule 18) [x] memory logged (rule 21) "
+      "[x] margin [%s] >=3 seeds [x] trivial controls (lexical bag and lexical order baselines) [x] calibration (rule 18) [x] memory logged (rule 21) "
       "[x] thresholds on calibration rows (rule 25) [x] given vs learned stated (rule 20)" % ("x" if len(a.seeds_list) >= 3 else " "))
     with open(path, "w") as f: f.write("\n".join(L) + "\n")
 
@@ -421,6 +529,8 @@ def main(argv=None):
     ap.add_argument("--splits", help="reuse the split assignment of an earlier run (held-out set fixed before a legend change)")
     ap.add_argument("--resume", action="store_true"); ap.add_argument("--force", action="store_true", help="accept examples whose !legend hash differs (inspection only)")
     ap.add_argument("--out", help="model folder (default <world>/model)")
+    ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")
+    ap.add_argument("--run_dir", help="write this run's folder here instead of <world>/runs/<timestamp>")
     ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")
     ap.add_argument("--star_seed", default=world.GLOBAL_STAR_SEED, help="seed of the word-star catalog; default the GLOBAL one shared by all worlds (spec v2 s.0)")
     ap.add_argument("--vary_stars", action="store_true", help="rule 6 / research reproduction: identities drawn per seed (star seed 'seed<k>'), as the repository scripts")
@@ -429,7 +539,8 @@ def main(argv=None):
     legend = Legend(os.path.join(wd, "legend.json"))
     if legend.errors: print("legend errors:\n  " + "\n  ".join(legend.errors)); return 1
     wj = os.path.join(wd, "world.json"); a.language = json.load(open(wj)).get("language", "en") if os.path.exists(wj) else "en"
-    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S"); a.run_dir = os.path.join(wd, "runs", ts); os.makedirs(a.run_dir, exist_ok=True)
+    ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S"); a.run_dir = os.path.abspath(a.run_dir) if a.run_dir else os.path.join(wd, "runs", ts)
+    os.makedirs(a.run_dir, exist_ok=True)
     log = open(os.path.join(a.run_dir, "train.log"), "w"); sys.stdout = Tee(sys.__stdout__, log)
     a.commit = git_commit()
     with open(os.path.join(a.run_dir, "command.txt"), "w") as f: f.write("sop train " + " ".join(argv if argv is not None else sys.argv[1:]) + f"\ncommit {a.commit}\n")
@@ -460,14 +571,14 @@ def main(argv=None):
     train_rows = [r for r in rows if r["split"] == "train"]; schema = build_schema(train_rows, legend)
     schema["content_kinds"] = sorted(content_kinds_of(train_rows, legend))
     print(f"[schema] roles {schema['role_order']} (core {schema['core_roles']}), max depth {schema['max_depth']}, event negation {schema['neg_event']}")
-    lexical, ranks = lexical_baseline(train_rows, legend, schema)
+    lexical, ranks = lexical_baseline(train_rows, legend, schema); bag = bag_baseline(train_rows, legend, schema)
     seen_words = {w for r in train_rows for fl in r["frame"]["roles"].values() for w in world.filler_words(fl)} | {s for r in train_rows for s in r["frame"]["speakers"]}
     model_dir = os.path.abspath(a.out or os.path.join(wd, "model")); a.seeds_list = [a.seed + k for k in range(a.seeds)]
     metrics, extra = [], []
     if a.eval_only:     # re-score a saved model with the current reader code; no training, thresholds kept from its config (rule 25)
         from .infer import Reader
         prev = json.load(open(os.path.join(model_dir, "metrics.json"))); rd = Reader(model_dir); a.seeds_list = [rd.cfg["seed"]]
-        mt = run_eval(rd, rows, legend, schema, a, lexical, seen_words, set(defs["new_identities"])); metrics, extra = [mt], [prev["training"][0]]
+        mt = run_eval(rd, rows, legend, schema, a, lexical, seen_words, set(defs["new_identities"]), bag); metrics, extra = [mt], [prev["training"][0]]
         chance_ = chance(rd, schema); a.D = rd.D; a.commit = f"{a.commit} (re-scored; trained at {rd.cfg.get('training_code_commit')})"
         for s, v in mt.items(): print(f"[eval] {s}: FULL " + " | ".join(f"{cs} {vv['acc']['FULL']:.3f}" for cs, vv in v.items()), flush=True)
     try:
@@ -477,7 +588,7 @@ def main(argv=None):
             build = md + ".building" if k == 0 else md
             if a.vary_stars: a.star_seed = f"seed{seed}"
             rd, ex = train_one(a, legend, rows, splits, schema, seed, build, a.run_dir)
-            mt = run_eval(rd, rows, legend, schema, a, lexical, seen_words, set(defs["new_identities"]))
+            mt = run_eval(rd, rows, legend, schema, a, lexical, seen_words, set(defs["new_identities"]), bag)
             metrics.append(mt); extra.append(ex)
             if k == 0: chance_ = chance(rd, schema)
             for s, v in mt.items():
@@ -500,7 +611,7 @@ def main(argv=None):
     summary["mean_over_seeds"] = agg
     with open(os.path.join(model_dir, "metrics.json"), "w") as f: json.dump(summary, f, indent=1)
     write_report(os.path.join(model_dir, "REPORT.md"), a, legend, rows, splits, defs, schema, metrics, extra, chance_, len(files))
-    shutil.copyfile(os.path.join(model_dir, "metrics.json"), os.path.join(a.run_dir, "metrics.json"))
+    for fn in ("metrics.json", "REPORT.md", "config.json"): shutil.copyfile(os.path.join(model_dir, fn), os.path.join(a.run_dir, fn))
     full = {s: agg[s]["catalog candidates"]["FULL"]["mean"] for s in agg}
     status("BUILT", examples_sha256=exhash, metrics_summary={"FULL (catalog candidates)": full})
     print(f"[done] model written to {model_dir}; REPORT.md and metrics.json there; run log {a.run_dir}/train.log")

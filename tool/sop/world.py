@@ -79,7 +79,7 @@ def _line_filler(line, by_id, legend, seen=frozenset()):
 def frame_of(wire, by_id, legend):
     """canonical frame of a top-level wire: {speakers, neg, event, roles, shape}; shape 'ok' when the v1 decoder can read the structure
     (says* -> [not] -> event), else the name of what it cannot read"""
-    f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None}
+    f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None, "scope": None}
     w, seen = wire, set()
     while w is not None and w.type == "says" and w.id not in seen:
         seen.add(w.id); f["speakers"].append(w.value("speaker")); s = w.get("scope")
@@ -91,7 +91,7 @@ def frame_of(wire, by_id, legend):
     events = legend.events if legend is not None else None
     if (w.type not in events) if events is not None else (w.type in ("entity", "unknown", "verdict") or w.type in OPERATORS):
         f["shape"] = w.type; f["event"] = w.type if w.type == "unknown" else None; return f
-    f["event"] = w.type; f["lemma"] = w.value("_verb")
+    f["event"] = w.type; f["lemma"] = w.value("_verb"); f["scope"] = w.value("_scope")
     for l in w.lines:
         if l.key.startswith("_"): continue
         f["roles"][l.key] = _line_filler(l, by_id, legend)
@@ -99,8 +99,14 @@ def frame_of(wire, by_id, legend):
     return f
 
 
-def canon(f, with_pred=True):
-    keep = {"speakers": f["speakers"], "neg": f["neg"], "event": f["event"], "roles": f["roles"], "shape": f["shape"]}
+def canon(f, with_pred=True, drop=()):
+    """the comparison key of a frame. drop: parts outside the legend's questions (legend reader.full_excludes, e.g. 'det': the quantifier
+    world v2 asks WHICH phrase is wide, not which determiner word was used — the determiner identity is its own axis, outside FULL; the
+    presence of a quantifier on a slot stays inside FULL: author Q2, 78d36e8)"""
+    roles = f["roles"]
+    if "det" in drop:      # the determiner WORD is outside FULL; its PRESENCE (the slot is quantified) stays a question of the legend
+        roles = {r: (fl[:3] + ["quantified" if fl[3] else None] if fl and fl[0] == "entity" else fl) for r, fl in roles.items()}
+    keep = {"speakers": f["speakers"], "neg": f["neg"], "event": f["event"], "roles": roles, "shape": f["shape"], "scope": f.get("scope")}
     if with_pred: keep["lemma"] = f.get("lemma")
     return json.dumps(keep, sort_keys=True)
 
@@ -128,6 +134,18 @@ class Compiler:
             if self.L.lemma_of(t) in verbs: used.add(i); return self.L.lemma_of(t)
         return None
 
+    def scope_terms(self, line, by_id):
+        """quantifier world v2 (C2c): an entity filler whose det is a wide-scope marker adds R_wide (x) R_role (x) f_head, a plain quantifier
+        adds R_q (x) R_role (x) f_head (category-local, unconditional terms; the event sums them / sqrt(n)); other determiners add nothing"""
+        st = self.L.reader.get("scope_terms")
+        if not st or len(line.atoms) != 1 or line.atoms[0].kind != "ref": return []
+        en = by_id.get(line.atoms[0].text)
+        if en is None or en.type != "entity" or en.value("head") is None: return []
+        det = en.value("det"); s = self.st
+        if det in st.get("wide", []): return [s.op("wide") * s.role(line.key) * s.id(en.value("head"))]
+        if det in st.get("q", []): return [s.op("q") * s.role(line.key) * s.id(en.value("head"))]
+        return []
+
     def value(self, line, by_id, tokens, used, depth=0):
         vs = [self.atom(a, by_id, tokens, used, depth) for a in line.atoms]; vs = [v for v in vs if v is not None]
         if not vs: return None
@@ -150,11 +168,14 @@ class Compiler:
                 lem = w.value("_verb") or self.lemma_for(w.type, tokens or [], used)
                 if lem is not None: S = S + st.op("pred") * st.id(lem)
                 else: self.missing_lemma += 1
+            terms = []
             for l in w.lines:
                 if l.key.startswith("_"): continue
                 v = self.value(l, by_id, tokens, used, depth)
                 if v is None: continue
                 S = S + st.role(l.key) * (v + (st.marker() if self.marker else 0))
+                terms += self.scope_terms(l, by_id)
+            if terms: S = S + sum(terms) / np.sqrt(len(terms))
         elif w.type == "entity":
             h = w.value("head")
             if h is not None: S = S + st.id(h)
