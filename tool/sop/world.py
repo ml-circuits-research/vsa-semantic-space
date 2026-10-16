@@ -1,0 +1,185 @@
+"""
+world.py — what the legend's roles mean as vectors (numpy only), and the canonical frame of a top-level wire.
+
+Stars (identities and role vectors) are unit-modulus complex vectors regenerated from a seed: star(seed, name, D) draws D phases from a
+numpy generator seeded by sha256(f"{seed}:{name}"). Identities use names "id:<word>" with the GLOBAL star seed (a word's star is
+the same in every world, spec v2 section 0); role vectors "role:<role id>", operator parts "op:<name>" and the marker use the world's seed. Nothing here is learned (rule 20: roles, identities, kinds are GIVEN; the reader learns the route book only).
+
+Target state of a wire (the constructed worlds of the repository, generalized; RESULTS 10b / 10d / 9c):
+  event e:   [R_pred (x) f_lemma] + sum_r R_r (x) (val(filler_r) [+ m])          m = occupancy marker (legend reader.occupancy_marker)
+  entity:    f_head + R_attr (x) val(attr) [+ R_det (x) f_det unless det is definite] (quantity/unit: values are invisible to the reader)
+  not:       R_not (x) val(scope)            must / may: R_must / R_may (x) val(scope)
+  if:        R_cond (x) val(condition) + R_then (x) val(consequence)
+  says:      R_speaker (x) (f_speaker [+ m]) + R_rep (x) val(scope)
+  and:       sum_i R_next^i (x) val(item_i)
+  values:    word -> f_word (a multi-word value uses the identity of its LAST token: the token the sentence carries; stated convention);
+             $w -> state(w); a & b -> sum; a | b -> sum / sqrt(n) (superposition); ~ -> m (filled, unrecognized); ? -> nothing.
+"""
+import hashlib, json
+import numpy as np
+
+OPERATORS = {"not", "must", "may", "if", "says", "and"}
+
+
+def star(seed, name, D):
+    h = hashlib.sha256(f"{seed}:{name}".encode("utf-8")).digest()
+    rng = np.random.default_rng(int.from_bytes(h[:8], "little"))
+    return np.exp(1j * rng.uniform(-np.pi, np.pi, D))
+
+
+GLOBAL_STAR_SEED = "sop-stars-v1"      # spec v2 section 0: a word's star is the same in every world (catalog of word stars, shared)
+
+
+class Stars:
+    """cache of stars: word identities from the GLOBAL star seed (shared across worlds), role / operator vectors and the occupancy marker
+    from the world's training seed (the world's named stars; not shared)"""
+    def __init__(self, seed, D, star_seed=GLOBAL_STAR_SEED): self.seed, self.D, self.star_seed, self.cache = seed, D, star_seed, {}
+    def get(self, name, seed=None):
+        seed = self.seed if seed is None else seed; v = self.cache.get((seed, name))
+        if v is None: v = self.cache[(seed, name)] = star(seed, name, self.D)
+        return v
+    def id(self, word): return self.get("id:" + value_token(word), self.star_seed)
+    def role(self, r): return self.get("role:" + r)
+    def op(self, name): return self.get("op:" + name)
+    def marker(self): return self.get("op:marker")
+
+
+def value_token(word):
+    """the identity a value is read with: the last token of a multi-word value"""
+    parts = str(word).split()
+    return parts[-1] if parts else str(word)
+
+
+# ---------------------------------------------------------------- canonical frames
+def _atom_filler(atom, by_id, legend, seen):
+    if atom.kind == "word": return ["word", atom.text]
+    if atom.kind == "unknown": return ["unknown"]
+    if atom.kind == "asked": return ["asked"]
+    w = by_id.get(atom.text)
+    if w is None or atom.text in seen: return ["bad-ref"]
+    seen = seen | {atom.text}
+    if w.type == "entity":
+        ent = ["entity", w.value("head")]
+        a = w.get("attr"); ent.append(_line_filler(a, by_id, legend, seen) if a is not None else None)
+        det = w.value("det"); ent.append(None if det is None or (legend is not None and det in legend.reader["definite_dets"]) else det)
+        return ent
+    if w.type == "not":
+        s = w.get("scope")
+        if s is not None and len(s.atoms) == 1 and s.atoms[0].kind == "word": return ["negword", s.atoms[0].text]
+        return ["not", _line_filler(s, by_id, legend, seen) if s is not None else None]
+    return ["wire", w.type]
+
+
+def _line_filler(line, by_id, legend, seen=frozenset()):
+    fs = [_atom_filler(a, by_id, legend, seen) for a in line.atoms]
+    if len(fs) == 1: return fs[0]
+    return ["set" if line.sep == "&" else "alt"] + sorted(fs, key=json.dumps)
+
+
+def frame_of(wire, by_id, legend):
+    """canonical frame of a top-level wire: {speakers, neg, event, roles, shape}; shape 'ok' when the v1 decoder can read the structure
+    (says* -> [not] -> event), else the name of what it cannot read"""
+    f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None}
+    w, seen = wire, set()
+    while w is not None and w.type == "says" and w.id not in seen:
+        seen.add(w.id); f["speakers"].append(w.value("speaker")); s = w.get("scope")
+        w = by_id.get(s.atoms[0].text) if s is not None and s.atoms and s.atoms[0].kind == "ref" else None
+    if w is not None and w.type == "not":
+        s = w.get("scope")
+        if s is not None and s.atoms and s.atoms[0].kind == "ref": f["neg"] = True; w = by_id.get(s.atoms[0].text)
+    if w is None: f["shape"] = "broken"; return f
+    events = legend.events if legend is not None else None
+    if (w.type not in events) if events is not None else (w.type in ("entity", "unknown", "verdict") or w.type in OPERATORS):
+        f["shape"] = w.type; f["event"] = w.type if w.type == "unknown" else None; return f
+    f["event"] = w.type; f["lemma"] = w.value("_verb")
+    for l in w.lines:
+        if l.key.startswith("_"): continue
+        f["roles"][l.key] = _line_filler(l, by_id, legend)
+    f["event_wire"] = w.id
+    return f
+
+
+def canon(f, with_pred=True):
+    keep = {"speakers": f["speakers"], "neg": f["neg"], "event": f["event"], "roles": f["roles"], "shape": f["shape"]}
+    if with_pred: keep["lemma"] = f.get("lemma")
+    return json.dumps(keep, sort_keys=True)
+
+
+def filler_words(fl):
+    """all words a filler mentions (for 'placed' bookkeeping)"""
+    if fl is None: return []
+    if fl[0] in ("word", "negword"): return [fl[1]]
+    if fl[0] == "entity": return [x for x in [fl[1], fl[3]] if x] + filler_words(fl[2])
+    if fl[0] in ("set", "alt"): return [w for x in fl[1:] for w in filler_words(x)]
+    if fl[0] == "not": return filler_words(fl[1])
+    return []
+
+
+# ---------------------------------------------------------------- target states
+class Compiler:
+    def __init__(self, legend, stars):
+        self.L, self.st = legend, stars; self.marker = legend.reader["occupancy_marker"]; self.pred = legend.reader["predicate_role"]
+        self.missing_lemma = 0
+
+    def lemma_for(self, ev_type, tokens, used):
+        verbs = set(self.L.events.get(ev_type, []))
+        for i, t in enumerate(tokens):
+            if i in used: continue
+            if self.L.lemma_of(t) in verbs: used.add(i); return self.L.lemma_of(t)
+        return None
+
+    def value(self, line, by_id, tokens, used, depth=0):
+        vs = [self.atom(a, by_id, tokens, used, depth) for a in line.atoms]; vs = [v for v in vs if v is not None]
+        if not vs: return None
+        s = sum(vs)
+        return s / np.sqrt(len(vs)) if line.sep == "|" else s
+
+    def atom(self, a, by_id, tokens, used, depth):
+        if a.kind == "word": return self.st.id(a.text)
+        if a.kind == "unknown": return self.st.marker()
+        if a.kind == "asked": return None
+        w = by_id.get(a.text)
+        if w is None or depth > 32: return None
+        return self.wire(w, by_id, tokens, used, depth + 1)
+
+    def wire(self, w, by_id, tokens, used=None, depth=0):
+        used = set() if used is None else used; st = self.st; S = np.zeros(st.D, dtype=complex)
+        V = lambda key: (lambda l: None if l is None else self.value(l, by_id, tokens, used, depth))(w.get(key))
+        if w.type in self.L.events:
+            if self.pred:
+                lem = w.value("_verb") or self.lemma_for(w.type, tokens or [], used)
+                if lem is not None: S = S + st.op("pred") * st.id(lem)
+                else: self.missing_lemma += 1
+            for l in w.lines:
+                if l.key.startswith("_"): continue
+                v = self.value(l, by_id, tokens, used, depth)
+                if v is None: continue
+                S = S + st.role(l.key) * (v + (st.marker() if self.marker else 0))
+        elif w.type == "entity":
+            h = w.value("head")
+            if h is not None: S = S + st.id(h)
+            a = V("attr")
+            if a is not None: S = S + st.op("attr") * a
+            det = w.value("det")
+            if det is not None and det not in self.L.reader["definite_dets"]: S = S + st.op("det") * st.id(det)
+        elif w.type in ("not", "must", "may"):
+            v = V("scope")
+            if v is not None: S = S + st.op(w.type) * v
+        elif w.type == "if":
+            c, q = V("condition"), V("consequence")
+            if c is not None: S = S + st.op("if.condition") * c
+            if q is not None: S = S + st.op("if.consequence") * q
+        elif w.type == "says":
+            sp = w.get("speaker")
+            if sp is not None:
+                v = self.value(sp, by_id, tokens, used, depth)
+                if v is not None: S = S + st.op("says.speaker") * (v + (st.marker() if self.marker else 0))
+            v = V("scope")
+            if v is not None: S = S + st.op("says.scope") * v
+        elif w.type == "and":
+            it = w.get("items")
+            if it is not None:
+                for i, a in enumerate(it.atoms):
+                    v = self.atom(a, by_id, tokens, used, depth)
+                    if v is not None: S = S + st.op("and.next") ** i * v
+        return S
