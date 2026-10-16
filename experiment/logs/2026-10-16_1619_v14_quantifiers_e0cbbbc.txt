@@ -1,0 +1,100 @@
+# 2026-10-16T16:19:10+02:00  commit=e0cbbbc  cmd: python3 v14_quantifiers.py --scope_target noun --det_gates open  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 116 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+scope target = noun
+v14_quantifiers (E2): device=cuda, D=1024, N=40000, seeds=5; quantifier = role on the argument (R_Q (x) f_det inside the slot); scope = R_sc (x) f_role; ambiguity = superposition in the WORLD
+training: affirmative (all definite) at depths 0-2 (share 0.4) + UNAMBIGUOUS quantified sentences (one quantifier, or two with a wide-scope marker) at depths 0-1; 12 nouns per class (6 new at test)
+test: unambiguous depth 0 / 1 / 2 (UNSEEN depth), new nouns, AMBIGUOUS (never trained) depth 0; 'both' reported when the top-2 scope scores are within delta=0.25
+patterns: ['{DA} {A} V3 {DB} {B} to {DC} {C} .', '{DC} {C} VR {DB} {B} from {DA} {A} .', '{DB} {B} is VP to {DC} {C} by {DA} {A} .', '{DB} {B} is VP by {DA} {A} to {DC} {C} .', 'to {DC} {C} , {DA} {A} V3 {DB} {B} .', '{DA} {A} V3 {DB} {B} , to {DC} {C} .']
+chance: noun 1/12 = 0.083 (new 1/6); determiner 1/6; scope 1/3; full frame ~0
+
+decoder (rule 17, from judgment a8a8fab C1): PRESENCE = best scope score >= a threshold set per depth on CALIBRATION sentences (midpoint of the mean best score on 60 quantified vs 60 affirmative calibration sentences per pattern, rng 1234+depth; the scored rows use rng 900+); SCOPE|present = argmax role (or 'both') on gold-quantified sentences, no 'none' rule; FULL = nouns, determiners, presence and scope all right.
+  gates GIVEN open (rule 20, not learned): ['every', 'each', 'some', 'a', 'certain']
+[train seed 0] start: RSS 1.58 GB | torch alloc 0.67 GB reserved 0.72 GB | MemAvailable 113.3 GB
+[train seed 0] step 500 sent 4000/40000 loss -0.596 (26s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 1000 sent 8000/40000 loss -0.711 (52s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 1500 sent 12000/40000 loss -0.753 (77s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 2000 sent 16000/40000 loss -0.828 (103s) | RSS 2.66 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 2500 sent 20000/40000 loss -0.826 (129s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.2 GB
+[train seed 0] step 3000 sent 24000/40000 loss -0.835 (154s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 3500 sent 28000/40000 loss -0.827 (180s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 4000 sent 32000/40000 loss -0.851 (205s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 4500 sent 36000/40000 loss -0.870 (231s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] step 5000 sent 40000/40000 loss -0.846 (257s) | RSS 2.71 GB | torch alloc 0.85 GB reserved 1.17 GB | MemAvailable 112.3 GB
+[train seed 0] end: RSS 2.71 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.5 GB (257s)
+  seed 0 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.151 (0.259 / 0.042); d1: 0.122 (0.196 / 0.048); d2: 0.065 (0.084 / 0.046)
+  seed 0 SCOPE|present one-quantifier / two-quantifier (marked): d0 1.000 / 0.930; d1 0.983 / 0.783; d2 UNSEEN 0.694 / 0.537; presence on ambiguous d0 0.806
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:111: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (258s) 0.999 | 0.979 | 0.956 | 0.967 | 0.864 | 1.000 | 0.787 | 0.711 | 0.622 | 0.389 | 0.922 | 0.800 | 0.592 | 0.763 | 0.364  || ambiguous: nouns 1.00 dets 0.91 || gates OPEN: ['COP', 'a', 'certain', 'each', 'every', 'from', 'some', 'that', 'to']
+  gates GIVEN open (rule 20, not learned): ['every', 'each', 'some', 'a', 'certain']
+[train seed 1] start: RSS 2.74 GB | torch alloc 0.73 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 500 sent 4000/40000 loss -0.584 (25s) | RSS 2.74 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.9 GB
+[train seed 1] step 1000 sent 8000/40000 loss -0.673 (51s) | RSS 2.74 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.9 GB
+[train seed 1] step 1500 sent 12000/40000 loss -0.736 (76s) | RSS 2.74 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.9 GB
+[train seed 1] step 2000 sent 16000/40000 loss -0.761 (101s) | RSS 2.72 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.9 GB
+[train seed 1] step 2500 sent 20000/40000 loss -0.796 (127s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 3000 sent 24000/40000 loss -0.809 (152s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 3500 sent 28000/40000 loss -0.790 (178s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 4000 sent 32000/40000 loss -0.828 (203s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 4500 sent 36000/40000 loss -0.841 (229s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] step 5000 sent 40000/40000 loss -0.847 (254s) | RSS 2.76 GB | torch alloc 0.85 GB reserved 1.53 GB | MemAvailable 111.8 GB
+[train seed 1] end: RSS 2.76 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.4 GB (255s)
+  seed 1 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.140 (0.246 / 0.033); d1: 0.100 (0.171 / 0.028); d2: 0.058 (0.085 / 0.031)
+  seed 1 SCOPE|present one-quantifier / two-quantifier (marked): d0 0.926 / 0.702; d1 0.883 / 0.750; d2 UNSEEN 0.633 / 0.585; presence on ambiguous d0 0.903
+  seed 1 (255s) 0.961 | 0.973 | 0.936 | 0.819 | 0.753 | 1.000 | 0.675 | 0.822 | 0.611 | 0.394 | 0.944 | 0.767 | 0.514 | 0.734 | 0.269  || ambiguous: nouns 0.98 dets 0.86 || gates OPEN: ['a', 'accepts', 'buys', 'certain', 'each', 'every', 'some', 'that', 'the']
+  gates GIVEN open (rule 20, not learned): ['every', 'each', 'some', 'a', 'certain']
+[train seed 2] start: RSS 2.86 GB | torch alloc 0.73 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 500 sent 4000/40000 loss -0.519 (25s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.8 GB
+[train seed 2] step 1000 sent 8000/40000 loss -0.723 (51s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.8 GB
+[train seed 2] step 1500 sent 12000/40000 loss -0.744 (76s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.8 GB
+[train seed 2] step 2000 sent 16000/40000 loss -0.789 (102s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.8 GB
+[train seed 2] step 2500 sent 20000/40000 loss -0.781 (127s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 3000 sent 24000/40000 loss -0.810 (153s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 3500 sent 28000/40000 loss -0.847 (178s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 4000 sent 32000/40000 loss -0.838 (203s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 4500 sent 36000/40000 loss -0.824 (229s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] step 5000 sent 40000/40000 loss -0.849 (255s) | RSS 2.90 GB | torch alloc 0.85 GB reserved 1.51 GB | MemAvailable 111.7 GB
+[train seed 2] end: RSS 2.90 GB | torch alloc 0.85 GB reserved 0.88 GB | MemAvailable 112.3 GB (255s)
+  seed 2 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.147 (0.251 / 0.043); d1: 0.119 (0.194 / 0.043); d2: 0.064 (0.087 / 0.041)
+  seed 2 SCOPE|present one-quantifier / two-quantifier (marked): d0 0.979 / 0.754; d1 0.958 / 0.717; d2 UNSEEN 0.633 / 0.573; presence on ambiguous d0 0.900
+  seed 2 (256s) 0.999 | 0.956 | 0.944 | 0.872 | 0.725 | 1.000 | 0.704 | 0.717 | 0.606 | 0.378 | 0.956 | 0.700 | 0.531 | 0.743 | 0.319  || ambiguous: nouns 0.99 dets 0.86 || gates OPEN: ['a', 'certain', 'each', 'every', 'from', 'some', 'that', 'to']
+  gates GIVEN open (rule 20, not learned): ['every', 'each', 'some', 'a', 'certain']
+[train seed 3] start: RSS 2.69 GB | torch alloc 0.73 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 500 sent 4000/40000 loss -0.521 (25s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 1000 sent 8000/40000 loss -0.684 (51s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 1500 sent 12000/40000 loss -0.727 (76s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 2000 sent 16000/40000 loss -0.745 (102s) | RSS 2.69 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 2500 sent 20000/40000 loss -0.826 (127s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 3000 sent 24000/40000 loss -0.824 (153s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 3500 sent 28000/40000 loss -0.814 (178s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 4000 sent 32000/40000 loss -0.822 (204s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 4500 sent 36000/40000 loss -0.818 (230s) | RSS 2.73 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.8 GB
+[train seed 3] step 5000 sent 40000/40000 loss -0.838 (255s) | RSS 2.67 GB | torch alloc 0.85 GB reserved 1.59 GB | MemAvailable 111.9 GB
+[train seed 3] end: RSS 2.71 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.5 GB (255s)
+  seed 3 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.146 (0.252 / 0.040); d1: 0.111 (0.183 / 0.039); d2: 0.061 (0.090 / 0.031)
+  seed 3 SCOPE|present one-quantifier / two-quantifier (marked): d0 0.915 / 0.784; d1 0.875 / 0.700; d2 UNSEEN 0.612 / 0.537; presence on ambiguous d0 0.636
+  seed 3 (256s) 0.937 | 0.956 | 0.889 | 0.853 | 0.692 | 1.000 | 0.654 | 0.850 | 0.578 | 0.367 | 0.933 | 0.679 | 0.508 | 0.715 | 0.319  || ambiguous: nouns 0.94 dets 0.84 || gates OPEN: ['a', 'certain', 'each', 'every', 'some', 'that']
+  gates GIVEN open (rule 20, not learned): ['every', 'each', 'some', 'a', 'certain']
+[train seed 4] start: RSS 2.82 GB | torch alloc 0.73 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 500 sent 4000/40000 loss -0.610 (25s) | RSS 2.82 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 1000 sent 8000/40000 loss -0.721 (51s) | RSS 2.82 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 1500 sent 12000/40000 loss -0.773 (76s) | RSS 2.82 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 2000 sent 16000/40000 loss -0.786 (102s) | RSS 2.82 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 2500 sent 20000/40000 loss -0.795 (128s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 3000 sent 24000/40000 loss -0.817 (153s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 3500 sent 28000/40000 loss -0.799 (178s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 4000 sent 32000/40000 loss -0.838 (204s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 4500 sent 36000/40000 loss -0.822 (230s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] step 5000 sent 40000/40000 loss -0.840 (255s) | RSS 2.86 GB | torch alloc 0.85 GB reserved 1.47 GB | MemAvailable 111.8 GB
+[train seed 4] end: RSS 2.86 GB | torch alloc 0.85 GB reserved 0.92 GB | MemAvailable 112.3 GB (256s)
+  seed 4 presence thresholds (calibration rows; mean quantified / affirmative): d0: 0.147 (0.255 / 0.038); d1: 0.115 (0.188 / 0.042); d2: 0.065 (0.090 / 0.040)
+  seed 4 SCOPE|present one-quantifier / two-quantifier (marked): d0 0.984 / 0.795; d1 0.942 / 0.608; d2 UNSEEN 0.582 / 0.549; presence on ambiguous d0 0.911
+  seed 4 (256s) 0.989 | 0.968 | 0.939 | 0.894 | 0.781 | 1.000 | 0.667 | 0.683 | 0.567 | 0.311 | 0.950 | 0.725 | 0.519 | 0.753 | 0.361  || ambiguous: nouns 0.99 dets 0.88 || gates OPEN: ['a', 'borrows', 'certain', 'each', 'every', 'some', 'that', 'to']
+
+== MEANS over 5 seeds: unamb d0: nouns | dets | PRESENCE | SCOPE|present | FULL (joint) | aff d0: ABSENT | unamb d1: FULL | unamb d2 UNSEEN: PRESENCE | SCOPE|present | FULL | aff d2: ABSENT | new nouns d0: FULL | AMBIG d0: both reported | ambig: cos to superposed world | ambig: forced surface-first
+  0.977±0.024 | 0.966±0.009 | 0.933±0.023 | 0.881±0.049 | 0.763±0.059 | 1.000±0.000 | 0.698±0.048 | 0.757±0.066 | 0.597±0.021 | 0.368±0.030 | 0.941±0.012 | 0.734±0.044 | 0.533±0.030 | 0.742±0.017 | 0.327±0.034
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 a=1.00 certain=1.00 each=1.00 every=1.00 some=1.00 to=0.60 from=0.40 borrows=0.20 the=0.20 NO=0.18 receives=0.15 accepts=0.13 COP=0.13 NP=0.13 buys=0.12
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] presence and scope as separate axes, scope conditional on presence (17) [x] presence threshold set on calibration rows, not the scored rows [x] one- and two-quantifier scope reported separately [x] params saved for re-scoring [x] given vs learned gates stated (20) [x] ambiguity reported separately, never trained [x] FULL frame (R1) [x] unseen depth 2 (composition rule, with reserve) [x] new nouns [x] >=3 seeds [x] model unchanged

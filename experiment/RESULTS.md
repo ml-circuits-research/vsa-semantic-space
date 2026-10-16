@@ -904,3 +904,65 @@ coverage 0.97). (ii) The regularity "seen at depth d (share p), tested at d+1" h
 FULL frame at depth 2 is 0.85 because the fillers (patient, attribute) lose at the unseen depth, not the scope. (iii) The lexical bag puts
 "delete the saved files" and "do not delete the saved files" at cos 0.85: the separation (0.06) is structural, as in E1. (iv) Everything here
 is templated; whether the reading survives paraphrase (the B3 criterion as written) is the LLM-paraphrase follow-up, PLANNED.
+
+## 10b-bis. Reference table re-run with the occupancy threshold set on TRAINING rows (rule 25) + depth-3 breakdown, E4 (a) (v16_reference.py; logs/2026-10-16_1351_v16_reference_e0cbbbc.txt; 5 seeds, same seeds and regime as 10b)
+Threshold: midpoint of the marker cosine on 120 depth-0 TRAINING sentences with C and 120 without (per seed: 0.21-0.23; the same-rows midpoint
+of 10b would have been the same value to two decimals). Every column of 10b is reproduced to three decimals (seen 1.000, predicate 1.000 /
+1.000, new ids 1.000, cues 1.000, unseen transitions 0.638±0.015, depth 2 1.000, depth 3 UNSEEN 0.813±0.030, occupancy 1.000 / 1.000 / 1.000;
+calibration of seed 0 identical). 10b's numbers stand; the threshold is now set where rule 25 requires.
+E4 (a) — where the depth-3 loss is (all 5 seeds, 100 sentences per template; roles A | B | C | predicate):
+| template (depth 3, inside three reports) | A | B | C | pred |
+|---|---|---|---|---|
+| T0 "A V B to C ." | 0.990 | 1.000 | 0.950 | 1.000 |
+| T1 "C VR B from A ." | 0.940 | 1.000 | 0.920 | 1.000 |
+| T6 "it is A who V B to C ." | 1.000 | 1.000 | 0.990 | 1.000 |
+| T12 "what A V to C is B ." | 0.990 | 1.000 | 0.960 | 1.000 |
+| T15 "A V B , to C ." | 1.000 | 1.000 | 0.910 | 1.000 |
+| T9 "to C , A V B ." | 0.990 | 1.000 | **0.770** | 1.000 |
+| T3 "B is VP by A to C ." (passive) | 0.840 | 1.000 | **0.760** | 1.000 |
+| T2 "B is VP to C by A ." (passive) | **0.810** | 1.000 | **0.520** | 1.000 |
+Per verb: the recipient-less verbs whose gates sit at the midpoint (accepts, gets, sees, buys, receives, borrows; 0.42-0.81) are at 1.000 on A
+and C at depth 3 in almost every seed; the PARTICIPLES (given, lent, offered, sold, shown; gates CLOSED, 0.00-0.33) carry the C loss
+(0.29-0.86); 'gives' / 'lends' (active, gate 0.00) have C 0.85 / 0.91.
+Reading. B and the predicate are 1.000 everywhere; the loss is on C (and A) in the two PASSIVE forms and in the C-fronted comma form — the
+forms where the recipient is not introduced by the verb that precedes it. The judgment's first suspect (half-open verb gates) is NOT
+supported: those verbs are at 1.000; the failing verbs are participles with closed gates. The predicate term is addressed by the same prefix
+as the slots at every level and costs cosine exactly where the margin was already smallest (6c without the predicate: 1.000). Decision rule
+of E4 applied after (b)-(d) below; whatever they give, the depth-3 number is reported with this breakdown and the acc-vs-coverage curve.
+
+## 10c-bis. Verifier re-run with the condition presence threshold set on the calibration half of dev (rule 25) (v17_verifier.py; logs/2026-10-16_1403_v17_verifier_e0cbbbc.txt; same seed, D, epochs as 10c; threshold on the EVEN rows, verdicts on the ODD rows, 4,210 questions)
+Threshold 0.101 (midpoint of present 0.159 / absent 0.044 on the even half; the same-rows midpoint of 10c would also be 0.101).
+| error type | n (odd half) | reader 10c-bis: detected / unverifiable / confident-wrong | reader 10c (whole dev, same-rows threshold) | lexical 10c-bis |
+|---|---|---|---|---|
+| change_sel | 4,195 | 0.759 / 0.238 / 0.004 | 0.764 / 0.232 / 0.004 | 0.405 / 0.582 / 0.012 |
+| swap_sel_cond | 4,177 | 0.733 / 0.263 / 0.004 | 0.740 / 0.257 / 0.003 | 0.317 / 0.376 / 0.306 |
+| flip_agg | 4,210 | 0.795 / 0.195 / 0.010 | 0.805 / 0.183 / 0.013 | 0.628 / 0.359 / 0.013 |
+| drop_cond | 4,177 | 0.158 / 0.688 / 0.153 | 0.159 / 0.690 / 0.151 | 0.216 / 0.360 / 0.424 |
+| add_cond | 4,195 | 0.162 / 0.836 / 0.001 | 0.162 / 0.837 / 0.001 | 0.216 / 0.356 / 0.428 |
+| change_value (invisible) | 4,177 | 0.158 / 0.543 / 0.298 | 0.159 / 0.532 / 0.310 | 0.216 / 0.360 / 0.424 |
+| gold: false alarm / unverifiable / confirmed | 4,210 | **0.162 / 0.541 / 0.297** | 0.162 / 0.529 / 0.309 | 0.215 / 0.358 / 0.427 |
+Precision on role errors 0.942, recall 0.522 (10c: 0.942 / 0.527). Every number moves by at most 0.013: the threshold was never the issue, the
+reader's own 16% confident-wrong on gold is. On gold the verifier confirms 0.30 and abstains on 0.54 — a filter on the role part, not a judge.
+This is the 10c table from now on; the reader and the dev frames are saved for C4 (re-scoring with tau set on the even half, curve on the odd half).
+
+## 10b-ter. E4 (b)-(d): is the depth-3 regression gating or capacity? (v16_reference.py; logs/2026-10-16_1511 (--p_omit 0), _1523 (--verb_gates closed), _1535 (--D 2048), all _v16_reference_e0cbbbc.txt; 5 seeds each, same seeds as 10b)
+Decision rule stated before the runs (judgment a8a8fab E4): gating if (b) or (c) restores depth 3 > 0.9 with the predicate role; capacity if
+only (d) does.
+| setting | seen FULL | unseen trans. | depth 2 | **depth 3 UNSEEN** | T2 passive A / C | T3 passive A / C | T9 fronted C | T1 "C receives B from A" A / C |
+|---|---|---|---|---|---|---|---|---|
+| 10b / 10b-bis (reference: recipient-less share 0.2, gates learned, D 1024) | 1.000 | 0.638 | 1.000 | **0.813±0.030** | 0.81 / 0.52 | 0.84 / 0.76 | 0.77 | 0.94 / 0.92 |
+| (b) recipient-less share 0 (the occupancy columns are void here: no 'not given' case exists) | 1.000 | 0.670 | 1.000 | **0.858±0.081** | 0.86 / 0.75 | 0.78 / 0.89 | 0.87 | 0.78 / 0.87 |
+| (c) verb gates GIVEN closed (rule 20), recipient-less kept | 0.986 | 0.597 | 0.968 | **0.745±0.042** | 0.86 / 0.56 | 0.79 / 0.81 | 0.81 | 0.34 / 0.61 |
+| (d) D = 2048 (capacity test) | 1.000 | 0.650 | 0.995 | **0.852±0.060** | 0.85 / 0.60 | 0.80 / 0.91 | 0.86 | 0.90 / 0.90 |
+Gates: (b) the recipient-less verbs fall to the midpoint (0.41-0.50) and 'to' rises to 0.40; (c) everything closed except 'that' and '.'; (d) as 10b.
+Reading, by the decision rule. NEITHER branch fires: no setting restores depth 3 > 0.9. (c) is WORSE (0.745) and costs the seen axes
+(0.986, depth 2 0.968): closing the verbs removes the gate that the recipient-less forms need ("C receives B from A", T1, drops to A 0.34),
+so the half-open verb gates were doing work, not adding noise — the judgment's first suspect is excluded twice (10b-bis breakdown, and (c)).
+(b) and (d) move depth 3 to 0.85-0.86 with large seed variance (±0.06-0.08) and leave the passive T2 at C 0.60-0.75: doubling D does not
+repair it, so it is not capacity; removing the recipient-less forms does not repair it, so it is not the extra occupancy case. What all four
+settings share is the loss on the PASSIVE forms (and the C-fronted comma form) at depth 3, with the predicate term present — the forms where
+C follows a participle whose gate is closed, so C's address is reached through 'to' only, and three 'that' displacements plus the predicate
+term at the same prefix leave C with the smallest margin (10b: d3:C margin mean 0.04). Conclusion for the reference table: the depth-3 number
+stays 0.813 (full coverage) / 1.000 at coverage 0.59 (A) and 0.975 at 0.33 (C), stated with this breakdown; the regression is a FORM effect
+(passive + predicate term at depth), neither gating nor capacity, and it is reported as a property of the predicate-role world. A remedy would
+be a change of world or model (e.g. the participle as an emitter — rule 20, given) and is NOT built here; proposed for judgment.
