@@ -1,0 +1,25 @@
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/commands/runs/20261016-195138/splits.json before training: heldout_depth2 105, heldout_sentences 4660, new_identities 210, train 35340
+[schema] roles ['action', 'patient', 'destination'] (core ['action', 'patient']), max depth 1, event negation True
+[train] seed 0: 35340 training rows x 1 epoch(s) -> 35340 steps' sentences; D=1024; kinds 16; vocab 40; predicate lemma not found in 0 targets
+[trace] text: move the saved reports .
+[trace] tokens/kinds: move/ACT the/the saved/ATTR reports/PAT ./.
+[trace] gold frame: {"event": "command", "lemma": null, "neg": false, "roles": {"action": ["word", "move"], "patient": ["entity", "reports", ["word", "saved"], null]}, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 54.81 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 2.52 GB | cpu | MemAvailable 110.0 GB
+[train seed 0] step 500 sent 4000/35340 loss -0.923 (81s) | RSS 2.74 GB | cpu | MemAvailable 109.2 GB
+[train seed 0] step 1000 sent 8000/35340 loss -0.941 (163s) | RSS 2.74 GB | cpu | MemAvailable 109.1 GB
+[train seed 0] step 1500 sent 12000/35340 loss -0.943 (244s) | RSS 2.57 GB | cpu | MemAvailable 109.5 GB
+[train seed 0] step 2000 sent 16000/35340 loss -0.962 (322s) | RSS 2.74 GB | cpu | MemAvailable 109.2 GB
+[train seed 0] step 2500 sent 20000/35340 loss -0.946 (404s) | RSS 2.71 GB | cpu | MemAvailable 109.4 GB
+[train seed 0] step 3000 sent 24000/35340 loss -0.941 (495s) | RSS 2.74 GB | cpu | MemAvailable 109.3 GB
+[train seed 0] step 3500 sent 28000/35340 loss -0.974 (585s) | RSS 2.71 GB | cpu | MemAvailable 109.9 GB
+[train seed 0] step 4000 sent 32000/35340 loss -0.964 (670s) | RSS 2.72 GB | cpu | MemAvailable 110.2 GB
+[train seed 0] end: RSS 2.59 GB | cpu | MemAvailable 109.9 GB (737s)
+[export] numpy reader vs torch states: max relative difference 1.10e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth2: FULL catalog candidates 0.790 | experiment candidates 0.790 | residual 0.894
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.242
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.236
+[eval] seed 0 train (sample): FULL catalog candidates 0.990 | residual 0.248
+[mem] after seed 0: RSS 2.00 GB | cpu | MemAvailable 110.5 GB
+[done] model written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/commands/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/commands/runs/20261016-195138/train.log
+checklist: [x] addresses from the world [x] shared identities [x] chance printed [x] seen/unseen axes separated [x] margin [ ] >=3 seeds [x] trivial control (lexical order baseline) [x] calibration (18) [x] memory logged (21) [x] thresholds on calibration rows (25) [x] given vs learned stated (20)

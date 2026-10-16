@@ -1,0 +1,27 @@
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/quantifiers/runs/20261016-200416/splits.json before training: depth2_affirmative (seen depth, fresh sentences) 90, heldout_depth2_quantified 90, heldout_sentences 3977, new_identities 180, train 36023
+[schema] roles ['agent', 'object', 'recipient'] (core ['agent', 'object', 'recipient']), max depth 2, event negation False
+[train] seed 0: 36023 training rows x 1 epoch(s) -> 36023 steps' sentences; D=1024; kinds 36; vocab 87; predicate lemma not found in 0 targets
+[trace] text: each key is lent to some child by the nurse .
+[trace] tokens/kinds: each/each key/NO is/COP lent/lent to/to some/some child/NP by/by the/the nurse/NP ./.
+[trace] gold frame: {"event": "loan", "lemma": null, "neg": false, "roles": {"agent": ["entity", "nurse", null, null], "object": ["entity", "key", null, "each"], "recipient": ["entity", "child", null, "some"]}, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 71.36 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 2.73 GB | cpu | MemAvailable 109.7 GB
+[train seed 0] step 500 sent 4000/36023 loss -0.593 (161s) | RSS 3.11 GB | cpu | MemAvailable 109.3 GB
+[train seed 0] step 1000 sent 8000/36023 loss -0.748 (310s) | RSS 2.96 GB | cpu | MemAvailable 109.5 GB
+[train seed 0] step 1500 sent 12000/36023 loss -0.788 (484s) | RSS 3.14 GB | cpu | MemAvailable 109.3 GB
+[train seed 0] step 2000 sent 16000/36023 loss -0.804 (659s) | RSS 3.15 GB | cpu | MemAvailable 109.2 GB
+[train seed 0] step 2500 sent 20000/36023 loss -0.800 (825s) | RSS 3.11 GB | cpu | MemAvailable 109.3 GB
+[train seed 0] step 3000 sent 24000/36023 loss -0.859 (988s) | RSS 3.24 GB | cpu | MemAvailable 109.2 GB
+[train seed 0] step 3500 sent 28000/36023 loss -0.791 (1163s) | RSS 3.18 GB | cpu | MemAvailable 109.3 GB
+[train seed 0] step 4000 sent 32000/36023 loss -0.834 (1327s) | RSS 3.10 GB | cpu | MemAvailable 109.4 GB
+[train seed 0] step 4500 sent 36000/36023 loss -0.830 (1488s) | RSS 3.14 GB | cpu | MemAvailable 109.4 GB
+[train seed 0] end: RSS 2.87 GB | cpu | MemAvailable 109.7 GB (1489s)
+[export] numpy reader vs torch states: max relative difference 1.16e-07 (float32 phases in the route book)
+[eval] seed 0 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 0.956 | experiment candidates 0.956 | residual 0.506
+[eval] seed 0 heldout_depth2_quantified: FULL catalog candidates 0.356 | experiment candidates 0.356 | residual 0.620
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.660 | experiment candidates 0.660 | residual 0.536
+[eval] seed 0 new_identities: FULL catalog candidates 0.528 | experiment candidates 0.528 | residual 0.579
+[eval] seed 0 train (sample): FULL catalog candidates 0.690 | residual 0.532
+[mem] after seed 0: RSS 2.17 GB | cpu | MemAvailable 110.2 GB
+[done] model written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/quantifiers/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/quantifiers/runs/20261016-200416/train.log
+checklist: [x] addresses from the world [x] shared identities [x] chance printed [x] seen/unseen axes separated [x] margin [ ] >=3 seeds [x] trivial control (lexical order baseline) [x] calibration (18) [x] memory logged (21) [x] thresholds on calibration rows (25) [x] given vs learned stated (20)

@@ -1,0 +1,2 @@
+sop train /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/worlds_p0/reference --D 1024 --seeds 1 --device cpu --n_eval 600 --log_every 500
+commit f759d93

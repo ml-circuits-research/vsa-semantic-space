@@ -166,8 +166,9 @@ property of the formulation set; and the axis "new formulations with seen transi
 the model, which is why we replaced it with "role cues seen". Categories are distributional, gates are not: the learned displacements
 cluster the content words into their five classes perfectly, and so does a skip-gram on the same sentences, so categories are an input the
 model consumes rather than something it produces; the gating structure, by contrast, is not recoverable from co-occurrence and does emerge
-from the objective (section 4). Quantifier scope is the one operator that does not follow the composition regularity: seen at depths 0-1 and
-tested at depth 2, nouns stay at 1.00 while the scope term is at or below chance in all three world definitions we tried (a role identity, the
+from the objective (section 4). Quantifier scope was, until 9c-sexies, the one operator that did not follow the composition regularity (the
+history, kept as the record of the correction): seen at depths 0-1 and tested at depth 2, nouns stayed at 1.00 while the scope term was at or
+below chance in all three world definitions we first tried (a role identity, the
 wide slot, the wide noun; depth-2 scope 0.52 / 0.33 / 0.21 against chance 0.33, decoder without a 'none' rule); a decoder with an absolute
 "no quantifier" threshold made this look even worse (0.03, below chance), and a relative threshold carried the same artefact more weakly, so
 presence and scope are now separate axes with the threshold set on calibration rows — evaluation first, then interpretation. Two hypotheses
@@ -179,7 +180,10 @@ at the unseen depth, 0.69-0.87 at the seen one): one displacement per determiner
 which phrase is wide is a relation between two determiners. The last step removed the relation from the reader: each determiner
 category emits its own unconditional term (a wide-marker term or a plain quantifier term), and the legend derives wide/narrow from the two
 terms at readout; the two-quantifier scope then composes at the unseen depth (0.966, every seed above 0.9; 9c-sexies), so quantifiers join
-the regularity entirely and no exception remains. Finally, a retracted
+the regularity entirely and no exception remains. Standing, said once: the composition regularity "seen at depth d in training (share p),
+tested at depth d+1" holds for every operator case tried — reporting, negation, modality, conditional, modal-in-conditional, negation on
+commands, one- and two-quantifier scope — with no named exception, on the reference world with the predicate role and the given
+relation-marker gates (10b-quinquies). Finally, a retracted
 claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats and structural limits (part of the claims)

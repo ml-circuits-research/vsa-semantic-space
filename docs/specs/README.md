@@ -1,4 +1,4 @@
 # docs/specs — specifications received from the author for the tool around the reader
-- SPEC_worlds_server_sop_cli.md — worlds server, SOP Lang, `sop` CLI, model folder (version 2 with §0 and the world.json `models` fields; sections 3.7-5 from version 1; section 6 not received)
+- SPEC_worlds_server_sop_cli.md — worlds server, SOP Lang, `sop` CLI, model folder: the COMPLETE specification received 2026-10-16 with the hand-over at 78d36e8 (sections 0-10, incl. section 6 the training skill, `_scope=`, multi-world dispatch, corrected sizes); identical to tool/SPEC_worlds_server_sop_cli.md, which is the copy the tool's conformance table refers to. The earlier partial version (sections 0-5, section 6 missing) is in the git history before this commit.
 - INDICATIONS_tool_agent.md — models by role (Haiku class for pipeline / annotate / second_look, Opus class for evolve), build order with tests, deliverables
 The implementation lives under tool/ (built by a coding agent in a separate worktree, merged at a judgment point).

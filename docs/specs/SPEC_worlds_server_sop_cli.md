@@ -1,7 +1,6 @@
-# Specification — worlds server, training skill, SOP Lang, and the `sop` CLI
-(version 2, received from the author on 2026-10-16, saved verbatim; this paste ended inside 3.7 — 3.7 to 5 below are taken from the first
-version received the same day (tool/SPEC_worlds_server_sop_cli.md), marked; section 6 (training skill) and section 8/9 referenced by the
-indications were not received in either version.)
+# PART 3 — Specification — worlds server, training skill, SOP Lang, and the `sop` CLI
+(received from the reviewing session on 2026-10-16 as PART 3 of the hand-over at 78d36e8; saved verbatim, replacing the partial copy of
+2026-10-16 that lacked section 6; this version adds the concepts page, `_scope=`, the multi-world dispatch and the corrected sizes)
 
 Purpose: a minimal, real tool around the reader. A person puts a world's files (legend, examples, raw sentences) on a small server; a
 coding agent, following a skill, annotates what needs annotating and trains the reader; the result is a self-contained `model/` folder;
@@ -26,7 +25,7 @@ this". Many worlds = many small readers + a dispatcher (explicit by channel, or 
 across worlds: the `sop` package, the server, the skill, the catalog of word stars (a word's star is the same everywhere), the kinds lexicon per
 language. Not shared: the route book (its jumps target the world's named stars). Two legends with the same question list are one world.
 Expected sizes: 5-20 roles and tens of event types per legend; a few thousand annotated sentences to start (the held-out-formulation number in
-REPORT.md says when to add more); a model under a few MB; training in minutes on one small accelerator; reading in microseconds.
+REPORT.md says when to add more); a model of a few to ~15 MB at D = 1024 (the per-category-pair relative keys dominate); training in minutes on one small accelerator; reading in microseconds.
 
 ## 1. Folder layout — one world = one folder
 
@@ -154,8 +153,8 @@ conditions, complex noun phrases), auxiliary wires that the top-level one refers
 | fallback | `unknown` | `_text`, `_unplaced`, `_status` | the reader found no event it knows | `@w1 unknown` / `_status=no-sense` |
 | verifier | `verdict` (only in `sop diff` output) | `left=`, `right=`, `_verdict`, `_role`, `_left`, `_right`, margins | the four verdicts of the verifier | 3.7 |
 
-Mood is not a wire type: `_mood=statement|command|question` is a line on the event wire (in the reader, mood is a role). Quantifier scope is not
-emitted in v1 (the determiner stays in `det=`); when the two-quantifier case composes it will be a `_scope=` line, not a new type.
+Mood is not a wire type: `_mood=statement|command|question` is a line on the event wire (in the reader, mood is a role). Quantifier scope is a
+`_scope=` line on the event wire (3.3), not a new type; the determiner word itself stays in `det=` on the entity wire.
 
 3.1 Header line. `@` + id + space + type. Ids are unique in the file (`w1`, `w2`, … any `[A-Za-z0-9_-]+`). `wireType` is: an event id from the
 legend (`transfer`); `entity` (a complex filler, 3.4); an operator (`not`, `must`, `may`, `if`, `says`, `and`); or `unknown` (the reader found no
@@ -186,13 +185,18 @@ Escaping: a bare value that would start with `$ ~ ?` or contain `& |` is quoted 
 - `_span.<role>=5-6` — token positions (0-based, inclusive) the filler came from; for highlighting and audits. Optional.
 - `_depth=1` — nesting depth of this wire. `_tense=past|present|future` — from the normalizer, not the reader; optional, stated as such.
 - `_source=reader|llm:<model>|human` — provenance on annotated examples; `_changed=yes` when the second look replaced the first annotation.
+- `_scope=<role>` on an event wire — the role whose quantifier is wide when the sentence has two quantified phrases (`_scope=both` when the
+  legend's rule says both; absent with zero or one quantifier, where `det=` on the entity wire says which word). Emitted from world version 2 of
+  the quantifier world on (the C2c category-local terms); v1 exporters emit none.
+- `_world=<world>` and `_world_margin=0.31` — on every top-level wire of a file written by the multi-world dispatcher (section 9): which
+  reader read this sentence and how clearly the fit chose it (`_world=none` on an `unknown` wire that no reader could place).
 
 3.4 Operators and entities are wires; an operator wraps a wire OR a word (the reader has both: R_op (x) S and R_op (x) f_word).
 - `not`: `scope=$w3` (prohibition / sentential negation) or `scope=saved` (a negated word).
 - `must` / `may`: `scope=$wN`.   `if`: `condition=$wA`, `consequence=$wB`.   `says`: `speaker=Maria`, `scope=$wN`.
 - `and` (events coordinated in one sentence): `items=$w1&$w2`.
-- `entity` (a complex filler): `head=files`, `attr=$w5` or `attr=red`, `quantity=40`, `unit=boxes`, `det=the|a` (determiner kept as text;
-  quantifier scope is NOT emitted in v1 — the named exception). "the unsaved files" = `object=$w4`; `@w4 entity`, `head=files`, `attr=$w5`;
+- `entity` (a complex filler): `head=files`, `attr=$w5` or `attr=red`, `quantity=40`, `unit=boxes`, `det=the|a|each|every` (the determiner
+  word kept as text; which quantified phrase is wide is the event wire's `_scope=` line, 3.3). "the unsaved files" = `object=$w4`; `@w4 entity`, `head=files`, `attr=$w5`;
   `@w5 not`, `scope=saved`.
 - Values: numbers, dates, identifiers normalized by the world's `values` patterns (`time=2026-10-16`, `invoice=4471`); the reader addresses the
   slot, the normalizer supplies the value (values are invisible to the reader — stated limit).
@@ -239,8 +243,6 @@ Checks: ids unique; every `$id` resolves and no reference cycle; every key is a 
 an allowed operator, or `unknown`; a `&` and a `|` never mix in one value; exactly one `_text` per top-level wire in examples; `_asked` only
 with `_mood=question`; the legend hash in `!legend` matches the legend given to `check`.
 
-[from here on: text of the FIRST version received (identical structure); the second paste ended at the start of 3.7]
-
 3.7 `sop diff a.sop b.sop` writes its verdicts in SOP too. The two files are named once in directives; a verdict wire names the compared
 wires by their plain ids (not `$`, which only resolves inside one file), one verdict wire per compared top-level wire:
 ```
@@ -281,12 +283,313 @@ sop formalize --model <dir> [file|-] [-o out.sop] [--tau 0.05] [--json]     sent
 sop check     --legend <legend.json> <files...>                                 validate SOP files against a legend; report per file; exit 1 on errors
 sop diff      <a.sop> <b.sop>                                                   the verifier: agreement / compatible-incomplete / contradiction (with the role) / unverifiable per wire
 sop stats     --model <dir>                                                     print metrics.json as a table
+sop formalize --worlds <DATA_ROOT> [file|-] [-o out.sop]                        multi-world: every world's reader reads each sentence; the dispatcher picks by fit (section 9)
 ```
 Exit codes: 0 ok; 1 input/validation error; 2 model missing or legend mismatch. Output is deterministic for the same model and input.
 `--json` emits the same content as JSON (one object per wire) for programs. Every wire written by `formalize` has `_margin`, `_status`,
-`_empty` [... the paste ended here; section 6 (training skill) not received]
+`_empty`, `_depth`; nothing is silently dropped: a sentence the reader cannot place still yields a wire (`unknown`, `_status=no-sense`).
 
-## Addendum (author, 2026-10-16, after version 2)
-A top-level wire may carry `_world="..."` (a reserved line naming the world it belongs to). Nowhere may the tool assume that one `.sop` file
-has a single legend: `check` validates each top-level wire against the legend of its `_world` (several legends per call), the legend hash is
-per world, `diff` compares wires within the same `_world` only, `formalize` writes `_world` on every top-level wire it emits.
+## 6. The training skill (for the coding agent)
+
+`skills/train-world/SKILL.md` + `scripts/`. The agent is given a world folder (local path or server URL) and follows:
+
+1. **Inventory.** Read world.json, legend.json, list examples/, raw/, audit/. Run `sop check` on examples. Stop and report if the legend is
+   inconsistent (role ids colliding with reserved names, events without verbs) or if examples reference unknown roles.
+2. **Annotate raw/** (only if raw/ is non-empty). One LLM, given the legend and the SOP Lang rules, writes the wire(s) of each sentence;
+   `sop check` validates every wire (invented keys or types are rejected and re-asked once); write `examples/annotated_<date>.sop` with
+   `_source=llm:<model>`. The control is the reader, in step 6b, not a second annotator.
+3. **Kinds.** Build the word -> kind table from the legend's `kinds` source (lexicon or tagger) over all tokens in examples; unknown words get
+   a kind from the tagger or `unknown`; write it to model/catalog.json. Report the share of tokens with kind `unknown`.
+4. **Splits**, written to runs/<ts>/splits.json before training: seen formulations; held-out sentences; held-out FORMULATIONS (sentence
+   patterns never seen, by template signature when examples are templated, by clustering of role-order otherwise); new identities (fillers
+   never seen). A lexical bag baseline is trained on the same rows.
+5. **Train** with the reference trainer (memory logged, checkpoints, 5 seeds when the data allow it, 1 seed otherwise and say so) on
+   the world's constellations built from the examples' wires; D from config (default 1024); thresholds set on calibration rows, never on the
+   reported rows (rule 25).
+6. **Evaluate** and write model/metrics.json and model/REPORT.md: per-role accuracy, FULL frame, the three occupancy cases, calibration
+   (confident-wrong at tau, coverage, acc-vs-coverage), the held-out-formulation split (the number that says how far the world's language is
+   covered), new identities, the lexical baseline on the same rows, agreement with the annotation on a held-out slice. Label everything
+   BUILT; list what is weak and what kind of examples would help (which formulations, which roles).
+6b. **Second look.** (The model choice is measured, not assumed: on a constructed world with gold frames, annotate 500 generated sentences with the
+   small and the large model and report both against the gold; the result decides the default in world.json.) The trained reader re-reads the training sentences. Where its margin is above tau and its frame disagrees with the
+   annotation, the LLM re-annotates that sentence with both readings in front of it and keeps one; write the cases to
+   `audit/disagreements.sop`. REPORT.md states the disagreement rate and how many annotations changed — the measured label noise. If more than
+   a stated share changed (world.json, default 5%), retrain once on the corrected examples. A human audit (`audit/sample_*.sop`) is optional.
+7. **Package**: model/ complete per section 4; status.json updated; runs/<ts>/ has the log and the exact command. Then run
+   `sop formalize` on a held-out slice and append the reader's wires next to the LLM's, for anyone who wants to look.
+
+8. **Evolve the legend** (section 1.1, steps 3-5): read the feedback of this training and `requests/`; decide a change set; write the
+   migration; re-annotate, retrain and evaluate v+1 on the held-out set fixed before the change; accept or reject by the criterion; write
+   `versions/v<N+1>/CHANGES.md`. Repeat while a change set is found and the budget of the run allows (budget stated in world.json:
+   max versions per run). Removals/merges only of roles empty across the corpus.
+
+Acceptance of a training (the skill checks before declaring BUILT): `sop check` passes on model/legend.json + examples; metrics.json has
+every field of step 6; REPORT.md states n, provenance, the disagreement rate of step 6b; confident-wrong at the stated tau is reported (no threshold on it: a high
+value is a finding, not a failure); the CLI formalizes `_text` of ten random examples and reproduces their role lines on the seen split.
+
+## 7. First world to build with this (proposal)
+
+The command world of the alignment chapter: actions (delete, save, send, move, copy, notify) as event types, with roles (patient, destination,
+condition, principal), operators `not`, `if`, `says`; moods command / statement / question. It exists as a constructed world (scope 1.000 on
+templates, 0.997 at the unseen depth); the pilot replaces its templates with real requests written by people (or LLM paraphrases of them),
+annotated as in steps 2 and 6b. Criterion for "real": on held-out real sentences, confident-wrong < 2% at whatever coverage results, coverage
+reported; the held-out-formulation split reported separately. The numbers go to STATUS.md as the first real-text row.
+
+## 8. Worked example, end to end (the commands world)
+
+8.1 `legend.json`
+```
+{
+  "version": 1,
+  "roles": [
+    {"id":"patient",     "question":"to what?"},
+    {"id":"destination", "question":"where to / to whom?"},
+    {"id":"condition",   "question":"under what condition?"},
+    {"id":"principal",   "question":"who asks / on whose behalf?"}
+  ],
+  "events": [
+    {"id":"delete", "verbs":["delete","remove","erase","drop"]},
+    {"id":"save",   "verbs":["save","store","keep"]},
+    {"id":"send",   "verbs":["send","forward","mail"]},
+    {"id":"move",   "verbs":["move","transfer","relocate"]},
+    {"id":"copy",   "verbs":["copy","duplicate"]},
+    {"id":"notify", "verbs":["notify","tell","inform","alert"]}
+  ],
+  "operators": ["not","if","says","and"],
+  "moods": ["statement","command","question"],
+  "kinds": {"source":"lexicon","lexicon":"kinds.tsv","fallback":"tagger:spacy:en_core_web_sm"},
+  "values": [
+    {"kind":"id",   "pattern":"#?\\d{3,}"},
+    {"kind":"date", "pattern":"\\d{4}-\\d{2}-\\d{2}|tomorrow|today|on (Mon|Tues|Wednes|Thurs|Fri|Satur|Sun)day"},
+    {"kind":"path", "pattern":"[\\w./-]+\\.(pdf|docx|csv|txt)"}
+  ]
+}
+```
+The action itself is not a role: it is the wire type (the predicate role of the reader, read through the synonym table), so "what is to be
+done?" is answered by the header line. `kinds.tsv` (word TAB kind; the kinds are the reader's categories, one learned key per kind):
+```
+delete	VERB
+files	NOUN
+the	DET
+unsaved	ADJ
+to	PREP
+archive	NOUN
+please	FILLER
+if	COND
+not	NEG
+Maria	PERSON
+```
+
+8.2 `raw/requests_2026-10.txt` (what the team supplies; one sentence per line)
+```
+Please delete the unsaved files.
+Do not send the invoice to the client before Friday.
+If the backup finished, move the logs to the archive.
+Maria says that the report should not be forwarded to legal.
+Which files did you move to the archive?
+Copy the report and notify Paul.
+```
+
+8.3 `examples/annotated_2026-10-16.sop` (what the agent writes after annotation; the same format the CLI emits)
+```
+!world commands
+!legend sha256:3f9a7c…
+!source llm:<model>; reader second look in audit/disagreements.sop
+
+@w1 delete
+_text=Please delete the unsaved files.
+_sentence=0
+_mood=command
+patient=$w2
+_empty=destination,condition,principal
+_source=llm:<model>
+
+@w2 entity
+head=files
+det=the
+attr=$w3
+
+@w3 not
+scope=saved
+
+@w4 not
+_text=Do not send the invoice to the client before Friday.
+_sentence=1
+_mood=command
+scope=$w5
+
+@w5 send
+patient=invoice
+destination=client
+condition="before Friday"
+_empty=principal
+
+@w6 if
+_text=If the backup finished, move the logs to the archive.
+_sentence=2
+_mood=command
+condition=$w7
+consequence=$w8
+
+@w7 unknown
+_unplaced=backup,finished
+# the legend has no event for "backup finished": the condition is kept as an opaque wire; stated, not hidden
+
+@w8 move
+patient=logs
+destination=archive
+
+@w9 says
+_text=Maria says that the report should not be forwarded to legal.
+_sentence=3
+_mood=statement
+speaker=Maria
+scope=$w10
+
+@w10 not
+scope=$w11
+
+@w11 send
+patient=report
+destination=legal
+_empty=condition,principal
+
+@w12 move
+_text=Which files did you move to the archive?
+_sentence=4
+_mood=question
+_asked=patient
+patient=?
+destination=archive
+
+@w13 and
+_text=Copy the report and notify Paul.
+_sentence=5
+_mood=command
+items=$w14 & $w15
+
+@w14 copy
+patient=report
+
+@w15 notify
+destination=Paul
+```
+
+8.4 Training (the coding agent, following the skill) — the shell it ends up running
+```
+sop check --legend worlds/commands/legend.json worlds/commands/examples/*.sop
+python -m sop.train --world worlds/commands --seeds 5 --D 1024      # writes runs/<ts>/, model/, status.json
+sop stats --model worlds/commands/model
+```
+`model/REPORT.md` then states: n sentences, provenance (how many human, how many LLM), the second-look disagreement rate and changes, the
+splits, the metrics table (per role, FULL, calibration, held-out formulations, new identities, lexical baseline), and "what would help".
+
+8.5 Formalizing new text with the CLI
+```
+$ echo "Do not move the unsaved logs to the archive before Friday." | sop formalize --model worlds/commands/model
+!world commands
+!legend sha256:3f9a7c…
+!generated sop 0.1, model worlds/commands/model (2026-10-16T18:40Z)
+
+@w1 not
+_text=Do not move the unsaved logs to the archive before Friday.
+_sentence=0
+_mood=command
+scope=$w2
+_margin=0.27
+_status=ok
+_depth=0
+
+@w2 move
+patient=$w3
+destination=archive
+condition="before Friday"
+_empty=principal
+_margin.patient=0.31
+_margin.destination=0.22
+_margin.condition=0.09
+_margin=0.09
+_status=ok
+_depth=1
+
+@w3 entity
+head=logs
+det=the
+attr=$w4
+
+@w4 not
+scope=saved
+```
+With `--tau 0.10` the same input gives `_status=abstain` on w2 (the condition margin 0.09 is under tau) and the consumer knows exactly which
+question is uncertain. A sentence outside the world:
+```
+$ echo "The weather in Lisbon is lovely." | sop formalize --model worlds/commands/model
+@w1 unknown
+_text=The weather in Lisbon is lovely.
+_sentence=0
+_unplaced=weather,Lisbon,lovely
+_residual=0.91
+_status=no-sense
+```
+
+8.6 Verifying a formalization made by someone else (an LLM, a person)
+```
+$ sop formalize --model worlds/commands/model request.txt -o reader.sop
+$ sop diff llm.sop reader.sop
+!left llm.sop
+!right reader.sop
+
+@d1 verdict
+left=w1
+right=w1
+_verdict=contradiction
+_role=destination
+_left=client
+_right=legal
+_margin.right=0.22
+```
+
+8.7 The server, from a shell
+```
+node server.js --root ./worlds --port 8080
+curl -X POST localhost:8080/worlds/commands
+curl -T legend.json localhost:8080/worlds/commands/files/legend.json
+curl -T requests.txt localhost:8080/worlds/commands/files/raw/requests_2026-10.txt
+curl -X POST localhost:8080/worlds/commands/check
+curl -X POST --data-binary @new_requests.txt localhost:8080/worlds/commands/formalize     # 503 until model/ exists
+```
+
+8.8 `skills/train-world/SKILL.md` — skeleton
+```
+---
+name: train-world
+description: Train the reader on a world folder (legend.json + examples/*.sop), annotating raw/ first; the reader's second look measures label noise; write model/ and REPORT.md.
+---
+Inputs: a world folder path or server URL. Never edit model/ by hand. Steps 1-7 of the specification, each with its check. Stop and report
+when: the legend is inconsistent; examples fail `sop check`; fewer than N annotated sentences exist (N stated in world.json); the memory
+curve is not flat. Output: model/, runs/<ts>/, status.json, and a five-line summary (n, FULL, confident-wrong at tau,
+coverage, held-out-formulation FULL) in the chat.
+scripts/: inventory.py, annotate.py, kinds.py, splits.py, train.py (the reference trainer), evaluate.py, second_look.py, evolve_legend.py, package.py
+```
+
+## 9. Several worlds: dispatch of mixed text
+
+A complex system holds many worlds, each with its own reader. Mixing happens at the level of SENTENCES (a document or a conversation carries
+sentences from several worlds; a sentence is, as a rule, from one). Three dispatch strategies, cheapest first; the labels are those of the
+research status:
+1. **Explicit, by channel or context** (BUILT by construction): the command channel goes to the commands world, the invoice import to the
+   invoices world. `sop formalize --model <that world>`.
+2. **By fit** (N7, PLANNED with its criterion: identification > 0.95 on single-world sentences with the vocabulary overlap stated): every
+   world's reader reads the sentence; the dispatcher picks the smallest relative residual, with the mean margin as the second rule; if every
+   residual is high the sentence is from no known world (`unknown`, `_world=none`). Readers cost microseconds, so a hundred worlds cost nothing.
+   The identification's confusion matrix and confident-wrong rate are reported like any other reading. Output: one file, several `!legend
+   <world> sha256:…` directives, `_world=` and `_world_margin=` on every top-level wire.
+3. **Sticky context** (HYPOTHESIS, not measured): a conversation stays in its current world until the fit says otherwise, with hysteresis,
+   so that one ambiguous sentence does not switch worlds; entity memory across sentences (pronouns, B8) is per world.
+What stays with the LLM in such a system: cutting free text into units; everything no reader places (`unknown` wires); the dialogue. The
+semantic layer says what was understood, in which world, with what certainty; the rest flows on. Sentences that mix worlds inside themselves
+(literature, metaphor) are out of scope and stated so.
+
+## 10. Out of scope for v1 (stated)
+Pronoun resolution across sentences; right-announced structure ("Q if P" with the consequence first); mixed worlds in one
+sentence; authentication, multi-user, HTTPS on the server; training triggered by the server.
