@@ -17,7 +17,7 @@ training, the lexical bag baseline on the same rows (6.4), training with the ref
 FULL with the structure estimated and given, occupancy in three cases, calibration, held-out formulations, new identities, baselines). Steps
 1-2 and 6b-8 are the skill's (skills/train-world/scripts/loop.py).
 """
-import argparse, collections, datetime, hashlib, json, os, shutil, subprocess, sys, time
+import argparse, collections, datetime, hashlib, json, os, shutil, subprocess, sys, tempfile, time
 import numpy as np
 
 HERE = os.path.dirname(os.path.abspath(__file__)); REPO = os.path.dirname(os.path.dirname(HERE)); EXP = os.path.join(REPO, "experiment")
@@ -583,7 +583,7 @@ def main(argv=None):
         for s, v in mt.items(): print(f"[eval] {s}: FULL " + " | ".join(f"{cs} {vv['acc']['FULL']:.3f}" for cs, vv in v.items()), flush=True)
     try:
         for k, seed in enumerate([] if a.eval_only else a.seeds_list):
-            md = model_dir if k == 0 else os.path.join(a.run_dir, f"seed{seed}", "model")
+            md = model_dir if k == 0 else (os.path.join(tempfile.mkdtemp(prefix=f"sop_seed{seed}_"), "model") if a.no_ckpt else os.path.join(a.run_dir, f"seed{seed}", "model"))   # --no_ckpt: the other seeds' models are not kept in the run folder
             if k == 0 and os.path.exists(md + ".building"): shutil.rmtree(md + ".building")
             build = md + ".building" if k == 0 else md
             if a.vary_stars: a.star_seed = f"seed{seed}"
