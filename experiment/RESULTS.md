@@ -773,12 +773,12 @@ FULL = nouns, determiners, presence and scope all right. Given: determiners 'eve
 |---|---|---|---|---|
 | depth 0: nouns / determiners | 0.988 / 0.968 | 0.977 / 0.966 | 0.999 / 0.946 ; 0.997 / 0.944 | nouns 1.00: slightly NOT met (cost of the open gates) |
 | depth 0: PRESENCE (quantified) / ABSENT (affirmative) | 0.887 / 1.000 | 0.933 / 1.000 | — | — |
-| depth 0: SCOPE|present, one-quantifier / two-quantifier | **0.976 / 0.761** | **0.961 / 0.793** | (scope with 'none' rule: 0.784 ; 0.873) | one-q > 0.9 MET; two-q NOT met |
+| depth 0: SCOPE|gold-quantified (argmax on sentences the gold marks as quantified; not conditioned on the predicted presence), one-quantifier / two-quantifier | **0.976 / 0.761** | **0.961 / 0.793** | (scope with 'none' rule: 0.784 ; 0.873) | one-q > 0.9 MET; two-q NOT met |
 | depth 0: FULL (joint) | 0.701 | 0.763 | 0.667 / 0.749 | — |
 | depth 1 FULL | 0.616 | 0.698 | 0.503 / 0.578 | — |
 | depth 2 (UNSEEN): PRESENCE / ABSENT | 0.806 / 0.922 | 0.757 / 0.941 | — | — |
-| depth 2 (UNSEEN): SCOPE|present, one-quantifier / two-quantifier | **0.667 / 0.529** | **0.631 / 0.556** | (no-none rule, diag: 0.333 / 0.250 ; 0.206 / 0.194) | > 0.9 NOT met (chance 0.33) |
-| depth 2 FULL | 0.386 | 0.368 | 0.008 / 0.011 (absolute 0.08) | NOT met |
+| depth 2 (UNSEEN): SCOPE|gold-quantified, one-quantifier / two-quantifier | **0.667 / 0.529** | **0.631 / 0.556** | (no-none rule, diag: 0.333 / 0.250 ; 0.206 / 0.194) | > 0.9 NOT met (chance 0.33) |
+| depth 2 FULL (presence threshold set on LABELLED depth-2 calibration sentences, held out — the unseen depth contributes a labelled statistic to the decoder; the STRICT column with the depth-1 threshold is in 9c-quater-bis) | 0.386 | 0.368 | 0.008 / 0.011 (absolute 0.08) | NOT met |
 | new nouns d0 FULL | 0.623 | 0.734 | 0.602 / 0.717 | — |
 | ambiguous (never trained): both reported / cos to superposed world / forced surface-first; presence on ambiguous | 0.377 / 0.725 / 0.397 ; 0.78 | **0.533** / 0.742 / 0.327 ; 0.83 | 0.389 / 0.804 ; 0.693 / 0.819 (absolute 0.08) | both > 0.9 NOT met |
 Per seed, one-quantifier scope at depth 2: slot 0.65-0.69, noun 0.58-0.69 (all five seeds above chance); two-quantifier 0.50-0.59.
@@ -1020,3 +1020,20 @@ margin separates right from wrong only partly on gold (false alarm at tau 0.05 =
 confident wrong decodings of the selected column or the aggregator, not noise the margin can filter. This fixes what the next step must be:
 the reader's confident-wrong rate on sel / agg (a reader property, 8c-8d), not the verifier's threshold. C5 (condition count from an occupancy
 marker, one retraining) stays PLANNED and is independent of this.
+
+## 10c-quater. E3 — where the verifier's false alarm comes from (rescore_v17_e3.py; logs/2026-10-16_1715_rescore_v17_e3_8faa02b.txt; saved frames of 10c-bis, odd half of dev, tau 0.05; re-scoring only)
+Selected column on the odd half: accuracy 0.814, confident-wrong 0.053, abstention 0.243; aggregator: accuracy 0.824, confident-wrong 0.137.
+| breakdown of the confident-wrong SELECTED-COLUMN decodings | n | sel accuracy | confident-wrong rate | share of all confident-wrong |
+|---|---|---|---|---|
+| tables with 1-5 columns | 1,657 | 0.855 | 0.048 | 0.36 |
+| 6-8 columns | 2,114 | 0.795 | 0.058 | 0.55 |
+| 9-12 columns | 409 | 0.756 | 0.049 | 0.09 |
+| 13+ columns | 30 | 0.700 | 0.033 | 0.00 |
+| gold column's name appears verbatim in the question | 3,328 | **0.910** | **0.023** | 0.34 |
+| gold column's name NOT in the question | 882 | **0.449** | **0.169** | **0.67** |
+Reading. The confident-wrong rate is flat across table sizes (0.03-0.06) and seven times higher when the gold column's name is not in the
+question (0.169 vs 0.023): two thirds of the confident-wrong selected columns come from the 21% of questions whose answer column is named by
+other words — a LEXICAL-MISMATCH effect, not a hard-table effect. On those questions the reader is at 0.45 and still confident; the margin
+does not know that the column was never named. The aggregator's confident-wrong (0.137) is the larger contributor to the 16% false alarm on
+gold and was already the lexical decision the model loses (8d). The 50-case audit sample (seed 0) is in logs/audit_confident_wrong_sel_50.jsonl
+with an empty audit_verdict per row, for the team: the share that is gold noise / ambiguous questions is the number needed before touching the reader.

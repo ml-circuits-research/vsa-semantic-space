@@ -1,0 +1,17 @@
+# 2026-10-16T17:16:54+02:00  commit=8faa02b  cmd: python3 rescore_v14_c2.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 116 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+Traceback (most recent call last):
+  File "/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/rescore_v14_c2.py", line 14, in <module>
+    st = torch.load(path, map_location=a.device)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vsa-semantic-space/.venv/lib/python3.12/site-packages/torch/serialization.py", line 1565, in load
+    with _open_file_like(f, "rb") as opened_file:
+         ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vsa-semantic-space/.venv/lib/python3.12/site-packages/torch/serialization.py", line 795, in _open_file_like
+    return _open_file(name_or_buffer, mode)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/salboaie/work/ml-circuits-research/vsa-semantic-space/.venv/lib/python3.12/site-packages/torch/serialization.py", line 776, in __init__
+    super().__init__(open(name, mode))  # noqa: SIM115
+                     ^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: 'logs/.ckpt_v14_q_slot_open_0.pt'

@@ -2,7 +2,7 @@
 affirmative ABSENT with the DEPTH-1 threshold (no depth-2 information at all) next to the depth-2 threshold of 9c-quater. Same worlds, seeds,
 calibration and scored rows as v14 (same rngs). No retraining."""
 import argparse, glob, numpy as np, torch, guard, v5_scale as v5, v14_quantifiers as q
-ap = argparse.ArgumentParser(); ap.add_argument("--targets", default="slot,noun"); ap.add_argument("--tag", default="q"); ap.add_argument("--device", default="cuda"); a = ap.parse_args()
+ap = argparse.ArgumentParser(); ap.add_argument("--targets", default="slot,noun"); ap.add_argument("--tag", default="run"); ap.add_argument("--device", default="cuda"); a = ap.parse_args()
 v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]; D = 1024
 for target in a.targets.split(","):
     q.SCOPE_TARGET = target; rows = []

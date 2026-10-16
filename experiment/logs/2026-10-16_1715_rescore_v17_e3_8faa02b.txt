@@ -1,0 +1,18 @@
+# 2026-10-16T17:15:54+02:00  commit=8faa02b  cmd: python3 rescore_v17_e3.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 116 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v17_e3: odd half of dev, 4210 questions, tau 0.05. Selected column: accuracy 0.814, confident-wrong 0.053, abstain 0.243. Aggregator: accuracy 0.824, confident-wrong 0.137
+
+(a) by number of columns: bucket | n | sel accuracy | confident-wrong rate | share of all confident-wrong
+   1-  5 |  1657 | 0.855 | 0.048 | 0.357
+   6-  8 |  2114 | 0.795 | 0.058 | 0.549
+   9- 12 |   409 | 0.756 | 0.049 | 0.089
+  13-100 |    30 | 0.700 | 0.033 | 0.004
+
+(b) by whether the gold column's name appears verbatim in the question: case | n | sel accuracy | confident-wrong rate | share of all confident-wrong
+  name in question       |  3328 | 0.910 | 0.023 | 0.335
+  name NOT in question   |   882 | 0.449 | 0.169 | 0.665
+
+50 confident-wrong selected-column cases (seed 0) written to logs/audit_confident_wrong_sel_50.jsonl for the hand audit (fields: question, gold_col, pred_col, margin; audit_verdict to fill: 'reader wrong' | 'gold noise / ambiguous')
+
+checklist: [x] re-scoring only, saved frames [x] odd half (report rows) [x] breakdown by table size and lexical match [x] audit sample of stated size and seed [x] confident-wrong at the stated tau (18)
