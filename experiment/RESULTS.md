@@ -1363,3 +1363,22 @@ existing key structure gives exactly one level. B5c as specified is not fully im
 built**. Operator-initial material (an operator before the whole clause: 'perhaps', 'if', a report) satisfies the condition throughout, which is
 why the composition regularity held for every operator so far: those operators all precede what they scope over. The post-subject auxiliary
 ("A must not ...") is the right-announced case inside one clause (chapter 8), with B5.0's list as its measured extent.
+
+### 11-bis. P0 — the 5-seed GPU round trip through the package (tool/tests/p0_full_gpu.sh at commit c843f53; runs committed under tool/runs/p0_gpu_5seed_c843f53/<world>/ with p0_table.md; built and run by the tool agent; quantifier world v2 = C2c)
+| world | axis | package, 5 seeds (roles) | tool FULL, depth ESTIMATED | tool FULL, depth GIVEN | RESULTS (5 seeds) |
+|---|---|---|---|---|---|
+| reference | seen formulations / new identities / role cues | 0.985±0.012 / 0.994±0.007 / 1.000 | same | same | 1.000 / 1.000 / 1.000 (10b) |
+| reference | unseen transitions | 0.643±0.017 | 0.564±0.079 | 0.567±0.077 | 0.638±0.015 |
+| reference | depth 3 UNSEEN | 0.742±0.040 | 0.742 | 0.742 | 0.813±0.030 (10b, learned gates); 0.968 (10b-quinquies, relation-marker gates given open — not expressed in the tool's legend) |
+| commands | depth 0 FULL / new patients | 1.000 / 1.000 | 1.000 / 1.000 | 1.000 / 1.000 | 0.999 / 1.000 (10d) |
+| commands | **depth 2 UNSEEN FULL** | — | **0.590**±0.059 (structure right on 0.684) | **0.857**±0.025 | 0.854±0.031 |
+| quantifiers v2 | nouns d0 / two-quantifier scope d0 / **d2 UNSEEN** / ambiguous "both" | 0.999 / 0.986±0.017 / **0.917**±0.063 / 0.993 | — | 0.995 / 0.995 / 0.962±0.029 / 0.987 | 0.999 / 0.996 / 0.966 / 0.993 (9c-sexies) |
+| quantifiers v2 | determiner word (own axis, outside FULL) | 0.744±0.006 | — | 0.995 | 0.950 (9c-sexies / 9c-septies) |
+Reading (C3 answered): the commands depth-2 gap of the 1-seed CPU run (0.790) was the tool's DEPTH ESTIMATION at an unseen depth, not the
+packaging — with the depth given the package reproduces 10d (0.857 vs 0.854); with the depth estimated FULL falls to 0.590 (structure read right
+on 0.684 of rows). Quantifier v2 reproduces C2c on scope (two-quantifier at the unseen depth 0.917±0.063 vs 0.966: lower mean, larger spread;
+"both" 0.993 = 0.993) with a lower determiner-word axis (0.744 vs 0.950: the tool decides the word with a presence threshold, v14 with its
+relative rule). Reference: role cues and unseen transitions reproduced; seen formulations, new identities and depth 3 (0.742 vs 0.813) not
+within seed variance — the run differs from v16 in three stated ways (per-seed identities from the tool's star function, depth estimated,
+candidates from the whole catalog), not isolated. Open for the tool: the depth estimator at unseen depths; the given relation-marker gates
+(to / by / from open, 10b-quinquies) as a legend field.

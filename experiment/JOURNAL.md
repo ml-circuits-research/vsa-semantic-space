@@ -293,3 +293,6 @@ Push = judgment point.
 B5c trace (trace_b5c.py, logs/trace_b5c.txt, no training): (a) and (b) reachable for every word except the subject before its stacked
 operators, whose address is identical in 'A must give' / 'A must not give' (one re-seating hop = one level) -> STOP per the instruction;
 nothing built (RESULTS 12-bis).
+P0 5-seed GPU round trip (agent; tool/runs/p0_gpu_5seed_c843f53/, RESULTS 11-bis): commands depth 2 0.857 with the depth given (10d 0.854)
+vs 0.590 estimated — the gap was the tool's depth estimator; quantifier v2 reproduces C2c on scope (0.917 at the unseen depth, both 0.993);
+reference depth 3 0.742 vs 0.813, not isolated. Push = judgment point.
