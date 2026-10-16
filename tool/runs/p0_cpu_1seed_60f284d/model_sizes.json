@@ -1,0 +1,277 @@
+[
+ {
+  "model": "worlds_p0/reference/model",
+  "files": {
+   "REPORT.md": 19946,
+   "background.npz": 14444,
+   "catalog.json": 3584,
+   "config.json": 827,
+   "legend.json": 870,
+   "metrics.json": 74395,
+   "routebook.npz": 11877382
+  },
+  "K": 32,
+  "D": 1024,
+  "arrays": {
+   "cats": {
+    "shape": [
+     32
+    ],
+    "dtype": "<U8",
+    "bytes": 1024
+   },
+   "codes": {
+    "shape": [
+     3
+    ],
+    "dtype": "<U6",
+    "bytes": 72
+   },
+   "path": {
+    "shape": [
+     32,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 131072
+   },
+   "bg0": {
+    "shape": [
+     32,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 131072
+   },
+   "bg": {
+    "shape": [
+     32,
+     32,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 4194304
+   },
+   "A": {
+    "shape": [
+     32,
+     32,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 4194304
+   },
+   "L": {
+    "shape": [
+     32,
+     32,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 4194304
+   },
+   "logits": {
+    "shape": [
+     32
+    ],
+    "dtype": "float64",
+    "bytes": 256
+   },
+   "gates": {
+    "shape": [
+     32
+    ],
+    "dtype": "float64",
+    "bytes": 256
+   }
+  },
+  "routebook_uncompressed_bytes": 12846664,
+  "pair_keys_bytes": 12582912,
+  "pair_keys_share": 0.9794692225156664,
+  "formula_3K2D4": 12582912
+ },
+ {
+  "model": "worlds_p0/commands/model",
+  "files": {
+   "REPORT.md": 11114,
+   "background.npz": 17944,
+   "catalog.json": 2803,
+   "config.json": 852,
+   "kinds.tsv": 515,
+   "legend.json": 581,
+   "metrics.json": 36353,
+   "routebook.npz": 3031511
+  },
+  "K": 16,
+  "D": 1024,
+  "arrays": {
+   "cats": {
+    "shape": [
+     16
+    ],
+    "dtype": "<U5",
+    "bytes": 320
+   },
+   "codes": {
+    "shape": [
+     3
+    ],
+    "dtype": "<U6",
+    "bytes": 72
+   },
+   "path": {
+    "shape": [
+     16,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 65536
+   },
+   "bg0": {
+    "shape": [
+     16,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 65536
+   },
+   "bg": {
+    "shape": [
+     16,
+     16,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 1048576
+   },
+   "A": {
+    "shape": [
+     16,
+     16,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 1048576
+   },
+   "L": {
+    "shape": [
+     16,
+     16,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 1048576
+   },
+   "logits": {
+    "shape": [
+     16
+    ],
+    "dtype": "float64",
+    "bytes": 128
+   },
+   "gates": {
+    "shape": [
+     16
+    ],
+    "dtype": "float64",
+    "bytes": 128
+   }
+  },
+  "routebook_uncompressed_bytes": 3277448,
+  "pair_keys_bytes": 3145728,
+  "pair_keys_share": 0.9598101937849205,
+  "formula_3K2D4": 3145728
+ },
+ {
+  "model": "worlds_p0/quantifiers/model",
+  "files": {
+   "REPORT.md": 14281,
+   "background.npz": 24912,
+   "catalog.json": 5026,
+   "config.json": 919,
+   "kinds.tsv": 926,
+   "legend.json": 884,
+   "metrics.json": 50567,
+   "routebook.npz": 14997271
+  },
+  "K": 36,
+  "D": 1024,
+  "arrays": {
+   "cats": {
+    "shape": [
+     36
+    ],
+    "dtype": "<U8",
+    "bytes": 1152
+   },
+   "codes": {
+    "shape": [
+     3
+    ],
+    "dtype": "<U6",
+    "bytes": 72
+   },
+   "path": {
+    "shape": [
+     36,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 147456
+   },
+   "bg0": {
+    "shape": [
+     36,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 147456
+   },
+   "bg": {
+    "shape": [
+     36,
+     36,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 5308416
+   },
+   "A": {
+    "shape": [
+     36,
+     36,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 5308416
+   },
+   "L": {
+    "shape": [
+     36,
+     36,
+     1024
+    ],
+    "dtype": "float32",
+    "bytes": 5308416
+   },
+   "logits": {
+    "shape": [
+     36
+    ],
+    "dtype": "float64",
+    "bytes": 288
+   },
+   "gates": {
+    "shape": [
+     36
+    ],
+    "dtype": "float64",
+    "bytes": 288
+   }
+  },
+  "routebook_uncompressed_bytes": 16221960,
+  "pair_keys_bytes": 15925248,
+  "pair_keys_share": 0.9817092385876922,
+  "formula_3K2D4": 15925248
+ }
+]
