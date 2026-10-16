@@ -1113,6 +1113,7 @@ Gates: the participles at 1.00 (given); the recipient verbs rise to 0.87-0.89 (l
 Reading, by the decision rule stated before the run: NOT met -> the form effect is a stated property of the predicate-role world; the 0.813 /
 two-number form with the breakdown stays; no further remedy is built. The emitter repaired what the trace predicted it could (the non-passive
 forms reach 1.00 at depth 3) and did not touch the passives: with the participle open C does hang off 'given' (given:P) but so does the
-by-phrase's A through 'given:.' + L[.:P], and the learned displacements did not separate the two at depth 3 — the passive's agent, announced
-AFTER the recipient by 'by', is right-announced structure for the chain (the declared limit of 6c), now visible inside one clause. The cost on
-unseen transitions (0.64 -> 0.57) is the price of one more emitter. B5 next, as the judgment says.
+by-phrase's A through 'given:.' + L[.:P], and the learned displacements did not separate the two at depth 3. [WITHDRAWN (indications 013c490
+§0): the sentence that classified the passive's by-phrase agent as right-announced structure — the relation markers announce their fillers before
+them; the classification waits for E1b (relation-marker gates given open), 10b-quinquies.] The cost on unseen transitions (0.64 -> 0.57) is the
+price of one more emitter.

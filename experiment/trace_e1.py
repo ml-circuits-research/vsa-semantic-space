@@ -10,7 +10,8 @@ part = dict(base); part.update({c: True for c in v16.PARTICIPLES})
 X = f"{P[0]} says that {P[1]} says that {P[2]} says that"
 S = {"T0 active": f"{X} {P[3]} gives {O[0]} to {P[4]} .", "T2 passive": f"{X} {O[0]} is given to {P[4]} by {P[3]} .", "T3 passive": f"{X} {O[0]} is given by {P[3]} to {P[4]} ."}
 roles = {P[3]: "A", O[0]: "B", P[4]: "C", "gives": "pred", "given": "pred"}
-for label, gates in (("(i) 10b learned gates: that, '.', recipient verbs open; participles closed", base), ("(ii) E1: participle gates GIVEN open", part)):
+relm = dict(base); relm.update({c: True for c in ("to", "by", "from")})
+for label, gates in (("(i) 10b learned gates: that, '.', recipient verbs open; participles closed", base), ("(ii) E1: participle gates GIVEN open", part), ("(iii) E1b: relation markers to / by / from GIVEN open (as 7c learned them)", relm)):
     m = v6.V6(w, 8, np.random.default_rng(0), gates, ["chainL"], "cpu"); m.np_model.gates = dict(gates); print(f"\n== {label}")
     for name, s in S.items():
         toks = s.split(); _, placed = v6.run_left(m.np_model, toks); print(f"  {name}: {s}"); keys = {}

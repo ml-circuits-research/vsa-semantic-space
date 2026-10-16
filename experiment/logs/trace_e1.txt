@@ -51,5 +51,32 @@
      shared keys A/pred: 2 of 3 / 2  distinct in A: ['given:P']
      shared keys A/C: 2 of 3 / 4  distinct in A: ['given:P']
 
+== (iii) E1b: relation markers to / by / from GIVEN open (as 7c learned them)
+  T0 active: p0 says that p1 says that p2 says that p3 gives o0 to p4 .
+     A    p3       <- that:that + that:that + that:to + L[to:P]
+     pred gives    <- that:that + that:that + that:to + L[to:gives]
+     B    o0       <- that:that + that:that + that:to + L[to:O]
+     C    p4       <- that:that + that:that + that:to + to:. + L[.:P]
+     shared keys C/pred: 2 of 4 / 3  distinct in C: ['L[.:P]', 'to:.']
+     shared keys A/pred: 2 of 3 / 3  distinct in A: ['L[to:P]']
+     shared keys A/C: 2 of 3 / 4  distinct in A: ['L[to:P]']
+  T2 passive: p0 says that p1 says that p2 says that o0 is given to p4 by p3 .
+     B    o0       <- that:that + that:that + that:to + L[to:O]
+     pred given    <- that:that + that:that + that:to + L[to:given]
+     C    p4       <- that:that + that:that + that:to + to:by + L[by:P]
+     A    p3       <- that:that + that:that + that:to + to:by + by:. + L[.:P]
+     shared keys C/pred: 2 of 4 / 3  distinct in C: ['L[by:P]', 'to:by']
+     shared keys A/pred: 2 of 5 / 3  distinct in A: ['L[.:P]', 'by:.', 'to:by']
+     shared keys A/C: 3 of 5 / 4  distinct in A: ['L[.:P]', 'by:.']
+  T3 passive: p0 says that p1 says that p2 says that o0 is given by p3 to p4 .
+     B    o0       <- that:that + that:that + that:by + L[by:O]
+     pred given    <- that:that + that:that + that:by + L[by:given]
+     A    p3       <- that:that + that:that + that:by + by:to + L[to:P]
+     C    p4       <- that:that + that:that + that:by + by:to + to:. + L[.:P]
+     shared keys C/pred: 2 of 5 / 3  distinct in C: ['L[.:P]', 'by:to', 'to:.']
+     shared keys A/pred: 2 of 4 / 3  distinct in A: ['L[to:P]', 'by:to']
+     shared keys A/C: 3 of 4 / 5  distinct in A: ['L[to:P]']
+
 Reading of the trace is written in RESULTS 10b-quater after the run (the trace is the evidence; the verdict is read from the shared-key counts:
 if C's address in the passive is reached through 'to' alone and shares its 'that' prefix with the predicate's carrier while in T0 it carries the
+verb's own key, the emitter test is the right one).

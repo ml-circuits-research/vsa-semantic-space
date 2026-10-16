@@ -1,0 +1,10 @@
+Rule-11 trace for C2c (indications 013c490 §2): one two-quantifier sentence at depth 2; the two second drawings (marker -> R_wide, every/some -> R_q) at distinct addresses, both carrying the 'that' prefix.
+  p0 says that p1 says that each child gives every book to the teacher .
+     child    1st drawing <- that:that + that:to + L[to:NP]
+     child    2nd drawing <- [that:that + that:to + L[to:NP]] + REL[each]   (target: rho_rep + rho_rep + rho_wide + slot)
+     book     1st drawing <- that:that + that:to + L[to:NO]
+     book     2nd drawing <- [that:that + that:to + L[to:NO]] + REL[every]   (target: rho_rep + rho_rep + rho_q + slot)
+     teacher  <- that:that + that:to + to:NP
+Checks: the two second drawings differ by their own noun's address (L[to:NP] vs L[to:NO]) AND by the emitter (REL[each] vs REL[every]); both inherit
+that:that + that:to. REL[each] must learn rho_wide, REL[every] rho_q — each UNCONDITIONAL (no dependence on the other determiner): no relation in
+the reader; the legend's readout rule derives wide / narrow from which terms are present.

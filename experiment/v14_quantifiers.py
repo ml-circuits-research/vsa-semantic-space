@@ -31,6 +31,11 @@ NOUNS_O = ["book", "pen", "key", "coin", "map", "cup", "hat", "ring", "ball", "c
 DETS_Q = ["every", "each", "some", "a", "a certain"]           # quantified; 'each' and 'a certain' are scope markers (wide)
 DET_DEF = "the"
 WIDE_MARKERS = {"each", "a certain"}
+NARROW_Q = ["every", "some", "a"]                              # the unmarked quantifier next to a marker (and the ambiguous pair)
+def set_c2c():
+    """C2c (indications 013c490 §2): 'a' and 'the' draw NOTHING; quantifiers are every / some (R_q) and the markers each / a certain (R_wide).
+    World rows that change (rule 16): one-quantifier determiners lose plain 'a'; the narrow / ambiguous determiners are every / some only."""
+    global DETS_Q, NARROW_Q; DETS_Q = ["every", "each", "some", "a certain"]; NARROW_Q = ["every", "some"]
 PATTERNS = ["{DA} {A} V3 {DB} {B} to {DC} {C} .", "{DC} {C} VR {DB} {B} from {DA} {A} .", "{DB} {B} is VP to {DC} {C} by {DA} {A} .",
             "{DB} {B} is VP by {DA} {A} to {DC} {C} .", "to {DC} {C} , {DA} {A} V3 {DB} {B} .", "{DA} {A} V3 {DB} {B} , to {DC} {C} ."]
 
@@ -55,14 +60,14 @@ class QWorld(v5.BigWorld):
         speakers = list(rng.choice(self.persons, depth, replace=False)) if depth else []
         roles = ["A", "B", "C"]
         if ambiguous:
-            q_roles = list(rng.choice(roles, 2, replace=False)); dets = {r: rng.choice(["every", "some", "a"]) for r in q_roles}; scope = sorted(q_roles)
+            q_roles = list(rng.choice(roles, 2, replace=False)); dets = {r: rng.choice(NARROW_Q) for r in q_roles}; scope = sorted(q_roles)
         else:
             nq = n_quant if n_quant is not None else int(rng.integers(1, 3))
             q_roles = list(rng.choice(roles, nq, replace=False)) if nq else []
             if nq == 0: dets = {}; scope = []                                           # affirmative, all definite: the base sentences at depths 0-2
             elif nq == 1: dets = {q_roles[0]: rng.choice(DETS_Q)}; scope = [q_roles[0]]
             else:
-                wide = q_roles[0]; dets = {wide: rng.choice(["each", "a certain"]), q_roles[1]: rng.choice(["every", "some", "a"])}; scope = [wide]
+                wide = q_roles[0]; dets = {wide: rng.choice(["each", "a certain"]), q_roles[1]: rng.choice(NARROW_Q)}; scope = [wide]
         D = {r: dets.get(r, DET_DEF) for r in roles}
         return (kind, (D["A"], nA), (D["B"], nB), (D["C"], nC)) + tuple(speakers) + (None,) * (3 - len(speakers)) + (scope,)
     def qrender(self, ev, t, rng):
@@ -78,6 +83,7 @@ class QRoleWorld(v7.NestedRoleWorld):
         super().__init__(F, world, rng); D = F.shape[1]
         self.R["Q"] = np.exp(1j * rng.uniform(-np.pi, np.pi, D)); self.R["sc"] = np.exp(1j * rng.uniform(-np.pi, np.pi, D)); self.R["neg"] = np.exp(1j * rng.uniform(-np.pi, np.pi, D))
         self.Frole = {r: np.exp(1j * rng.uniform(-np.pi, np.pi, D)) for r in ("A", "B", "C")}
+        self.R["wide"] = np.exp(1j * rng.uniform(-np.pi, np.pi, D)); self.R["q"] = np.exp(1j * rng.uniform(-np.pi, np.pi, D))      # C2c operators
     def det_vec(self, det):
         w = self.w; return self.F[w.idx["certain"]] if det == "a certain" else self.F[w.idx[det]]
     def state(self, ev):
@@ -86,7 +92,13 @@ class QRoleWorld(v7.NestedRoleWorld):
             slot = self.F[w.idx[noun]]
             if det != DET_DEF: slot = slot + self.R["Q"] * self.det_vec(det)
             S = S + self.R[r] * slot
-        if scope:                                                   # no quantifier => no scope term (empty scope gave 0/0 = NaN on 2026-10-15)
+        if SCOPE_TARGET == "c2c":                                   # category-local, UNCONDITIONAL terms: marker -> R_wide (x) slot; every/some -> R_q (x) slot; a/the nothing
+            terms = []
+            for r, (det, noun) in zip(("A", "B", "C"), ev[1:4]):
+                if det in WIDE_MARKERS: terms.append(self.R["wide"] * self.R[r] * self.F[w.idx[noun]])
+                elif det in ("every", "some"): terms.append(self.R["q"] * self.R[r] * self.F[w.idx[noun]])
+            if terms: S = S + sum(terms) / np.sqrt(len(terms))
+        elif scope:                                                 # no quantifier => no scope term (empty scope gave 0/0 = NaN on 2026-10-15)
             nouns = {r: w.idx[n] for r, (d_, n) in zip(("A", "B", "C"), ev[1:4])}
             if SCOPE_TARGET == "role": terms = [self.R["sc"] * self.Frole[r] for r in scope]                                  # 9c-bis: a ROLE identity as filler (unreachable)
             elif SCOPE_TARGET == "slot": terms = [self.R["sc"] * self.R[r] * self.F[nouns[r]] for r in scope]               # E2c primary: the scope operator wraps the quantified SLOT
@@ -95,7 +107,7 @@ class QRoleWorld(v7.NestedRoleWorld):
         for x in reversed(speakers): S = self.R["X"] * self.F[w.idx[x]] + self.R["rep"] * S
         return S
 
-def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none="relative"):
+def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none="relative", tau_term=None):
     R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}
     Fr = {r: torch.tensor(world.Frole[r], dtype=m.F.dtype, device=m.device) for r in world.Frole}
     Fn = m.F / m.F.abs().pow(2).sum(-1, keepdim=True).sqrt(); Sn = S / S.abs().pow(2).sum(-1).sqrt(); rep = torch.conj(R["rep"]) ** depth
@@ -106,6 +118,21 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none="rela
         sc = torch.real((Sn * torch.conj(R[r]) * rep) @ torch.conj(Fn[cid]).T); out[r] = cands[int(sc.argmax())]
         sd = torch.real((Sn * torch.conj(R[r]) * torch.conj(R["Q"]) * rep) @ torch.conj(dvec).T); j = int(sd.argmax())
         out["d" + r] = dets[j] if float(sd[j]) > 0.5 * float(sc.max()) else "the"           # no quantifier term => definite
+    if SCOPE_TARGET == "c2c":
+        # readout rule (the legend, printed next to every number): an R_wide term present -> that slot is wide (the R_q slot narrow); one R_q term
+        # alone -> the only quantifier; two R_q and no R_wide -> ambiguous, "both"; no term -> no quantifier. Term presence = score >= tau_term
+        # (set per depth on calibration rows); the PRESENCE axis uses the best score as before.
+        sw = {r: float(torch.real((Sn * torch.conj(R["wide"]) * rep * torch.conj(R[r]) * torch.conj(Fn[w.idx[out[r]]])).sum())) for r in ("A", "B", "C")}
+        sq = {r: float(torch.real((Sn * torch.conj(R["q"]) * rep * torch.conj(R[r]) * torch.conj(Fn[w.idx[out[r]]])).sum())) for r in ("A", "B", "C")}
+        ssc = {r: max(sw[r], sq[r]) for r in ("A", "B", "C")}; tt = tau_term if tau_term is not None else 0.0
+        W = [r for r in sw if sw[r] >= tt]; Qs = [r for r in sq if sq[r] >= tt]
+        if W: derived = [max(W, key=lambda r: sw[r])]
+        elif len(Qs) == 1: derived = Qs
+        elif len(Qs) >= 2: derived = sorted(sorted(Qs, key=lambda r: -sq[r])[:2])
+        else: derived = []
+        out["scope_scores"] = ssc; out["wide_scores"] = sw; out["q_scores"] = sq; out["pres_score"] = max(ssc.values())
+        out["scope_top"] = derived; out["scope_first"] = derived[0] if derived else None; out["scope"] = derived; out["scope_choice"] = out["scope_first"]
+        return out
     if SCOPE_TARGET == "role":
         ssc = {r: float(torch.real((Sn * torch.conj(R["sc"]) * rep * torch.conj(Fr[r])).sum()) / Fr[r].abs().pow(2).sum().sqrt()) for r in ("A", "B", "C")}
     else:                                                                 # the scope term carries the NOUN: read it with the decoded noun of each role
@@ -128,11 +155,12 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none="rela
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true", help="checkpoint every 2000 steps to logs/.ckpt_<tag>_<seed>.pt"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="run"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run"); ap.add_argument("--scope_target", default="role", choices=["role", "slot", "noun"], help="world definition of the wide-scope term: role = 9c-bis (R_sc x f_role), slot = E2c primary (R_sc x R_role x f_noun), noun = E2c secondary (R_sc x f_noun)")
+    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true", help="checkpoint every 2000 steps to logs/.ckpt_<tag>_<seed>.pt"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="run"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run"); ap.add_argument("--scope_target", default="role", choices=["role", "slot", "noun", "c2c"], help="world definition of the wide-scope term: role = 9c-bis (R_sc x f_role), slot = E2c primary (R_sc x R_role x f_noun), noun = E2c secondary (R_sc x f_noun)")
     ap.add_argument("--det_gates", default="learned", choices=["learned", "open"], help="C2 (judgment a8a8fab E2): 'open' = determiner gates GIVEN open (rule 20), not learned")
     ap.add_argument("--rel", action="store_true", help="C2b (judgment 3b4f837 E2): the quantified determiners are BEACON-RELATIVE emitters (one learned displacement each, relative to the noun's own address); gates untouched")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     SCOPE_TARGET = a.scope_target; globals()["SCOPE_TARGET"] = a.scope_target
+    if a.scope_target == "c2c": set_c2c(); print("C2c world (rule 16, rows that change): 'a' and 'the' draw nothing; one-quantifier determiners = every / each / some / a certain; narrow and ambiguous = every / some; marker -> R_wide (x) slot, every/some -> R_q (x) slot; readout: R_wide present -> wide; one R_q -> the quantifier; two R_q, no R_wide -> both")
     print(f"scope target = {a.scope_target}")
     print(f"v14_quantifiers (E2): device={a.device}, D={D}, N={N}, seeds={a.seeds}; quantifier = role on the argument (R_Q (x) f_det inside the slot); scope = R_sc (x) f_role; ambiguity = superposition in the WORLD")
     print(f"training: affirmative (all definite) at depths 0-2 (share {a.p_aff}) + UNAMBIGUOUS quantified sentences (one quantifier, or two with a wide-scope marker) at depths 0-1; 12 nouns per class (6 new at test)")
@@ -149,7 +177,7 @@ if __name__ == "__main__":
         m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
         if a.det_gates == "open": print(f"  gates GIVEN open (rule 20, not learned): {m.fix_gates(['every', 'each', 'some', 'a', 'certain'], True)}")
         params = [m.theta, m.logits]
-        if a.rel: print(f"  C2b beacon-relative emitters (given set, learned displacement): {m.set_rel_emitters(['every', 'each', 'some', 'a', 'certain'], ['NP', 'NO'])} -> takers NP, NO"); params.append(m.rel)
+        if a.rel: print(f"  C2b beacon-relative emitters (given set, learned displacement): {m.set_rel_emitters(['every', 'each', 'some', 'certain'] if a.scope_target == 'c2c' else ['every', 'each', 'some', 'a', 'certain'], ['NP', 'NO'])} -> takers NP, NO"); params.append(m.rel)
         trng = np.random.default_rng(200 + seed); sents, targets = [], []
         for n in range(N):
             # E1b protocol (after the 9c protocol error): affirmative (all 'the') sentences at depths 0-2, quantified sentences at depths 0-1
@@ -162,27 +190,37 @@ if __name__ == "__main__":
         if a.device == "cuda": torch.cuda.synchronize()
         t_train = time.time() - t0
         def pres_threshold(depth, n=60):
-            """calibration rows (rule: a threshold is never set on the rows it is reported on): midpoint of the mean best scope score on quantified vs affirmative sentences"""
-            crng = np.random.default_rng(1234 + depth); q, af = [], []
+            """calibration rows (rule 25: a threshold is never set on the rows it is reported on): midpoint of the mean best scope score on quantified vs
+            affirmative sentences; for C2c also the per-slot TERM threshold (midpoint of the true terms' scores vs the other slots' best scores)"""
+            crng = np.random.default_rng(1234 + depth); q, af, tin, tout = [], [], [], []
             for t in range(len(PATTERNS)):
                 for nq, store in ((None, q), (0, af)):
                     evs = [w.qevent(crng, depth=depth, nouns_p=trNP, nouns_o=trNO, n_quant=nq) for _ in range(n // len(PATTERNS) + 1)]; toks = [w.qrender(ev, t, crng) for ev in evs]
                     cats, ids, mask = m.encode(toks)
                     with torch.no_grad(): S = m.states(cats, ids, mask)
-                    store.extend(decode_q(S[k], m, world, w, trNP, trNO, depth, a.delta)["pres_score"] for k in range(len(evs)))
-            return 0.5 * (float(np.mean(q)) + float(np.mean(af))), float(np.mean(q)), float(np.mean(af))
-        thr = {d: pres_threshold(d) for d in (0, 1, 2)}
-        print(f"  seed {seed} presence thresholds (calibration rows; mean quantified / affirmative): " + "; ".join(f"d{d}: {thr[d][0]:.3f} ({thr[d][1]:.3f} / {thr[d][2]:.3f})" for d in thr))
+                    for k, ev in enumerate(evs):
+                        o = decode_q(S[k], m, world, w, trNP, trNO, depth, a.delta); store.append(o["pres_score"])
+                        if SCOPE_TARGET == "c2c":
+                            for r, (det, _) in zip(("A", "B", "C"), ev[1:4]):
+                                if det in WIDE_MARKERS: tin.append(o["wide_scores"][r]); tout.append(o["q_scores"][r])
+                                elif det in ("every", "some"): tin.append(o["q_scores"][r]); tout.append(o["wide_scores"][r])
+                                else: tout.extend([o["wide_scores"][r], o["q_scores"][r]])
+            tt = 0.5 * (float(np.mean(tin)) + float(np.mean(tout))) if tin else None
+            return 0.5 * (float(np.mean(q)) + float(np.mean(af))), float(np.mean(q)), float(np.mean(af)), tt
+        thr = {d: pres_threshold(d) for d in (0, 1, 2)}; fb_all = {}
+        print(f"  seed {seed} presence thresholds (calibration rows; mean quantified / affirmative): " + "; ".join(f"d{d}: {thr[d][0]:.3f} ({thr[d][1]:.3f} / {thr[d][2]:.3f})" for d in thr) + ("" if thr[0][3] is None else "; C2c term thresholds: " + ", ".join(f"d{d} {thr[d][3]:.3f}" for d in thr)))
         def run(depth, ambiguous, NP, NO, n=60, n_quant=None, thr_depth=None):
             thr_d = depth if thr_depth is None else thr_depth                                  # strict column: the DEPTH-1 threshold at depth 2
-            erng = np.random.default_rng(900 + depth + 10 * ambiguous + (0 if n_quant is None else 100 * (n_quant + 1))); nouns, dets, pres, scope, full, both, cosw, surf, sc1, sc2 = [], [], [], [], [], [], [], [], [], []
+            erng = np.random.default_rng(900 + depth + 10 * ambiguous + (0 if n_quant is None else 100 * (n_quant + 1))); nouns, dets, pres, scope, full, both, cosw, surf, sc1, sc2, fboth = [], [], [], [], [], [], [], [], [], [], []
+            if not ambiguous and n_quant is None and thr_depth is None: fb_all[depth] = fboth
             for t in range(len(PATTERNS)):
                 evs = [w.qevent(erng, depth=depth, nouns_p=NP, nouns_o=NO, ambiguous=ambiguous, n_quant=n_quant) for _ in range(n)]; toks = [w.qrender(ev, t, erng) for ev in evs]
                 cats, ids, mask = m.encode(toks)
                 with torch.no_grad(): S = m.states(cats, ids, mask)
                 for k, ev in enumerate(evs):
-                    o = decode_q(S[k], m, world, w, NP, NO, depth, a.delta); ok_n = [o[r] == ev[i][1] for r, i in (("A", 1), ("B", 2), ("C", 3))]; ok_d = [o["d" + r] == ev[i][0] for r, i in (("A", 1), ("B", 2), ("C", 3))]
+                    o = decode_q(S[k], m, world, w, NP, NO, depth, a.delta, tau_term=thr[thr_d][3]); ok_n = [o[r] == ev[i][1] for r, i in (("A", 1), ("B", 2), ("C", 3))]; ok_d = [o["d" + r] == ev[i][0] for r, i in (("A", 1), ("B", 2), ("C", 3))]
                     nouns.extend(ok_n); dets.extend(ok_d); present = o["pres_score"] >= thr[thr_d][0]; truth = sorted(ev[-1])
+                    if not ambiguous and n_quant != 0: fboth.append(len(o["scope_top"]) == 2)                       # FALSE-BOTH rate on unambiguous sentences (C3)
                     if n_quant == 0: pres.append(not present); full.append(all(ok_n) and all(ok_d) and not present); continue       # affirmative: ABSENT is the axis
                     pres.append(present)
                     if ambiguous:
@@ -199,7 +237,7 @@ if __name__ == "__main__":
         u0 = run(0, False, trNP, trNO); u1 = run(1, False, trNP, trNO, n=40); u2 = run(2, False, trNP, trNO, n=30); nn_ = run(0, False, teNP, teNO, n=40); am = run(0, True, trNP, trNO)
         a0 = run(0, False, trNP, trNO, n=30, n_quant=0); a2 = run(2, False, trNP, trNO, n=30, n_quant=0)
         s2 = run(2, False, trNP, trNO, n=30, thr_depth=1); sa2 = run(2, False, trNP, trNO, n=30, n_quant=0, thr_depth=1)   # STRICT: depth-1 threshold at depth 2
-        print(f"  seed {seed} SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 {u0[5]:.3f} / {u0[6]:.3f}; d1 {u1[5]:.3f} / {u1[6]:.3f}; d2 UNSEEN {u2[5]:.3f} / {u2[6]:.3f}; presence on ambiguous d0 {am[5]:.3f}")
+        print(f"  seed {seed} SCOPE|gold-quantified one-quantifier / two-quantifier (marked): d0 {u0[5]:.3f} / {u0[6]:.3f}; d1 {u1[5]:.3f} / {u1[6]:.3f}; d2 UNSEEN {u2[5]:.3f} / {u2[6]:.3f}; presence on ambiguous d0 {am[5]:.3f}; FALSE-BOTH on unambiguous d0 / d2: {np.mean(fb_all[0]):.3f} / {np.mean(fb_all[2]):.3f}")
         r = [u0[0], u0[1], u0[2], u0[3], u0[4], a0[2], u1[4], u2[2], u2[3], u2[4], a2[2], nn_[4], am[0], am[1], am[2], s2[2], s2[4], sa2[2]]; res.append(r); gt = m.gates(); gates_all.append(gt)
         print(f"  seed {seed} ({t_train:.0f}s) " + " | ".join(f"{x:.3f}" for x in r) + f"  || ambiguous: nouns {am[3]:.2f} dets {am[4]:.2f} || gates OPEN: {sorted(c for c, v in gt.items() if v > 0.5)}", flush=True)
     r = np.array(res); print(f"\n== MEANS over {a.seeds} seeds: " + " | ".join(cols)); print("  " + " | ".join(f"{r[:,i].mean():.3f}±{r[:,i].std():.3f}" for i in range(len(cols))))
