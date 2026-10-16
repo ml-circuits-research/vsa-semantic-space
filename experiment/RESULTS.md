@@ -1117,3 +1117,14 @@ by-phrase's A through 'given:.' + L[.:P], and the learned displacements did not 
 §0): the sentence that classified the passive's by-phrase agent as right-announced structure — the relation markers announce their fillers before
 them; the classification waits for E1b (relation-marker gates given open), 10b-quinquies.] The cost on unseen transitions (0.64 -> 0.57) is the
 price of one more emitter.
+
+### 10c-quater-bis. The 50-case audit (indications 013c490 §4a) — logs/audit_confident_wrong_sel_50.jsonl, verdicts and one-line reasons filled in
+Labeler: an LLM (Claude Fable 5.1, the session running this repository; not an independent model — stated; anyone can check rows by hand).
+Of the 50 confident-wrong selected-column cases (odd half of dev, tau 0.05, seed 0): **gold-correct (the reader is wrong) 34 = 0.68; gold-wrong 7
+= 0.14; ambiguous question 9 = 0.18**. Share of the 16% that is gold noise or ambiguity: **0.32** (16/50). Typical reader errors: the reader
+picks the CONDITION column (the one the question names a value for) instead of the asked column — 'what days were the rounds of ...' -> Rounds,
+'which score has a location attendance of ...' -> Location Attendance (20 of the 34); synonyms the reader does not have ('driver' -> Rider,
+'selection' -> Pick #, 'writers' -> Written by). Typical gold noise: the asked entity vs its score column ('what away team played at ...' ->
+gold 'Away team score'), garbled questions. Consequence for the operating point: of the 0.162 false alarm on gold, about 0.11 is the reader's
+and about 0.05 is the data's; the reader's part is mostly the asked-vs-condition column confusion, a decision the question's syntax carries
+('what X has a Y of ...'): a reader property, as 10c-ter said. No operating point is chosen on this; C5 and 4c follow.
