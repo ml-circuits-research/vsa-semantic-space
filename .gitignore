@@ -3,3 +3,5 @@ __pycache__/
 tomorrow.sh
 experiment/logs/.ckpt_*
 experiment/logs/.run.lock
+experiment/logs/*.pt
+experiment/logs/*.npz

@@ -1,0 +1,33 @@
+
+== (i) E2c learned gates: that, to, from open; determiners closed
+  p0 says that p1 says that each child gives a book to the teacher .
+     child    <- that:that + that:to + L[to:NP]
+     book     <- that:that + that:to + L[to:NO]
+     teacher  <- that:that + that:to + to:NP
+  p0 says that p1 says that every child gives a book to the teacher .
+     child    <- that:that + that:to + L[to:NP]
+     book     <- that:that + that:to + L[to:NO]
+     teacher  <- that:that + that:to + to:NP
+  chain address of the wide noun under 'each' vs 'every': IDENTICAL; contains 'that' re-addressing: yes
+
+== (ii) C2 flag: determiners GIVEN open
+  p0 says that p1 says that each child gives a book to the teacher .
+     child    <- that:that + that:each + each:a + L[a:NP]
+     book     <- that:that + that:each + each:a + a:to + L[to:NO]
+     teacher  <- that:that + that:each + each:a + a:to + to:NP
+  p0 says that p1 says that every child gives a book to the teacher .
+     child    <- that:that + that:every + every:a + L[a:NP]
+     book     <- that:that + that:every + every:a + a:to + L[to:NO]
+     teacher  <- that:that + that:every + every:a + a:to + to:NP
+  chain address of the wide noun under 'each' vs 'every': DIFFERENT; contains 'that' re-addressing: yes
+
+Target (slot world, depth 2): rho_rep + rho_rep + rho_sc + rho_A + f_wide for the wide noun; the narrow noun gets only rho_rep + rho_rep + rho_B + f_narrow.
+Verdict: under (i) the chain address of the wide noun is IDENTICAL for 'each' and 'every' (that:that + that:to + L[to:NP] in both), so the only
+terms that can distinguish them are path / bigram (bg:each:NP vs bg:every:NP), which carry no 'that' displacement => not re-addressed by the
+frame => cannot land at rho_rep + rho_rep + rho_sc + rho_A. Under (ii) the wide noun's chain address contains the determiner's OWN category
+(that:that + that:each + each:a + L[a:NP] vs that:that + that:every + every:a + L[a:NP]): a product of per-category vectors that includes the
+two 'that' displacements and differs between the two determiners => the scope term CAN move with the frame. The flag is therefore a valid test
+of H-a (addressing). What it cannot settle: whether the gradient makes (that:each + each:a) - (that:every + every:a) equal to rho_sc + (the
+slot's own correction) — that is what the run measures. Cost to watch: with the determiners open EVERY noun's base address now passes through
+its determiner ('the' stays closed, so definite and quantified nouns take different chains) => report nouns and determiners at depth 2, not
+only the scope. One- and two-quantifier scope are reported separately (H-a vs H-b).

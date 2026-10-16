@@ -168,9 +168,11 @@ cluster the content words into their five classes perfectly, and so does a skip-
 model consumes rather than something it produces; the gating structure, by contrast, is not recoverable from co-occurrence and does emerge
 from the objective (section 4). Quantifier scope is the one operator that does not follow the composition regularity: seen at depths 0-1 and
 tested at depth 2, nouns stay at 1.00 while the scope term is at or below chance in all three world definitions we tried (a role identity, the
-wide slot, the wide noun); a decoder with an absolute "no quantifier" threshold made this look even worse (0.03, below chance) until the
-rule was made relative to the noun scores — evaluation first, then interpretation. Our hypothesis, not yet tested, is that scope is a relation
-between two slots and not an envelope over a state, so no degree-1 word term can carry it to a depth-shifted address. Finally, a retracted
+wide slot, the wide noun; depth-2 scope 0.52 / 0.33 / 0.21 against chance 0.33, decoder without a 'none' rule); a decoder with an absolute
+"no quantifier" threshold made this look even worse (0.03, below chance), and a relative threshold carried the same artefact more weakly, so
+presence and scope are now separate axes with the threshold set on calibration rows — evaluation first, then interpretation. Two hypotheses
+are recorded and untested: the scope term composes only when it is carried by the code the reporting frame re-addresses (the determiner gates
+stayed closed, so it was not), and the two-quantifier case may additionally need a term holding both phrases. Finally, a retracted
 claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats and structural limits (part of the claims)

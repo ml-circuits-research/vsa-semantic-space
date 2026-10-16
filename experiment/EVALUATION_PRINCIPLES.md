@@ -55,3 +55,9 @@ Added 2026-10-16 (external review of the positioning document; round 10):
     them is a draft, not a result.
 24. **The regime of a composition test is named exactly**: "seen at depth d in training (share p), tested at depth d+1" — never "one
     exposure" (nothing was shown once; the combination was a stated share of the training sentences at the shallow depth).
+25. **A threshold is never set on the rows it is reported on.** Every threshold (presence, occupancy, abstention tau, 'none') is set on a
+    calibration split — training sentences, or a named half of dev — and the table header names that split. Setting it on the scored rows
+    tunes the number on its own test set, even when it is "only a midpoint".
+26. **Queues wait on the pid lock only.** A wait loop never greps for a pattern that occurs in its own command line (two queued launches
+    waited on each other for an hour on 2026-10-16); `queue.sh` runs `run.sh` invocations strictly in sequence; the pgrep check inside `run.sh`
+    is a secondary guard that excludes its own process tree.

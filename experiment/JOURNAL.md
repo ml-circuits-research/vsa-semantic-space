@@ -233,3 +233,16 @@ threshold explains the 0.03 but under no rule do the corrected targets compose (
 both corrected worlds. RESULTS 9c-ter; decoder default now relative. current_status.md rewritten whole with the interpretation (relation vs
 envelope, HYPOTHESIS), proposals C1-C6 (PLANNED, criteria) and six questions; STATUS.md updated; PAPER_NOTE §7-8 and 00_READ_FIRST §5.9
 updated. Push = judgment point.
+
+## 2026-10-16 (DGX, afternoon) — judgment at a8a8fab applied (process points C), queue of re-runs and C2 started
+Judgment saved verbatim as experiment/JUDGMENT_2026-10-16_a8a8fab.md. Applied in one commit: (C1) the 9c-ter sentence on the relative 'none'
+rule was FALSE (its own diagnostic table showed slot d0 0.978 -> 0.850, d2 0.333 -> 0.033) — corrected; no 'none' rule from now on: v14
+reports PRESENCE (threshold on calibration sentences) and SCOPE conditional on presence, one- and two-quantifier separately; every quantifier
+number carries its decoder rule; the E2c models were not saved, so the numbers keep their labels (all scripts save final params from now on).
+(C2) v16 occupancy threshold moved to depth-0 training sentences; v17 condition threshold moved to the even half of dev, verdicts on the odd
+half; rule 25. (C3) N5-N7 rows added without criteria (addendum text not received). (E1) one hypothesis -> H-a addressing / H-b relation;
+(E2) degree-2 term withdrawn (commutative binding; information already degree 1); C2 = determiner gates GIVEN open, depth-2 trace first
+(logs/trace_c2.txt: the flag puts the wide noun's chain address through the determiner's own category and both 'that' displacements — valid
+test of H-a). (E4) depth-3 breakdown coded; (b) (c) (d) queued. (E5) gold "filter, not judge" sentence added; v17 saves reader + frames.
+(E6) queue.sh; run.sh excludes its own tree; rule 26; run.sh ignores *.md in the dirty check. Queue: v16, v17, v16 omit0, v16 verb gates
+closed, v16 D 2048, v14 slot open, v14 noun open.

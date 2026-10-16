@@ -101,6 +101,13 @@ class V8(v6.V6):
             opt.zero_grad(); (-cos.mean()).backward(); opt.step()
             with torch.no_grad(): self.theta[0] = 0
 
+    def fix_gates(self, cats, open_):
+        """rule 20: gates GIVEN for these categories (not learned): logit +8 (open) or -8 (closed), gradient masked. Returns the categories fixed."""
+        idx = [self.cat_id[c] for c in cats if c in self.cat_id]
+        with torch.no_grad(): self.logits[idx] = 8.0 if open_ else -8.0
+        mask = torch.ones_like(self.logits); mask[idx] = 0
+        self.logits.register_hook(lambda g: g * mask)
+        return [self.cats[i] for i in idx]
     def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
 
 if __name__ == "__main__":

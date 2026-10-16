@@ -102,8 +102,16 @@ if __name__ == "__main__":
         for s_, r in zip(S, rows):
             f = read_frame(s_, hid(dtabs, r["table_id"])); frames.append(f)
             for k, (c, top, mg) in enumerate(f["conds"]): thr_pres.append((top, k < len(r["sql"]["conds"])))
-    tp = np.array(thr_pres); pres_thr = 0.5 * (tp[tp[:, 1] == 1, 0].mean() + tp[tp[:, 1] == 0, 0].mean())   # stated presence threshold (midpoint of present / absent slots)
-    print(f"condition-slot presence threshold (midpoint of present {tp[tp[:,1]==1,0].mean():.3f} / absent {tp[tp[:,1]==0,0].mean():.3f}): {pres_thr:.3f}")
+    # presence threshold set on the CALIBRATION half of dev (even rows), reported on the other half (odd rows) — judgment a8a8fab C2
+    thr_cal = []
+    for i, r in enumerate(dev):
+        if i % 2 == 0:
+            for k, (c, top, mg) in enumerate(frames[i]["conds"]): thr_cal.append((top, k < len(r["sql"]["conds"])))
+    tp = np.array(thr_cal); pres_thr = 0.5 * (tp[tp[:, 1] == 1, 0].mean() + tp[tp[:, 1] == 0, 0].mean())
+    tpa = np.array(thr_pres); thr_same = 0.5 * (tpa[tpa[:, 1] == 1, 0].mean() + tpa[tpa[:, 1] == 0, 0].mean())
+    print(f"condition-slot presence threshold set on the calibration half of dev (even rows; midpoint of present {tp[tp[:,1]==1,0].mean():.3f} / absent {tp[tp[:,1]==0,0].mean():.3f}): {pres_thr:.3f}  (the same-rows midpoint of 10c would be {thr_same:.3f})")
+    torch.save({"params": [p_.detach().cpu() for p_ in m.params], "frames": frames, "dev_ids": [r.get("table_id") for r in dev], "pres_thr": float(pres_thr)}, "logs/.ckpt_v17_reader_frames.pt")
+    print("reader params and dev frames saved to logs/.ckpt_v17_reader_frames.pt (re-scoring without retraining: C4 / C5)")
     # ---- lexical baseline frame (BoW+LR of v12: sel by overlap features, agg by hashed BoW), trained on train
     H = 4096; hb = lambda r: torch.bincount(torch.tensor([hash(w) % H for w in tok(r["question"])]), minlength=H).float().clamp(max=1)
     Xa = torch.stack([hb(r) for r in train]).to(dev_); ya = torch.tensor([r["sql"]["agg"] for r in train], device=dev_); Wa = torch.nn.Linear(H, 6).to(dev_); opt = torch.optim.Adam(Wa.parameters(), lr=1e-2, weight_decay=1e-5)
@@ -138,14 +146,17 @@ if __name__ == "__main__":
         return ("ok", None)
     kinds = ["drop_cond", "swap_sel_cond", "change_sel", "flip_agg", "add_cond", "change_value"]; rng = np.random.default_rng(0)
     stats = {k: {"reader": collections.Counter(), "lex": collections.Counter()} for k in kinds + ["no_error"]}
+    lex_frames = []
     for i, r in enumerate(dev):
-        cols = dtabs[r["table_id"]]; lf = lex_frame(r)
+        cols = dtabs[r["table_id"]]; lf = lex_frame(r); lex_frames.append(lf)
+        if i % 2 == 0: continue                                   # calibration half: not scored (its rows set the presence threshold)
         for kind in kinds + ["no_error"]:
             prop = {"sel": r["sql"]["sel"], "agg": r["sql"]["agg"], "conds": [list(c) for c in r["sql"]["conds"]]} if kind == "no_error" else propose_with_error(r["sql"], len(cols), rng, kind)
             if prop is None: continue
             for name, fr, isr in (("reader", frames[i], True), ("lex", lf, False)):
                 v, field = verdict(fr, prop, kind, isr); stats[kind][name][v] += 1
-    print(f"\n== VERIFIER on dev ({len(dev)} questions), one injected error per instance; reader = v11 full model (no table), lex = BoW+LR frame (no condition model)")
+    torch.save(lex_frames, "logs/.ckpt_v17_lex_frames.pt")
+    print(f"\n== VERIFIER on the REPORT half of dev (odd rows, {len(dev)//2} questions; the even half set the presence threshold), one injected error per instance; reader = v11 full model (no table), lex = BoW+LR frame (no condition model)")
     print("error type | n | reader: detected (recall) / unverifiable / missed(confident-wrong) | lex: detected / unverifiable / missed")
     for kind in kinds:
         for name in ("reader", "lex"):
@@ -158,4 +169,5 @@ if __name__ == "__main__":
     fa = c["error"] / n; tot_err = sum(stats[k]["reader"]["error"] for k in kinds[:5]); tot_n = sum(sum(stats[k]["reader"].values()) for k in kinds[:5])
     print(f"  precision of the 'error' verdict on ROLE errors vs gold (reader): {tot_err / (tot_err + fa * tot_n / max(1, len(kinds[:5]))):.3f}  (false-alarm rate on gold {fa:.3f}); recall on role errors {tot_err / max(tot_n,1):.3f}")
     print("  stated: change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values); conditions are detected by column set only.")
-    print(f"\nchecklist: [x] world addresses [x] fixed identities [x] no table at the input [x] one error per instance, per-type rates [x] lexical baseline on the same rows [x] unverifiable = margin < tau (18) [x] false-alarm rate on gold [x] invisible error types stated [x] memory logged (21) [ ] LLM-produced formalizations (follow-up)")
+    print(f"  stated: on GOLD frames the verifier confirms {c['ok']/n:.3f} and says 'unverifiable' on {c['unverifiable']/n:.3f} — it is a filter on the role part of a formalization, not a judge of it.")
+    print(f"\nchecklist: [x] world addresses [x] fixed identities [x] no table at the input [x] one error per instance, per-type rates [x] lexical baseline on the same rows [x] unverifiable = margin < tau (18) [x] false-alarm rate on gold [x] invisible error types stated [x] presence threshold set on the calibration half, reported on the other half [x] reader and frames saved for re-scoring [x] memory logged (21) [ ] LLM-produced formalizations (follow-up)")

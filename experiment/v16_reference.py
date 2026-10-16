@@ -89,6 +89,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18)
+    ap.add_argument("--verb_gates", default="learned", choices=["learned", "closed"], help="E4 (c): verb gates GIVEN closed (rule 20)")
     ap.add_argument("--tau", type=float, default=0.05); ap.add_argument("--p_omit", type=float, default=0.2); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="ref")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v16_reference (B1 + B2): device={a.device}, D={D}, N={N}, seeds={a.seeds}, tau={a.tau}; predicate role (surface lemma, option a) + occupancy marker m; calibration on every readout")
@@ -97,18 +98,20 @@ if __name__ == "__main__":
     verbs = sorted(set(LEMMA.values())); print(f"predicate candidates ({len(verbs)}): {verbs}; chance 1/{len(verbs)}; roles: chance 1/12 (new ids 1/6)\n")
     cols = ["seen FULL(roles)", "pred (surface)", "pred (event)", "new ids FULL", "role cues FULL", "unseen trans. FULL", "depth 2 FULL", "depth 3 UNSEEN FULL", "occupancy: known", "unknown filler", "not given"]
     res = []; gates_all = []
+    breakdown = {}
     for seed in range(a.seeds):
         w = RefWorld(a.n_id, np.random.default_rng(seed)); trP, teP, trO, teO = w.persons[:12], w.persons[12:], w.objects[:12], w.objects[12:]
         F = np.exp(1j * np.random.default_rng(300 + seed).uniform(-np.pi, np.pi, (len(w.vocab), D))); world = RefRoleWorld(F, w, np.random.default_rng(100 + seed))
         m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
-        trng = np.random.default_rng(200 + seed); sents, targets = [], []
+        if a.verb_gates == "closed": print(f"  verb gates GIVEN closed (rule 20, not learned; E4 c): {m.fix_gates([c for c in m.cats if c in LEMMA], False)}")
+        trng = np.random.default_rng(200 + seed); sents, targets, meta = [], [], []
         for n in range(N):
             d = int(trng.integers(3)); ev = w.event(trP, trO, depth=d)
-            if trng.random() < a.p_omit: toks = w.render_omit(ev, int(trng.integers(len(OMIT_C)))); targets.append(world.state(ev, toks, has_C=False))
-            else: toks = w.render(ev, int(trng.choice(v5.TRAIN_T))); targets.append(world.state(ev, toks))
+            if trng.random() < a.p_omit: toks = w.render_omit(ev, int(trng.integers(len(OMIT_C)))); targets.append(world.state(ev, toks, has_C=False)); meta.append((d, True))
+            else: toks = w.render(ev, int(trng.choice(v5.TRAIN_T))); targets.append(world.state(ev, toks)); meta.append((d, False))
             sents.append(toks)
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
-        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=(f"logs/.ckpt_{a.tag}_{seed}.pt" if a.ckpt else None), resume=a.resume, tag=f" seed {seed}")
+        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=f"logs/.ckpt_v16_{a.tag}_D{D}_omit{a.p_omit}_{a.verb_gates}_{seed}.pt", resume=a.resume, tag=f" seed {seed}")
         if a.device == "cuda": torch.cuda.synchronize()
         t_train = time.time() - t0; cal = Calib()
         def run(templs, P, O, depth, n=30, axis="x"):
@@ -125,6 +128,16 @@ if __name__ == "__main__":
             return float(np.mean(full)), float(np.mean(ps)), float(np.mean(pe))
         seen = run(v5.TRAIN_T, trP, trO, 0, axis="seen"); newid = run(v5.TRAIN_T, teP, teO, 0, n=20, axis="newid"); cues = run(cues_ok, trP, trO, 0, axis="cues"); unseen = run(held_new, trP, trO, 0, n=20, axis="unseen")
         d2 = run(v5.TRAIN_T, trP, trO, 2, n=15, axis="d2"); d3 = run(v5.TRAIN_T, trP, trO, 3, n=15, axis="d3")
+        # E4 (a) (judgment a8a8fab): per-template and per-verb breakdown of the roles at depth 3, with the verb's gate value
+        erng3 = np.random.default_rng(933); gt = m.gates()
+        for t in v5.TRAIN_T:
+            evs = [w.event(trP, trO, depth=3) for _ in range(20)]; toks = [w.render(ev, t) for ev in evs]; c, i_, k = m.encode(toks)
+            with torch.no_grad(): S = m.states(c, i_, k)
+            for j, ev in enumerate(evs):
+                o = readout(S[j], m, world, w, 3, trP, trO, verbs); vt = next((x for x in toks[j] if x in LEMMA), "?")
+                for key in (f"T{t}", f"verb {vt} (gate {gt.get(vt, float('nan')):.2f})"):
+                    bd = breakdown.setdefault(key, {"A": [], "B": [], "C": [], "pred": []})
+                    bd["A"].append(o["A"]["id"] == ev[1]); bd["B"].append(o["B"]["id"] == ev[2]); bd["C"].append(o["C"]["id"] == ev[3]); bd["pred"].append(o["pred"]["id"] == w.surface_verb(toks[j]))
         # occupancy: the C role in three cases
         erng = np.random.default_rng(555); pres = {"known": [], "unknown": [], "absent": []}
         for k in range(120):
@@ -133,14 +146,23 @@ if __name__ == "__main__":
                 c, i_, kk = m.encode([toks])
                 with torch.no_grad(): o = readout(m.states(c, i_, kk)[0], m, world, w, 0, trP + teP, trO, verbs)
                 pres[case].append(o["C"]["present"])
-        thr = 0.5 * (np.mean(pres["known"]) + np.mean(pres["absent"]))        # presence threshold: midpoint, stated
+        # presence threshold set on CALIBRATION rows = depth-0 TRAINING sentences (120 with C, 120 without), never on the 360 scored readouts (judgment a8a8fab C2)
+        cal_known = [i for i, (d, om) in enumerate(meta) if d == 0 and not om][:120]; cal_abs = [i for i, (d, om) in enumerate(meta) if d == 0 and om][:120]; cp = {"known": [], "absent": []}
+        for case, idxs in (("known", cal_known), ("absent", cal_abs)):
+            for i in idxs:
+                c, i_, kk = m.encode([sents[i]])
+                with torch.no_grad(): cp[case].append(readout(m.states(c, i_, kk)[0], m, world, w, 0, trP + teP, trO, verbs)["C"]["present"])
+        thr = 0.5 * (np.mean(cp["known"]) + np.mean(cp["absent"])); thr_old = 0.5 * (np.mean(pres["known"]) + np.mean(pres["absent"]))
         occ = (float(np.mean(np.array(pres["known"]) > thr)), float(np.mean(np.array(pres["unknown"]) > thr)), float(np.mean(np.array(pres["absent"]) < thr)))
         r = [seen[0], seen[1], seen[2], newid[0], cues[0], unseen[0], d2[0], d3[0], occ[0], occ[1], occ[2]]; res.append(r); gt = m.gates(); gates_all.append(gt)
-        print(f"  seed {seed} ({t_train:.0f}s) " + " | ".join(f"{x:.3f}" for x in r) + f"  || presence cos: known {np.mean(pres['known']):.2f} unknown {np.mean(pres['unknown']):.2f} absent {np.mean(pres['absent']):.2f} (thr {thr:.2f}) || gates OPEN: {sorted(c for c, v in gt.items() if v > 0.5)}", flush=True)
+        print(f"  seed {seed} ({t_train:.0f}s) " + " | ".join(f"{x:.3f}" for x in r) + f"  || presence cos: known {np.mean(pres['known']):.2f} unknown {np.mean(pres['unknown']):.2f} absent {np.mean(pres['absent']):.2f} (thr {thr:.2f} from training rows: known {np.mean(cp['known']):.2f} / absent {np.mean(cp['absent']):.2f}; same-rows midpoint would be {thr_old:.2f}) || gates OPEN: {sorted(c for c, v in gt.items() if v > 0.5)}", flush=True)
         if seed == 0:
             print("  calibration (seed 0, tau = %.2f):" % a.tau)
             for ax in ("seen:A", "seen:B", "seen:C", "seen:pred", "newid:A", "d3:A", "d3:C", "unseen:A", "unseen:C"): print(f"     {ax:10s} " + cal.report(ax, a.tau))
     r = np.array(res); print(f"\n== MEANS over {a.seeds} seeds: " + " | ".join(cols)); print("  " + " | ".join(f"{r[:,i].mean():.3f}±{r[:,i].std():.3f}" for i in range(len(cols))))
     cats0 = sorted(gates_all[0]); g = {c: np.mean([gt[c] for gt in gates_all]) for c in cats0}
     print("== learned gates (mean sigmoid; OPEN > 0.5): " + " ".join(f"{c}={g[c]:.2f}" for c in sorted(cats0, key=lambda c: -g[c])[:14]))
-    print(f"\nchecklist: [x] world addresses [x] shared F [x] chance printed [x] predicate role present (23) [x] occupancy by marker, not norm (A1) [x] calibration: margin, confident-wrong, abstention, acc-vs-coverage (18) [x] memory logged (21) [{'x' if a.seeds >= 3 else ' '}] >=3 seeds [x] given vs learned stated (20)")
+    print(f"== depth-3 breakdown over all seeds (E4 a): key | n | A | B | C | pred   (template keys T<i>; verb keys carry the seed-0 gate value)")
+    for key in sorted(breakdown, key=lambda k: (k.startswith("verb"), k)):
+        bd = breakdown[key]; print(f"   {key:28s} | {len(bd['A']):4d} | " + " | ".join(f"{np.mean(bd[x]):.3f}" for x in ("A", "B", "C", "pred")))
+    print(f"\nchecklist: [x] world addresses [x] shared F [x] chance printed [x] predicate role present (23) [x] occupancy threshold set on training rows, not the scored rows [x] depth-3 per-template / per-verb breakdown (E4 a) [x] params saved [x] occupancy by marker, not norm (A1) [x] calibration: margin, confident-wrong, abstention, acc-vs-coverage (18) [x] memory logged (21) [{'x' if a.seeds >= 3 else ' '}] >=3 seeds [x] given vs learned stated (20)")

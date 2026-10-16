@@ -716,11 +716,18 @@ raw scope-score profile (mean score of the TRUE wide role | mean of the other ro
 Determiners (all targets): one quantifier d0 0.81-0.86, d2 0.64-0.67; two marked d0 0.77-0.82, d2 0.46-0.48. Nouns 1.000 everywhere.
 Reading.
 - The evaluation artefact is REAL but it is not the whole story. The absolute threshold does turn depth-2 scope into 0.03 for the corrected
-  targets (the 'none' rule recovers 0.33 / 0.21); it also makes the affirmative case readable (0.91-1.00 where the 9c-bis decoder had 0 by
-  construction). The RELATIVE rule is the one to keep (it reads the affirmative case at 0.84-1.00 and leaves the quantified cases within 0.01-
-  0.13 of the no-none rule at depth 0); it will be the decoder from here on. Under NO rule does a corrected target compose: at depth 2 the
-  raw score of the true wide role equals the score of the other roles (slot 0.024 vs 0.015, noun 0.035 vs 0.039) — there is NO scope signal
-  at the unseen depth, whereas the role-identity target of 9c-bis keeps a weak one (0.093 vs 0.030 -> 0.52 scope, above chance).
+  targets (the no-none rule recovers 0.33 / 0.21); it also makes the affirmative case readable (0.91-1.00 where the 9c-bis decoder had 0 by
+  construction). CORRECTED (judgment a8a8fab C1; the first version of this paragraph said the relative rule "affects the affirmative case
+  only" — the table above contradicts it): the RELATIVE rule carries the same depth artefact, weaker — slot one-quantifier d0 0.978 -> 0.850,
+  d2 0.333 -> 0.033; noun d2 0.206 -> 0.067 — because scope scores shrink with depth while noun scores do not. Therefore NO 'none' rule is used
+  from now on: rule 17 is applied as for negation — PRESENCE (quantifier present / absent) is its own axis, thresholded on calibration
+  sentences (rule 25), and SCOPE is reported conditional on presence as the argmax, with the one- and two-quantifier cases separate
+  (v14 decoder from commit after a8a8fab). Every quantifier number in this file, STATUS.md and PAPER_NOTE carries the rule it was computed
+  under: 9c-bis = no-none rule; the E2c table = absolute 0.08; the diagnostic table = all three. The 5-seed E2c models were not saved
+  (saving is on from now), so these numbers keep their labels and are not re-scored. Under NO rule does a corrected target compose: at depth 2
+  the raw score of the true wide role equals the score of the other roles (slot 0.024 vs 0.015, noun 0.035 vs 0.039) — there is NO scope
+  signal at the unseen depth, whereas the role-identity target of 9c-bis keeps a weak one (0.093 vs 0.030 -> 0.52 scope under the no-none
+  rule, above chance).
 - So the world correction worked where the trace said it could — at the SEEN depth the one-quantifier scope is 0.96-0.99 (role target 0.89),
   the best quantifier number so far — and failed at the unseen depth, worse than the target it replaced. The quantifier terms of the corrected
   worlds are carried by terms that are NOT re-addressed by the reporting frame: the diagnostic shows the determiner gates CLOSED in both
@@ -729,25 +736,32 @@ Reading.
   depth; the chain term (the one 'that' re-addresses, and the one that makes nouns compose at 1.000) is identical for 'each' and 'every' when
   the determiners are closed. The role-identity target of 9c-bis cannot be produced by any word term, so its weak signal lives in the chain by
   default, which is why it survives one level (0.52) without being right.
-- Interpretation proposed for judgment (HYPOTHESIS, rule 22): quantifier scope is not an envelope operator like negation / modality /
-  reporting (one term R_op (x) S applied to a whole state, carried by a gate word the chain re-addresses) but a RELATION between two slots
-  (which of two quantified noun phrases out-scopes the other). A relation of two sentence positions needs a term of degree 2 in word
-  identities — address (x) f_A (x) f_B — or an operator word that opens a frame; the current model has only degree-1 word terms and the
-  gradient did not open the determiner gates (opening them would cost on the nouns, which are already 1.000). This is the same class of limit
-  as "right-announced structure": the information exists in the sentence but no causal degree-1 term can hold it at a depth-shifted address.
-- Two changes that follow and are NOT applied here (PLANNED, criterion each; for judgment):
-  (a) a degree-2 relational term, one per sentence, bound by the wide determiner's slot and the narrow one's: criterion = scope > 0.9 at depth
-  0 AND > 0.9 at depth 2 with the regime above, 5 seeds, nouns unchanged at 1.00, no loss on 6c/9b/9d (the term must be inert where there is
-  no quantifier); (b) forcing the determiner gates OPEN (given, not learned — rule 20 stated) so that the scope difference enters the chain:
-  criterion = the same, and the cost on nouns and on the other operator tables reported. (a) tests the hypothesis; (b) tests the mechanism
-  claimed in the second bullet. If (b) already composes, the limit is in the learned gating, not in the degree of the terms.
-- Ambiguity: the noun target gives "both hypotheses reported" 0.69 (role 0.43, slot 0.39) with a forced surface-first choice 0.33; the
-  product reading proposed for judgment is to EMIT scope as "both" (the superposed world state is what the model produces, cos 0.80-0.84, and
-  the two readings are what a reasoner receives), rather than to pick. Not a criterion yet (observed, rule 22).
-- Status of the regularity (rule 24): "seen at depth d in training (share p), tested at depth d+1" holds for reporting, negation, modality,
-  conditional, modal-in-conditional; quantifier scope FAILS in all three worlds tried (role 0.52, slot 0.33, noun 0.21 at depth 2 under the
-  no-none rule; nouns 1.00 in all). 9c-bis stays; E2c supersedes nothing — it adds the two corrected targets and the diagnostic. The decoder
-  change (relative 'none' rule) affects the affirmative case only and is applied from the next run on; the numbers above are not re-run.
+- Hypotheses recorded (HYPOTHESIS, rule 22; corrected by the judgment at a8a8fab E1 — the first version here had one hypothesis, "scope is a
+  relation between two slots, needs a degree-2 term", which cannot explain the ONE-quantifier failure: which single slot is quantified is a
+  degree-1 fact, exactly the slot target):
+  H-a (addressing): the scope term composes only if it is carried by the code the reporting frame re-addresses (the chain). In both corrected
+      worlds the determiner gates stayed closed, so the each/every difference rode on position-local terms. Covers the one- AND two-quantifier
+      failures. Tested by C2 (determiner gates GIVEN open; depth-2 trace in logs/trace_c2.txt: with the flag the wide noun's chain address
+      contains the determiner's own category and both 'that' displacements; without it, it is identical for 'each' and 'every').
+  H-b (relation): the two-quantifier case additionally needs a term that holds both phrases. Covers the two-quantifier case only; testable
+      only after C2, and only if the one-quantifier case then composes while the two-quantifier case still fails.
+  This is NOT the same limit as right-announced structure (that one is about causal order; this one is about addressing): two declared limits.
+- Changes (judgment a8a8fab E2): C2 = determiner gates GIVEN open (rule 20 stated), 5 seeds, regime of 9c-bis, both targets; criterion scope
+  > 0.9 at depth 0 AND at depth 2, nouns 1.00, cost on the 6c / 9b / 9d / 10d tables reported; one- and two-quantifier scope separately.
+  The degree-2 term as first proposed here (address (x) f_wide (x) f_narrow) is WITHDRAWN: binding is commutative, so the term is symmetric in
+  the two nouns and cannot say which is wide; and with two quantified phrases "A out-scopes B" is already determined by "which slot is wide",
+  which the slot target encodes — degree 2 adds no information. Only if C2 composes the one-quantifier case and not the two-quantifier one: a
+  relational term with a PERMUTED filler (permutation binding, B7), declared as a change of principle. If C2 fails on both: no third world
+  definition without a new argument; the quantifier line stays the named exception with H-a / H-b open.
+- Ambiguity: the noun target gives "both hypotheses reported" 0.69 (role 0.43, slot 0.39) with a forced surface-first choice 0.33 (absolute-
+  0.08 decoder). Adopted (judgment a8a8fab E3): scope on ambiguous sentences is EMITTED as "both" — the reader's equivalent of the verifier's
+  "compatible, incomplete". Criterion, two-sided: both > 0.9 on never-trained ambiguous sentences AND one reading > 0.9 on unambiguous ones,
+  with the FALSE-BOTH rate on unambiguous sentences reported as its own number; measured on whichever target C2 ends with. Until met: observed, partial.
+- Status of the regularity (rule 24): "seen at depth d in training (share p), tested at depth d+1" holds for six operator cases (reporting,
+  negation, modality, conditional, modal-in-conditional, negation on commands); quantifier scope FAILS at the unseen depth in all three world
+  definitions tried (depth 2, no-none rule: role 0.52, slot 0.33, noun 0.21; nouns 1.00 in all). 9c-bis stays; E2c supersedes nothing — it
+  adds the two corrected targets and the diagnostic. The numbers above are not re-run; the decoder from the next run on has no 'none' rule
+  (presence / scope split, see the first bullet).
 
 ## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
 World: R_may (x) S, R_must (x) S; R_if (x) S_P + R_then (x) S_Q; reporting as before. Forms: "may V", "perhaps V3"; "must V", "has to V";
@@ -813,7 +827,7 @@ with margin >= tau; abstention split into right/wrong; accuracy-vs-coverage at t
 | new formulations, UNSEEN transitions FULL | 0.638±0.015 | — (as before: 0.6-0.7 in rounds 3-6; no loss from the predicate role) |
 | depth 2 (seen) FULL / depth 3 UNSEEN FULL | 1.000 / 0.813±0.030 | depth 3 > 0.9 NOT met with the predicate role (6c without it: 1.000) |
 | occupancy: known filler / UNKNOWN filler / NOT GIVEN | 1.000 / 1.000 / 1.000 | three cases > 0.95 MET (A1: by marker, not by norm) |
-| presence cosine on the marker: known 0.38, unknown 0.38, absent 0.06 (threshold 0.22 = midpoint, fixed per seed) | separation 0.32 | — |
+| presence cosine on the marker: known 0.38, unknown 0.38, absent 0.06 (threshold 0.22 = midpoint, per seed; set on the SAME 360 scored readouts — rule 25 violation, re-run with the threshold set on training rows in 10b-bis) | separation 0.32 | — |
 Calibration (seed 0, tau = 0.05; the same shape on the other seeds): seen roles and predicate: accuracy 1.000, margin mean 0.22-0.33, p10
 0.13-0.29, coverage 1.00, confident-wrong 0.000. New identities: 1.000, confident-wrong 0.000. Depth 3 (unseen): accuracy 0.90 (A) /
 0.875 (C) at full coverage, margins mean 0.06 / 0.04 — at tau 0.05 coverage drops to 0.59 / 0.33 and the covered accuracy is 1.000 / 0.975,
@@ -851,7 +865,10 @@ on the same rows; no condition model) scored identically.
 | no error (gold) | 8,421 | FALSE ALARM **0.162** / unverifiable 0.529 / confirmed 0.309 | 0.213 / 0.359 / 0.427 |
 Precision of the 'error' verdict on ROLE errors (change_sel, swap, flip_agg) against the gold false-alarm rate: 0.942; recall on role errors
 0.527 (the rest is 'unverifiable', not 'missed'). Criterion (judgment B4: detection > 0.9 on role errors): NOT met — 0.74-0.81 detected,
-0.18-0.26 unverifiable, confident-wrong 0.3-1.3%.
+0.18-0.26 unverifiable, confident-wrong 0.3-1.3%. On GOLD frames the verifier confirms 0.309 and says 'unverifiable' on 0.529: it is a
+FILTER on the role part of a formalization, not a judge of it — half of the correct formalizations get no verdict (judgment a8a8fab E5).
+Caveat (rule 25, judgment C2): the condition presence threshold of this run was the midpoint over the SAME dev rows that are scored; the
+re-run sets it on the even half of dev and reports the odd half (10c-bis, below, old and new side by side).
 Stated limits. change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values): 0.159 "detected" there is the
 false-alarm rate, as on gold. Condition errors (drop / add) are read only through the column SET at a presence threshold, and the condition
 model is weak (0.16 detected, 0.5-0.8 unverifiable): the condition slot was already the weak part of the full-query number (8c, 0.37).

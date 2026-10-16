@@ -2,17 +2,22 @@
 # Runs a python script and saves the log with the date and the current commit hash in its name.
 set -euo pipefail
 [ $# -ge 1 ] || { echo "usage: ./run.sh script.py [arguments]"; exit 1; }
-# logs/ is ignored by the check: new logs are always uncommitted at run time
-if [ -n "$(git status --porcelain 2>/dev/null | grep -v "logs/")" ]; then
-  echo "There are uncommitted changes. Commit first (git add -A && git commit), so that the log corresponds to a commit."; exit 1
+# logs/ is ignored by the check: new logs are always uncommitted at run time. Documents (*.md) are ignored too (2026-10-16): the hash in the
+# log name must identify the CODE that ran; documents are edited while runs are queued.
+if [ -n "$(git status --porcelain 2>/dev/null | grep -v "logs/" | grep -v "\.md$")" ]; then
+  echo "There are uncommitted code changes. Commit first (git add -A && git commit), so that the log corresponds to a commit."; exit 1
 fi
 # protection (2026-10-16, after the machine hung on 2026-10-15): one run at a time, enough free memory, a wall-clock cap
 LOCK=logs/.run.lock
 if [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; then
   echo "Another run.sh is active (pid $(cat "$LOCK"), lock $LOCK). Runs are sequential; wait for it or stop it first."; exit 1
 fi
-if pgrep -f "python3? v[0-9]+_|python3? frame_roundtrip|python3? diag_" >/dev/null; then
-  echo "Another experiment process is running (pgrep). Runs are sequential on this machine; wait for it or stop it first."; pgrep -af "python3? v[0-9]+_" | head -3; exit 1
+# secondary guard (the lock is the primary one): other experiment processes, EXCLUDING this script's own process tree (a parent queue.sh or
+# shell whose command line mentions a script name must not make run.sh refuse its own launch — judgment 2026-10-16 E6)
+anc=""; p=$$; while [ "$p" -gt 1 ]; do anc="$anc $p"; p=$(ps -o ppid= -p "$p" 2>/dev/null | tr -d ' '); [ -n "$p" ] || break; done
+others=$(pgrep -f "python3? v[0-9]+_|python3? frame_roundtrip|python3? diag_" | grep -vxF -f <(printf '%s\n' $anc) || true)
+if [ -n "$others" ]; then
+  echo "Another experiment process is running (pids: $others). Runs are sequential on this machine; wait for it or stop it first."; ps -o pid,args -p $(echo $others | tr ' ' ',') | head -4; exit 1
 fi
 avail_gb=$(awk '/MemAvailable/ {printf "%d", $2/1024/1024}' /proc/meminfo)
 if [ "$avail_gb" -lt 40 ]; then echo "Only ${avail_gb} GB available; refusing to start (need 40)."; exit 1; fi
