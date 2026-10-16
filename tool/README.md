@@ -118,7 +118,61 @@ tool/bin/sop train tool/worlds_p0/quantifiers --D 1024 --seeds 5 --vary_stars --
 ```
 `tests/p0_full_cpu.sh` runs the same at one seed on the CPU. Results: see "P0 results" below.
 
-P0_RESULTS_PLACEHOLDER
+### P0 results (BUILT: `tests/p0_full_cpu.sh` at commit 60f284d, 1 seed, CPU, full sizes; logs in `tool/worlds_p0/<world>/runs/`, not committed)
+| world | axis | package (1 seed, CPU) | tool FULL incl. structure | RESULTS (5 seeds) | section |
+|---|---|---|---|---|---|
+| reference | seen formulations FULL (A, B, C) | 1.000 | 1.000 | 1.000±0.000 | 10b |
+| reference | predicate, surface lemma | 1.000 | 1.000 | 1.000 | 10b |
+| reference | new identities FULL | 1.000 | 1.000 | 1.000 | 10b |
+| reference | role cues seen FULL | 1.000 | 1.000 | 1.000 | 10b |
+| reference | unseen transitions FULL | 0.633 | 0.511 | 0.638±0.015 | 10b |
+| reference | depth 3 UNSEEN FULL | 0.792 | 0.792 | 0.813±0.030 | 10b |
+| commands | depth 0: action | 1.000 | 0.998 | 1.000 | 10d |
+| commands | depth 0: patient (with attribute and its negation) | 0.998 | 0.998 | 1.000 / 0.999 (patient / attribute) | 10d |
+| commands | depth 0 FULL | 0.998 | 0.998 | 0.999 | 10d |
+| commands | new patients FULL | 1.000 | 1.000 | 1.000 | 10d |
+| commands | depth 2 UNSEEN FULL | 0.790 | 0.790 | 0.854±0.031 | 10d |
+| commands | depth 2 UNSEEN: structure (depth + negation scope) | 0.905 | 0.790 | scope 0.997±0.003 (depth given) | 10d |
+| quantifiers | depth 0: nouns (agent / object / recipient heads) | 0.997 | 0.660 | 0.999 | 9c-bis |
+| quantifiers | depth 0: noun + determiner per role | 0.878 | 0.660 | determiners 0.923±0.009 | 9c-bis |
+| quantifiers | depth 2 UNSEEN quantified: nouns | 0.993 | 0.356 | 1.00 (seed 0 diagnostic) | 9c-bis |
+| quantifiers | depth 2 UNSEEN quantified: noun + determiner | 0.726 | 0.356 | determiners 0.46-0.64 (seed 0) | 9c-bis |
+| quantifiers | new nouns depth 0: noun + determiner FULL | 0.528 | 0.528 | 0.657 (FULL incl. scope) | 9c-bis |
+
+Reading, per rule 10 (evaluation first):
+- **Reference world: reproduced within seed variance** on every roles column (seen, predicate, new identities, role cues 1.000; unseen
+  transitions 0.633 vs 0.638±0.015; depth 3 0.792 vs 0.813±0.030). The tool's own FULL is lower on unseen transitions (0.511) because the
+  tool ESTIMATES the reporting depth from S (structure 0.839 there) while the repository scripts are given the depth.
+- **Commands world**: depth 0 and new patients reproduced (0.998 / 1.000 vs 0.999 / 1.000). Depth 2 (unseen) FULL 0.790 vs 0.854±0.031 —
+  about two standard deviations below, one seed; here too the tool estimates depth and negation jointly (structure 0.905), the script is given
+  the depth and scores the scope among four hypotheses (0.997).
+- **Quantifier world**: NOT the same world as 9c-bis — the spec's v1 does not emit quantifier scope, so the export has no scope term in the
+  targets. Nouns are reproduced (0.997 vs 0.999 at depth 0; 0.993 vs 1.00 at the unseen depth 2). Determiners differ: lower at depth 0 (role
+  noun+determiner 0.878, vs determiners 0.923±0.009) and higher at the unseen depth 2 (0.726 vs 0.46-0.64, seed 0); the determiner presence here is
+  a threshold set on training rows, v14 used a fixed relative rule (0.5 x the noun score), and the scope term no longer competes with the base.
+  Not "within seed variance" for determiners; the difference is stated, not tuned.
+- One seed only (rule 6): the 5-seed GPU run (command above) is the P0 result; this table is the CPU check that the package reproduces the
+  reference table's mechanism through `model/` and numpy inference (numpy vs torch states agree to 1e-7).
+- Model size: the route book is K^2 x D x 3 float32 phases (K kinds): reference 12 MB (K = 32), quantifiers 15 MB, commands 2.9 MB at D = 1024;
+  above the spec's "a few MB" expectation for worlds with many function-word kinds (each function word is its own kind in these worlds).
+
+## Test results (BUILT; `tests/run_all.sh` on CPU, commit 60f284d's code; outputs in `tool/tests/out/`, not committed)
+- test 1 (SOP Lang + check): the 3.5 example parses and round-trips byte for byte; every 3.6 negative case rejected with line and reason;
+  a file mixing two worlds passes with two legends and fails with one. PASS.
+- test 2 (formalize, smoke readers D = 256): deterministic (byte-identical twice) on the three worlds, output passes `sop check`, exit 2 on a
+  missing model / a legend mismatch, the dispatcher by fit sends 3 + 3 sentences to the right worlds. PASS.
+- test 3 (injected-error verifier, commands smoke reader, new patients, 140 sentences, tau 0.05): gold: false alarm 0.000 / unverifiable
+  0.021 / confirmed 0.979; change_action, change_patient, flip_negation detected 1.000; flip_attr_negation 0.936 / 0.064 unverifiable;
+  drop / add destination 1.000 / 0.975; missed (confident-wrong) 0.000 on every type. The 10c shape holds (on a templated world, so far
+  cleaner than WikiSQL's 0.74-0.81). PASS.
+- test 4 + 6 (server and page): every route, 503 without a model, traversal rejected, model/ and runs/ refused, byte-identical downloads. PASS.
+- test 5 (skill loop): (a) one version on the commands world from raw/ — model/ complete, REPORT.md with every section, second-look
+  disagreement rate 0.013 (17 of 1273; oracle annotator, nothing changed). (b) legend without `destination`: the `_unplaced` clusters give
+  {archive, cloud, folder, trash} (kind DEST, 225 sentences, 3 routes) as the only NOVEL supported cluster (the NATTR cluster {new, unsaved,
+  unsent, unsigned} is supported but its lemmas already fill a role: reported as reader errors, not proposed); proposed as `role_1`
+  (placeholder name: API unavailable), migrated (225 examples), retrained and ACCEPTED: FULL 0.860 -> 0.871 (tolerance 0.02), residual
+  0.526 -> 0.524, unknown 0 -> 0, confident-wrong 0.047 -> 0.037. Caveat: the residual drop is small (0.002), and v and v+1 FULL are each
+  measured against their own version's annotations (v+1's include the new role). PASS.
 
 ## The train-world skill and the models
 The coding agent of the loop is Claude; the models are named by role in `world.json` `models`: `pipeline`, `annotate`, `second_look` =
