@@ -24,7 +24,7 @@ Run: python3 v14_quantifiers.py [--seeds 5] [--N 40000] [--D 1024]
 import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
-import v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
+import trainer, v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
 
 NOUNS_P = ["child", "teacher", "student", "nurse", "doctor", "farmer", "driver", "guard", "clerk", "judge", "singer", "pilot", "baker", "tailor", "miner", "sailor", "monk", "scout"]
 NOUNS_O = ["book", "pen", "key", "coin", "map", "cup", "hat", "ring", "ball", "card", "lamp", "bag", "flag", "rope", "drum", "shell", "stone", "kite"]
@@ -121,7 +121,7 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none=0.08)
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
-    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run"); ap.add_argument("--scope_target", default="role", choices=["role", "slot", "noun"], help="world definition of the wide-scope term: role = 9c-bis (R_sc x f_role), slot = E2c primary (R_sc x R_role x f_noun), noun = E2c secondary (R_sc x f_noun)")
+    ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--device", default="cuda"); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true", help="checkpoint every 2000 steps to logs/.ckpt_<tag>_<seed>.pt"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="run"); ap.add_argument("--delta", type=float, default=0.25); ap.add_argument("--p_aff", type=float, default=0.4, help="share of affirmative (all-definite) sentences at depths 0-2 in training (E1b protocol); 0 = the 9c run"); ap.add_argument("--scope_target", default="role", choices=["role", "slot", "noun"], help="world definition of the wide-scope term: role = 9c-bis (R_sc x f_role), slot = E2c primary (R_sc x R_role x f_noun), noun = E2c secondary (R_sc x f_noun)")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     SCOPE_TARGET = a.scope_target; globals()["SCOPE_TARGET"] = a.scope_target
     print(f"scope target = {a.scope_target}")
@@ -142,14 +142,10 @@ if __name__ == "__main__":
             else: ev = w.qevent(trng, depth=int(trng.integers(2)), nouns_p=trNP, nouns_o=trNO)
             sents.append(w.qrender(ev, int(trng.integers(len(PATTERNS))), trng)); targets.append(world.state(ev))
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
-        opt = torch.optim.Adam([m.theta, m.logits], lr=a.lr)
-        for i in range(0, N, a.batch):
-            sl = slice(i, i + a.batch); S = m.states(cats[sl], ids[sl], mask[sl]); tgt = tgt_all[sl]
-            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
-            assert torch.isfinite(cos).all(), f"non-finite loss at step {i}: a target or state is NaN (check the world)"
-            opt.zero_grad(); (-cos.mean()).backward(); opt.step()
-            with torch.no_grad(): m.theta[0] = 0
-        torch.cuda.synchronize(); t_train = time.time() - t0
+        ckpt = f"logs/.ckpt_{a.tag}_{seed}.pt" if a.ckpt else None
+        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=ckpt, resume=a.resume, tag=f" seed {seed}")
+        if a.device == "cuda": torch.cuda.synchronize()
+        t_train = time.time() - t0
         def run(depth, ambiguous, NP, NO, n=60):
             erng = np.random.default_rng(900 + depth + 10 * ambiguous); nouns, dets, scope, full, both, cosw, surf = [], [], [], [], [], [], []
             for t in range(len(PATTERNS)):

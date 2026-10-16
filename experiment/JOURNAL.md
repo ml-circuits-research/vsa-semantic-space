@@ -207,3 +207,7 @@ in frame.py and "occupancy not by norm"; A2 commutative-binding limit in PAPER_N
 A6 memory figure; rules 18-24 (24 = name the regime exactly); P2 rename "one exposure" -> "seen at depth d (share p), tested at d+1" with
 shares; P3 current_status rewritten whole with labels; P4 pid-file lock in run.sh; N0 STATUS.md at the root; Q2 both ambiguity numbers
 labelled with n. Next: E2c (rule-11 trace first), then round 10 A2.
+Round 10 A2 code (10:35): trainer.py = the one training loop for E1/E2/E3 — memory (RSS, torch alloc/reserved, MemAvailable) every N
+steps, .item() losses, no graph after a step, finite-loss assertion, checkpoints every 2000 steps with --resume (tested on CPU: resume at
+step 800 works); run.sh: expandable_segments, log-advance watchdog (kill after 30 min without log growth), pid lock. The memory curve of a
+short reference GPU run is reported after E2c finishes (sequential launches).

@@ -23,7 +23,7 @@ Run: python3 v13_negation.py [--seeds 5] [--N 40000] [--D 1024] [--batch 8]
 import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time, copy
 import numpy as np, torch
-import v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
+import trainer, v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
 
 BASE = {"GIVE": "give", "SELL": "sell", "SEND": "send", "LEND": "lend", "SHOW": "show", "OFFER": "offer"}
 # negated formulation patterns per scope; V = base form (after 'does not' / 'never'), V3 = 3rd person (gives), VP participle
@@ -96,7 +96,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024)
     ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02); ap.add_argument("--n_id", type=int, default=18)
-    ap.add_argument("--device", default="cuda"); ap.add_argument("--p_neg", type=float, default=0.4); ap.add_argument("--neg_depth_train", type=int, default=0, help="E1b: negation seen in training up to this depth (0 = depth 0 only)")
+    ap.add_argument("--device", default="cuda"); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true", help="checkpoint every 2000 steps to logs/.ckpt_<tag>_<seed>.pt"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="run"); ap.add_argument("--p_neg", type=float, default=0.4); ap.add_argument("--neg_depth_train", type=int, default=0, help="E1b: negation seen in training up to this depth (0 = depth 0 only)")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
     print(f"v13_negation (E1): device={a.device}, D={D}, N={N}, batch={a.batch}, seeds={a.seeds}; negation as a role R_neg bound to its scope; model = v8 bundle, learned gates (start closed)")
     print(f"training: affirmative at depths 0-2 (formulations {v5.TRAIN_T}) + negated forms (scopes S, A, B, C; both patterns each) at depths 0-{a.neg_depth_train}, p_neg={a.p_neg}")
@@ -118,14 +118,10 @@ if __name__ == "__main__":
                 d = int(rng.integers(3)); ev = w.event(trP, trO, depth=d); toks = w.render(ev, int(rng.choice(v5.TRAIN_T)))
             sents.append(toks); targets.append(world.state(ev, toks))
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
-        opt = torch.optim.Adam([m.theta, m.logits], lr=a.lr)
-        for i in range(0, N, a.batch):
-            sl = slice(i, i + a.batch); S = m.states(cats[sl], ids[sl], mask[sl]); tgt = tgt_all[sl]
-            cos = torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt())
-            assert torch.isfinite(cos).all(), f"non-finite loss at step {i}: a target or state is NaN (check the world)"
-            opt.zero_grad(); (-cos.mean()).backward(); opt.step()
-            with torch.no_grad(): m.theta[0] = 0
-        torch.cuda.synchronize(); t_train = time.time() - t0
+        ckpt = f"logs/.ckpt_{a.tag}_{seed}.pt" if a.ckpt else None
+        trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt_all, a.batch, a.lr, log_every=a.log_every, ckpt=ckpt, resume=a.resume, tag=f" seed {seed}")
+        if a.device == "cuda": torch.cuda.synchronize()
+        t_train = time.time() - t0
         per_form = {}
         def run(depth, neg, n=60):
             roles, pres, scope, full = [], [], [], []
