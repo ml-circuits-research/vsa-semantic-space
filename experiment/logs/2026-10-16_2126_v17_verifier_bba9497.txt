@@ -7,3 +7,37 @@ C5: occupancy marker on the condition slots (world rows that change, rule 16: fi
 [train ep 0] start: RSS 1.77 GB | torch alloc 0.69 GB reserved 0.92 GB | MemAvailable 113.1 GB
 [train ep 0] step 500 sent 16000/56355 loss -0.572 (396s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.5 GB
 [train ep 0] step 1000 sent 32000/56355 loss -0.643 (780s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.1 GB
+[train ep 0] step 1500 sent 48000/56355 loss -0.687 (1174s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.0 GB
+[train ep 0] end: RSS 2.06 GB | torch alloc 0.86 GB reserved 0.94 GB | MemAvailable 112.4 GB (1376s)
+[train ep 1] start: RSS 2.06 GB | torch alloc 0.77 GB reserved 0.94 GB | MemAvailable 112.4 GB
+[train ep 1] step 500 sent 16000/56355 loss -0.697 (387s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 109.7 GB
+[train ep 1] step 1000 sent 32000/56355 loss -0.787 (774s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 109.7 GB
+[train ep 1] step 1500 sent 48000/56355 loss -0.735 (1156s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.3 GB
+[train ep 1] end: RSS 2.06 GB | torch alloc 0.86 GB reserved 0.92 GB | MemAvailable 113.0 GB (1355s)
+[train ep 2] start: RSS 2.07 GB | torch alloc 0.77 GB reserved 0.92 GB | MemAvailable 113.0 GB
+[train ep 2] step 500 sent 16000/56355 loss -0.688 (381s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.3 GB
+[train ep 2] step 1000 sent 32000/56355 loss -0.675 (763s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.3 GB
+[train ep 2] step 1500 sent 48000/56355 loss -0.641 (1144s) | RSS 2.07 GB | torch alloc 0.86 GB reserved 3.56 GB | MemAvailable 110.3 GB
+[train ep 2] end: RSS 2.07 GB | torch alloc 0.86 GB reserved 0.94 GB | MemAvailable 113.0 GB (1343s)
+reader trained (4075s)
+condition-slot presence threshold set on the calibration half of dev (even rows; midpoint of present 0.374 / absent 0.015): 0.194  (the same-rows midpoint of 10c would be 0.194)
+condition-slot OCCUPANCY on the report half (odd rows; marker cosine): present read as present 0.890 (n 5784), absent read as absent 0.992 (n 11056); C5 criterion: both > 0.9
+reader params and dev frames saved to logs/.ckpt_v17_reader_frames_occ.pt (re-scoring without retraining: C4 / C5 / 4c)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v17_verifier.py:150: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  return {"sel": (int(t2.indices[0]), float(t2.values[0] - (t2.values[1] if len(sc) > 1 else 0))), "agg": (int(ta.indices[0]), float(ta.values[0] - ta.values[1])), "conds": []}
+
+== VERIFIER on the REPORT half of dev (odd rows, 4210 questions; the even half set the presence threshold), one injected error per instance; reader = v11 full model (no table), lex = BoW+LR frame (no condition model)
+error type | n | reader: detected (recall) / unverifiable / missed(confident-wrong) | lex: detected / unverifiable / missed
+  drop_cond      |  4177 | reader 0.150 / 0.825 / 0.025 | lex 0.216 / 0.359 / 0.425
+  swap_sel_cond  |  4177 | reader 0.707 / 0.287 / 0.005 | lex 0.321 / 0.376 / 0.304
+  change_sel     |  4195 | reader 0.732 / 0.262 / 0.005 | lex 0.406 / 0.582 / 0.012
+  flip_agg       |  4210 | reader 0.781 / 0.206 / 0.013 | lex 0.630 / 0.358 / 0.013
+  add_cond       |  4195 | reader 0.153 / 0.846 / 0.000 | lex 0.216 / 0.356 / 0.428
+  change_value   |  4177 | reader 0.149 / 0.495 / 0.356 | lex 0.216 / 0.359 / 0.425
+  no_error (gold) |  4210 | reader FALSE-ALARM 0.152 / unverifiable 0.495 / ok 0.353 | lex false-alarm 0.216 / 0.357 / 0.427
+  precision of the 'error' verdict on ROLE errors vs gold (reader): 0.943  (false-alarm rate on gold 0.152); recall on role errors 0.505
+  stated: change_value is INVISIBLE to this reader (it decodes columns and the aggregator, not values); conditions are detected by column set only.
+  stated: on GOLD frames the verifier confirms 0.353 and says 'unverifiable' on 0.495 — it is a filter on the role part of a formalization, not a judge of it.
+
+checklist: [x] world addresses [x] fixed identities [x] no table at the input [x] one error per instance, per-type rates [x] lexical baseline on the same rows [x] unverifiable = margin < tau (18) [x] false-alarm rate on gold [x] invisible error types stated [x] presence threshold set on the calibration half, reported on the other half [x] reader and frames saved for re-scoring [x] memory logged (21) [ ] LLM-produced formalizations (follow-up)

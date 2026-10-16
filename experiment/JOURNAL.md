@@ -278,3 +278,15 @@ accuracy 0.38 -> 0.81; the lexical-mismatch confident-wrong grows 0.07 -> 0.17. 
 in a worktree and merged (tool/; 6 tests PASS; round trip within seed variance at 1 seed; spec section 6 missing). Process: run.sh now
 ignores *.md and excludes its own process tree from the lock check; queue.sh waits on the pid lock only (rule 26); an accidentally
 committed worktree gitlink made three runs refuse at 19:17 (fixed, .claude/ ignored). Push = judgment point.
+
+## 2026-10-16 (DGX, night, second push) — hand-over 78d36e8 applied; C5, mismatch-aware abstention, B5.0
+Saved verbatim: the hand-over (instructions + the missing judgment 013c490 + the complete tool spec, section 6 included), the B5 instruction
+after the stop. Q2 (log _2125): FULL on the quantifier world redefined over the legend's questions — d2 unseen 0.967 (old 0.603; the gap was the
+determiner identity, now its own axis). C5 (log _2126): occupancy marker on the condition slots — present 0.890 / absent 0.992, criterion not
+met by 0.01; detection unchanged because the verdict abstains on the column margin. Mismatch-aware abstention (log _2235): the chosen-name
+feature adds nothing; margin alone meets < 2% at coverage 0.445. B5 permutation route dropped (author: nothing given in the reader); B5.0
+(log _2236): zero rendered order pairs in the three grammars; 2 colliding algebraic pairs (must/neg, must/may), 5 witnessed; the reader reads
+the rendered order 1.000, the never-trained reversed order 0.98 (E3) / 0.00 (E1, B3). Rule 27 added. Tool: agent's section-6 work, `_scope`,
+quantifier world v2, depth given vs estimated, model sizes merged; 6 tests pass on main; the 5-seed GPU round trip starts after this push.
+Process: a run started from a shell without the venv crashed on import (log removed, lock cleared); run.sh is now launched with the venv active.
+Push = judgment point.

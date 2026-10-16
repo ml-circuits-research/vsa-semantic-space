@@ -1269,3 +1269,75 @@ world = nouns + presence + scope-or-both; the determiner IDENTITY is its own axi
 Reading: the whole gap between the old FULL columns and the scope columns of 9c-sexies was the determiner identity (three terms competing in
 one slot: 0.890 per sentence, 0.950 per determiner). Over the legend's questions the C2c world reads the unseen depth at 0.967 (strict 0.864)
 and new nouns at 0.998. The 9c-* FULL numbers before this section keep the old definition and are not restated.
+
+## 10c-sexies. C5 — condition count from an OCCUPANCY MARKER in the verifier's reader world (v17_verifier.py --occ_marker; logs/2026-10-16_2126_v17_verifier_bba9497.txt; one retraining, seed 0, D = 512, 3 epochs, 56,355 questions; presence threshold on the even half of dev, every number on the odd half, 4,210 questions)
+World rows that change (rule 16): a FILLED condition slot k adds R_COND[k] (x) R_OCC (x) M to the target (X2 applied to the verifier world;
+R_OCC and M fixed, given). Presence of a condition = cosine with M after unbinding R_COND[k] R_OCC, thresholded at the midpoint of the
+calibration half (present 0.374 / absent 0.015 -> 0.194; 10c-bis read presence from the column cosine: present 0.158 / absent 0.043 -> 0.101).
+| axis (odd half) | 10c-bis (presence from the column cosine) | **C5 (presence from the marker)** | criterion |
+|---|---|---|---|
+| condition-slot occupancy: present read as present / absent read as absent | not printed then (the column cosine; separation 0.158 vs 0.043) | **0.890** (n 5,784) / **0.992** (n 11,056) | both > 0.9: **NOT met** (present 0.890) |
+| drop_cond detected / unverifiable / confident-wrong | 0.159 / 0.690 / 0.151 | 0.150 / 0.825 / 0.025 | before / after reported |
+| add_cond | 0.162 / 0.837 / 0.001 | 0.153 / 0.846 / 0.000 | — |
+| swap_sel_cond / change_sel / flip_agg detected | 0.740 / 0.764 / 0.805 | 0.707 / 0.732 / 0.781 | no loss beyond 0.03 |
+| gold: false alarm / unverifiable / confirmed | 0.162 / 0.541 / 0.297 | 0.152 / 0.495 / 0.353 | — |
+| role-error recall / precision | 0.522 / 0.942 | 0.505 / 0.943 | — |
+Reading: the marker separates the two cases far better than the column cosine (0.374 vs 0.015 against 0.158 vs 0.043) and reads absence at
+0.992, but presence stays at 0.890, under the criterion: the slots the reader misses are the second and later conditions (the first slot is
+the one most questions fill). The drop_cond / add_cond DETECTION did not move (0.15), because the verdict code is unchanged: a condition-set
+disagreement is called "error" only when the minimum COLUMN-identity margin over the slots clears tau, and that margin is small on empty slots —
+so 0.83 of the condition errors are "unverifiable", not missed (confident-wrong on drop_cond fell 0.151 -> 0.025). The marker's own margin
+(distance from the presence threshold) is not used by the verdict yet; using it is a re-scoring of the saved frames
+(logs/.ckpt_v17_reader_frames_occ.pt), no retraining — proposed, not done (current_status.md).
+
+## 10c-septies. Mismatch-aware abstention (hand-over 78d36e8 Q4; rescore_v17_mismatch.py; logs/2026-10-16_2235_rescore_v17_mismatch_e8be5cf.txt; saved frames of 10c-bis, no retraining; tau per rule set on the even half, curve on the odd half)
+Feature available at verification time: the name of the column the reader CHOSE appears verbatim in the question (the schema is known, the gold
+is not). Rule M = abstain when margin < tau OR the chosen name is absent; control = margin only. Criterion: confident-wrong on sel < 2% at the
+coverage that results, coverage reported (rule 18: calibration reporting, not tuning).
+| rule | tau chosen on the calibration half (first grid value with confident-wrong < 2% there) | report half: coverage / covered accuracy / confident-wrong | criterion |
+|---|---|---|---|
+| margin only (control) | 0.15 | **0.445** / 0.980 / **0.009** | MET at coverage 0.445 |
+| M: margin AND chosen name in the question | 0.10 | 0.561 / 0.961 / 0.022 | NOT met (0.022) |
+| M at tau 0.15 (for comparison, same tau as the control) | — | 0.424 / 0.980 / 0.009 | the name rule costs 0.02 coverage for no gain |
+| at the stated tau 0.05: margin only / M | — | 0.757 / 0.930 / 0.053 ; 0.689 / 0.932 / 0.047 | — |
+The 4c split at tau 0.05 (gold column name in the question or not): IN — confident-wrong 0.023 / 0.022, coverage 0.834 / 0.834 (control / M);
+NOT in — confident-wrong 0.169 -> 0.143, coverage 0.466 -> 0.143. Chosen name in the question on 0.837 of the report rows (accuracy 0.860
+there) vs 0.163 (accuracy 0.576).
+Reading: the 0.169 cannot be turned into abstentions by this feature: on the mismatched questions the reader's confident wrong choice is
+mostly a column whose name IS in the question (the wrong one of the mentioned columns), so rule M removes coverage (0.466 -> 0.143) while the
+confident-wrong rate there falls only 0.169 -> 0.143. The margin alone reaches the criterion at tau 0.15 with coverage 0.445; the chosen-name
+rule adds nothing at equal tau. The mismatch finding of 10c-quater stays a property of the reader, not a feature to abstain on.
+
+## 12. B5.0 — the operator-ORDER collision of commutative binding, measured as it is (b5_0_collisions.py; logs/2026-10-16_2236_b5_0_collisions_e8be5cf.txt; instruction after the B5 stop, step 1; no remedy, nothing added to the reader)
+Part A, algebra (world states, 100 fresh events per pair). Rendered sentence pairs differing ONLY in operator order: **0** in all three grammars
+(E1, E3, B3 each nest their operators in one fixed order). Pairs whose two orders are expressible as world states:
+| world | pair | cos(world states) | class | rendered? |
+|---|---|---|---|---|
+| E1 | rep o neg_S vs neg_S o rep ("X says that A never gives" / "X never says that A gives") | 0.762 | SEPARATED: witness = the speaker term | first yes, second no |
+| E3 | rep o may vs may o rep | 0.750 | SEPARATED: speaker | first yes, second no |
+| E3 | if-then(may on Q) vs may o if-then | 0.525 | SEPARATED: the P clause under one operator only | first yes (mixed), second no |
+| E3 | rep o if-then vs if-then o rep (both clauses reported) | 0.802 | SEPARATED: speaker | first yes, second no |
+| E3 | must o may vs may o must | **1.000** | **COLLIDING** (identical state, same frame) | neither (the grammar never stacks two modals) |
+| E3 + neg | must o neg vs neg o must ("A must not give" / "A does not have to give") | **1.000** | **COLLIDING** | neither (no world has both operators; built from E3's R_must and a R_neg drawn like E1's) |
+| B3 | rep o neg_S vs neg_S o rep ("the user says that do not send" / "the user never says that send") | 0.752 | SEPARATED: speaker | first yes, second no |
+Counts: colliding 2, witnessed 5. Word-level operators (constituent negation, the negated attribute) are not order operators (listed as such).
+Rule 11 traces, term by term: must o neg vs neg o must — every term coincides (cos 1.000 on A, B, C), the bag of identities is identical too:
+colliding. rep o neg vs neg o rep — the three inner terms coincide (1.000 each), the speaker term differs (cos 0.047): the witness; whole-state
+cos 0.766 (3 of 4 terms shared).
+Part B, reader charts (seed 0 of each world RETRAINED with the original regime — E1b, E3b, 10d — because those runs saved no checkpoints;
+the reversed sentence was never in training; n = 100 pairs each):
+| pair | cos world states | cos reader charts | cos bags (control) | order hypothesis right: rendered sentence / reversed (unseen) | frames DIFFER |
+|---|---|---|---|---|---|
+| E1 rep o neg vs neg o rep | 0.762 | 0.364 | 1.000 | 1.000 (margin +0.115) / **0.000** (margin -0.027) | 0.000 |
+| E3 if-then(may on Q) vs may o if-then | 0.525 | 0.502 | 0.888 | 1.000 (+0.171) / **0.980** (+0.027) | 0.980 |
+| B3 rep o neg vs neg o rep | 0.758 | 0.719 | 0.857 | 1.000 (+0.168) / **0.000** (-0.138) | 0.000 |
+Reading. (i) The collision is real and exact where two wrapping operators stack with nothing between them (must/neg, must/may): the frame is
+the same and no reader of these worlds can tell the orders apart; no grammar of the repository renders such a pair, so it is a measured
+property of the algebra, not of a tested sentence. (ii) Where a term sits under only one of the two operators (the speaker; a clause of the
+conditional) the two orders are different states (cos 0.53-0.80) and are decodable through that witness — the reader reads the rendered order
+right at 1.000 on all three worlds. (iii) On the REVERSED, never-trained order the reader's chart carries the witness only in E3 (0.980: 'perhaps'
+is an open emitter the reader already knows at depth 0, so "perhaps if P , then Q" is read as may over the whole conditional); in E1 and B3 the
+reversed sentence ("X never says that ...") is read as the trained order (0.000): the reader's chart separates the two sentences (cos 0.36 /
+0.72 against bags 1.00 / 0.86) but not along the witness — the 'never' before 'says' does not move the speaker's star under R_neg, because that
+displacement was never trained. The bag control cannot tell E1's pair at all (1.000). This list is the measured extent of the chapter-8 limit
+and the record B5c is judged against.

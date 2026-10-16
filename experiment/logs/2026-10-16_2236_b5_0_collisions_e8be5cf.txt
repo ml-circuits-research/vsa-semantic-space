@@ -1,0 +1,60 @@
+# 2026-10-16T22:36:59+02:00  commit=e8be5cf  cmd: python3 b5_0_collisions.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+B5.0: the operator-order collision of commutative binding, measured as it is (instruction after the B5 stop, step 1). No remedy.
+
+== Part A: operator algebra of the three worlds (world states only, no reader)
+rendered stackings — E1 (v13): rep^d o neg_S (d 0-1 in E1b training, 2 tested), rep^d o neg_A/B/C (word-level, not an order operator); the order neg o rep ('X never says that ...') is NOT rendered.
+rendered stackings — E3 (v15): rep^d o may / must, rep^d o if-then, rep^d o if-then(may|must on Q) (the mixed construction); the orders may o rep, may o if-then, must o may are NOT rendered.
+rendered stackings — B3 (v18): rep^d o neg_S (prohibition), attr-negation (word-level, inside the patient), neg_S o attr-neg (both); the order neg_S o rep is NOT rendered.
+
+  E1     | rep o neg_S vs neg_S o rep                                 | cos(world states) 0.761 ± 0.005 | SEPARATED by a witness term | first rendered, second NOT
+  E3     | rep o may vs may o rep                                     | cos(world states) 0.750 ± 0.009 | SEPARATED by a witness term | first rendered (modal / if-then inside a report; mixed), second NOT
+  E3     | must o may vs may o must                                   | cos(world states) 1.000 ± 0.000 | COLLIDING (identical state, same frame) | neither rendered (the grammar never stacks two modals)
+  E3     | if-then(may on Q) vs may o if-then                         | cos(world states) 0.525 ± 0.014 | SEPARATED by a witness term | first rendered (modal / if-then inside a report; mixed), second NOT
+  E3     | rep o if-then vs if-then o rep (both clauses reported)     | cos(world states) 0.802 ± 0.007 | SEPARATED by a witness term | first rendered (modal / if-then inside a report; mixed), second NOT
+  E3+neg | must o neg vs neg o must (constructed: no world has both)  | cos(world states) 1.000 ± 0.000 | COLLIDING (identical state, same frame) | neither (constructed)
+  B3     | rep o neg_S vs neg_S o rep                                 | cos(world states) 0.752 ± 0.012 | SEPARATED by a witness term | first rendered, second NOT
+  counts: colliding pairs 2, witnessed pairs 5; rendered sentence pairs differing ONLY in operator order: 0 in all three grammars (every grammar nests its operators in one fixed order)
+
+== rule 11 trace, colliding pair: 'A must not give B to C' (must o neg) vs 'A does not have to give B to C' (neg o must), one event
+   term A (p6): R_must R_neg R_A f  vs  R_neg R_must R_A f : cos 1.000  -> COINCIDES (commutative binding)
+   term B (o6): R_must R_neg R_B f  vs  R_neg R_must R_B f : cos 1.000  -> COINCIDES (commutative binding)
+   term C (p8): R_must R_neg R_C f  vs  R_neg R_must R_C f : cos 1.000  -> COINCIDES (commutative binding)
+   every term coincides: the two states are identical; the bag of identities is identical too (same words up to the auxiliary); the frame is the same -> colliding.
+
+== rule 11 trace, witnessed pair: 'X says that A never gives B to C' (rep o neg) vs 'X never says that A gives B to C' (neg o rep), one event
+   term A (p10): R_rep R_neg R_A f  vs  R_neg R_rep R_A f : cos 1.000  -> COINCIDES
+   term B (o1): R_rep R_neg R_B f  vs  R_neg R_rep R_B f : cos 1.000  -> COINCIDES
+   term C (p4): R_rep R_neg R_C f  vs  R_neg R_rep R_C f : cos 1.000  -> COINCIDES
+   term X (p16): R_X f_X  vs  R_neg R_X f_X : cos 0.047  -> DIFFERS: the speaker term is the witness; whole-state cos 0.766 (3 of 4 terms shared)
+
+== Part B: reader charts on the three constructible pairs (seed 0 of each world retrained with the original regime; the reversed sentence was never in training)
+[train E1 (E1b regime: negation at depths 0-1, p_neg 0.4)] start: RSS 1.54 GB | torch alloc 0.67 GB reserved 0.72 GB | MemAvailable 113.1 GB
+[train E1 (E1b regime: negation at depths 0-1, p_neg 0.4)] step 2000 sent 16000/40000 loss -0.864 (81s) | RSS 2.68 GB | torch alloc 0.87 GB reserved 1.13 GB | MemAvailable 112.2 GB
+[train E1 (E1b regime: negation at depths 0-1, p_neg 0.4)] step 4000 sent 32000/40000 loss -0.903 (162s) | RSS 2.68 GB | torch alloc 0.87 GB reserved 1.13 GB | MemAvailable 112.2 GB
+[train E1 (E1b regime: negation at depths 0-1, p_neg 0.4)] end: RSS 2.68 GB | torch alloc 0.87 GB reserved 0.92 GB | MemAvailable 112.4 GB (202s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:129: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  E1 (E1b regime: negation at depths 0-1, p_neg 0.4): reader trained (202s); gates OPEN: ['anything', 'by', 'does', 'from', 'never', 'that', 'to', 'who']
+  example pair: p9 says that p5 never lends o4 to p3 .  /  p9 never says that p5 lends o4 to p3 .
+  E1 rep o neg vs neg o rep: n 100 | cos world states 0.762 | cos reader charts 0.364 | cos bags 1.000 | order hypothesis right on the rendered sentence 1.000 (margin +0.115), on the reversed (unseen) sentence 0.000 (margin -0.027) | frames DIFFER 0.000
+[train E3 (E3b regime: p_mixed 0.15)] start: RSS 2.88 GB | torch alloc 0.83 GB reserved 0.92 GB | MemAvailable 112.1 GB
+[train E3 (E3b regime: p_mixed 0.15)] step 2000 sent 16000/40000 loss -0.804 (104s) | RSS 2.88 GB | torch alloc 0.97 GB reserved 1.31 GB | MemAvailable 111.8 GB
+[train E3 (E3b regime: p_mixed 0.15)] step 4000 sent 32000/40000 loss -0.896 (208s) | RSS 2.88 GB | torch alloc 0.97 GB reserved 1.31 GB | MemAvailable 111.8 GB
+[train E3 (E3b regime: p_mixed 0.15)] end: RSS 2.88 GB | torch alloc 0.97 GB reserved 1.04 GB | MemAvailable 112.1 GB (260s)
+  E3 (E3b regime: p_mixed 0.15): reader trained (260s); gates OPEN: [',', 'has', 'may', 'must', 'perhaps', 'that', 'to']
+  example pair: if p6 lends o0 to p0 , then p1 may offer o9 to p9 .  /  perhaps if p6 lends o0 to p0 , then p1 offers o9 to p9 .
+  E3 if-then(may on Q) vs may o if-then: n 100 | cos world states 0.525 | cos reader charts 0.502 | cos bags 0.888 | order hypothesis right on the rendered sentence 1.000 (margin +0.171), on the reversed (unseen) sentence 0.980 (margin +0.027) | frames DIFFER 0.980
+[train B3 (10d regime: p_depth1 0.3)] start: RSS 2.87 GB | torch alloc 0.88 GB reserved 1.04 GB | MemAvailable 112.1 GB
+[train B3 (10d regime: p_depth1 0.3)] step 2000 sent 16000/40000 loss -0.946 (39s) | RSS 2.87 GB | torch alloc 0.90 GB reserved 1.09 GB | MemAvailable 112.0 GB
+[train B3 (10d regime: p_depth1 0.3)] step 4000 sent 32000/40000 loss -0.977 (78s) | RSS 2.87 GB | torch alloc 0.90 GB reserved 1.09 GB | MemAvailable 112.0 GB
+[train B3 (10d regime: p_depth1 0.3)] end: RSS 2.87 GB | torch alloc 0.90 GB reserved 0.96 GB | MemAvailable 112.1 GB (98s)
+  B3 (10d regime: p_depth1 0.3): reader trained (98s); gates OPEN: ['ATTR', 'DEST', 'PRINC', 'never', 'not', 'the']
+  example pair: the user says that do not send the shared files .  /  the user never says that send the shared files .
+  B3 rep o neg vs neg o rep: n 100 | cos world states 0.758 | cos reader charts 0.719 | cos bags 0.857 | order hypothesis right on the rendered sentence 1.000 (margin +0.168), on the reversed (unseen) sentence 0.000 (margin -0.138) | frames DIFFER 0.000
+
+reading aid: with commutative binding the inner clause is identical in both orders by construction; a pair is decodable only through its witness term (the speaker, or the clause under one operator only). 'frames DIFFER' measures that witness on the reader's chart; the 'must not / not must' pair has no witness and is not decodable by any reader of these worlds.
+
+checklist: [x] measurement only, no remedy, nothing added to the reader [x] algebra per world with rendered / not-rendered stated [x] colliding vs witnessed classified with counts [x] rule 11 traces term by term [x] reader charts: seed 0 retrained with the original regimes (stated) [x] bag control on the same rows [x] reversed sentences stated as never trained

@@ -1,47 +1,52 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-16 night — indications 013c490 applied: E1b, C2c, N5, 4c, P0)
+# Current status (rewritten whole at every judgment point; last: 2026-10-16 night — hand-over 78d36e8 applied; C5, mismatch-aware abstention, B5.0 done; B5c next, trace first)
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/INDICATIONS_2026-10-16_013c490.md (saved verbatim), experiment/RESULTS.md
-10b-quinquies, 9c-sexies, 10e, 10c-quinquies, 11; STATUS.md; experiment/JOURNAL.md; tool/README.md. Note: the file
-JUDGMENT_2026-10-16_013c490.md the indications refer to ("the answers and the reasoning behind E1b, C2c, N5") was never received; only the
-indications file exists in the repository.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/INSTRUCTIONS_2026-10-16_78d36e8.md, experiment/JUDGMENT_2026-10-16_013c490.md,
+experiment/INSTRUCTIONS_2026-10-16_B5_after_stop.md (all saved verbatim), experiment/RESULTS.md 9c-septies, 10c-sexies, 10c-septies, 11, 12;
+STATUS.md; experiment/JOURNAL.md; tool/README.md.
 
-## A. Results, in the indications' order (all BUILT)
+## A. Done since 78d36e8, in the instructed order (all BUILT unless stated)
 | step | result | criterion / decision rule (written before the run) | outcome |
 |---|---|---|---|
-| §0 | 10b-quater's "right-announced structure" sentence on the passive withdrawn | — | done (stays withdrawn after E1b) |
-| **§1 E1b** relation-marker gates to / by / from GIVEN open (log 2026-10-16_1905) | depth 3 UNSEEN **0.968**±0.020 (10b: 0.813); passives T2 / T3 A and C 1.000; seen axes and occupancy 1.000; unseen transitions 0.627 (0.638); at tau 0.05 coverage 0.93 / 0.88, confident-wrong 0.000; T9 comma form C 0.84 | depth 3 > 0.9, passives > 0.9, no loss | **MET** — the regression was the gate set, not the form; new reference table (STATUS depth-3 row), learned-gate world kept as history |
-| **§2 C2c** category-local quantifier terms, wide/narrow derived at readout (log 2026-10-16_1918; trace logs/trace_c2c.txt) | two-quantifier SCOPE|gold-q d0 **0.996**, **d2 UNSEEN 0.966** (0.988, 0.927, 0.976, 0.951, 0.988); one-quantifier 0.995 / 0.992 (seed 1: 0.974 / 0.980); nouns 0.999; affirmative read absent 1.000; presence d2 0.983, strict 0.924; both on never-trained ambiguous 0.993; FALSE-BOTH 0.000 / 0.000; determiners 0.950, FULL d2 0.60 (cost) | two-q > 0.9 at d0 AND d2; one-q >= 0.99; nouns >= 0.99; strict presence and false-both reported | **MET** on 5/5 seeds for the two-quantifier scope -> quantifiers join the regularity entirely; exception row removed; H-b retired; permuted-filler term NOT built (WITHDRAWN); C3 "both" criterion met under the C2c readout rule |
-| **§3 N5** kind ambiguity (v19_kinds, log 2026-10-16_1941) | ref 1.000; (a) majority kind: h-as-noun 0.989, h-as-verb 1.000; (b) superposition + readout by fit: h-as-noun **0.907**±0.026 (0.950, 0.900, 0.909, 0.869, 0.906), h-as-verb 1.000; kind by fit noun 0.967 / verb 0.374, resolved 0.555, both 0.445; bag 0.866 vs state 0.821 | (b) within 0.02 of ref on ambiguous sentences | **NOT met** (gap 0.09 on the noun uses; 0.047 averaged over both uses); (a) is the better baseline; recorded as negative, no remedy without judgment |
-| §4a audit | 50 confident-wrong sel cases labelled by me (stated): 34 reader wrong / 7 gold wrong / 9 ambiguous — 0.32 data noise | — | done (10c-quater-bis); C5 is next on the verifier |
-| **§4c** data curve (logs 2026-10-16_2033-_2038) | sel confident-wrong at tau 0.05: 0.056 / 0.082 / 0.053 at 1k / 5k / 56k while accuracy 0.38 -> 0.59 -> 0.81 and abstain 0.84 -> 0.24; gold column name NOT in question: confident-wrong 0.069 -> 0.147 -> 0.169 (IN: 0.052 -> 0.023); agg confident-wrong 0.25 -> 0.14; role-error recall 0.21 -> 0.38 -> 0.52, false alarm on gold 0.13 / 0.20 / 0.16 | reported, no criterion | data converts abstentions into right answers, not confident-wrong; the lexical-mismatch confident-wrong GROWS with data |
-| **§5 P0** tool (separate agent, worktree; merged; RESULTS 11, tool/README.md) | sop package + server.js + skill + 6 tests PASS (CPU); round trip 1 seed: reference seen 1.000, depth 3 0.792 (0.813±0.030), commands depth 2 0.790 (0.854±0.031), quantifier nouns 0.997 (scope not exported in v1); missing-role recovery PASS; annotator measurement "API unavailable" | reproduce RESULTS within seed variance | acceptable at 1 seed; commands depth 2 two sd low; 5-seed GPU round trip PLANNED (command in README); spec section 6 never received (TODO markers) |
-| §6 P1 real text | — | — | waits for the team's data |
+| C1 | calibration row updated: depth 3 MET with the given relation-marker gates (coverage 0.93 / 0.88, confident-wrong 0.000); unseen transitions NOT met (C coverage 0.74) | — | done |
+| C2 | P0 CPU runs committed (tool/runs/p0_cpu_1seed_60f284d/: logs, metrics, splits, commands, model sizes; code f759d93, quantifier v1) | — | done |
+| Q1 | the missing judgment saved verbatim; the complete spec (sections 0-10) in tool/ and docs/specs/ | — | done |
+| **Q2** FULL redefined over the legend's questions (9c-septies, log 2026-10-16_2125, saved C2c models) | FULL-new d0 0.995, d1 0.996, **d2 UNSEEN 0.967** (0.978, 0.922, 0.978, 0.967, 0.989), strict 0.864, new nouns 0.998, ambiguous (nouns + presence + both) 0.990; FULL-old 0.887 / 0.834 / 0.603 / 0.536 / 0.856; determiner identity own axis 0.890 per sentence | both FULLs once, side by side (rule 16) | done; the old gap was the determiner identity |
+| Q3 | N5 row: (a) majority kind is the practical rule, two kind hypotheses at readout when the margin is low; "resolve before drawing" HYPOTHESIS, its diagnostic in the next kinds run | — | done |
+| **C5** occupancy marker on the condition slots (10c-sexies, log _2126, one retraining) | present read as present **0.890** (n 5,784), absent 0.992 (n 11,056); marker separation 0.374 vs 0.015 (column cosine was 0.158 vs 0.043); drop_cond / add_cond detection 0.150 / 0.153 (10c-bis 0.159 / 0.162); confident-wrong on drop_cond 0.151 -> 0.025; other role errors within 0.03 | present and absent > 0.9; detection before / after | **NOT met** on the present side (0.890); detection unchanged because the verdict abstains on the column-identity margin (unverifiable 0.83), not on the marker's — re-scoring proposed (E, 2) |
+| **Q4** mismatch-aware abstention (10c-septies, log _2235, re-scoring) | margin-only: tau 0.15 (calibration half) -> coverage 0.445, covered accuracy 0.980, confident-wrong 0.009; rule M (chosen name in question): tau 0.10 -> 0.561 / 0.961 / 0.022; at equal tau 0.15 M gives 0.424 / 0.009; NOT-in-question rows: confident-wrong 0.169 -> 0.143 with coverage 0.466 -> 0.143 | confident-wrong < 2% at the resulting coverage | margin-only MET (coverage 0.445); rule M NOT met; the feature adds nothing: the confident wrong choice on mismatched questions is mostly a column whose name IS in the question |
+| **B5.0** collision measured as it is (RESULTS 12, log _2236) | 0 rendered sentence pairs differing only in operator order in E1 / E3 / B3; algebra: colliding must/neg and must/may (identical state, no witness), witnessed rep/neg, rep/may, rep/if-then, if-then/may (speaker or a clause under one operator; cos 0.53-0.80); reader charts (seed 0 retrained, stated): rendered order read 1.000 on all three; reversed never-trained order 0.980 (E3, 'perhaps' is a known emitter) / 0.000 (E1, B3: 'never' before 'says' does not move the speaker's star); bags 1.00 / 0.89 / 0.86 | enumeration + traces, no criterion | on record; the measured extent of the chapter-8 limit |
+| rule 27 | criterion on the mean, per-seed list, "5/5 seeds" | — | added; AGENTS.md rules 1-27 |
+| P0 follow-up (agent, merged) | section 6 implemented (LLM steps report "API unavailable"); quantifier world v2 = C2c with `_scope` in exporter / check / formalize (v1 kept under versions/); FULL with depth estimated vs given vs given+negation; model sizes (per-category-pair keys 96-98%: 11.9 / 15.0 / 3.0 MB); p0_full_gpu.sh prepared with the lock | 6 tests PASS on main | 5-seed GPU round trip starts now (GPU free), runs committed under tool/runs/ |
 
-## B. Effect-size series recorded (judgment E2 decision rule)
-One-quantifier scope at the unseen depth: no signal 0.21-0.33 -> chain-carried 0.63-0.67 -> beacon-relative 0.998 (C2b) -> 0.992 (C2c).
-Two-quantifier scope at the unseen depth: 0.33-0.56 (9c-bis..C2) -> 0.48 (C2b, conditional term) -> **0.966** (C2c, two unconditional terms).
-The regularity "seen at depth d in training (share p), tested at depth d+1" now holds for every operator case tried: reporting, negation,
-modality, conditional, modal-in-conditional, negation on commands, one- and two-quantifier scope. No named exception remains.
+## B. B5c — what the trace must show, and the concern stated before it (instruction after the stop, step 2)
+World: op(X) = R_op (x) f_op + R_lvl (x) X for sentential operators (not, must, may, says); 'if' keeps its two roles; word-level negation unchanged;
+gates learned, nothing given. Trace (rule 11) on "A must not give B to C" / "A does not have to give B to C" at depth 0 and inside one report:
+(a) the operator word's star lands at R_op at its own level; (b) the words after it carry the extra R_lvl.
+Concern, stated before the trace: for the words AFTER both operators (a) and (b) can hold with the existing pair keys (hop into the operator
+word = R_op at its level; hop out of it = R_lvl, as after 'that'). For the SUBJECT, which precedes the two stacked operators in English, the
+chain gives one left re-seating key EL[A <- first open operator]; that key cannot be R_lvl R_A in "A must give" and R_lvl^2 R_A in "A must not
+give" at the same time — unless the first operator's own address differs between the two sentences, which it does not (it is first). If the
+trace shows this, B5c stops per the instruction and the report says: operators that follow their subject are, for the subject, the
+right-announced case inside one clause. The decision is the trace's, not mine.
 
 ## C. HYPOTHESIS
-- H-b (wide/narrow is a relation between the two determiners): RETIRED — true as a statement about the legend, false as a requirement on the
-  reader: the legend computes the relation from two category-local terms (C2c).
-- N5: the kind should be resolved BEFORE the drawing, from the first open emitter's preference, rather than drawn half-way (the half-way
-  drawing halves the noun term). Not built; for judgment.
+- Order of two stacked wrapping operators: not representable by commutative binding (B5.0: exact collision); B5c is the candidate (PLANNED).
+- N5 "resolve before drawing" (first open emitter's preference): HYPOTHESIS, diagnostic to print in the next kinds run.
+- Verifier conditions: the marker's own margin as the verdict's abstention statistic (re-scoring, no retraining) — proposed, not done.
 
-## D. PLANNED, in the indications' order
-B5-B7 (order collisions: permutation binding, level-indexed roles; sparse block codes; fourth address code); C5 (occupancy marker in the
-verifier's reader world, one retraining); N6 (possible now), N7 (after N1); P0 5-seed GPU round trip; P1 (team data); N3, N1, N2; B8-B9
-(HYPOTHESIS); N4; LLM paraphrases / formalizations when data arrives; the annotator measurement (needs the API).
+## D. PLANNED, in the instructed order
+B5c trace -> B5c run + level-indexed control (or STOP) -> B6 sparse block codes -> B7 fourth address code -> N6 -> P1 when the team's data
+arrives; the annotator measurement when the API is available; the 5-seed GPU round trip (running next, agent); N7 after N1; B8-B9 (HYPOTHESIS).
 
 ## E. Questions for the reviewing session
-1. The indications cite JUDGMENT_2026-10-16_013c490.md; it was never received. Should it be sent so it can be saved verbatim?
-2. C2c met the criterion: confirm the removal of the exception row and the retirement of H-b, and that the C2c world (slot target, learned
-   gates) is the quantifier reference world. Costs to accept or to work on: determiners 0.950 at depth 0, FULL 0.60 at depth 2.
-3. N5 not met with the superposition as defined. Record as negative and stop, or test "resolve before drawing" (C above) with the same
-   criterion?
-4. 4c: the lexical-mismatch confident-wrong grows with data (0.07 -> 0.17). Is C5 still the next verifier step, or a mismatch-aware
-   abstention (name-in-question as a feature of tau) first? C5 is what the indications say; it stays first unless told otherwise.
-5. Tool: spec section 6 (splits, skill steps, second look) was cut from the message; the agent left TODO markers. Send section 6?
-   The v1 export emits no quantifier scope term — should the exporter emit the C2c terms (new world version) before the 5-seed round trip?
-6. The 50-case audit was labelled by me, not by the team (stated in 10c-quater-bis). Does the team want to re-label?
+1. B5.0's list: the two colliding pairs are not rendered by any grammar. Is a world that renders "A must not give" / "A does not have to give"
+   (modal + negation in one clause) to be built for B5c, or should B5c be judged on the witnessed pairs plus the constructed colliding pair?
+   The trace can run on the constructed pair either way.
+2. C5: present 0.890 misses the criterion by 0.01, on the second and later condition slots; the verdict still abstains on the column margin.
+   Re-score the saved marker frames with the marker's margin as the condition verdict's statistic (no retraining), before deciding C5?
+3. Q4: the margin alone meets the 2% criterion at coverage 0.445; is that operating point to be written as the verifier's stated one, or is the
+   verifier kept at tau 0.05 with its confident-wrong 0.053 and coverage 0.757 (the row as it stands)?
+4. Section 6's LLM steps exist but have never run (no API); the tool's annotation path is therefore untested end to end. Does the team
+   want a key on this machine, or will annotation happen elsewhere?
+5. B5c (B above): if the trace shows the subject problem, the instruction says STOP. Confirm that "operators after their subject" would then
+   be recorded under the declared limit (chapter 8), with B5.0's list as its measured extent, and B5c not run.
