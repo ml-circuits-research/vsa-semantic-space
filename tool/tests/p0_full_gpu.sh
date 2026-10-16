@@ -15,7 +15,9 @@ cd "$REPO"
 if [ -n "$(git status --porcelain 2>/dev/null | grep -v "logs/" | grep -v "\.md$" | grep -v "^?? tool/worlds" || true)" ]; then
   echo "uncommitted code changes: commit first, so that the run folder corresponds to a commit"; exit 1; fi
 COMMIT=$(git rev-parse --short HEAD); OUT="$TOOL/runs/p0_gpu_5seed_$COMMIT"
-LOCK="$REPO/experiment/logs/.run.lock"; mkdir -p "$(dirname "$LOCK")"
+# the lock of the MAIN checkout (run.sh / queue.sh run there): from a git worktree, the checkout that owns the common .git directory
+MAIN="$(dirname "$(cd "$REPO" && git rev-parse --path-format=absolute --git-common-dir)")"
+LOCK="${P0_LOCK:-$MAIN/experiment/logs/.run.lock}"; mkdir -p "$(dirname "$LOCK")"; echo "GPU lock: $LOCK"
 held() { [ -f "$LOCK" ] && kill -0 "$(cat "$LOCK" 2>/dev/null)" 2>/dev/null; }
 if held; then
   if [ "${1:-}" = "--wait" ]; then while held; do sleep 30; done
