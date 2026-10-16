@@ -1,0 +1,41 @@
+{
+ "world": "quantifiers",
+ "D": 1024,
+ "seed": 0,
+ "language": "en",
+ "legend_sha256": "sha256:c52ccef3fc2ea6a8e26486d08da8c3b030454a840859172bc0d69d11c648fb81",
+ "legend_version": 2,
+ "training_code_commit": "c843f53",
+ "trained": "2026-10-16T23:16:53",
+ "codes": [
+  "path",
+  "chainL",
+  "bigram"
+ ],
+ "gate_init": "closed",
+ "batch": 8,
+ "lr": 0.02,
+ "epochs": 1,
+ "n_train_steps_sentences": 36058,
+ "thresholds": {
+  "tau": 0.05,
+  "tau_source": "stated (the repository's v16 value), not fitted on any rows",
+  "no_sense_share": 0.5,
+  "no_sense_source": "stated",
+  "no_fit_residual": 0.9,
+  "no_fit_source": "stated (dispatcher only, spec section 9)",
+  "presence": {
+   "agent": null,
+   "object": null,
+   "recipient": null
+  },
+  "attr_presence": {},
+  "det_presence": {
+   "agent": 0.3495744043420034,
+   "object": 0.3096248156828177,
+   "recipient": 0.4038706787007657
+  },
+  "scope_term": 0.4597494182278711,
+  "calibration_split": "train (a sample of 400 training sentences, rng 1234+seed); never the scored rows (rule 25)"
+ }
+}

@@ -1,0 +1,39 @@
+{
+ "world": "commands",
+ "D": 1024,
+ "seed": 0,
+ "language": "en",
+ "legend_sha256": "sha256:0782b57ac43091381c039aa502c4a12acb236dbbab3e41e3d1f1b76151600ff1",
+ "legend_version": 1,
+ "training_code_commit": "c843f53",
+ "trained": "2026-10-16T23:05:13",
+ "codes": [
+  "path",
+  "chainL",
+  "bigram"
+ ],
+ "gate_init": "closed",
+ "batch": 8,
+ "lr": 0.02,
+ "epochs": 1,
+ "n_train_steps_sentences": 35340,
+ "thresholds": {
+  "tau": 0.05,
+  "tau_source": "stated (the repository's v16 value), not fitted on any rows",
+  "no_sense_share": 0.5,
+  "no_sense_source": "stated",
+  "no_fit_residual": 0.9,
+  "no_fit_source": "stated (dispatcher only, spec section 9)",
+  "presence": {
+   "action": null,
+   "patient": null,
+   "destination": 0.4973020634142931
+  },
+  "attr_presence": {
+   "patient": null
+  },
+  "det_presence": {},
+  "scope_term": null,
+  "calibration_split": "train (a sample of 400 training sentences, rng 1234+seed); never the scored rows (rule 25)"
+ }
+}

@@ -47,7 +47,7 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | the three constructed worlds as world folders; the quantifier world VERSION 2 (C2c) with v1 under `versions/v1/` | `export_worlds.py` (`sop export`) | BUILT (test 2) |
 | the train-world skill, spec 6 steps 1-8 and the acceptance of a training | `skills/train-world/` | BUILT offline (test 5); LLM steps PLANNED (no API) |
 | the annotator measurement of 6b (small vs large, 500 commands sentences) | `skills/train-world/scripts/measure_annotators.py` | PLANNED: "API unavailable" on this machine |
-| the 5-seed GPU round trip | `tests/p0_full_gpu.sh` | PLANNED: prepared, not run (the GPU is not free) |
+| the 5-seed GPU round trip | `tests/p0_full_gpu.sh` | BUILT: `tool/runs/p0_gpu_5seed_c843f53/` |
 
 ### Choices where the spec leaves room (each stated in the code too)
 - **Several legends per file** (amendment of 2026-10-16): `!legend sha256:<hex>` for the default world and `!legend <world> sha256:<hex>` per
@@ -179,11 +179,46 @@ not comparable (no scope term in v1, see the REPORT of that run).
 commit f759d93 with the quantifier world VERSION 1 (no scope term in the targets, no `_scope`); the GPU round trip below uses VERSION 2 (the
 C2c world, `_scope`). Only the noun rows of the two runs measure the same thing.
 
-**GPU, 5 seeds** (PLANNED, prepared, not run): `tool/tests/p0_full_gpu.sh` — reference, commands, quantifiers VERSION 2 (C2c); full sizes,
-`--seeds 5 --vary_stars --device cuda --no_ckpt`; it takes the repository's GPU lock (`experiment/logs/.run.lock`, the pid lock of run.sh /
-queue.sh; `--wait` polls it, rule 26), refuses an unclean code tree, and writes `tool/runs/p0_gpu_5seed_<commit>/<world>/` (train.log,
-metrics.json, splits.json, command.txt, REPORT.md, config.json, legend.json; no checkpoints) and `p0_table.md` (`tests/p0_compare.py`:
-structure estimated and depth given side by side, against 10b, 10d and 9c-sexies).
+**GPU, 5 seeds** (BUILT: `tool/tests/p0_full_gpu.sh` at commit c843f53; `tool/runs/p0_gpu_5seed_c843f53/<world>/` — train.log, metrics.json,
+splits.json, command.txt, REPORT.md, config.json, legend.json; `p0_table.md`; no checkpoints, no per-seed models): reference, commands,
+quantifiers VERSION 2 (C2c); full sizes, `--seeds 5 --vary_stars --device cuda --no_ckpt`; the GPU lock of the main checkout was held
+for the whole run. "package" = the axis of the row (roles only where the RESULTS column is roles only); the two FULL columns are the tool's
+FULL on the row's split with the structure ESTIMATED and with the depth GIVEN (author C3).
+
+| world | axis | package | tool FULL, structure estimated | tool FULL, depth given | RESULTS (5 seeds) | section |
+|---|---|---|---|---|---|---|
+| reference | seen formulations (A, B, C) | 0.985±0.012 | 0.985±0.012 | 0.985±0.012 | 1.000±0.000 | 10b |
+| reference | predicate, surface lemma | 1.000±0.000 | 0.985±0.012 | 0.985±0.012 | 1.000 | 10b |
+| reference | new identities | 0.994±0.007 | 0.994±0.007 | 0.994±0.007 | 1.000 | 10b |
+| reference | role cues seen | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000 | 10b |
+| reference | unseen transitions | 0.643±0.017 | 0.564±0.079 | 0.567±0.077 | 0.638±0.015 | 10b |
+| reference | depth 3 UNSEEN | 0.742±0.040 | 0.742±0.040 | 0.742±0.040 | 0.813±0.030 (10b); 0.968 after E1b (10b-quinquies) | 10b |
+| commands | depth 0: action | 1.000±0.000 | 1.000±0.001 | 1.000±0.001 | 1.000 | 10d |
+| commands | depth 0: patient (with attribute and its negation) | 1.000±0.001 | 1.000±0.001 | 1.000±0.001 | 1.000 / 0.999 (patient / attribute) | 10d |
+| commands | depth 0 FULL | 1.000±0.001 | 1.000±0.001 | 1.000±0.001 | 0.999 | 10d |
+| commands | new patients FULL | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000 | 10d |
+| commands | depth 2 UNSEEN FULL | 0.590±0.059 | 0.590±0.059 | 0.857±0.025 | 0.854±0.031 | 10d |
+| commands | depth 2 UNSEEN: structure (depth + negation scope) | 0.684±0.065 | 0.590±0.059 | 0.857±0.025 | scope 0.997±0.003 (depth given) | 10d |
+| quantifiers | depth 0: nouns | 0.999±0.004 | 0.995±0.006 | 0.995±0.006 | 0.999±0.002 (C2c) | 9c-sexies |
+| quantifiers | depth 0: _scope (wide role / both / absent) | 0.996±0.005 | 0.995±0.006 | 0.995±0.006 | one quantifier 0.995, presence 1.000 (C2c) | 9c-sexies |
+| quantifiers | two-quantifier scope, depth 0 | 0.986±0.017 | 0.995±0.006 | 0.995±0.006 | 0.996 (C2c) | 9c-sexies |
+| quantifiers | depth 2 UNSEEN: two-quantifier scope | 0.917±0.063 | 0.962±0.029 | 0.962±0.029 | 0.966 (C2c, 5/5 seeds) | 9c-sexies |
+| quantifiers | ambiguous (never trained): both | 0.993±0.013 | 0.987±0.016 | 0.987±0.016 | 0.993 (C2c) | 9c-sexies |
+| quantifiers | determiner identity (outside FULL) | 0.744±0.006 | 0.995±0.006 | 0.995±0.006 | 0.950±0.013 (C2c) | 9c-sexies |
+
+Reading (rule 10: evaluation first):
+- **Commands depth 2: the gap was depth estimation, not packaging.** With the depth given, FULL 0.857±0.025 reproduces 10d (0.854±0.031);
+  with the depth estimated it is 0.590±0.059 (structure right on 0.684). The tool's depth estimator (best mean cleanup over the always-present
+  roles at each depth hypothesis) is the weak part at an unseen depth; 9a's estimator was 1.000 on the reference world, so this is a
+  property of this estimator on the commands world, to be fixed in the tool, not a result about the reader.
+- **Quantifier world v2 reproduces C2c on scope**: two-quantifier scope at depth 0 0.986±0.017 (0.996), at the UNSEEN depth 2 0.917±0.063
+  (0.966; lower mean, larger spread), ambiguous sentences never trained read as `both` 0.993±0.013 (0.993); nouns 0.999 (0.999). The
+  determiner WORD (outside FULL) is lower: 0.744±0.006 against 0.950±0.013 — the tool reads the word with a presence threshold from the
+  determiner channel and the slot's presence from the scope terms; v14 reads it with its own relative rule.
+- **Reference**: role cues 1.000 and unseen transitions 0.643±0.017 (0.638±0.015) reproduced; seen formulations 0.985±0.012 and new
+  identities 0.994±0.007 slightly under 1.000; depth 3 0.742±0.040 under 10b's 0.813±0.030 (and far under 10b-quinquies' 0.968, which needs
+  the participle gates given open: not in the tool's legend). Not reproduced within seed variance on those three rows; the differences of
+  this run from the script: identities per seed from the tool's star function, the depth estimated, the candidates = the whole catalog.
 
 ## Test results (BUILT; `tests/run_all.sh` on CPU; smoke readers D = 256; outputs in `tool/tests/out/`, not committed; all six PASS)
 - test 1 (SOP Lang + check): the 3.5 example parses and round-trips byte for byte; every 3.6 negative case rejected with line and reason;

@@ -1,0 +1,2 @@
+sop train /tmp/sop_p0_gpu_UDCz/commands --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/commands
+commit c843f53
