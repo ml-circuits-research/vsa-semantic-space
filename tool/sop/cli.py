@@ -149,7 +149,8 @@ def main(argv=None):
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         import export_worlds; return export_worlds.main(argv[1:])
     a = ap.parse_args(argv)
-    try: return {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a)
+    try:
+        rc = {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a); sys.stdout.flush(); return rc
     except BrokenPipeError:
         os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno()); return 0
 

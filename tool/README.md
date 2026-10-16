@@ -86,6 +86,19 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   error types mapped by function (change_action / change_patient ~ change_sel, flip_negation ~ flip_agg, drop / add destination ~ drop /
   add_cond). The test checks the 10c shape (role errors detected more often than false alarms on gold; missed <= false alarms), not its numbers.
 
+## Conformance with spec v2 and the `_world` amendment
+| statement | status | where |
+|---|---|---|
+| one world = one folder = one versioned legend = one reader | done | world folders (`sop export`, server `POST /worlds/{w}`); `model/` bound to the legend hash (`config.json`, CLI exit 2 on mismatch) |
+| readers are per world; many worlds = many readers + a dispatcher (by channel, or by fit: smallest residual wins) | done | `sop formalize --model A [--model B ...]` (`infer.formalize_text`); by channel = one `--model` |
+| shared across worlds: the package, the server, the skill, the word-star catalog (a word's star is the same everywhere), the kinds lexicon per language | done | `world.GLOBAL_STAR_SEED`; one `sop` package, `server.js`, `skills/train-world`; the lexicon is a file per world folder (per-language sharing = copying the same `kinds.tsv`; no central per-language store yet) |
+| NOT shared: the route book | done | `model/routebook.npz` per world |
+| two legends with the same question list are one world | not enforced | stated here; no check compares question lists across worlds |
+| the word "domain" does not appear in the tool | done | grep-clean in code and docs of `tool/` |
+| world.json: `models` {pipeline, annotate, second_look, evolve}, `min_examples`, `max_versions_per_run`, `second_look_escalate` (0.05) | done | `server.js` (POST /worlds), `export_worlds.py`; read by `skills/train-world/scripts/{llm,loop}.py` |
+| `_world` on top-level wires; a .sop file may hold several worlds; per-world legend hash | done | `soplang` (reserved line), `check.py` (`!legend <world> sha256:...`), `infer.py` writes `_world`, `diff.py` compares within a world; test 1 (mixed file passes with two legends, fails with one) |
+| expected sizes stated (5-20 roles, tens of event types, a few thousand sentences, a model under a few MB); no time estimates | done | below |
+
 ## Concepts (spec v2 section 0) and expected sizes
 One world = one folder = one versioned legend = one reader; readers are per world (the route book targets the world's named stars and is not
 shared); the `sop` package, the server, the skill, the catalog of word stars and the kinds lexicon per language are shared. Two legends with the
