@@ -1,0 +1,14 @@
+# 2026-10-16T21:25:38+02:00  commit=bba9497  cmd: python3 rescore_v14_c2c_full.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v14_c2c_full: C2c world (slot target, learned gates, beacon-relative emitters), saved models of 9c-sexies; decoder as in v14 (presence threshold and C2c term threshold per depth from calibration rows; STRICT = depth-1 threshold at depth 2)
+  seed 0 0.919 | 0.919 | 1.000 | 0.846 | 1.000 | 0.644 | 0.978 | 0.611 | 0.911 | 1.000 | 1.000 | 1.000 | 1.000 | 0.871 | 1.000 | 1.000 | 1.000
+  seed 1 0.856 | 0.847 | 0.983 | 0.808 | 0.979 | 0.467 | 0.922 | 0.367 | 0.756 | 1.000 | 1.000 | 0.994 | 0.994 | 0.817 | 1.000 | 0.975 | 0.958
+  seed 2 0.878 | 0.875 | 0.997 | 0.833 | 1.000 | 0.622 | 0.978 | 0.589 | 0.922 | 1.000 | 1.000 | 1.000 | 1.000 | 0.838 | 1.000 | 1.000 | 1.000
+  seed 3 0.883 | 0.878 | 0.994 | 0.804 | 1.000 | 0.589 | 0.967 | 0.472 | 0.822 | 1.000 | 1.000 | 1.000 | 1.000 | 0.850 | 0.992 | 0.992 | 0.992
+  seed 4 0.914 | 0.914 | 1.000 | 0.879 | 1.000 | 0.694 | 0.989 | 0.639 | 0.911 | 1.000 | 1.000 | 1.000 | 1.000 | 0.904 | 1.000 | 1.000 | 1.000
+
+== MEANS over 5 seeds: unamb d0: dets (own axis) | FULL-old | FULL-new | unamb d1: FULL-old | FULL-new | unamb d2 UNSEEN: FULL-old | FULL-new | STRICT d2: FULL-old | FULL-new | aff d0: FULL-old | FULL-new | aff d2: FULL-old | FULL-new | new nouns d0: FULL-old | FULL-new | AMBIG d0: both | FULL-new (nouns + presence + both)
+  0.890±0.024 | 0.887±0.027 | 0.995±0.006 | 0.834±0.027 | 0.996±0.008 | 0.603±0.076 | 0.967±0.023 | 0.536±0.102 | 0.864±0.065 | 1.000±0.000 | 1.000±0.000 | 0.999±0.002 | 0.999±0.002 | 0.856±0.030 | 0.998±0.003 | 0.993±0.010 | 0.990±0.016
+
+checklist: [x] saved params, no retraining [x] same calibration and scored rows as 9c-sexies (rngs) [x] both FULL definitions printed once (rule 16) [x] determiner identity reported as its own axis [x] strict column uses no depth-2 information [x] 5 seeds

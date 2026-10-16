@@ -1,0 +1,7 @@
+# 2026-10-16T21:26:43+02:00  commit=bba9497  cmd: python3 v17_verifier.py --occ_marker  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v17_verifier (B4): device=cuda, D=512; train 56355, dev 8421, vocabulary 33318; tau=0.05; controlled version (gold frame + one injected error; no LLM)
+clustering data: 194596 TRAIN sequences only; dev not used.
+C5: occupancy marker on the condition slots (world rows that change, rule 16: filled slot k adds R_COND[k] (x) R_OCC (x) M); presence = cosine with M after unbinding, threshold on the calibration half
+[train ep 0] start: RSS 1.77 GB | torch alloc 0.69 GB reserved 0.92 GB | MemAvailable 113.1 GB

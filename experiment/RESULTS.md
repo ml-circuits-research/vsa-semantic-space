@@ -1251,3 +1251,21 @@ large annotator: "API unavailable" (PLANNED, as expected). Model sizes: referenc
 commands 2.9 MB. Not done: spec section 6 (never received; marked TODO), LLM steps (behind `llm_call`), decoding of if / must / may / and,
 mood as a role, the "two legends with the same questions are one world" check. The 5-seed GPU round trip is a command in tool/README.md,
 not run (PLANNED).
+
+### 9c-septies. FULL on the quantifier world redefined over the legend's questions (hand-over 78d36e8 Q2, rule 16) — both definitions once, on the saved C2c models (rescore_v14_c2c_full.py; logs/2026-10-16_2125_rescore_v14_c2c_full_bba9497.txt; 5 seeds, same calibration and scored rows as 9c-sexies; no retraining)
+Definition change (rule 16): the legend asks which phrase is wide, not which determiner word was used, so from here FULL on the quantifier
+world = nouns + presence + scope-or-both; the determiner IDENTITY is its own axis outside FULL. FULL-old (the 9c-* columns up to 9c-sexies)
+= nouns + determiners + presence + scope. On affirmative rows presence means ABSENT; on ambiguous rows "both" by the C2c readout rule.
+| axis (5 seeds) | FULL-old | **FULL-new** |
+|---|---|---|
+| unambiguous d0 | 0.887±0.027 | **0.995**±0.006 |
+| unambiguous d1 | 0.834 | **0.996** |
+| unambiguous d2 UNSEEN (d2 threshold) | 0.603±0.076 | **0.967**±0.023 (0.978, 0.922, 0.978, 0.967, 0.989) |
+| STRICT d2 (d1 threshold) | 0.536±0.102 | **0.864**±0.065 (0.911, 0.756, 0.922, 0.822, 0.911) |
+| affirmative d0 / d2 (ABSENT) | 1.000 / 0.999 | 1.000 / 0.999 |
+| new nouns d0 | 0.856 | **0.998** |
+| ambiguous d0: both / FULL-new (nouns + presence + both) | 0.993 / — | 0.993 / **0.990** |
+| determiner identity, own axis (all three right per sentence), d0 | 0.890±0.024 | (outside FULL) |
+Reading: the whole gap between the old FULL columns and the scope columns of 9c-sexies was the determiner identity (three terms competing in
+one slot: 0.890 per sentence, 0.950 per determiner). Over the legend's questions the C2c world reads the unseen depth at 0.967 (strict 0.864)
+and new nouns at 0.998. The 9c-* FULL numbers before this section keep the old definition and are not restated.
