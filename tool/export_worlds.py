@@ -202,11 +202,16 @@ def export_quantifiers(out, n, n_eval, seed):
     return write_world(out, "quantifiers", "v14 quantifier world: determiners as roles inside the argument (scope not emitted in v1)", legend, lexicon, files, hints)
 
 
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser()
+def main(argv=None):
+    ap = argparse.ArgumentParser(prog="sop export")
     ap.add_argument("--out", default=os.path.join(HERE, "worlds")); ap.add_argument("--n", type=int, default=2000); ap.add_argument("--n_eval", type=int, default=20)
     ap.add_argument("--seed", type=int, default=0); ap.add_argument("--worlds", default="reference,commands,quantifiers")
-    a = ap.parse_args(); os.makedirs(a.out, exist_ok=True)
+    a = ap.parse_args(argv); os.makedirs(a.out, exist_ok=True)
     print(f"export_worlds: n={a.n} training-distribution sentences per world, n_eval={a.n_eval} per eval template/form, seed {a.seed}")
     for name in a.worlds.split(","):
         {"reference": export_reference, "commands": export_commands, "quantifiers": export_quantifiers}[name](a.out, a.n, a.n_eval, a.seed)
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

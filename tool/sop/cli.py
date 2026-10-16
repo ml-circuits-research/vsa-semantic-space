@@ -7,6 +7,7 @@ cli.py — the `sop` command (spec 5).
   sop diff      <a.sop> <b.sop> [--tau 0.05] [--model <dir>] [-o out.sop] [--force] [--json]
   sop stats     --model <dir> [--json]
   sop train     <world> [...]            (torch; see train.py)
+  sop export    [--out dir] [--n N] ...  (the repository's three constructed worlds as world folders; tool/export_worlds.py)
 Exit codes: 0 ok; 1 input / validation error; 2 model missing or legend mismatch. Output is deterministic for the same model and input.
 """
 import argparse, json, os, re, sys
@@ -144,6 +145,9 @@ def main(argv=None):
     if argv is None: argv = sys.argv[1:]
     if argv and argv[0] == "train":
         from .train import main as tmain; return tmain(argv[1:])
+    if argv and argv[0] == "export":            # the repository's constructed worlds as world folders (tool/export_worlds.py)
+        sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        import export_worlds; return export_worlds.main(argv[1:])
     a = ap.parse_args(argv)
     try: return {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a)
     except BrokenPipeError: return 0
