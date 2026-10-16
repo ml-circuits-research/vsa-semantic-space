@@ -11,8 +11,10 @@ rng = np.random.default_rng(seed); w = q.QWorld(rng); trNP, trNO = q.NOUNS_P[:12
 F = np.exp(1j * np.random.default_rng(300 + seed).uniform(-np.pi, np.pi, (len(w.vocab), D))); world = q.QRoleWorld(F, w, np.random.default_rng(100 + seed))
 m = q.v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], "cuda", gate_init="closed"); m.set_F(F)
 trng = np.random.default_rng(200 + seed); sents, targets = [], []
-for n in range(a.N):
-    d = int(trng.integers(2)); ev = w.qevent(trng, depth=d, nouns_p=trNP, nouns_o=trNO); sents.append(w.qrender(ev, int(trng.integers(len(q.PATTERNS))), trng)); targets.append(world.state(ev))
+for n in range(a.N):   # E1b protocol, as in the corrected v14: affirmative (all definite) at depths 0-2 (40%), quantified at depths 0-1
+    if trng.random() < 0.4: ev = w.qevent(trng, depth=int(trng.integers(3)), nouns_p=trNP, nouns_o=trNO, n_quant=0)
+    else: ev = w.qevent(trng, depth=int(trng.integers(2)), nouns_p=trNP, nouns_o=trNO)
+    sents.append(w.qrender(ev, int(trng.integers(len(q.PATTERNS))), trng)); targets.append(world.state(ev))
 cats, ids, mask = m.encode(sents); tgt_all = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device); opt = torch.optim.Adam([m.theta, m.logits], lr=0.02)
 for i in range(0, a.N, 8):
     sl = slice(i, i + 8); S = m.states(cats[sl], ids[sl], mask[sl]); tgt = tgt_all[sl]
@@ -33,7 +35,7 @@ def case(depth, n_quant, ambiguous, n=40, patterns=None):
     p = np.array(prof); return np.mean(nouns), np.mean(dets), np.mean(scope), np.mean(full), p[:, 0].mean(), p[:, 1].mean()
 print("\ncase | depth | nouns | dets | scope | FULL | scope score: true wide role | other roles")
 for depth in (0, 1, 2):
-    for name, nq, amb in (("one quantifier", 1, False), ("two, marked", 2, False), ("ambiguous (two unmarked)", None, True)):
+    for name, nq, amb in (("affirmative (all definite)", 0, False), ("one quantifier", 1, False), ("two, marked", 2, False), ("ambiguous (two unmarked)", None, True)):
         r = case(depth, nq, amb, n=30); print(f"  {name:26s} | {depth} | " + " | ".join(f"{x:.3f}" for x in r))
 print("\nper pattern, depth 0, unambiguous (nouns | dets | scope | FULL):")
 for t, pat in enumerate(q.PATTERNS):

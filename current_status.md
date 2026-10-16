@@ -1,4 +1,4 @@
-# Current status (rewritten at every judgment point; last: 2026-10-15 night, round 9 incl. E1b and E2 first run)
+# Current status (rewritten at every judgment point; last: 2026-10-16 09:05, E2 corrected; E3 running)
 
 ## Deliverables requested in the post-8d judgment (section F) — status
 - EMPIRICAL_NOTE.md: full draft; curve as figure 1 (to draw), same-input table, hard-pair table with n, budget check (gate PASSED: 10x
@@ -22,21 +22,26 @@ E1b (done): negation seen at depths 0-1, tested at depth 2 (UNSEEN): FULL frame 
 sentential negation included (E1: 0.0-0.5 -> 1.00). A DATA limit, not a mechanism limit — the same pattern as reporting in 6c: an operator
 composes one level further than trained once it has been seen inside another operator once.
 
-## E2 — quantifiers as roles, first run (5 seeds; RESULTS 9c)
-PROTOCOL ERROR found by the diagnostic, stated first: training had quantifier sentences at depths 0-1 and NO sentence at depth 2 at all
-(E1b had affirmative sentences at 0-2). The chain parameter 'that:that' only exists at depth >= 2, so at depth 2 everything collapses (nouns
-0.31, determiners 0.29) — not the quantifiers. The depth-2 column is void; E2 is being re-run with the E1b protocol (affirmative 0-2,
-operator 0-1). The composition rule is NOT yet tested for quantifiers; the reserve stands untouched.
-What the run establishes at depths 0-1:
-| axis | result | criterion |
+## Overnight: the machine hung (no SSH, hard reset) and the E2 re-run had a NaN bug
+The 18:37 re-run produced NaN targets (empty scope list => 0/0) and the machine hung later in the evening. Protection now in place
+(experiment/guard.py, imported first by every training script; run.sh): torch allocator capped at 50% of the unified memory (a 70 GB
+allocation is refused in-process, tested), MemAvailable watchdog (exit < 16 GB), 6 h wall-clock limit, finite-loss assertion, one run at a
+time, 40 GB free required to start; cgroup caps do NOT bound CUDA unified memory (tested). Session under tmux.
+
+## E2 — quantifiers as roles: first run (9c, protocol error), corrected run (9c-bis), diagnostic
+| axis | corrected run (5 seeds) | criterion |
 |---|---|---|
-| nouns / determiners (depth 0) | 1.000 / 0.973 | MET |
-| scope with ONE quantifier (depth 0 / 1) | 0.950 / 0.967 | > 0.9 MET |
-| scope with TWO quantifiers, marker 'each' / 'a certain' (depth 0 / 1) | **0.811 / 0.744** | > 0.9 NOT met — real weakness |
-| ambiguous 'every ... a ...' (never trained): both hypotheses reported | **0.46-0.50**; cos to the superposed world 0.86; forced choice surface-first 0.32 | reported; partial "knows it does not know", by composition |
-Learned gates: that, '.', to open; recipient verbs (sees, buys, receives, ...) open, active verbs closed; determiners closed.
-Decision taken (rule 10: evaluation -> data -> optimization -> architecture): this is a data/protocol error at the evaluation-data level,
-fixed in the data; nothing in the model is changed.
+| nouns / determiners, depth 0 | 0.999 / 0.923 | nouns MET; determiners just below |
+| scope, unambiguous, depth 0 (one quantifier 0.89 / two marked 0.62, diag) | 0.795 | > 0.9 NOT met |
+| depth 2 UNSEEN: scope / FULL | **0.603 / 0.362** | > 0.9 NOT met |
+| diag at depth 2: nouns / determiners / scope | **1.00** / 0.64 / 0.52 | nouns compose; quantifier terms do not |
+| ambiguous (never trained): both reported / cos to superposed world | 0.43 / 0.84 | reported; partial, by composition |
+=> The composition rule FAILS for quantifiers after one exposure (reserve of 9b-bis applied; reported, not repaired). Reporting itself
+composes (nouns 1.00 at the unseen depth — the 9c protocol error is gone). The quantifier is only approximately represented even at seen
+depths. Evaluation gap fixed (decoder had no "no quantifier" hypothesis; affects only affirmative sentences).
+Hypothesis for judgment: the world's scope term R_sc (x) f_role has a ROLE identity as filler — not any word in the sentence — so no
+address (x) f_word term can carry it exactly (the same class of mismatch as the flat world of round 5). Representable alternative that
+keeps "scope as a role": R_sc (x) f_noun_wide (the wide-scope quantified noun, present in the sentence). A world-definition correction, NOT applied.
 
 ## Conclusions relative to the new programme
 1. "Operator = role" holds for negation on its own, every scope, no rule, scope right 100%: Prolog/Z3 is a plan, not a promise, for
@@ -46,9 +51,10 @@ fixed in the data; nothing in the model is changed.
 3. The short empirical paper is complete as a draft with its gate passed and its condition ablated.
 
 ## Questions for judgment
-1. E2 two-quantifier scope at 0.81 / 0.74 (one quantifier 0.95): report as a limit of the scope role as defined (one R_sc term per wide
-   argument), or allow one world-side change — a per-quantifier scope term R_sc (x) f_det (x) f_role — before E3? My preference: report as is
-   now, re-run E2 with the corrected protocol, and decide after the depth-2 result.
+1. E2: the composition rule fails for quantifiers (0.36 full frame at the unseen depth; nouns 1.00, quantifier terms ~0.5). Two readings:
+   (a) a genuine limit of "operator = role" for quantifiers — report and move on; (b) my world asserts a term with a ROLE identity as filler
+   (R_sc (x) f_A) that no word term can carry — correct the world to R_sc (x) f_noun_wide and re-run once (E2c). I favour (b) because it is the
+   same mistake as the flat world, found by the same argument; if (b) also fails, (a) is established. Decision requested before E2c.
 2. Ambiguity: "both reported" at ~0.5 by composition, never trained. Is that the number to keep (honest, partial), or do we also report the
    forced-choice distribution (surface-first 0.32) as the default the state would give a reasoner?
 3. Figure 1 is drawn (figures/fig1_wikisql_curve.png); EMPIRICAL_NOTE references it. E3 (modality/conditionals, with the right-announced 'Q if P'

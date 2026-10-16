@@ -189,3 +189,6 @@ Protection added (experiment/guard.py, imported first in every training script; 
 allocations (tested: a 3 GB cuda tensor survived a 2 GB cap), so the cap is in-process — torch allocator limited to 50% of the unified
 memory (a 70 GB allocation is refused with an OOM error, tested), a watchdog that exits when MemAvailable < 16 GB, a 6 h wall-clock limit;
 run.sh refuses a second concurrent run and refuses to start under 40 GB available. The session now runs under tmux.
+E2 corrected run (09:00): nouns compose to the unseen depth (1.00), quantifier terms do not (dets 0.46-0.64, scope 0.52): the composition
+rule FAILS for quantifiers after one exposure — reserve applied, reported as such. Decoder gap fixed ('none' scope hypothesis). Hypothesis
+for judgment: the world's scope filler is a ROLE identity (not a word) => not representable by address (x) f_word; propose R_sc (x) f_noun.

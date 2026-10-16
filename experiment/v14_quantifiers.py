@@ -88,7 +88,7 @@ class QRoleWorld(v7.NestedRoleWorld):
         for x in reversed(speakers): S = self.R["X"] * self.F[w.idx[x]] + self.R["rep"] * S
         return S
 
-def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25):
+def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25, tau_none=0.08):
     R = {r: torch.tensor(world.R[r], dtype=m.F.dtype, device=m.device) for r in world.R}
     Fr = {r: torch.tensor(world.Frole[r], dtype=m.F.dtype, device=m.device) for r in world.Frole}
     Fn = m.F / m.F.abs().pow(2).sum(-1, keepdim=True).sqrt(); Sn = S / S.abs().pow(2).sum(-1).sqrt(); rep = torch.conj(R["rep"]) ** depth
@@ -101,7 +101,8 @@ def decode_q(S, m, world, w, nouns_p, nouns_o, depth, delta=0.25):
         out["d" + r] = dets[j] if float(sd[j]) > 0.5 * float(sc.max()) else "the"           # no quantifier term => definite
     ssc = {r: float(torch.real((Sn * torch.conj(R["sc"]) * rep * torch.conj(Fr[r])).sum()) / Fr[r].abs().pow(2).sum().sqrt()) for r in ("A", "B", "C")}
     top = sorted(ssc, key=lambda r: -ssc[r]); both = ssc[top[1]] >= (1 - delta) * ssc[top[0]] and ssc[top[1]] > 0.5 * ssc[top[0]]
-    out["scope_scores"] = ssc; out["scope"] = sorted(top[:2]) if both else [top[0]]; out["scope_choice"] = top[0]
+    none = ssc[top[0]] < tau_none                                 # "no quantifier" hypothesis (evaluation gap found 2026-10-16: affirmative sentences always got a scope)
+    out["scope_scores"] = ssc; out["scope"] = [] if none else (sorted(top[:2]) if both else [top[0]]); out["scope_choice"] = None if none else top[0]
     return out
 
 if __name__ == "__main__":

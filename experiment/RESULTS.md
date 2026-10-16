@@ -654,3 +654,35 @@ Reading: (i) quantifier = role on the argument holds for nouns and determiners (
 (ii) with TWO quantifiers the scope decision is the weak point (0.81), a real result to keep; (iii) "knows when it does not know": on never-seen
 ambiguous sentences the state reports both scope hypotheses in 46-50% of cases and sits at 0.86 cosine from the superposed world state —
 partial, by composition, with no training on ambiguity; (iv) the depth-2 result is void (protocol), re-run pending.
+
+### 9c-bis. E2 re-run with the E1b protocol (affirmative all-definite sentences at depths 0-2, quantified at 0-1; v14 --p_aff 0.4;
+logs/2026-10-16_0833_v14_quantifiers_c5333dc.txt; 5 seeds) + diagnostic (diag_v14.py, seed 0, corrected protocol)
+| axis | 9c (no depth-2 sentences) | 9c-bis (corrected protocol) | criterion |
+|---|---|---|---|
+| nouns / determiners, depth 0 | 1.000 / 0.973 | 0.999 / 0.923±0.009 | nouns MET; determiners just below 0.95 |
+| SCOPE, unambiguous, depth 0 | 0.862 | 0.795±0.021 | > 0.9 NOT met |
+| FULL frame, unambiguous, depth 0 / 1 | 0.798 / 0.724 | 0.665 / 0.562 | — |
+| depth 2 (UNSEEN): SCOPE / FULL | 0.469 / 0.047 (void) | **0.603±0.030 / 0.362±0.031** | > 0.9 NOT met |
+| new nouns, depth 0, FULL | 0.800 | 0.657 | — |
+| AMBIGUOUS (never trained): both reported / cos to superposed world / surface-first | 0.458 / 0.858 / 0.322 | 0.425±0.031 / 0.843±0.017 / 0.259 | reported |
+Diagnostic per case x depth (seed 0; nouns | determiners | scope): one quantifier d0 1.00 | 0.81 | 0.89; d1 1.00 | 0.84 | 0.87; d2 (UNSEEN)
+**1.00** | 0.64 | 0.52. Two marked: d0 1.00 | 0.77 | 0.62; d2 1.00 | 0.46 | 0.52. Affirmative (all 'the'): nouns and determiners 1.00 at every
+depth (scope 0.000 by construction: the decoder had no "no quantifier" hypothesis — an EVALUATION gap, fixed in decode_q with a 'none'
+threshold, affects only affirmative sentences, not the table above). Per determiner (one quantifier, d0): a 1.00, a certain 0.98, every 0.93,
+each 0.86, some 0.75. Per pattern (d0): determiners 0.70-0.95, scope 0.60-0.88.
+Reading, with the reserve of 9b-bis APPLIED:
+- The composition rule does NOT hold for quantifiers after one exposure: at the unseen depth the NOUNS compose (1.00 — reporting itself
+  composes, so the 9c protocol error is gone) while the quantifier-specific terms do not (determiners 0.46-0.64, scope 0.52 against chance
+  0.33). This is the first operator for which the rule fails, and it is reported as such; it is not repaired with more data.
+- The weakness is already visible at SEEN depths: scope 0.80 (one quantifier 0.89, two 0.62) and determiners 0.92 — the quantifier is only
+  approximately represented even where it was trained. Adding the affirmative sentences (needed for depth 2) lowered the seen-depth numbers
+  (0.86 -> 0.80, 0.97 -> 0.92): the quantifier terms compete with the base.
+- Hypothesis on the cause, proposed for judgment (rule 10 order: evaluation fixed, data corrected, optimization unchanged — this is the
+  world/model level, as in round 5-6): the world's scope term is R_sc (x) f_role, whose filler is the identity OF A ROLE, not of any word in
+  the sentence. The model can only produce terms address (x) f_word, so R_sc (x) f_A is not representable exactly (the same class of
+  mismatch as the flat world of round 5: the world asserts something no causal word term can carry). A representable alternative keeps
+  "scope as a role": R_sc (x) f_noun_wide — the wide-scope quantified NOUN's identity, which is in the sentence. This is a correction of my
+  world definition, not of the model; it is NOT applied here. The determiner term R_Q (x) f_det inside the slot is representable (f_det is a
+  word), and its 0.92 / 0.64 suggests a second, smaller issue: two identities bundled in one slot halve each other's strength.
+- "Knows when it does not know": unchanged — ~0.43 of never-trained ambiguous sentences get both hypotheses, cosine 0.84 to the superposed
+  world state; partial, by composition.
