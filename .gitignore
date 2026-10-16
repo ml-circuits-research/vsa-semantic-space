@@ -1,4 +1,5 @@
 __pycache__/
+tomorrow.sh
 *.pyc
 .venv/
 experiment/logs/.ckpt_*
