@@ -166,13 +166,21 @@ property of the formulation set; and the axis "new formulations with seen transi
 the model, which is why we replaced it with "role cues seen". Categories are distributional, gates are not: the learned displacements
 cluster the content words into their five classes perfectly, and so does a skip-gram on the same sentences, so categories are an input the
 model consumes rather than something it produces; the gating structure, by contrast, is not recoverable from co-occurrence and does emerge
-from the objective (section 4). Finally, a retracted claim is corrected in every document in the same commit as the retraction.
+from the objective (section 4). Quantifier scope is the one operator that does not follow the composition regularity: seen at depths 0-1 and
+tested at depth 2, nouns stay at 1.00 while the scope term is at or below chance in all three world definitions we tried (a role identity, the
+wide slot, the wide noun); a decoder with an absolute "no quantifier" threshold made this look even worse (0.03, below chance) until the
+rule was made relative to the noun scores — evaluation first, then interpretation. Our hypothesis, not yet tested, is that scope is a relation
+between two slots and not an envelope over a state, so no degree-1 word term can carry it to a depth-shifted address. Finally, a retracted
+claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats and structural limits (part of the claims)
 Commutative binding records the MULTISET of roles on a path, not their order: two operator chains that differ only in order can collide
 ("X says that not P" vs "not (X says that P)"); we claim no arbitrary tree representation (remedies — permutation binding, level-indexed
 roles — are planned, X1/B7). Occupancy cannot be read from the norm after unbinding (unbinding is an isometry); what is reported instead
-is the reconstruction residual (rule 18). Memory: of the order of D x rows x 4 bytes, i.e. a megabyte at D ~ 1k, not less.
+is the reconstruction residual (rule 18). Memory: of the order of D x rows x 4 bytes, i.e. a megabyte at D ~ 1k, not less. Adding the
+predicate role (one more term per level) lowers the unseen-depth-3 full frame from 1.000 to 0.81, with the loss on the argument roles and
+reported by the margin (coverage 0.3-0.6 at a fixed threshold); the depth-3 claim of section 3 is stated for the predicate-less world.
+Quantifier scope does not compose to an unseen depth in any world tried (section 7).
 The world is ours: synthetic, six frames, two reporting verbs, 36 identities, D = 1024; the positive nesting result holds for reporting
 announced before its clause. The control is small (0.79M parameters) and minimally tuned; larger models, more data and learned embeddings
 (which would remove the fixed-identity constraint and with it the zero-shot test) are not covered. The old "seen transitions" axis measures

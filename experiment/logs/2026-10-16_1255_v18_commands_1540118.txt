@@ -1,0 +1,82 @@
+# 2026-10-16T12:55:07+02:00  commit=1540118  cmd: python3 v18_commands.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v18_commands (B3): device=cuda, D=1024, N=40000, seeds=5, tau=0.05; command world, negation as a role around its scope; forms ['aff', 'aff_dest', 'prohib', 'prohib_never', 'attr_affix', 'attr_rel', 'prohib_attr']; templated sentences only (LLM paraphrases PLANNED, no API)
+training: all forms at depth 0, and inside one report ('the admin says that ...') with share 0.3 at depth 1; test: depth 0 (seen forms, fresh events), new patients (3 unseen), depth 2 (UNSEEN)
+chance: action 1/5, patient 1/6 (new 1/3), attribute 1/5, scope hypothesis 1/4
+
+[train seed 0] start: RSS 1.41 GB | torch alloc 0.63 GB reserved 0.65 GB | MemAvailable 113.0 GB
+[train seed 0] step 500 sent 4000/40000 loss -0.918 (10s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 111.8 GB
+[train seed 0] step 1000 sent 8000/40000 loss -0.917 (20s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 0] step 1500 sent 12000/40000 loss -0.965 (30s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.1 GB
+[train seed 0] step 2000 sent 16000/40000 loss -0.946 (40s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 2500 sent 20000/40000 loss -0.970 (50s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 3000 sent 24000/40000 loss -0.934 (60s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 3500 sent 28000/40000 loss -0.943 (70s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 4000 sent 32000/40000 loss -0.977 (80s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 4500 sent 36000/40000 loss -0.969 (90s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] step 5000 sent 40000/40000 loss -0.960 (100s) | RSS 2.55 GB | torch alloc 0.71 GB reserved 0.90 GB | MemAvailable 112.2 GB
+[train seed 0] end: RSS 2.55 GB | torch alloc 0.71 GB reserved 0.78 GB | MemAvailable 112.3 GB (100s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:104: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (101s) 1.000 | 1.000 | 0.996 | 1.000 | 1.000 | 0.996 | 1.000 | 0.993 | 0.993 | 0.836 | 0.000 | 0.871  || cos(aff, prohib) 0.08 cos(prohib, attr-neg) 0.19; bag 0.85/0.68 || gates OPEN: ['ATTR', 'DEST', 'PRINC', 'never', 'not', 'the']
+[train seed 1] start: RSS 2.63 GB | torch alloc 0.69 GB reserved 1.39 GB | MemAvailable 111.6 GB
+[train seed 1] step 500 sent 4000/40000 loss -0.945 (10s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 1000 sent 8000/40000 loss -0.945 (20s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 1500 sent 12000/40000 loss -0.963 (30s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 2000 sent 16000/40000 loss -0.954 (39s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 2500 sent 20000/40000 loss -0.948 (49s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 3000 sent 24000/40000 loss -0.944 (59s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 3500 sent 28000/40000 loss -0.966 (69s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 4000 sent 32000/40000 loss -0.985 (79s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 4500 sent 36000/40000 loss -0.955 (89s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] step 5000 sent 40000/40000 loss -0.941 (99s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.41 GB | MemAvailable 111.6 GB
+[train seed 1] end: RSS 2.63 GB | torch alloc 0.71 GB reserved 0.76 GB | MemAvailable 112.3 GB (99s)
+  seed 1 (99s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.829 | 0.000 | 1.000  || cos(aff, prohib) 0.05 cos(prohib, attr-neg) 0.17; bag 0.85/0.68 || gates OPEN: ['DEST', 'NATTR', 'do', 'never', 'that', 'the', 'to']
+[train seed 2] start: RSS 2.63 GB | torch alloc 0.69 GB reserved 1.37 GB | MemAvailable 111.6 GB
+[train seed 2] step 500 sent 4000/40000 loss -0.898 (10s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.6 GB
+[train seed 2] step 1000 sent 8000/40000 loss -0.945 (20s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.6 GB
+[train seed 2] step 1500 sent 12000/40000 loss -0.945 (30s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.6 GB
+[train seed 2] step 2000 sent 16000/40000 loss -0.975 (39s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 2500 sent 20000/40000 loss -0.956 (49s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 3000 sent 24000/40000 loss -0.921 (59s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 3500 sent 28000/40000 loss -0.974 (69s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 4000 sent 32000/40000 loss -0.951 (79s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 4500 sent 36000/40000 loss -0.942 (89s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] step 5000 sent 40000/40000 loss -0.947 (98s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 2] end: RSS 2.63 GB | torch alloc 0.71 GB reserved 0.76 GB | MemAvailable 112.3 GB (98s)
+  seed 2 (99s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.843 | 0.000 | 0.988  || cos(aff, prohib) 0.05 cos(prohib, attr-neg) 0.17; bag 0.84/0.67 || gates OPEN: ['DEST', 'NATTR', 'do', 'never', 'that', 'the']
+[train seed 3] start: RSS 2.61 GB | torch alloc 0.69 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 3] step 500 sent 4000/40000 loss -0.909 (10s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 1000 sent 8000/40000 loss -0.918 (20s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 1500 sent 12000/40000 loss -0.945 (30s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 2000 sent 16000/40000 loss -0.930 (40s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 2500 sent 20000/40000 loss -0.919 (50s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 3000 sent 24000/40000 loss -0.931 (61s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 3500 sent 28000/40000 loss -0.971 (71s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 4000 sent 32000/40000 loss -0.948 (81s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 4500 sent 36000/40000 loss -0.930 (91s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] step 5000 sent 40000/40000 loss -0.961 (101s) | RSS 2.61 GB | torch alloc 0.71 GB reserved 1.39 GB | MemAvailable 111.7 GB
+[train seed 3] end: RSS 2.61 GB | torch alloc 0.71 GB reserved 0.74 GB | MemAvailable 112.4 GB (101s)
+  seed 3 (101s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.993 | 0.850 | 0.000 | 1.000  || cos(aff, prohib) 0.05 cos(prohib, attr-neg) 0.17; bag 0.85/0.68 || gates OPEN: ['DEST', 'NATTR', 'do', 'never', 'that', 'the']
+[train seed 4] start: RSS 2.63 GB | torch alloc 0.69 GB reserved 1.35 GB | MemAvailable 111.7 GB
+[train seed 4] step 500 sent 4000/40000 loss -0.914 (10s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 1000 sent 8000/40000 loss -0.923 (20s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 1500 sent 12000/40000 loss -0.928 (30s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 2000 sent 16000/40000 loss -0.950 (41s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 2500 sent 20000/40000 loss -0.969 (51s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 3000 sent 24000/40000 loss -0.970 (61s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 3500 sent 28000/40000 loss -0.929 (70s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 4000 sent 32000/40000 loss -0.987 (80s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 4500 sent 36000/40000 loss -0.980 (90s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] step 5000 sent 40000/40000 loss -0.961 (99s) | RSS 2.63 GB | torch alloc 0.71 GB reserved 1.37 GB | MemAvailable 111.7 GB
+[train seed 4] end: RSS 2.63 GB | torch alloc 0.71 GB reserved 0.74 GB | MemAvailable 112.3 GB (99s)
+  seed 4 (100s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.914 | 0.000 | 0.983  || cos(aff, prohib) 0.06 cos(prohib, attr-neg) 0.17; bag 0.84/0.66 || gates OPEN: ['ATTR', 'DEST', 'do', 'never', 'that', 'the']
+
+== MEANS over 5 seeds: d0: action | patient | attribute | PRESENCE | SCOPE | FULL | new patients FULL | d1 FULL | d2 UNSEEN: SCOPE | d2 FULL | scope-only pairs: confident-wrong | coverage
+  1.000±0.000 | 1.000±0.000 | 0.999±0.001 | 1.000±0.000 | 1.000±0.000 | 0.999±0.001 | 1.000±0.000 | 0.999±0.003 | 0.997±0.003 | 0.854±0.031 | 0.000±0.000 | 0.968±0.049
+== scope accuracy per form (depth 0): aff=1.00 aff_dest=1.00 prohib=1.00 prohib_never=1.00 attr_affix=1.00 attr_rel=1.00 prohib_attr=1.00
+== separation model | bag: cos(aff, prohibition) 0.058 | 0.845; cos(prohibition, attr-negated) 0.174 | 0.676
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] scope separately from presence (17) [x] scope-only pairs with confident-wrong and coverage (18) [x] bag control [x] unseen depth [x] memory logged (21) [x] >=3 seeds [ ] LLM paraphrases (PLANNED) [x] given vs learned stated (20)

@@ -687,6 +687,68 @@ Reading, with the reserve of 9b-bis APPLIED:
 - "Reports both hypotheses": unchanged — ~0.43 of never-trained ambiguous sentences get both hypotheses, cosine 0.84 to the superposed
   world state; partial, by composition.
 
+### 9c-ter. E2c — quantifier world correction, both targets (v14 --scope_target slot: logs/2026-10-16_1031_v14_quantifiers_7f2b6b7.txt; --scope_target noun: logs/2026-10-16_1052_v14_quantifiers_8fc1fcc.txt; 5 seeds each, same regime as 9c-bis: --p_aff 0.4) + evaluation diagnostic (diag_e2c.py; logs/2026-10-16_1240_diag_e2c_c142b57.txt; seed 0, one model per target)
+Rule-11 trace first (trace_e2c.py, logs/trace_e2c.txt): the slot target R_sc (x) (R_role (x) f_noun) is a product of per-category vectors the
+model has (the wide determiner's emitted slot, L[each:NP] or bg:each:NP), the role-identity target of 9c-bis is not. Regime: quantified
+sentences (one quantifier, or two with a wide-scope marker) seen at depths 0-1 (share 0.6), affirmative at 0-2, tested at depth 2.
+| axis (5 seeds) | 9c-bis role-identity target | E2c slot target | E2c noun target | criterion |
+|---|---|---|---|---|
+| depth 0: nouns / determiners | 0.999 / 0.923 | 0.999 / 0.946±0.010 | 0.997 / 0.944±0.011 | nouns MET; determiners just below 0.95 |
+| depth 0: SCOPE / FULL | 0.795 / 0.665 | 0.784±0.038 / 0.667±0.027 | **0.873±0.051** / **0.749±0.037** | scope > 0.9 NOT met |
+| depth 1 FULL | 0.562 | 0.503±0.051 | 0.578±0.043 | — |
+| depth 2 (UNSEEN): SCOPE / FULL, decoder with the ABSOLUTE 'none' threshold 0.08 | (0.603 / 0.362, decoder without 'none') | 0.027 / 0.008 | 0.029 / 0.011 | > 0.9 NOT met; see the diagnostic |
+| new nouns d0 FULL | 0.657 | 0.602 | 0.717 | — |
+| ambiguous (never trained; n = 360/seed): both reported / cos to superposed world / forced surface-first | 0.425 / 0.843 / 0.259 | 0.389±0.080 / 0.804 / 0.427 | 0.693±0.029 / 0.819 / 0.331 | reported, observed |
+Evaluation diagnostic (rule 10: evaluation before data, optimization, architecture). The depth-2 values 0.03 are BELOW chance (0.33); the
+suspected cause was the 'none' (no-quantifier) hypothesis added to decode_q after 9c-bis with an ABSOLUTE threshold (tau_none = 0.08) —
+all scope scores shrink with depth, so at depth 2 the decoder says 'none' for every sentence. diag_e2c re-scores one model per target under
+three rules — absolute 0.08 (as in E2c), none (as in 9c-bis), relative (none if best scope score < 0.25 x best noun score) — and prints the
+raw scope-score profile (mean score of the TRUE wide role | mean of the other roles):
+| target | case | d0 abs / none / rel | raw true vs other | d2 (UNSEEN) abs / none / rel | raw true vs other |
+|---|---|---|---|---|---|
+| role (9c-bis) | one quantifier | 0.894 / 0.894 / 0.894 | 0.281 vs 0.059 | 0.483 / **0.522** / 0.478 | 0.093 vs 0.030 |
+| role | two, marked | 0.622 / 0.622 / 0.622 | 0.317 vs 0.129 | 0.517 / 0.517 / 0.517 | 0.143 vs 0.062 |
+| slot (E2c) | one quantifier | 0.961 / **0.978** / 0.850 | 0.167 vs 0.034 | 0.006 / **0.333** / 0.033 | 0.024 vs 0.015 |
+| slot | two, marked | 0.683 / 0.683 / 0.683 | 0.194 vs 0.074 | 0.033 / 0.250 / 0.083 | 0.034 vs 0.029 |
+| noun (E2c) | one quantifier | 0.994 / **0.994** / 0.989 | 0.206 vs 0.034 | 0.028 / **0.206** / 0.067 | 0.035 vs 0.039 |
+| noun | two, marked | 0.772 / 0.772 / 0.772 | 0.247 vs 0.100 | 0.039 / 0.194 / 0.106 | 0.046 vs 0.044 |
+| all three | affirmative (truth = none) | role 0.36 / 0 / 0.72; slot 0.97 / 0 / 1.00; noun 0.91 / 0 / 0.99 | max score 0.05-0.10 | role 0.99 / 0 / 0.96; slot 1.00 / 0 / 0.99; noun 0.95 / 0 / 0.84 | 0.03-0.05 |
+Determiners (all targets): one quantifier d0 0.81-0.86, d2 0.64-0.67; two marked d0 0.77-0.82, d2 0.46-0.48. Nouns 1.000 everywhere.
+Reading.
+- The evaluation artefact is REAL but it is not the whole story. The absolute threshold does turn depth-2 scope into 0.03 for the corrected
+  targets (the 'none' rule recovers 0.33 / 0.21); it also makes the affirmative case readable (0.91-1.00 where the 9c-bis decoder had 0 by
+  construction). The RELATIVE rule is the one to keep (it reads the affirmative case at 0.84-1.00 and leaves the quantified cases within 0.01-
+  0.13 of the no-none rule at depth 0); it will be the decoder from here on. Under NO rule does a corrected target compose: at depth 2 the
+  raw score of the true wide role equals the score of the other roles (slot 0.024 vs 0.015, noun 0.035 vs 0.039) — there is NO scope signal
+  at the unseen depth, whereas the role-identity target of 9c-bis keeps a weak one (0.093 vs 0.030 -> 0.52 scope, above chance).
+- So the world correction worked where the trace said it could — at the SEEN depth the one-quantifier scope is 0.96-0.99 (role target 0.89),
+  the best quantifier number so far — and failed at the unseen depth, worse than the target it replaced. The quantifier terms of the corrected
+  worlds are carried by terms that are NOT re-addressed by the reporting frame: the diagnostic shows the determiner gates CLOSED in both
+  corrected worlds (open: from, that, to; 9c-bis seed 0 opened the verbs), so, exactly as the trace's second branch predicted, the scope
+  difference between 'each' and 'every' is carried by bigram / path terms (bg:each:NP), which are position-local and do not move with the
+  depth; the chain term (the one 'that' re-addresses, and the one that makes nouns compose at 1.000) is identical for 'each' and 'every' when
+  the determiners are closed. The role-identity target of 9c-bis cannot be produced by any word term, so its weak signal lives in the chain by
+  default, which is why it survives one level (0.52) without being right.
+- Interpretation proposed for judgment (HYPOTHESIS, rule 22): quantifier scope is not an envelope operator like negation / modality /
+  reporting (one term R_op (x) S applied to a whole state, carried by a gate word the chain re-addresses) but a RELATION between two slots
+  (which of two quantified noun phrases out-scopes the other). A relation of two sentence positions needs a term of degree 2 in word
+  identities — address (x) f_A (x) f_B — or an operator word that opens a frame; the current model has only degree-1 word terms and the
+  gradient did not open the determiner gates (opening them would cost on the nouns, which are already 1.000). This is the same class of limit
+  as "right-announced structure": the information exists in the sentence but no causal degree-1 term can hold it at a depth-shifted address.
+- Two changes that follow and are NOT applied here (PLANNED, criterion each; for judgment):
+  (a) a degree-2 relational term, one per sentence, bound by the wide determiner's slot and the narrow one's: criterion = scope > 0.9 at depth
+  0 AND > 0.9 at depth 2 with the regime above, 5 seeds, nouns unchanged at 1.00, no loss on 6c/9b/9d (the term must be inert where there is
+  no quantifier); (b) forcing the determiner gates OPEN (given, not learned — rule 20 stated) so that the scope difference enters the chain:
+  criterion = the same, and the cost on nouns and on the other operator tables reported. (a) tests the hypothesis; (b) tests the mechanism
+  claimed in the second bullet. If (b) already composes, the limit is in the learned gating, not in the degree of the terms.
+- Ambiguity: the noun target gives "both hypotheses reported" 0.69 (role 0.43, slot 0.39) with a forced surface-first choice 0.33; the
+  product reading proposed for judgment is to EMIT scope as "both" (the superposed world state is what the model produces, cos 0.80-0.84, and
+  the two readings are what a reasoner receives), rather than to pick. Not a criterion yet (observed, rule 22).
+- Status of the regularity (rule 24): "seen at depth d in training (share p), tested at depth d+1" holds for reporting, negation, modality,
+  conditional, modal-in-conditional; quantifier scope FAILS in all three worlds tried (role 0.52, slot 0.33, noun 0.21 at depth 2 under the
+  no-none rule; nouns 1.00 in all). 9c-bis stays; E2c supersedes nothing — it adds the two corrected targets and the diagnostic. The decoder
+  change (relative 'none' rule) affects the affirmative case only and is applied from the next run on; the numbers above are not re-run.
+
 ## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
 World: R_may (x) S, R_must (x) S; R_if (x) S_P + R_then (x) S_Q; reporting as before. Forms: "may V", "perhaps V3"; "must V", "has to V";
 "if P , then Q", "if P , Q", and "Q if P" (RIGHT-announced: included on purpose). Training: affirmative 0-2, modals and conditionals 0-1; the
@@ -799,3 +861,29 @@ confidence (swap: 0.29 missed) or cannot decide (change_sel: 0.59 unverifiable).
 and it says so through the margin rather than through a wrong verdict — in B4's terms, the verifier is useful on the role part of a
 formalization and silent on the lexical part. The 16% false alarm on gold (the reader's own wrong decodings with margin >= tau) is the number
 to reduce before the LLM version.
+
+## 10d. B3 — negation on COMMANDS: scope as a role (v18_commands.py; logs/2026-10-16_1255_v18_commands_1540118.txt; 5 seeds, D = 1024, 40k, batch 8)
+World: command = R_act (x) f_verb + R_pat (x) f_noun [+ R_attr (x) f_adj] [+ R_dest (x) f_place]; negation = a role around its scope: prohibition
+R_neg (x) S (the whole command), negated attribute R_pat (x) (f_noun + R_neg (x) f_adj) (only the attribute), or both. Seven templated forms:
+affirmative, with destination, "do not V the N", "never V the N", "V the un-ADJ N" (affixal), "V the N that is not ADJ" (relative), and
+prohibition + negated attribute. Training: all forms at depth 0 and inside one report ("the admin says that ...", share 0.3 at depth 1); test
+on fresh events at depth 0, 3 UNSEEN patients, and depth 2 (unseen). Decoding over four scope hypotheses (none / S / attr / S+attr), scope
+reported separately from presence (rule 17); scope-only pairs = "do not delete the saved files" vs "delete the unsaved files" (same words
+except the negation site), 240 readouts per seed at tau = 0.05; lexical bag on the same pairs. LLM paraphrases: PLANNED (no API).
+| axis (5 seeds) | result | criterion |
+|---|---|---|
+| depth 0: action / patient / attribute | 1.000 / 1.000 / 0.999 | — |
+| depth 0: PRESENCE of negation / SCOPE (4 hypotheses) / FULL | 1.000 / **1.000** / 0.999 | scope > 0.95 MET (templates) |
+| scope per form (d0): aff, aff_dest, prohib, never, affixal, relative, prohib+attr | 1.00 on all seven | — |
+| new patients FULL / depth 1 FULL | 1.000 / 0.999 | — |
+| depth 2 (UNSEEN; negation forms seen at depths 0-1, share 0.3 at depth 1): SCOPE / FULL | **0.997±0.003** / 0.854±0.031 | scope: regularity holds; FULL < 0.9 (the loss is on the fillers at depth 2, not on the scope) |
+| scope-only pairs: confident-wrong / coverage at tau 0.05 | **0.000±0.000** / 0.968±0.049 | confident-wrong < 1% at coverage > 90%: MET |
+| separation cos(aff, prohibition) / cos(prohibition, attr-negated); lexical bag | 0.058 / 0.174 ; bag 0.845 / 0.676 | gaps > 0.5 MET |
+Learned gates (5 seeds): 'never', 'the', DEST open in 5/5; 'do', 'that' in 4/5; the negated-attribute category (NATTR, "un-ADJ") in 3/5;
+'not' in 1/5 (its scope is carried by 'do' / 'never' and the attribute category, the same as E1's partition).
+Reading. (i) On templated commands the three readings of a negation (forbid the action, negate the attribute, both) are decoded at 1.000 with
+scope separate from presence, and the two sentences that differ only in the negation site are never confused with confidence (0.000 at
+coverage 0.97). (ii) The regularity "seen at depth d (share p), tested at d+1" holds for the scope (0.997) — the sixth operator case; the
+FULL frame at depth 2 is 0.85 because the fillers (patient, attribute) lose at the unseen depth, not the scope. (iii) The lexical bag puts
+"delete the saved files" and "do not delete the saved files" at cos 0.85: the separation (0.06) is structural, as in E1. (iv) Everything here
+is templated; whether the reading survives paraphrase (the B3 criterion as written) is the LLM-paraphrase follow-up, PLANNED.

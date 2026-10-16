@@ -227,3 +227,9 @@ alarm on gold 0.162; condition and value errors mostly 'unverifiable' (values in
 Process lesson: the two queued launches (diag_e2c, v18) waited on `pgrep -f "v16_reference|v17_verifier"` — a pattern that matches the
 waiting shell's OWN command line, so both loops waited forever (found at 12:40, one hour after the lock was free). Rule for queues: wait on
 the pid lock (logs/.run.lock) only, never on a pgrep pattern that appears in the waiting command. Both runs relaunched sequentially at 12:40.
+B3 commands (13:04; log 2026-10-16_1255, 5 seeds): scope 1.000 on seven templated forms, confident-wrong 0.000 on scope-only pairs
+(coverage 0.97), unseen depth 2 scope 0.997 (FULL 0.854, fillers). RESULTS 10d. diag_e2c (log 2026-10-16_1240): the absolute 'none'
+threshold explains the 0.03 but under no rule do the corrected targets compose (depth-2 raw scope signal = noise); determiner gates closed in
+both corrected worlds. RESULTS 9c-ter; decoder default now relative. current_status.md rewritten whole with the interpretation (relation vs
+envelope, HYPOTHESIS), proposals C1-C6 (PLANNED, criteria) and six questions; STATUS.md updated; PAPER_NOTE §7-8 and 00_READ_FIRST §5.9
+updated. Push = judgment point.
