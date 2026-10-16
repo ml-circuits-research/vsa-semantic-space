@@ -797,6 +797,53 @@ Reading, by the criterion stated before the run.
   open; no permuted-filler term is built; no third world definition. The relative numbers (0.65 vs 0.33) are recorded as the measured effect
   of carrying the scope term in the chain. Next experiments: B5-B7 as planned.
 
+### 9c-quater-bis. C2 strict columns (judgment 3b4f837 C2): depth 2 with the DEPTH-1 presence threshold, on the saved C2 models (rescore_v14_c2.py; logs/2026-10-16_1814_rescore_v14_c2_edfd146.txt; 5 seeds, same rows)
+| target | depth-2 threshold (labelled depth-2 calibration rows, as in 9c-quater): PRESENCE / FULL / aff ABSENT | STRICT, depth-1 threshold (no depth-2 information): PRESENCE / FULL / aff ABSENT |
+|---|---|---|
+| slot | 0.806 / 0.386 / 0.922 | **0.257 / 0.150 / 0.998** |
+| noun | 0.757 / 0.368 / 0.941 | **0.173 / 0.109 / 1.000** |
+The scope scores shrink with depth (thresholds d1 0.08-0.12, d2 0.03-0.07): with the depth-1 threshold most depth-2 quantified sentences read
+as 'absent'. The 9c-quater depth-2 FULL numbers (0.37-0.39) therefore DEPEND on the labelled depth-2 statistic; the strict numbers are 0.11-0.15.
+SCOPE|gold-quantified is unaffected (it does not use the threshold). Both columns are reported from here on.
+
+### 9c-quinquies. C2b — the determiner as a BEACON-RELATIVE emitter (v8.set_rel_emitters; v14 --rel; --scope_target slot: logs/2026-10-16_1729_v14_quantifiers_8faa02b.txt; --scope_target noun: logs/2026-10-16_1751_v14_quantifiers_edfd146.txt; 5 seeds each; regime of 9c-bis; gates LEARNED, determiners closed)
+Mechanism (judgment 3b4f837 E2): a quantified determiner (every, each, some, a, certain — a given set) draws the NEXT noun a second time at
+(the noun's own address) (x) exp(i REL[det]) (x) f_noun, one learned displacement per determiner category, relative to the noun's slot; the probe's
+cumulative position is untouched. Trace first (logs/trace_c2b.txt): (a) the wide noun's second drawing inherits its own address, which contains
+both 'that' displacements, plus REL[det]; (b) every other word is IDENTICAL under each / every; (c) with two quantifiers each REL is added to
+its own noun's address. Decoder as in 9c-quater (presence on calibration rows per depth; SCOPE|gold-quantified = argmax; strict columns with the
+depth-1 threshold).
+| axis (5 seeds) | slot target | noun target | C2 (gates open) slot / noun | criterion |
+|---|---|---|---|---|
+| depth 0: nouns / determiners | **0.998** / 0.919 | 0.993 / 0.867 | 0.988 / 0.968 ; 0.977 / 0.966 | nouns 1.00: slot within 0.002 |
+| depth 0: PRESENCE / aff ABSENT | 0.996 / **1.000** | 0.998 / **1.000** | 0.887 / 1.000 ; 0.933 / 1.000 | — |
+| depth 0: SCOPE|gold-q one-quantifier / two-quantifier (marked) | **0.993 / 0.685** | **0.976 / 0.867** | 0.976 / 0.761 ; 0.961 / 0.793 | one-q > 0.9 MET (both); two-q NOT met |
+| depth 0 FULL (joint) / depth 1 FULL | 0.686 / 0.599 | 0.633 / 0.520 | 0.701 / 0.616 ; 0.763 / 0.698 | — |
+| **depth 2 (UNSEEN): SCOPE|gold-q one-quantifier** (per seed) | **0.998** (1.000, 0.990, 1.000, 1.000, 1.000) | **0.927** (0.959, 0.929, 0.898, 0.888, 0.959) | 0.667 ; 0.631 | > 0.9 **MET** (slot 5/5 seeds; noun 3/5, mean met) |
+| depth 2 (UNSEEN): SCOPE|gold-q two-quantifier | 0.481 | 0.463 | 0.529 ; 0.556 | NOT met (chance 0.33) |
+| depth 2: PRESENCE (d2 threshold) / STRICT (d1 threshold) / aff ABSENT (d2 thr; strict) | **0.978 / 0.867** / 1.000 ; 1.000 | 0.912 / **0.032** / 0.987 ; 1.000 | 0.806 / 0.257 ; 0.757 / 0.173 | — |
+| depth 2 FULL (d2 threshold) / STRICT | 0.472 / 0.409 | 0.196 / 0.009 | 0.386 / 0.150 ; 0.368 / 0.109 | — (the two-quantifier half of the sentences fails) |
+| new nouns d0 FULL | 0.608 | 0.571 | 0.623 ; 0.734 | — |
+| ambiguous (never trained): both reported / cos superposed / forced surface-first | 0.655±0.130 / 0.837 / 0.622 | **0.838**±0.062 / 0.829 / 0.398 | 0.377 ; 0.533 | both > 0.9 NOT met (noun target close) |
+Gates (learned): that 1.00, to 0.80 / 0.60, from 0.60, by 0.56-0.59, '.' 0.55-0.64; determiners stay closed (0.1-0.2); recipient verbs 0.2-0.4.
+Reading, by the criterion and decision rule stated before the run.
+- ONE quantifier: the scope term now moves with the frame WITHOUT shifting the rest of the sentence — nouns 0.998 (C2: 0.988), affirmative
+  sentences read as absent 1.000 at both depths, and the one-quantifier scope at the UNSEEN depth is 0.998 on the slot target (five seeds at
+  0.99-1.00) and 0.927 on the noun target. The one-quantifier case therefore JOINS the regularity "seen at depth d (share 0.6 over depths 0-1),
+  tested at depth d+1": the third effect size in the judgment's series is no signal 0.21-0.33 -> chain-carried 0.63-0.67 -> beacon-relative
+  0.93-1.00. H-a is supported in the form the judgment restated it: the scope term composes when it is carried by the re-addressed code AND the
+  probe is untouched. On the slot target even the strict presence (depth-1 threshold) holds at 0.87; on the noun target it does not (0.03: the
+  noun-target scope scores shrink faster with depth), so the slot target is the world definition kept.
+- TWO quantifiers (marked): NOT met at any depth (0.69 / 0.87 at depth 0, 0.46-0.48 at depth 2). This is the configuration the a8a8fab
+  judgment named: the one-quantifier case composes and the two-quantifier case does not. The trace said why: with two emitters, 'every' must emit
+  the scope term in a one-quantifier sentence and must NOT next to 'each' — one displacement per category cannot do both; which phrase is wide
+  is a relation between the two determiners. H-b is now TESTABLE and the judgment's conditional applies: a relational term with a PERMUTED filler
+  (permutation binding, B7), emitted by the wide determiner's category through a learned displacement, declared as a change of principle, with
+  the criterion of C1 plus "inert when no quantifier". It is NOT built here; proposed for judgment (current_status.md E).
+- Determiners dropped (0.92 / 0.87 from 0.97): the second drawing competes with the determiner term inside the same slot — a cost to report.
+- Status of the regularity (rule 24): six operator cases + the one-quantifier scope hold; the two-quantifier (marked) scope is now the named
+  exception, with H-b as its stated hypothesis.
+
 ## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
 World: R_may (x) S, R_must (x) S; R_if (x) S_P + R_then (x) S_Q; reporting as before. Forms: "may V", "perhaps V3"; "must V", "has to V";
 "if P , then Q", "if P , Q", and "Q if P" (RIGHT-announced: included on purpose). Training: affirmative 0-2, modals and conditionals 0-1; the
@@ -1037,3 +1084,35 @@ other words — a LEXICAL-MISMATCH effect, not a hard-table effect. On those que
 does not know that the column was never named. The aggregator's confident-wrong (0.137) is the larger contributor to the 16% false alarm on
 gold and was already the lexical decision the model loses (8d). The 50-case audit sample (seed 0) is in logs/audit_confident_wrong_sel_50.jsonl
 with an empty audit_verdict per row, for the team: the share that is gold noise / ambiguous questions is the number needed before touching the reader.
+
+## 10b-quater. E1 — the depth-3 passives: rule-11 trace, then the participle as an emitter (trace_e1.py, logs/trace_e1.txt; v16_reference.py --part_gates open; logs/2026-10-16_1717_v16_reference_8faa02b.txt; 5 seeds, same seeds as 10b)
+Trace (i), with the learned gate set of 10b (that, '.', recipient verbs open; 'to' and the participles CLOSED), inside three reports:
+| form at depth 3 | A | C | predicate carrier |
+|---|---|---|---|
+| T0 "A gives B to C ." | that:that + that:that + that:. + **.:P** | that:that + that:that + that:. + **L[.:P]** | ... + L[.:gives] |
+| T2 "B is given to C by A ." | ... + **L[.:P]** | ... + **.:P** | ... + L[.:given] |
+| T3 "B is given by A to C ." | ... + .:P | ... + L[.:P] | ... + L[.:given] |
+With 'to' and the participle closed, the only emitter inside the clause is the period: both persons hang off '.' through the two keys the
+category P has there (.:P and L[.:P]), and the PASSIVE T2 gives them the SAME two addresses as T0 WITH THE ROLES SWAPPED. The chain code is
+therefore form-blind on T2 (it says "first person = agent"); the roles can only be told apart by the path / bigram codes, which do not move with
+the depth. C and the predicate share only the 'that' prefix (2 of 3 keys) in every form — the predicate crosstalk blamed in 10b-ter is not what
+the trace shows; the trace shows an A/C address collision specific to the passive. The emitter test is therefore the right one: with the
+participle open, T2 gives C <- ... + that:given + given:P and A <- ... + given:. + L[.:P] — distinct keys, and C now hangs off the participle.
+Run (ii), participle gates GIVEN open (given, sold, sent, lent, shown, offered; rule 20):
+| axis (5 seeds) | 10b (participles learned, closed) | E1 (ii) participles given open | criterion |
+|---|---|---|---|
+| seen / predicate / new ids / cues / depth 2 / occupancy | 1.000 everywhere | 1.000 everywhere | no loss: MET |
+| unseen transitions FULL | 0.638 | **0.570**±0.029 | loss |
+| depth 3 UNSEEN FULL | 0.813±0.030 | 0.850±0.052 | > 0.9 NOT met |
+| depth 3 per form, A / C: T0 | 0.99 / 0.95 | 1.00 / 1.00 | — |
+| T1 "C receives B from A" | 0.94 / 0.92 | 0.96 / 1.00 | — |
+| **T2 passive** | 0.81 / 0.52 | **0.77 / 0.52** | C > 0.9 NOT met |
+| **T3 passive** | 0.84 / 0.76 | 0.81 / 0.79 | C > 0.9 NOT met |
+| T9 fronted C | 0.99 / 0.77 | 1.00 / 0.75 | — |
+Gates: the participles at 1.00 (given); the recipient verbs rise to 0.87-0.89 (learned).
+Reading, by the decision rule stated before the run: NOT met -> the form effect is a stated property of the predicate-role world; the 0.813 /
+two-number form with the breakdown stays; no further remedy is built. The emitter repaired what the trace predicted it could (the non-passive
+forms reach 1.00 at depth 3) and did not touch the passives: with the participle open C does hang off 'given' (given:P) but so does the
+by-phrase's A through 'given:.' + L[.:P], and the learned displacements did not separate the two at depth 3 — the passive's agent, announced
+AFTER the recipient by 'by', is right-announced structure for the chain (the declared limit of 6c), now visible inside one clause. The cost on
+unseen transitions (0.64 -> 0.57) is the price of one more emitter. B5 next, as the judgment says.

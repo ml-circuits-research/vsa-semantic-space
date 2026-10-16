@@ -256,3 +256,13 @@ decision rule fires; form effect, reported as such. 10c-bis: threshold on the ev
 two-quantifier 0.76-0.79; depth 2 one-q 0.63-0.67, two-q 0.53-0.56 (chance 0.33; before: no signal) — H-a partly supported, criterion not
 met, remedies stopped per the judgment. 10c-ter (C4): false alarm < 5% needs tau 0.25 and costs 44 points of role detection; confirmed on
 gold 0.297 at every tau — the false alarm is confident wrong decoding, a reader property. Push = judgment point.
+
+## 2026-10-16 (DGX, late evening) — judgment 3b4f837 applied: C fixes, E1 trace + participle emitter, C2b, E3 breakdown
+E1 trace (logs/trace_e1.txt): in the passive the chain gives A and C the active form's addresses with the roles swapped (both hang off the
+period); participle gates given open (log 2026-10-16_1717): non-passive forms 1.00 at depth 3, passive T2 C 0.52 unchanged, unseen transitions
+0.64 -> 0.57 -> NOT met; form effect = stated property. C2b (determiner as a beacon-relative emitter, trace logs/trace_c2b.txt; logs _1729 slot,
+_1751 noun): ONE-quantifier scope at the unseen depth 0.998 (slot, 5 seeds 0.99-1.00), nouns 0.998, affirmative absent 1.000 — criterion MET,
+the one-quantifier case joins the regularity; two-quantifier marked 0.46-0.48 at depth 2 — the named exception, H-b, permuted-filler term
+proposed for judgment (a8a8fab condition met). Strict re-scoring of C2 (log _1814): depth-2 presence 0.81 -> 0.26 with the depth-1
+threshold. E3 (log _1715): sel confident-wrong 0.169 when the gold column's name is not in the question vs 0.023; 50-case audit file written.
+N5-N7 criteria in STATUS. Push = judgment point.

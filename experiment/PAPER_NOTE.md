@@ -171,10 +171,12 @@ tested at depth 2, nouns stay at 1.00 while the scope term is at or below chance
 wide slot, the wide noun; depth-2 scope 0.52 / 0.33 / 0.21 against chance 0.33, decoder without a 'none' rule); a decoder with an absolute
 "no quantifier" threshold made this look even worse (0.03, below chance), and a relative threshold carried the same artefact more weakly, so
 presence and scope are now separate axes with the threshold set on calibration rows — evaluation first, then interpretation. Two hypotheses
-are recorded: the scope term composes only when it is carried by the code the reporting frame re-addresses (the determiner gates stayed
-closed, so it was not) — tested by giving the determiner gates open: a signal appears at the unseen depth (one-quantifier scope 0.63-0.67
-against chance 0.33) but no composition (criterion > 0.9), so this is a partial account; and the two-quantifier case may additionally need a
-term holding both phrases (untested: the one-quantifier case does not compose either). We stopped building remedies at that point. Finally, a retracted
+were recorded and tested in order. Opening the determiner gates put the scope term into the re-addressed chain but shifted every later word
+with it: a signal at the unseen depth (0.63-0.67 against chance 0.33), no composition. Letting the determiner draw its noun a second time at a
+learned displacement RELATIVE to the noun's own address, with the probe untouched, composes: one-quantifier scope 0.998 at the unseen depth
+(five seeds), nouns 0.998, affirmative sentences read as unquantified 1.000. Two quantifiers with a wide-scope marker do not compose (0.46-0.48
+at the unseen depth, 0.69-0.87 at the seen one): one displacement per determiner cannot mark 'every' wide alone and narrow next to 'each' —
+which phrase is wide is a relation between two determiners, and that is where the exception now sits. Finally, a retracted
 claim is corrected in every document in the same commit as the retraction.
 
 ## 8. Caveats and structural limits (part of the claims)

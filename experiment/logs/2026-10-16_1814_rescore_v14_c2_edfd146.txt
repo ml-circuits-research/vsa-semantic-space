@@ -1,0 +1,19 @@
+# 2026-10-16T18:14:02+02:00  commit=edfd146  cmd: python3 rescore_v14_c2.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  slot seed 0: thresholds d1 0.088 d2 0.050 | d2 threshold: PRESENCE 0.744 FULL 0.339 aff ABSENT 0.944 | STRICT d1 threshold: PRESENCE 0.256 FULL 0.167 aff ABSENT 1.000
+  slot seed 1: thresholds d1 0.089 d2 0.047 | d2 threshold: PRESENCE 0.850 FULL 0.372 aff ABSENT 0.911 | STRICT d1 threshold: PRESENCE 0.272 FULL 0.128 aff ABSENT 1.000
+  slot seed 2: thresholds d1 0.076 d2 0.034 | d2 threshold: PRESENCE 0.767 FULL 0.378 aff ABSENT 0.972 | STRICT d1 threshold: PRESENCE 0.222 FULL 0.133 aff ABSENT 1.000
+  slot seed 3: thresholds d1 0.082 d2 0.044 | d2 threshold: PRESENCE 0.844 FULL 0.444 aff ABSENT 0.839 | STRICT d1 threshold: PRESENCE 0.356 FULL 0.217 aff ABSENT 0.989
+  slot seed 4: thresholds d1 0.085 d2 0.041 | d2 threshold: PRESENCE 0.822 FULL 0.394 aff ABSENT 0.944 | STRICT d1 threshold: PRESENCE 0.178 FULL 0.106 aff ABSENT 1.000
+== slot target, 5 seeds: depth-2 threshold PRESENCE | FULL | aff ABSENT || STRICT (depth-1 threshold) PRESENCE | FULL | aff ABSENT
+  0.806±0.042 | 0.386±0.035 | 0.922±0.046 | 0.257±0.059 | 0.150±0.039 | 0.998±0.004
+  noun seed 0: thresholds d1 0.122 d2 0.065 | d2 threshold: PRESENCE 0.711 FULL 0.389 aff ABSENT 0.922 | STRICT d1 threshold: PRESENCE 0.106 FULL 0.067 aff ABSENT 1.000
+  noun seed 1: thresholds d1 0.100 d2 0.058 | d2 threshold: PRESENCE 0.822 FULL 0.394 aff ABSENT 0.944 | STRICT d1 threshold: PRESENCE 0.256 FULL 0.150 aff ABSENT 1.000
+  noun seed 2: thresholds d1 0.119 d2 0.064 | d2 threshold: PRESENCE 0.717 FULL 0.378 aff ABSENT 0.956 | STRICT d1 threshold: PRESENCE 0.128 FULL 0.089 aff ABSENT 1.000
+  noun seed 3: thresholds d1 0.111 d2 0.061 | d2 threshold: PRESENCE 0.850 FULL 0.367 aff ABSENT 0.933 | STRICT d1 threshold: PRESENCE 0.194 FULL 0.122 aff ABSENT 1.000
+  noun seed 4: thresholds d1 0.115 d2 0.065 | d2 threshold: PRESENCE 0.683 FULL 0.311 aff ABSENT 0.950 | STRICT d1 threshold: PRESENCE 0.183 FULL 0.117 aff ABSENT 1.000
+== noun target, 5 seeds: depth-2 threshold PRESENCE | FULL | aff ABSENT || STRICT (depth-1 threshold) PRESENCE | FULL | aff ABSENT
+  0.757±0.066 | 0.368±0.030 | 0.941±0.012 | 0.173±0.053 | 0.109±0.029 | 1.000±0.000
+
+checklist: [x] saved params, no retraining [x] strict column uses no depth-2 information (threshold from depth 1) [x] same calibration and scored rows as 9c-quater (rngs) [x] both targets
