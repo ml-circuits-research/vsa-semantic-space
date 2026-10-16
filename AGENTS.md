@@ -5,7 +5,7 @@
    translation must not change any number, table or conclusion (verify by diffing the extracted numbers before/after).
 2. **Source of truth.** `experiment/00_READ_FIRST.md` and `experiment/RESULTS.md`
    rounds 2+ . Anything that contradicts a later round is marked RETRACTED/SUPERSEDED, never deleted.
-3. **Evaluation.** Follow `experiment/EVALUATION_PRINCIPLES.md`, rules 1-26, for every new experiment.
+3. **Evaluation.** Follow `experiment/EVALUATION_PRINCIPLES.md`, rules 1-27, for every new experiment.
    Print the checklist at the end of every evaluation script.
 4. **Runs.** Commit the code first, then `./run.sh script.py [args]` (it refuses an unclean tree except `logs/`); every result cited in a
    document points to a log in `experiment/logs/` whose name carries the commit hash. Never re-run to "improve" old numbers.

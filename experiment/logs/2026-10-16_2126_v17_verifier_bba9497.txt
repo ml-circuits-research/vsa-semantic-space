@@ -5,3 +5,4 @@ v17_verifier (B4): device=cuda, D=512; train 56355, dev 8421, vocabulary 33318; 
 clustering data: 194596 TRAIN sequences only; dev not used.
 C5: occupancy marker on the condition slots (world rows that change, rule 16: filled slot k adds R_COND[k] (x) R_OCC (x) M); presence = cosine with M after unbinding, threshold on the calibration half
 [train ep 0] start: RSS 1.77 GB | torch alloc 0.69 GB reserved 0.92 GB | MemAvailable 113.1 GB
+[train ep 0] step 500 sent 16000/56355 loss -0.572 (396s) | RSS 2.06 GB | torch alloc 0.86 GB reserved 4.20 GB | MemAvailable 109.5 GB

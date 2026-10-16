@@ -63,3 +63,6 @@ Added 2026-10-16 (external review of the positioning document; round 10):
 26. **Queues wait on the pid lock only.** A wait loop never greps for a pattern that occurs in its own command line (two queued launches
     waited on each other for an hour on 2026-10-16); `queue.sh` runs `run.sh` invocations strictly in sequence; the pgrep check inside `run.sh`
     is a secondary guard that excludes its own process tree.
+27. **A criterion is judged on the MEAN over seeds, with the per-seed list printed next to it** whenever the mean meets a criterion that some
+    seeds do not; a criterion that every seed must meet says so ("5/5 seeds") and is reported as the count of seeds meeting it. (Hand-over
+    78d36e8; the C2c two-quantifier scope was met 5/5, the C2b noun target one-quantifier scope 3/5 with the mean met.)
