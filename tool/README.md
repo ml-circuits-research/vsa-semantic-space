@@ -216,8 +216,9 @@ Reading (rule 10: evaluation first):
   determiner WORD (outside FULL) is lower: 0.744±0.006 against 0.950±0.013 — the tool reads the word with a presence threshold from the
   determiner channel and the slot's presence from the scope terms; v14 reads it with its own relative rule.
 - **Reference**: role cues 1.000 and unseen transitions 0.643±0.017 (0.638±0.015) reproduced; seen formulations 0.985±0.012 and new
-  identities 0.994±0.007 slightly under 1.000; depth 3 0.742±0.040 under 10b's 0.813±0.030 (and far under 10b-quinquies' 0.968, which needs
-  the participle gates given open: not in the tool's legend). Not reproduced within seed variance on those three rows; the differences of
+  identities 0.994±0.007 slightly under 1.000; depth 3 0.742±0.040 under 10b's 0.813±0.030 (and far under 10b-quinquies' 0.968, reached with
+  the RELATION-MARKER gates 'to' / 'by' / 'from' GIVEN open, `--rel_gates open`; the tool's legend does not express "gates given open for a
+  stated set of categories (here to / by / from)"; the participle-gate run, 10b-quater, did not meet its criterion, 0.850). Not reproduced within seed variance on those three rows; the differences of
   this run from the script: identities per seed from the tool's star function, the depth estimated, the candidates = the whole catalog.
 
 ## Test results (BUILT; `tests/run_all.sh` on CPU; smoke readers D = 256; outputs in `tool/tests/out/`, not committed; all six PASS)
