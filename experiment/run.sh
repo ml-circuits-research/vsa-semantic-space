@@ -24,7 +24,7 @@ hash=$(git rev-parse --short HEAD 2>/dev/null || echo nogit)
 name=$(basename "$1" .py)
 out="logs/$(date +%Y-%m-%d_%H%M)_${name}_${hash}.txt"
 { echo "# $(date -Iseconds)  commit=$hash  cmd: python3 $*  (guard: mem fraction $VSA_MEM_FRACTION, min available $VSA_MIN_AVAILABLE_GB GB, max $VSA_MAX_HOURS h; MemAvailable at start ${avail_gb} GB)"; echo "# $(python3 --version 2>&1)  $(nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null | head -1)"; } > "$out"
-( timeout --signal=TERM $((${VSA_MAX_HOURS%.*}*3600+600)) python3 "$@" 2>&1 | tee -a "$out" ) &
+( timeout --signal=TERM $((${VSA_MAX_HOURS%.*}*3600+600)) python3 -u "$@" 2>&1 | tee -a "$out" ) &
 pid=$!
 # log-advance watchdog: if the log has not grown for STALL_MIN minutes, kill the run (default 30)
 STALL_MIN=${STALL_MIN:-30}; last=$(stat -c %s "$out"); stalled=0
