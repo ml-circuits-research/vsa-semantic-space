@@ -419,6 +419,7 @@ def main(argv=None):
     ap.add_argument("--splits", help="reuse the split assignment of an earlier run (held-out set fixed before a legend change)")
     ap.add_argument("--resume", action="store_true"); ap.add_argument("--force", action="store_true", help="accept examples whose !legend hash differs (inspection only)")
     ap.add_argument("--out", help="model folder (default <world>/model)")
+    ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")
     ap.add_argument("--star_seed", default=world.GLOBAL_STAR_SEED, help="seed of the word-star catalog; default the GLOBAL one shared by all worlds (spec v2 s.0)")
     ap.add_argument("--vary_stars", action="store_true", help="rule 6 / research reproduction: identities drawn per seed (star seed 'seed<k>'), as the repository scripts")
     a = ap.parse_args(argv)
@@ -461,8 +462,14 @@ def main(argv=None):
     seen_words = {w for r in train_rows for fl in r["frame"]["roles"].values() for w in world.filler_words(fl)} | {s for r in train_rows for s in r["frame"]["speakers"]}
     model_dir = os.path.abspath(a.out or os.path.join(wd, "model")); a.seeds_list = [a.seed + k for k in range(a.seeds)]
     metrics, extra = [], []
+    if a.eval_only:     # re-score a saved model with the current reader code; no training, thresholds kept from its config (rule 25)
+        from .infer import Reader
+        prev = json.load(open(os.path.join(model_dir, "metrics.json"))); rd = Reader(model_dir); a.seeds_list = [rd.cfg["seed"]]
+        mt = run_eval(rd, rows, legend, schema, a, lexical, seen_words, set(defs["new_identities"])); metrics, extra = [mt], [prev["training"][0]]
+        chance_ = chance(rd, schema); a.D = rd.D; a.commit = f"{a.commit} (re-scored; trained at {rd.cfg.get('training_code_commit')})"
+        for s, v in mt.items(): print(f"[eval] {s}: FULL " + " | ".join(f"{cs} {vv['acc']['FULL']:.3f}" for cs, vv in v.items()), flush=True)
     try:
-        for k, seed in enumerate(a.seeds_list):
+        for k, seed in enumerate([] if a.eval_only else a.seeds_list):
             md = model_dir if k == 0 else os.path.join(a.run_dir, f"seed{seed}", "model")
             if k == 0 and os.path.exists(md + ".building"): shutil.rmtree(md + ".building")
             build = md + ".building" if k == 0 else md
