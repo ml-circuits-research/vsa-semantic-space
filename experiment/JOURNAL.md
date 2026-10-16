@@ -246,3 +246,13 @@ half; rule 25. (C3) N5-N7 rows added without criteria (addendum text not receive
 test of H-a). (E4) depth-3 breakdown coded; (b) (c) (d) queued. (E5) gold "filter, not judge" sentence added; v17 saves reader + frames.
 (E6) queue.sh; run.sh excludes its own tree; rule 26; run.sh ignores *.md in the dirty check. Queue: v16, v17, v16 omit0, v16 verb gates
 closed, v16 D 2048, v14 slot open, v14 noun open.
+
+## 2026-10-16 (DGX, evening) — the judgment's queue run: thresholds, E4 (a)-(d), C2, C4
+Queue (./queue.sh, strict sequence, 13:51-16:41) + rescore (16:41). 10b-bis: threshold on training rows reproduces every 10b column; depth-3
+breakdown: the loss is on C in the PASSIVE forms (T2 C 0.52) and the C-fronted form, participles with closed gates; half-open verb gates are
+at 1.000 (judgment's suspect excluded). 10b-ter: (b) 0.858, (c) 0.745 (worse, costs seen axes), (d) D 2048 0.852 — neither branch of the
+decision rule fires; form effect, reported as such. 10c-bis: threshold on the even half, odd half reported: all numbers within 0.013 of 10c.
+9c-quater (C2, determiner gates given open, presence/scope split): depth-0 one-quantifier scope 0.96-0.98 (criterion met for the first time),
+two-quantifier 0.76-0.79; depth 2 one-q 0.63-0.67, two-q 0.53-0.56 (chance 0.33; before: no signal) — H-a partly supported, criterion not
+met, remedies stopped per the judgment. 10c-ter (C4): false alarm < 5% needs tau 0.25 and costs 44 points of role detection; confirmed on
+gold 0.297 at every tau — the false alarm is confident wrong decoding, a reader property. Push = judgment point.

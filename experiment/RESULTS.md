@@ -763,6 +763,40 @@ Reading.
   adds the two corrected targets and the diagnostic. The numbers above are not re-run; the decoder from the next run on has no 'none' rule
   (presence / scope split, see the first bullet).
 
+### 9c-quater. C2 — determiner gates GIVEN open (rule 20), presence / scope split (rule 17), thresholds on calibration rows (rule 25) (v14_quantifiers.py --det_gates open; --scope_target slot: logs/2026-10-16_1557_v14_quantifiers_e0cbbbc.txt; --scope_target noun: logs/2026-10-16_1619_v14_quantifiers_e0cbbbc.txt; 5 seeds each; regime of 9c-bis)
+Trace first (logs/trace_c2.txt): with the flag the wide noun's chain address contains the determiner's own category and both 'that'
+displacements (that:that + that:each + each:a + L[a:NP] vs ... every ...), so the scope term sits in the re-addressed code — a valid test of H-a.
+Decoder: PRESENCE = best scope score >= a per-depth threshold set on calibration sentences (rng 1234+depth; scored rows rng 900+; thresholds
+d0 ~0.11-0.15, d1 ~0.08-0.12, d2 ~0.03-0.07, quantified vs affirmative means printed per seed); SCOPE|present = argmax (or both), no 'none' rule;
+FULL = nouns, determiners, presence and scope all right. Given: determiners 'every, each, some, a, certain' open (logit +8, gradient masked).
+| axis (5 seeds) | slot target, C2 | noun target, C2 | E2c (gates learned; decoder absolute 0.08) slot / noun | criterion |
+|---|---|---|---|---|
+| depth 0: nouns / determiners | 0.988 / 0.968 | 0.977 / 0.966 | 0.999 / 0.946 ; 0.997 / 0.944 | nouns 1.00: slightly NOT met (cost of the open gates) |
+| depth 0: PRESENCE (quantified) / ABSENT (affirmative) | 0.887 / 1.000 | 0.933 / 1.000 | — | — |
+| depth 0: SCOPE|present, one-quantifier / two-quantifier | **0.976 / 0.761** | **0.961 / 0.793** | (scope with 'none' rule: 0.784 ; 0.873) | one-q > 0.9 MET; two-q NOT met |
+| depth 0: FULL (joint) | 0.701 | 0.763 | 0.667 / 0.749 | — |
+| depth 1 FULL | 0.616 | 0.698 | 0.503 / 0.578 | — |
+| depth 2 (UNSEEN): PRESENCE / ABSENT | 0.806 / 0.922 | 0.757 / 0.941 | — | — |
+| depth 2 (UNSEEN): SCOPE|present, one-quantifier / two-quantifier | **0.667 / 0.529** | **0.631 / 0.556** | (no-none rule, diag: 0.333 / 0.250 ; 0.206 / 0.194) | > 0.9 NOT met (chance 0.33) |
+| depth 2 FULL | 0.386 | 0.368 | 0.008 / 0.011 (absolute 0.08) | NOT met |
+| new nouns d0 FULL | 0.623 | 0.734 | 0.602 / 0.717 | — |
+| ambiguous (never trained): both reported / cos to superposed world / forced surface-first; presence on ambiguous | 0.377 / 0.725 / 0.397 ; 0.78 | **0.533** / 0.742 / 0.327 ; 0.83 | 0.389 / 0.804 ; 0.693 / 0.819 (absolute 0.08) | both > 0.9 NOT met |
+Per seed, one-quantifier scope at depth 2: slot 0.65-0.69, noun 0.58-0.69 (all five seeds above chance); two-quantifier 0.50-0.59.
+Learned gates besides the given ones: 'that' 1.00, 'to' 0.60, 'from' 0.40; the recipient verbs fall to 0.25-0.38 (slot) / 0.12-0.20 (noun).
+Reading, by the criterion stated before the run.
+- H-a is PARTLY supported and the criterion is NOT met. Putting the scope term into the re-addressed code produces a scope signal at the unseen
+  depth where there was none (one-quantifier 0.63-0.67 against 0.21-0.33 before, five seeds each), but it is far from composing (criterion
+  > 0.9), and presence itself degrades at depth 2 (0.76-0.81). At the seen depth the one-quantifier scope now meets its criterion (0.96-0.98)
+  for the first time; the two-quantifier (marked) case does not (0.76-0.79) even at depth 0, where the determiner gate is open and the information
+  is degree 1 — so the two-quantifier weakness is not (only) addressing either.
+- Costs: nouns 0.98-0.99 (from 1.00: every quantified noun's chain now passes through its determiner), determiners up (0.97), ambiguous "both"
+  down on the slot target (0.38) and up on the noun target (0.53; still far from the C3 criterion). The 6c / 9b / 9d / 10d tables are not
+  affected (their worlds have no determiners and were not re-run).
+- Decision per the judgment ("if C2 fails on both: stop building remedies"): C2 fails on both at the unseen depth. The quantifier line stays
+  the named exception with H-a (partly supported: signal, no composition) and H-b (untested: the one-quantifier case does not compose either)
+  open; no permuted-filler term is built; no third world definition. The relative numbers (0.65 vs 0.33) are recorded as the measured effect
+  of carrying the scope term in the chain. Next experiments: B5-B7 as planned.
+
 ## 9d. E3 — MODALITY and CONDITIONALS as roles (v15_modality.py; logs/2026-10-16_0902_v15_modality_b2b8f34.txt; 5 seeds, D = 1024, 40k)
 World: R_may (x) S, R_must (x) S; R_if (x) S_P + R_then (x) S_Q; reporting as before. Forms: "may V", "perhaps V3"; "must V", "has to V";
 "if P , then Q", "if P , Q", and "Q if P" (RIGHT-announced: included on purpose). Training: affirmative 0-2, modals and conditionals 0-1; the
@@ -966,3 +1000,23 @@ term at the same prefix leave C with the smallest margin (10b: d3:C margin mean 
 stays 0.813 (full coverage) / 1.000 at coverage 0.59 (A) and 0.975 at 0.33 (C), stated with this breakdown; the regression is a FORM effect
 (passive + predicate term at depth), neither gating nor capacity, and it is reported as a property of the predicate-role world. A remedy would
 be a change of world or model (e.g. the participle as an emitter — rule 20, given) and is NOT built here; proposed for judgment.
+
+## 10c-ter. C4 — abstention threshold set on the calibration half, curve on the report half (rescore_v17_c4.py; logs/2026-10-16_1641_rescore_v17_c4_ef75946.txt; saved frames of 10c-bis, no retraining)
+Rule: the smallest tau on a grid whose false-alarm rate on GOLD frames is < 0.05 on the EVEN half of dev; everything below is on the ODD half.
+| tau | gold: false alarm / unverifiable / confirmed | role errors: detected / unverifiable / confident-wrong | condition errors: detected / unverifiable / confident-wrong | role detection lost vs tau 0.05 |
+|---|---|---|---|---|
+| 0.00 | 0.703 / 0.000 / 0.297 | 0.993 / 0.000 / 0.007 | 0.921 / 0.000 / 0.079 | -0.231 |
+| 0.05 (10c) | 0.162 / 0.541 / 0.297 | 0.762 / 0.231 / 0.007 | 0.160 / 0.761 / 0.079 | 0 |
+| 0.10 | 0.109 / 0.594 / 0.297 | 0.642 / 0.351 / 0.007 | 0.107 / 0.814 / 0.079 | +0.120 |
+| 0.15 | 0.072 / 0.630 / 0.297 | 0.520 / 0.473 / 0.007 | 0.071 / 0.850 / 0.079 | +0.242 |
+| 0.20 | 0.049 / 0.654 / 0.297 | 0.419 / 0.574 / 0.007 | 0.048 / 0.873 / 0.079 | +0.343 |
+| **0.25 (chosen on the even half)** | **0.033 / 0.669 / 0.297** | **0.323 / 0.670 / 0.007** | 0.033 / 0.889 / 0.079 | **+0.439** |
+| 0.30 | 0.019 / 0.683 / 0.297 | 0.235 / 0.757 / 0.007 | 0.019 / 0.902 / 0.079 | +0.527 |
+At the chosen tau, per type: flip_agg 0.558 detected, change_sel 0.205, swap 0.206, drop_cond 0.032, add_cond 0.033; confident-wrong 0.004-0.014
+on role errors, 0.156 on drop_cond (the missing condition is read as absent with confidence), 0.298 on change_value (invisible).
+Reading. The trade-off is steep: bringing the false alarm on gold under 5% costs 44 points of role detection (0.76 -> 0.32), and the confirmed
+rate on gold stays 0.297 at every tau — it is the fraction of gold frames the reader decodes exactly, and no threshold changes it. The reader's
+margin separates right from wrong only partly on gold (false alarm at tau 0.05 = 0.16 of confident disagreements with gold): the 16% are
+confident wrong decodings of the selected column or the aggregator, not noise the margin can filter. This fixes what the next step must be:
+the reader's confident-wrong rate on sel / agg (a reader property, 8c-8d), not the verifier's threshold. C5 (condition count from an occupancy
+marker, one retraining) stays PLANNED and is independent of this.

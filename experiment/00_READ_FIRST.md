@@ -120,7 +120,7 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
      [DONE, 9a]; R3-R4 operators as roles with scope reported separately (rule 17): E1 negation [DONE, 9b: scope 1.00 at depth 0; sentential
      negation inside reporting fails when unseen there; E1b: seen at depth 1 (share 0.2), read at depth 2 = 0.972], E2 quantifiers [DONE,
      9c/9c-bis/9c-ter: the ONE operator for which the regularity fails in all three worlds tried (role / slot / noun targets); hypothesis for
-     judgment: scope is a relation between two slots, not an envelope operator — degree-2 term or open determiner gates PLANNED], E3
+     hypotheses H-a addressing / H-b relation; C2 (determiner gates given open) gave a signal at the unseen depth, 0.63-0.67 vs chance 0.33, no composition; remedies stopped, 9c-quater], E3
      modality/conditionals [DONE, 9d/9d-bis: 1.000 at the unseen depth; 'Q if P' at the declared limit], E6 verifier on real text [DONE,
      controlled version 10c: role errors 0.74-0.81 detected, confident-wrong < 1.3%, false alarm 0.16; LLM formalizations PLANNED]
      (injected errors, precision/recall), E4 coordination, E5 reference, E7 LLM annotation pipeline; Spider after E6; capacity after all.

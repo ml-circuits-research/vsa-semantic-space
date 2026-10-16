@@ -1,48 +1,45 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-16 afternoon — judgment at a8a8fab applied: process points C, queue started)
+# Current status (rewritten whole at every judgment point; last: 2026-10-16 evening — judgment a8a8fab applied and its queue run: C, E4 (a)-(d), C2, C4)
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-16_a8a8fab.md (the judgment, saved verbatim),
-experiment/RESULTS.md 9c-ter / 10a-10d (corrected cells), STATUS.md, experiment/JOURNAL.md.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-16_a8a8fab.md (the judgment), experiment/RESULTS.md
+9c-quater, 10b-bis, 10b-ter, 10c-bis, 10c-ter, STATUS.md, experiment/JOURNAL.md (two entries today, afternoon and evening).
 
-## A. Judgment a8a8fab — what was applied in this commit (BUILT unless stated)
-| point | applied |
-|---|---|
-| E1 | one hypothesis replaced by two: H-a (addressing: the scope term composes only if carried by the code the frame re-addresses) and H-b (relation, two-quantifier case only); "same class as right-announced" removed — two declared limits; wording "six operator cases; quantifier scope fails at the unseen depth in all three world definitions" in RESULTS / STATUS / PAPER_NOTE |
-| E2 | degree-2 term WITHDRAWN (commutative binding: symmetric in the two nouns; information already degree 1). C2 = determiner gates GIVEN open (v14 --det_gates open, v8.fix_gates, rule 20 printed). Depth-2 rule-11 trace done BEFORE the run (trace_c2.py; logs/trace_c2.txt): with the E2c gates the wide noun's chain address is IDENTICAL for 'each' and 'every' (that:that + that:to + L[to:NP]); with the flag it contains the determiner's own category and both 'that' displacements (that:that + that:each + each:a + L[a:NP] vs ... every ...) — the flag puts the scope term into the re-addressed code, so it is a valid test of H-a. One- and two-quantifier scope reported separately |
-| E3 | "emit both" adopted with the two-sided criterion + false-both rate; measured on the target C2 ends with; label stays observed/partial until met |
-| E4 | 10b = reference table; depth-3 stated with both numbers everywhere; E4 (a) breakdown per template / per verb (with gate value) coded in v16; (b) --p_omit 0, (c) --verb_gates closed (given, rule 20), (d) --D 2048 queued; decision rule as in the judgment |
-| E5 | C4/C5 before the LLM version; gold "confirms 0.31 / unverifiable 0.53 — a filter, not a judge" added to 10c and STATUS; v17 now saves the reader and the dev frames (C4 = re-scoring on the saved frames, tau set on the even half, curve reported on the odd half); C5 (condition marker readout) needs a world change for the verifier reader = one retraining, PLANNED after this queue; LLM input format: PLANNED (jsonl spec to be committed with C4) |
-| E6 | queue.sh (strict sequence, waits on the pid lock only); run.sh pgrep excludes its own process tree; rule 26 written. Also: run.sh's dirty-tree check now ignores *.md (the hash identifies the CODE; documents are edited while a queue runs) |
-| C1 | 9c-ter sentence corrected ("affects the affirmative case only" was false: slot d0 0.978 -> 0.850, d2 0.333 -> 0.033 under the relative rule); NO 'none' rule from now on: PRESENCE axis (threshold on calibration sentences, rng stated) + SCOPE conditional on presence (argmax / both) + FULL joint, one- and two-quantifier separate (v14 rewritten); every quantifier number carries its decoder rule in the cell; the E2c 5-seed models were NOT saved -> numbers kept with labels, not re-scored; all scripts now save final params |
-| C2 | v16: occupancy threshold set on depth-0 TRAINING sentences (120 with C, 120 without), the 360 scored readouts untouched, same-rows midpoint printed for comparison; v17: condition presence threshold set on the EVEN half of dev, verdicts reported on the ODD half (old whole-dev numbers kept as 10c); rule 25 written. Both re-runs queued (10b-bis, 10c-bis; old and new side by side) |
-| C3 | N5 / N6 / N7 rows added to STATUS.md and section D below WITHOUT criteria: the addendum text was not received (only the three names appear in the judgment). PLANNED, criteria to be supplied |
-| C4 | STATUS cells fixed (quantifier row: decoder rule per number; verifier row: confirmed / unverifiable on gold; depth-3 row: both numbers) |
+## A. Results of the judgment's order (all BUILT; logs with hash e0cbbbc / ef75946)
+| step | result | criterion / decision rule | outcome |
+|---|---|---|---|
+| C2-threshold re-runs: v16 (training rows), v17 (even half of dev) | every 10b column reproduced to three decimals (threshold 0.21-0.23 either way); 10c numbers move <= 0.013 | report old and new | thresholds were never the issue; rule 25 now satisfied (10b-bis, 10c-bis) |
+| E4 (a) depth-3 breakdown | B and predicate 1.000 everywhere; the loss is on C (and A) in the PASSIVE forms (T2 "B is VP to C by A": A 0.81 / C 0.52; T3 0.84 / 0.76) and the C-fronted comma form (C 0.77); verbs with half-open gates are at 1.000; participles (gates closed) carry the loss | find which forms fail | the judgment's first suspect (half-open verb gates) excluded |
+| E4 (b) recipient-less share 0 / (c) verb gates given closed / (d) D = 2048 | depth 3: 0.858±0.081 / **0.745**±0.042 (seen axes also drop, 0.986) / 0.852±0.060; passive T2 C 0.75 / 0.56 / 0.60 | gating if (b) or (c) > 0.9; capacity if only (d) | NEITHER fires: a FORM effect (passive + predicate term at depth); reported as a property of the predicate-role world, with the breakdown and the acc-vs-coverage numbers (0.813 full coverage; 1.000 at 0.59 (A), 0.975 at 0.33 (C)) |
+| C2: determiner gates GIVEN open, both targets, presence/scope split, depth-2 trace first | depth 0: one-quantifier scope 0.98 / 0.96 (slot / noun), two-quantifier 0.76 / 0.79; depth 2 UNSEEN: one-q **0.67 / 0.63**, two-q 0.53 / 0.56 (chance 0.33; before: 0.33 / 0.21, no signal); presence d2 0.81 / 0.76; nouns 0.99 / 0.98 (cost) | scope > 0.9 at d0 AND d2, one-/two-q separately | NOT met at d2 for both; one-q at d0 MET for the first time. H-a PARTLY supported (signal, no composition); H-b untested. Per the judgment: remedies STOPPED, no permuted-filler term, no third world |
+| C3 "emit both" | both 0.53 (noun) / 0.38 (slot) with the C2 decoder; 0.69 with the absolute-0.08 decoder (label kept) | both > 0.9 and one reading > 0.9 on unambiguous | NOT met; observed, partial |
+| C4: tau set on the even half (false alarm < 5%), curve on the odd half, no retraining | chosen tau 0.25: false alarm 0.033, role detection **0.32** (from 0.76 at tau 0.05), confirmed on gold 0.297 at every tau | report detection lost at every tau | the 16% false alarm is confident WRONG decoding of sel / agg, not margin noise: the next step is the reader's confident-wrong rate (a reader property), not the verifier threshold |
+| LLM formalizations | input format committed (experiment/LLM_FORMALIZATIONS_FORMAT.md: jsonl, two LLMs, disagreement discards, audit of 50, n >= 1,000, seed stated) | — | PLANNED, waits for the data |
 
-## B. Queue started after this commit (./queue.sh, strict sequence; logs carry the commit hash)
-1. v16_reference.py --seeds 5 — 10b-bis: threshold on training rows + E4 (a) breakdown.
-2. v17_verifier.py — 10c-bis: threshold on the calibration half, report half; reader + frames saved.
-3. v16_reference.py --seeds 5 --p_omit 0 — E4 (b).
-4. v16_reference.py --seeds 5 --verb_gates closed — E4 (c).
-5. v16_reference.py --seeds 5 --D 2048 — E4 (d), capacity test.
-6. v14_quantifiers.py --scope_target slot --det_gates open — C2, slot target.
-7. v14_quantifiers.py --scope_target noun --det_gates open — C2, noun target.
-Criteria (stated before the runs): E4 — gating if (b) or (c) restores depth 3 > 0.9 with the predicate role, capacity if only (d) does; C2 —
-scope > 0.9 at depth 0 AND depth 2 (one- and two-quantifier separately), nouns 1.00 at depth 2, determiners reported, cost on 6c / 9b / 9d /
-10d tables reported (those tables are not re-run; the cost is read on this world's own seen axes and, if C2 is adopted, by re-running them).
-Then: C4 (re-scoring on the saved frames) + C5 (marker readout, one retraining) + LLM jsonl format; B5-B7; C3 on the world C2 leaves.
+## B. Process (BUILT this period)
+Rule 25 (thresholds on calibration rows) and rule 26 (queues on the pid lock only; queue.sh; run.sh excludes its own tree); every script saves
+final params; v14 decoder = presence + scope|present + joint, one-/two-quantifier separate, no 'none' rule; every quantifier number labelled
+with its decoder rule; 9c-ter false sentence corrected; degree-2 term withdrawn; H-a / H-b recorded; N5-N7 rows without criteria (addendum text
+not received); run.sh ignores *.md in its dirty-tree check (documents are edited while a queue runs; the hash identifies the code).
 
-## C. BUILT since the previous judgment (unchanged numbers; see RESULTS) — for reference
-E2c slot / noun targets (9c-ter, labels per cell); diag_e2c; A2 memory curve (10a); B1+B2 reference table (10b; depth 3 UNSEEN 0.813 at full
-coverage, at tau 0.05 coverage 0.59 (A) / 0.33 (C) with covered accuracy 1.000 / 0.975, confident-wrong 0.000 / 0.008); B4 verifier (10c);
-B3 commands (10d: scope 1.000, confident-wrong 0.000 at coverage 0.968, depth 2 unseen scope 0.997).
+## C. Where this leaves the claims
+- Composition regularity: six operator cases hold; quantifier scope is the named exception. Carrying the scope term in the re-addressed code
+  (C2) turns "no signal" into a weak signal (0.63-0.67 at the unseen depth) without composing; the account is partial and stays HYPOTHESIS.
+- Reference table (10b): the depth-3 regression is a form effect (passives with the predicate term); the number is stated in the two-number
+  form with the breakdown. The 6c 1.000 is the predicate-less world's number.
+- Verifier: a filter on the role part (detects 0.73-0.80 of role errors at 16% false alarm; confirms 0.30 of gold); the false alarm is bounded
+  by the reader's confident-wrong rate, not by the threshold.
 
 ## D. PLANNED / HYPOTHESIS, in judgment order
-C4 + C5 + LLM input format (PLANNED); permuted-filler relational term (PLANNED, conditional on C2's outcome); B5-B7; N3, N1, N2; N5 kind
-ambiguity, N6 missing-legend residual, N7 world identification by fit (PLANNED, criteria not received); B8-B9 (HYPOTHESIS); N4; LLM paraphrases
-for B3 (PLANNED, no API).
+B5 (order collisions: permutation binding, level-indexed roles), B6 (sparse block codes), B7 (fourth address code remeasured); C5 (occupancy
+marker in the verifier reader's world, one retraining; present/absent > 0.9); the reader's confident-wrong on sel/agg; N3, N1, N2; N5-N7
+(criteria not received); B8-B9 (HYPOTHESIS); N4; LLM paraphrases (B3) and LLM formalizations (B4) when data arrives.
 
-## E. Questions for the reviewing session
-1. N5-N7: please send the addendum text (criteria); the rows exist without them.
-2. run.sh now ignores *.md in its dirty-tree check so that documents can be edited while a queue runs — acceptable, or must documents also be
-   committed before every run?
-3. C5 requires adding an occupancy marker to the verifier reader's world (one retraining of the WikiSQL reader): confirm, or restrict C5 to a
-   readout on the existing state (no marker — then "condition count" is read from the condition slots' cosines only).
+## E. Proposals for judgment (not built)
+1. Depth-3 passives: the participle as an EMITTER (gate given open, rule 20) so that C after "given to" is addressed through the participle
+   rather than through 'to' alone; criterion: T2 / T3 C > 0.9 at depth 3, no loss elsewhere. Or accept the form effect as a stated property.
+2. Quantifiers: stop here (as the judgment says) and record the C2 effect size; or one more measurement WITHOUT a new world — the same C2 run
+   with the quantified share raised at depth 1 (0.6 -> 0.9) to see whether the depth-2 signal grows with exposure (tests whether 0.65 is a
+   data effect or a ceiling). Not started.
+3. Verifier false alarm: measure the reader's confident-wrong on sel / agg against training size (8d curve, re-scored at tau 0.05) before any
+   change; C5 after.
+4. run.sh ignoring *.md — confirm.
+5. N5-N7 — the addendum text.
