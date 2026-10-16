@@ -134,6 +134,10 @@ def check_doc(doc, legends, rep, require_text=True, force=False):
                 if r not in ids: rep.err(l.lineno, f"dangling reference ${r} (no wire {r!r} in this file)")
             if w.type == "verdict" and l.key in ("left", "right") and any(a.kind == "ref" for a in l.atoms):
                 rep.err(l.lineno, "a verdict names compared wires by plain id, not $ref")
+        sc = w.get("_scope")
+        if sc is not None:
+            if w.type not in legend.events: rep.err(sc.lineno, f"_scope is only allowed on event wires (wire {w.id} is {w.type!r})")
+            elif sc.text not in legend.roles and sc.text != "both": rep.err(sc.lineno, f"_scope={sc.text!r}: must be a legend role ({legend.roles}) or 'both'")
         asked = w.get("_asked")
         if asked is not None and w.value("_mood") != "question":
             rep.err(asked.lineno, "_asked is only allowed with _mood=question")

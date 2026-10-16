@@ -47,8 +47,13 @@ def split_sentences(text, paragraphs=False):
 def cmd_formalize(a):
     from .infer import Reader, ModelError, formalize_text
     rds = []
-    for mdir in a.model:
-        try: rds.append(Reader(mdir, a.legend if len(a.model) == 1 else None, a.force))
+    if a.worlds:
+        from .infer import readers_of_root
+        try: rds = readers_of_root(a.worlds, a.force)
+        except ModelError as e: print(f"sop formalize: {e}", file=sys.stderr); return 2
+        if not rds: print(f"sop formalize: no world with a model under {a.worlds}", file=sys.stderr); return 2
+    for mdir in (a.model or []):
+        try: rds.append(Reader(mdir, a.legend if len(a.model) == 1 and not a.worlds else None, a.force))
         except ModelError as e: print(f"sop formalize: {e}", file=sys.stderr); return 2
         except (OSError, ValueError, KeyError) as e: print(f"sop formalize: model unreadable: {e}", file=sys.stderr); return 2
     for rd in rds:
@@ -132,7 +137,8 @@ def cmd_stats(a):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(prog="sop"); sub = ap.add_subparsers(dest="cmd", required=True)
-    p = sub.add_parser("formalize"); p.add_argument("--model", required=True, action="append", help="repeat for the dispatcher by fit (smallest _residual wins)"); p.add_argument("input", nargs="?"); p.add_argument("-o")
+    p = sub.add_parser("formalize"); p.add_argument("--model", action="append", help="repeat for the dispatcher by fit (smallest relative _residual wins)")
+    p.add_argument("--worlds", help="DATA_ROOT: every <world>/model under it reads each sentence; the dispatcher picks by fit (spec section 9)"); p.add_argument("input", nargs="?"); p.add_argument("-o")
     p.add_argument("--tau", type=float); p.add_argument("--json", action="store_true"); p.add_argument("--legend"); p.add_argument("--force", action="store_true")
     p.add_argument("--paragraphs", action="store_true", help="split paragraphs into sentences (default: one sentence per line)")
     p = sub.add_parser("check"); p.add_argument("--legend", action="append", help="legend.json, or name=legend.json; repeatable (one per world)")
@@ -149,6 +155,7 @@ def main(argv=None):
         sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
         import export_worlds; return export_worlds.main(argv[1:])
     a = ap.parse_args(argv)
+    if a.cmd == "formalize" and not (a.model or a.worlds): ap.error("formalize needs --model <dir> (repeatable) or --worlds <DATA_ROOT>")
     try:
         rc = {"formalize": cmd_formalize, "check": cmd_check, "diff": cmd_diff, "stats": cmd_stats}[a.cmd](a); sys.stdout.flush(); return rc
     except BrokenPipeError:

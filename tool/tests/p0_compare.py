@@ -1,43 +1,59 @@
 """
-p0_compare.py — the P0 round-trip table: the package's numbers (tool/worlds_p0/<world>/model/metrics.json) next to the RESULTS tables'
-(5 seeds, GPU; cited by section). The package estimates the reporting depth (and the negation) from S; the repository scripts are given the
-depth — so the comparable column is the roles-only one ('heads FULL' / per-role), and the tool's FULL (roles + predicate + structure) is
-printed beside it. Run: python3 tool/tests/p0_compare.py [--root tool/worlds_p0]
+p0_compare.py — the P0 round-trip table: the package's numbers next to the RESULTS tables' (5 seeds, GPU; cited by section).
+Reads <root>/<world>/metrics.json (a committed run folder, tool/runs/...) or <root>/<world>/model/metrics.json (a world folder).
+Columns (author C3): the comparable axis; the tool's FULL with the structure (reporting depth, negation) ESTIMATED from the state; FULL with
+the depth GIVEN, as the repository scripts. Values are mean ± std over the run's seeds.
+Run: python3 tool/tests/p0_compare.py --root tool/runs/p0_cpu_1seed_60f284d   (or a GPU run folder)
 """
 import argparse, json, os
 TOOL = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 ROWS = {   # world: [(label, split, metric, RESULTS value, source)]
-    "reference": [("seen formulations FULL (A, B, C)", "heldout_sentences", "heads FULL (model)", "1.000±0.000", "10b"),
+    "reference": [("seen formulations (A, B, C)", "heldout_sentences", "heads FULL (model)", "1.000±0.000", "10b"),
                   ("predicate, surface lemma", "heldout_sentences", "predicate (surface lemma)", "1.000", "10b"),
-                  ("new identities FULL", "new_identities", "heads FULL (model)", "1.000", "10b"),
-                  ("role cues seen FULL", "heldout_formulations_role_cues_seen", "heads FULL (model)", "1.000", "10b"),
-                  ("unseen transitions FULL", "heldout_formulations_unseen_transitions", "heads FULL (model)", "0.638±0.015", "10b"),
-                  ("depth 3 UNSEEN FULL", "heldout_depth3", "heads FULL (model)", "0.813±0.030", "10b")],
+                  ("new identities", "new_identities", "heads FULL (model)", "1.000", "10b"),
+                  ("role cues seen", "heldout_formulations_role_cues_seen", "heads FULL (model)", "1.000", "10b"),
+                  ("unseen transitions", "heldout_formulations_unseen_transitions", "heads FULL (model)", "0.638±0.015", "10b"),
+                  ("depth 3 UNSEEN", "heldout_depth3", "heads FULL (model)", "0.813±0.030 (10b); 0.968 after E1b (10b-quinquies)", "10b")],
     "commands": [("depth 0: action", "heldout_sentences", "role action", "1.000", "10d"),
                  ("depth 0: patient (with attribute and its negation)", "heldout_sentences", "role patient", "1.000 / 0.999 (patient / attribute)", "10d"),
                  ("depth 0 FULL", "heldout_sentences", "FULL", "0.999", "10d"),
                  ("new patients FULL", "new_identities", "FULL", "1.000", "10d"),
                  ("depth 2 UNSEEN FULL", "heldout_depth2", "FULL", "0.854±0.031", "10d"),
                  ("depth 2 UNSEEN: structure (depth + negation scope)", "heldout_depth2", "structure (depth, negation)", "scope 0.997±0.003 (depth given)", "10d")],
-    "quantifiers": [("depth 0: nouns (agent / object / recipient heads)", "heldout_sentences", "head agent|head object|head recipient", "0.999", "9c-bis"),
-                    ("depth 0: noun + determiner per role", "heldout_sentences", "role agent|role object|role recipient", "determiners 0.923±0.009", "9c-bis"),
-                    ("depth 2 UNSEEN quantified: nouns", "heldout_depth2_quantified", "head agent|head object|head recipient", "1.00 (seed 0 diagnostic)", "9c-bis"),
-                    ("depth 2 UNSEEN quantified: noun + determiner", "heldout_depth2_quantified", "role agent|role object|role recipient", "determiners 0.46-0.64 (seed 0)", "9c-bis"),
-                    ("new nouns depth 0: noun + determiner FULL", "new_identities", "FULL", "0.657 (FULL incl. scope)", "9c-bis")],
+    "quantifiers": [("depth 0: nouns", "heldout_sentences", "head agent|head object|head recipient", "0.999±0.002 (C2c)", "9c-sexies"),
+                    ("depth 0: _scope (wide role / both / absent)", "heldout_sentences", "_scope (wide role / both / absent)", "one quantifier 0.995, presence 1.000 (C2c)", "9c-sexies"),
+                    ("two-quantifier scope, depth 0", "heldout_sentences", "_scope on two-quantifier sentences", "0.996 (C2c)", "9c-sexies"),
+                    ("depth 2 UNSEEN: two-quantifier scope", "heldout_depth2_quantified", "_scope on two-quantifier sentences", "0.966 (C2c, 5/5 seeds)", "9c-sexies"),
+                    ("ambiguous (never trained): both", "ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both)", "_scope on two-quantifier sentences", "0.993 (C2c)", "9c-sexies"),
+                    ("determiner identity (outside FULL)", "heldout_sentences", "determiner identity (outside FULL when the legend excludes it)", "0.950±0.013 (C2c)", "9c-sexies")],
 }
 
+
+def load(root, w):
+    for p in (os.path.join(root, w, "metrics.json"), os.path.join(root, w, "model", "metrics.json")):
+        if os.path.exists(p): return json.load(open(p))
+    return None
+
+
+def cell(m, split, metric, cs="catalog candidates"):
+    ag = m.get("mean_over_seeds", {}).get(split, {}).get(cs, {})
+    keys = metric.split("|"); vals = [ag[k] for k in keys if k in ag]
+    if not vals: return "—"
+    mean = sum(v["mean"] for v in vals) / len(vals); std = max(v["std"] for v in vals)
+    return f"{mean:.3f}" + (f"±{std:.3f}" if len(m.get("seeds", [])) > 1 else "")
+
+
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("--root", default=os.path.join(TOOL, "worlds_p0")); a = ap.parse_args()
-    print("| world | axis | package (1 seed, CPU) | tool FULL incl. structure | RESULTS (5 seeds) | section |\n|---|---|---|---|---|---|")
+    ap = argparse.ArgumentParser(); ap.add_argument("--root", default=os.path.join(TOOL, "runs", "p0_cpu_1seed_60f284d")); a = ap.parse_args()
+    print(f"P0 round trip, {a.root}\n")
+    print("| world | axis | package | tool FULL, structure estimated | tool FULL, depth given | RESULTS (5 seeds) | section |\n|---|---|---|---|---|---|---|")
     for w, rows in ROWS.items():
-        p = os.path.join(a.root, w, "model", "metrics.json")
-        if not os.path.exists(p): print(f"| {w} | (no model: run tests/p0_full_cpu.sh) | | | | |"); continue
-        m = json.load(open(p))["per_seed"][0]
+        m = load(a.root, w)
+        if m is None: print(f"| {w} | (no metrics.json under {a.root}/{w}) | | | | | |"); continue
         for label, split, metric, ref, src in rows:
-            acc = m[split]["catalog candidates"]["acc"]; vals = [acc[k] for k in metric.split("|")]
-            v = sum(vals) / len(vals); full = acc["FULL"]
-            print(f"| {w} | {label} | {v:.3f} | {full:.3f} | {ref} | {src} |")
+            print(f"| {w} | {label} | {cell(m, split, metric)} | {cell(m, split, 'FULL')} | {cell(m, split, 'FULL [depth given]')} | {ref} | {src} |")
+
 
 if __name__ == "__main__":
     main()

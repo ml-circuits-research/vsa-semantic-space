@@ -15,7 +15,7 @@ code() { curl -s -o "$ROOT/body" -w '%{http_code}' "$@"; }
 ok "$(code -X POST "$B/worlds/shop")" 201 "POST /worlds/shop creates the folder layout"
 ok "$(code -X POST "$B/worlds/shop")" 409 "POST again: 409 exists"
 for f in world.json status.json examples raw audit model runs versions requests; do [ -e "$ROOT/shop/$f" ] || { echo "FAIL layout: $f missing"; FAILS=$((FAILS+1)); }; done
-python3 -c "import json,sys; w=json.load(open('$ROOT/shop/world.json')); assert set(w['models'])=={'pipeline','annotate','second_look','evolve'} and w['second_look_escalate']==0.05 and 'min_examples' in w and 'max_versions_per_run' in w" \
+python3 -c "import json,sys; w=json.load(open('$ROOT/shop/world.json')); assert set(w['models'])=={'pipeline','annotate','second_look','evolve'} and w['second_look_escalate']==0.05 and w['second_look_retrain']==0.05 and 'min_examples' in w and 'max_versions_per_run' in w" \
   && echo "PASS world.json carries models per step, min_examples, max_versions_per_run, second_look_escalate" || { echo "FAIL world.json fields"; FAILS=$((FAILS+1)); }
 
 cat > "$ROOT/legend.json" <<'EOF'

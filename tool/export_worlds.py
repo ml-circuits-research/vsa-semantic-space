@@ -12,7 +12,7 @@ sentences are drawn by hash inside `sop train`). Nothing in experiment/ is modif
 Run: python3 tool/export_worlds.py [--out tool/worlds] [--n 2000] [--n_eval 20] [--seed 0] [--worlds reference,commands,quantifiers]
      (the full-size P0 run uses --n 30000 for reference and --n 40000 for commands / quantifiers, as the scripts)
 """
-import argparse, datetime, json, os, sys
+import argparse, datetime, json, os, shutil, sys
 os.environ.setdefault("CUDA_VISIBLE_DEVICES", "")            # generators only: never touch the GPU
 HERE = os.path.dirname(os.path.abspath(__file__)); EXP = os.path.join(os.path.dirname(HERE), "experiment")
 sys.path.insert(0, EXP); sys.path.insert(0, HERE)
@@ -26,7 +26,7 @@ def write_world(out, name, desc, legend, lexicon, files, hints, language="en"):
     for d in ("examples", "raw", "audit", "model", "runs", "versions", "requests"): os.makedirs(os.path.join(wd, d), exist_ok=True)
     json.dump({"name": name, "language": language, "description": desc, "created": datetime.date.today().isoformat(), "version": legend["version"],
                "models": {"pipeline": "claude-haiku-5-5", "annotate": "claude-haiku-5-5", "second_look": "claude-haiku-5-5", "evolve": "claude-opus-5-5"},
-               "second_look_escalate": 0.05, "min_examples": 500, "max_versions_per_run": 3}, open(os.path.join(wd, "world.json"), "w"), indent=1)
+               "second_look_escalate": 0.05, "second_look_retrain": 0.05, "min_examples": 500, "max_versions_per_run": 3}, open(os.path.join(wd, "world.json"), "w"), indent=1)
     lp = os.path.join(wd, "legend.json"); json.dump(legend, open(lp, "w"), indent=1)
     with open(os.path.join(wd, "kinds.tsv"), "w") as f:
         f.write("# word\tkind\tlemma — the world's own categories (GIVEN, rule 20)\n")
@@ -150,6 +150,7 @@ def export_commands(out, n, n_eval, seed, name="commands", drop_role=None, raw=F
     files = {"train.sop": train, "eval_new_identities.sop": ev_rows(tePat, 0, n_eval), "eval_depth2_unseen.sop": ev_rows(trPat, 2, max(3, n_eval // 2))}
     hints = {"heldout_sentence_share": 0.1, "new_identities": list(tePat),
              "file_splits": {"examples/eval_new_identities.sop": "new_identities", "examples/eval_depth2_unseen.sop": "heldout_depth2"},
+             "heldout_formulations": "none: the repository script (v18_commands) trains every form; held-out formulations are not part of its protocol",
              "protocol": "v18_commands: all forms at depth 0 and inside one report (share 0.3), patients 0-5; new patients 6-8; depth 2 unseen"}
     wd = write_world(out, name, "v18 command world: negation as a role around its scope (prohibition vs negated attribute)"
                      + (f"; DELIBERATELY INCOMPLETE legend: role '{drop_role}' removed (evolution test)" if drop_role else ""), legend, lexicon, files, hints)
@@ -159,47 +160,105 @@ def export_commands(out, n, n_eval, seed, name="commands", drop_role=None, raw=F
 
 
 # ---------------------------------------------------------------- quantifiers (v14)
-def export_quantifiers(out, n, n_eval, seed):
+SCOPE_RULE = ("R_wide present -> that slot is wide; one R_q -> the quantifier; two R_q and no R_wide -> both; "
+              "_scope written only with two or more quantified slots (absent with zero or one: det= on the entity says the word)")
+
+
+def export_quantifiers_version(out, n, n_eval, seed, version):
+    """version 1 = no scope (spec v1); version 2 = the C2c world (v14 --scope_target c2c --rel; RESULTS 9c-sexies): wide-scope markers
+    (each, a certain) -> R_wide (x) slot, plain quantifiers (every, some) -> R_q (x) slot, 'a' and 'the' draw nothing; beacon-relative emitters
+    on the quantified determiners; `_scope=<role>|both` on the event wire with two quantified phrases."""
     import v5_scale as v5, v14_quantifiers as v14, v16_reference as v16
-    v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
-    w = v14.QWorld(np.random.default_rng(seed)); trNP, teNP, trNO, teNO = v14.NOUNS_P[:12], v14.NOUNS_P[12:], v14.NOUNS_O[:12], v14.NOUNS_O[12:]
-    roles = [{"id": "agent", "question": "who gives?"}, {"id": "object", "question": "what?"}, {"id": "recipient", "question": "to whom?"}]
-    events = {}
-    for lem, ev in v16.EVENT.items(): events.setdefault(ev, []).append(lem)
-    legend = {"version": 1, "roles": roles, "events": [{"id": e, "verbs": vs} for e, vs in events.items()], "operators": ["says"], "moods": ["statement"],
-              "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
-              "reader": {"predicate_role": False, "occupancy_marker": False, "definite_dets": ["the"]}}
-    sent_words = {x for ps in w.qframes.values() for t in ps for x in t.split() if not x.startswith("{")} | set(v14.NOUNS_P) | set(v14.NOUNS_O) \
-        | {"every", "each", "some", "a", "certain", "the"} | set(w.persons) | {x for o in v5.OUTER for x in o.split() if not x.startswith("{") and x != "<P>"}
-    lexicon = {x: (w.cat[x], v16.LEMMA.get(x)) for x in sent_words}
-    def row(ev, toks, t):
-        speakers = [x for x in ev[4:7] if x is not None]
-        lem = next(v16.LEMMA[x] for x in toks if x in v16.LEMMA)
-        def ent(det, noun):
-            def f(ids):
-                en = soplang.Wire(next(ids), "entity"); en.set("head", noun); en.set("det", det); return [en]
-            return f
-        return sentence_builder(" ".join(toks), f"Q{t}", lambda ids: chain(ids, speakers, False, v16.EVENT[lem],
-                                [("agent", ent(*ev[1])), ("object", ent(*ev[2])), ("recipient", ent(*ev[3]))]))
-    trng = np.random.default_rng(200 + seed); train = []
-    for _ in range(n):
-        if trng.random() < 0.4: ev = w.qevent(trng, depth=int(trng.integers(3)), nouns_p=trNP, nouns_o=trNO, n_quant=0)
-        else: ev = w.qevent(trng, depth=int(trng.integers(2)), nouns_p=trNP, nouns_o=trNO)
-        t = int(trng.integers(len(v14.PATTERNS))); train.append(row(ev, w.qrender(ev, t, trng), t))
-    erng = np.random.default_rng(900 + seed)
-    def ev_rows(depth, NP, NO, k, n_quant=None):
-        rs = []
-        for t in range(len(v14.PATTERNS)):
-            for _ in range(k): ev = w.qevent(erng, depth=depth, nouns_p=NP, nouns_o=NO, n_quant=n_quant); rs.append(row(ev, w.qrender(ev, t, erng), t))
-        return rs
-    files = {"train.sop": train, "eval_new_identities.sop": ev_rows(0, teNP, teNO, n_eval), "eval_depth2_quantified_unseen.sop": ev_rows(2, trNP, trNO, max(3, n_eval // 2)),
-             "eval_depth2_affirmative.sop": ev_rows(2, trNP, trNO, max(3, n_eval // 2), n_quant=0)}
-    hints = {"heldout_sentence_share": 0.1, "new_identities": list(teNP) + list(teNO),
-             "file_splits": {"examples/eval_new_identities.sop": "new_identities", "examples/eval_depth2_quantified_unseen.sop": "heldout_depth2_quantified",
-                             "examples/eval_depth2_affirmative.sop": "depth2_affirmative (seen depth, fresh sentences)"},
-             "protocol": "v14_quantifiers (E1b protocol): affirmative (all 'the') at depths 0-2 (share 0.4) + unambiguous quantified at depths 0-1; "
-                         "nouns 0-11, new nouns 12-17; quantified depth 2 unseen. SCOPE NOT EMITTED (spec v1): det= only; ambiguous sentences not exported"}
-    return write_world(out, "quantifiers", "v14 quantifier world: determiners as roles inside the argument (scope not emitted in v1)", legend, lexicon, files, hints)
+    saved = (list(v14.DETS_Q), list(v14.NARROW_Q))
+    if version >= 2: v14.set_c2c()
+    try:
+        v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
+        w = v14.QWorld(np.random.default_rng(seed)); trNP, teNP, trNO, teNO = v14.NOUNS_P[:12], v14.NOUNS_P[12:], v14.NOUNS_O[:12], v14.NOUNS_O[12:]
+        roles = [{"id": "agent", "question": "who gives?"}, {"id": "object", "question": "what?"}, {"id": "recipient", "question": "to whom?"}]
+        events = {}
+        for lem, ev in v16.EVENT.items(): events.setdefault(ev, []).append(lem)
+        reader = {"predicate_role": False, "occupancy_marker": False, "definite_dets": ["the"]}
+        if version >= 2:
+            reader.update({"scope_terms": {"wide": ["each", "a certain"], "q": ["every", "some"]}, "scope_rule": SCOPE_RULE,
+                           "rel_emitters": {"emitters": ["every", "each", "some", "certain"], "takers": ["NP", "NO"]}, "full_excludes": ["det"]})
+        legend = {"version": version, "roles": roles, "events": [{"id": e, "verbs": vs} for e, vs in events.items()], "operators": ["says"],
+                  "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [], "reader": reader}
+        sent_words = {x for ps in w.qframes.values() for t in ps for x in t.split() if not x.startswith("{")} | set(v14.NOUNS_P) | set(v14.NOUNS_O) \
+            | {"every", "each", "some", "a", "certain", "the"} | set(w.persons) | {x for o in v5.OUTER for x in o.split() if not x.startswith("{") and x != "<P>"}
+        lexicon = {x: (w.cat[x], v16.LEMMA.get(x)) for x in sent_words}
+        R = {"A": "agent", "B": "object", "C": "recipient"}
+        def row(ev, toks, t, tmpl=None):
+            speakers = [x for x in ev[4:7] if x is not None]
+            lem = next(v16.LEMMA[x] for x in toks if x in v16.LEMMA)
+            def ent(det, noun):
+                def f(ids):
+                    en = soplang.Wire(next(ids), "entity"); en.set("head", noun); en.set("det", det); return [en]
+                return f
+            n_q = sum(1 for i in (1, 2, 3) if ev[i][0] != "the"); scope = ev[-1]
+            def build(ids):
+                ws = chain(ids, speakers, False, v16.EVENT[lem], [("agent", ent(*ev[1])), ("object", ent(*ev[2])), ("recipient", ent(*ev[3]))])
+                if version >= 2 and n_q >= 2:
+                    evw = next(x for x in ws if x.type == v16.EVENT[lem]); evw.set("_scope", "both" if len(scope) == 2 else R[scope[0]])
+                return ws
+            return sentence_builder(" ".join(toks), tmpl or f"Q{t}", build)
+        trng = np.random.default_rng(200 + seed); train = []
+        for _ in range(n):
+            if trng.random() < 0.4: ev = w.qevent(trng, depth=int(trng.integers(3)), nouns_p=trNP, nouns_o=trNO, n_quant=0)
+            else: ev = w.qevent(trng, depth=int(trng.integers(2)), nouns_p=trNP, nouns_o=trNO)
+            t = int(trng.integers(len(v14.PATTERNS))); train.append(row(ev, w.qrender(ev, t, trng), t))
+        erng = np.random.default_rng(900 + seed)
+        def ev_rows(depth, NP, NO, k, n_quant=None, ambiguous=False):
+            rs = []
+            for t in range(len(v14.PATTERNS)):
+                for _ in range(k):
+                    ev = w.qevent(erng, depth=depth, nouns_p=NP, nouns_o=NO, n_quant=n_quant, ambiguous=ambiguous); rs.append(row(ev, w.qrender(ev, t, erng), t))
+            return rs
+        files = {"train.sop": train, "eval_new_identities.sop": ev_rows(0, teNP, teNO, n_eval),
+                 "eval_depth2_quantified_unseen.sop": ev_rows(2, trNP, trNO, max(3, n_eval // 2)),
+                 "eval_depth2_affirmative.sop": ev_rows(2, trNP, trNO, max(3, n_eval // 2), n_quant=0)}
+        fs = {"examples/eval_new_identities.sop": "new_identities", "examples/eval_depth2_quantified_unseen.sop": "heldout_depth2_quantified",
+              "examples/eval_depth2_affirmative.sop": "depth2_affirmative (seen depth, fresh sentences)"}
+        if version >= 2:
+            files["eval_ambiguous_d0.sop"] = ev_rows(0, trNP, trNO, max(3, n_eval // 2), ambiguous=True)
+            fs["examples/eval_ambiguous_d0.sop"] = "ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both)"
+        hints = {"heldout_sentence_share": 0.1, "new_identities": list(teNP) + list(teNO), "file_splits": fs,
+                 "heldout_formulations": "none: the repository script (v14_quantifiers) trains every pattern; held-out formulations are not part of its protocol",
+                 "protocol": "v14_quantifiers (E1b protocol): affirmative (all 'the') at depths 0-2 (share 0.4) + unambiguous quantified at depths 0-1; "
+                             "nouns 0-11, new nouns 12-17; quantified depth 2 unseen. " +
+                             ("VERSION 2 = C2c (--scope_target c2c --rel): _scope on two-quantifier sentences; ambiguous sentences (never trained) at depth 0"
+                              if version >= 2 else "VERSION 1: scope NOT emitted (spec v1): det= only; ambiguous sentences not exported")}
+        desc = ("v14 quantifier world, version 2 = C2c (scope by category-local R_wide / R_q terms, readout rule in the legend)" if version >= 2
+                else "v14 quantifier world, version 1: determiners as roles inside the argument (scope not emitted)")
+        return write_world(out, "quantifiers", desc, legend, lexicon, files, hints)
+    finally:
+        v14.DETS_Q, v14.NARROW_Q = saved
+
+
+def export_quantifiers(out, n, n_eval, seed):
+    """the current quantifier world is VERSION 2 (author Q5, 78d36e8); version 1 (no scope) is kept under versions/v1/ with its examples"""
+    import tempfile
+    tmp = tempfile.mkdtemp(prefix="sop_qv1_"); export_quantifiers_version(tmp, n, n_eval, seed, 1)
+    wd = export_quantifiers_version(out, n, n_eval, seed, 2)
+    v1 = os.path.join(wd, "versions", "v1"); v2 = os.path.join(wd, "versions", "v2")
+    if os.path.exists(v1): shutil.rmtree(v1)
+    os.makedirs(v2, exist_ok=True); src = os.path.join(tmp, "quantifiers")
+    shutil.copytree(os.path.join(src, "examples"), os.path.join(v1, "examples"))
+    for f in ("legend.json", "kinds.tsv", "split_hints.json"): shutil.copy(os.path.join(src, f), os.path.join(v1, f))
+    shutil.copy(os.path.join(wd, "legend.json"), os.path.join(v2, "legend.json")); shutil.rmtree(tmp)
+    from sop.legend import sha256_file
+    with open(os.path.join(v1, "CHANGES.md"), "w") as f:
+        f.write(f"# v1 — the quantifier world without scope (spec v1)\nlegend {sha256_file(os.path.join(v1, 'legend.json'))}. Determiners in `det=`, "
+                "no scope term in the targets, no `_scope` line. Kept for comparison (P0 CPU run tool/runs/p0_cpu_1seed_60f284d/quantifiers).\n")
+    with open(os.path.join(v2, "CHANGES.md"), "w") as f:
+        f.write(f"# v2 — the C2c quantifier world (author Q5, instructions 78d36e8)\nlegend {sha256_file(os.path.join(v2, 'legend.json'))}.\n\n"
+                "## Change set\n- targets: wide-scope markers (each, a certain) add R_wide (x) R_role (x) f_noun, plain quantifiers (every, some) add "
+                "R_q (x) R_role (x) f_noun, 'a' and 'the' nothing (experiment/v14_quantifiers.py --scope_target c2c; RESULTS 9c-sexies)\n"
+                "- beacon-relative emitters on every / each / some / certain (takers NP, NO): legend reader.rel_emitters (--rel)\n"
+                f"- readout rule in the legend: {SCOPE_RULE}\n- `_scope=<role>|both` on the event wire (spec 3.3)\n"
+                "- FULL is defined over the legend's questions (nouns, presence, scope-or-both); the determiner identity is its own axis (legend "
+                "reader.full_excludes = ['det']); the previous FULL is printed next to it once (rule 16)\n\n## Decision\nA world-definition change decided "
+                "by the author (not a loop evolution step): no acceptance criterion of spec 1.1 step 5 applies; v1 stays under versions/v1/.\n")
+    return wd
 
 
 def main(argv=None):

@@ -14,7 +14,8 @@ OPERATOR_KEYS = {"not": {"scope"}, "must": {"scope"}, "may": {"scope"}, "if": {"
 ENTITY_KEYS = {"head", "attr", "quantity", "unit", "det"}
 VERDICT_KEYS = {"left", "right"}
 KNOWN_OPERATORS = set(OPERATOR_KEYS)
-READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_dets": ["the"]}
+READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_dets": ["the"], "scope_terms": None, "scope_rule": None,
+                   "rel_emitters": None, "full_excludes": []}
 PUNCT = re.compile(r"([.,;:!?](?=\s|$))")
 
 
@@ -44,7 +45,7 @@ class Legend:
             if os.path.exists(lp): self._load_lexicon(lp)
             else: self.warnings.append(f"lexicon {lp} not found (kinds unknown; sop check does not need them, training does)")
         else:
-            self.errors.append("kinds.source 'tagger' is not implemented in v1 (use a lexicon)")   # TODO(section 6 missing): tagger kinds
+            self.errors.append("kinds.source 'tagger' is not implemented in v1 (use a lexicon)")   # limit of v1 (spec 6.3 allows a tagger; none is installed)
 
     def _validate(self):
         e = []
@@ -54,6 +55,8 @@ class Legend:
         if len(set(self.roles)) != len(self.roles): e.append("duplicate role ids")
         for ev in self.events:
             if ev in KNOWN_OPERATORS or ev in ("entity", "unknown", "verdict"): e.append(f"event id {ev!r} collides with a reserved wire type")
+        for ev in self.raw.get("events", []):
+            if not ev.get("verbs"): e.append(f"event {ev.get('id')!r} has no verbs (spec 6.1: an event without verbs is a legend inconsistency)")
         for op in self.operators:
             if op not in KNOWN_OPERATORS: e.append(f"operator {op!r} is not one of {sorted(KNOWN_OPERATORS)}")
         return e

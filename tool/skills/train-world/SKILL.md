@@ -19,7 +19,8 @@ The implementing agent of this tool is Claude; the agent that RUNS this skill is
 needs a model above the Opus class; when a step cannot be done at that class, report it as a limit. All LLM calls go through
 `scripts/llm.py:llm_call(role, prompt, world_dir)`; with no API reachable it raises `LLMUnavailable` and the step says "API unavailable".
 
-Scripts: `scripts/loop.py <cmd> <world>` (cmd: propose-legend, annotate, train, second-look, feedback, evolve, step, run), `scripts/llm.py`,
+Scripts: `scripts/loop.py <cmd> <world>` (cmd: inventory, propose-legend, annotate, train, second-look, package, accept-training, feedback,
+evolve, step, run), `scripts/llm.py`,
 `scripts/measure_annotators.py`. The CLI is `tool/bin/sop` (check, formalize, diff, stats, train).
 
 ## The loop (spec 1.1 steps 1-6)
@@ -68,5 +69,19 @@ provenance `_source=oracle:generator-gold ...`). The second look by the oracle c
 naming falls back to placeholders. `scripts/measure_annotators.py` (small vs large annotator, 500 commands sentences, FULL agreement with
 gold; the small default stands if within 0.02) prints "API unavailable" and exits 3.
 
-TODO(section 6 missing): the spec's section 6 (training skill steps 6.1-6.7, splits, 6b) was not received; the steps above are the minimum
-that runs spec 1.1 end to end and are marked as such in the code.
+## The steps of spec section 6, one script each (`loop.py run` does them in this order)
+
+| spec 6 step | what the script does | command |
+|---|---|---|
+| 1 Inventory | world.json, legend.json, the files of examples/ raw/ audit/; `sop check` on examples; STOP and report on a legend inconsistency (role ids colliding with reserved names, events without verbs) or on examples with unknown roles | `loop.py inventory` |
+| 2 Annotate raw/ | the annotate model writes the wires; `sop check` validates every wire; a rejected one is RE-ASKED ONCE with the errors; then an `unknown` wire; `examples/annotated_<date>.sop`, `_source=llm:<model>` | `loop.py annotate` |
+| 3 Kinds | word -> kind from the lexicon over all tokens; a word with no kind gets the kind `unknown`; the share of `unknown` tokens in REPORT.md; the table in model/catalog.json | `sop train` |
+| 4 Splits | runs/<ts>/splits.json BEFORE training: seen formulations (train), held-out sentences, held-out FORMULATIONS (by template when templated, else by role order), new identities; the lexical bag baseline (and the order baseline) trained on the same rows | `sop train` |
+| 5 Train | experiment/trainer.train_loop + V8 (memory logged, checkpoints); 5 seeds when the data allow it (>= min_examples sentences), 1 otherwise and said so; thresholds on calibration rows | `sop train` (seeds chosen by `loop.py run`) |
+| 6 Evaluate | metrics.json + REPORT.md: per role, FULL (structure estimated, depth given, depth and negation given), the three occupancy cases, calibration, held-out formulations, new identities, the baselines on the same rows, agreement with the annotation on the held-out sentences; what is weak and which formulations to add | `sop train` |
+| 6b Second look | the reader re-reads the TRAINING sentences; confident and disagreeing -> the second_look model keeps one reading (in place, `_changed=yes`); audit/disagreements.sop; disagreement rate and changes (label noise) in REPORT.md; ESCALATION (rate > second_look_escalate: annotate / second_look to the large class, raw/ re-annotated once); RETRAIN once when the changed share > second_look_retrain (default 0.05) | `loop.py second-look` |
+| 7 Package | model/ complete; status.json; runs/<ts>/ with log and command; `sop formalize` on a held-out slice next to the annotation, with the verdicts (audit/heldout_*.sop) | `loop.py package` |
+| acceptance of a training | `sop check` on model/legend.json + examples; metrics.json has every field of step 6; REPORT.md states n, provenance, the 6b rate; confident-wrong at tau reported; ten random seen examples reproduced role line for role line -> BUILT, else FAILED with the reason | `loop.py accept-training` |
+| 8 Evolve | steps 3-5 of 1.1 above; with an API, the annotate model re-annotates the sentences the migration lists under the new legend; offline the migration's rule | `loop.py step` |
+
+The annotator measurement of 6b (small vs large, 500 commands sentences): `scripts/measure_annotators.py`.

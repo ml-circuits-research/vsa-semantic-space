@@ -13,7 +13,8 @@ every decision rule is here, written, so that the agent only calls scripts and r
 The annotator `oracle:<dir>` is the OFFLINE stand-in for the annotate model on constructed worlds: it copies the generator's gold wires for
 the same _text (no LLM; stated as such in every provenance line). With `llm`, the annotate model of world.json is called through llm.py; when
 no API is reachable the step reports "API unavailable" and writes nothing.
-TODO(section 6 missing): the spec's skill steps 6.1-6.7 were not received; this is the minimum that runs the loop of 1.1 end to end.
+Spec section 6, steps -> functions: 1 inventory; 2 annotate (re-asked once on a rejected wire); 3-6 `sop train` (kinds, splits, training,
+evaluation); 6b second_look (+ escalation, + retrain once); 7 package + accept_training (the acceptance paragraph); 8 step (evolve).
 """
 import argparse, collections, copy, datetime, glob, json, os, re, shutil, subprocess, sys
 import numpy as np
@@ -111,11 +112,17 @@ def annotate(wd, annotator="llm", limit=None):
     else:
         model = model_for("annotate", wd); spec = annotation_prompt_header(legend)
         for s in todo:
-            try: text = llm_call("annotate", spec + "\nSentence: " + s + "\nReply with the SOP wires only.", wd)
+            try:
+                text = llm_call("annotate", spec + "\nSentence: " + s + "\nReply with the SOP wires only.", wd)
+                ws = parse_llm_wires(text, s, legend, ids, model, wd)
+                if ws[0].type == "unknown":            # spec 6.2: invented keys or types are rejected and re-asked ONCE, with the errors
+                    errs = check_errors(text, legend)
+                    text = llm_call("annotate", spec + "\nSentence: " + s + f"\nYour previous answer was rejected by sop check: {errs}\n"
+                                    "Reply with corrected SOP wires only.", wd)
+                    ws = parse_llm_wires(text, s, legend, ids, model, wd); stats["re-asked"] += 1
             except LLMUnavailable as e: return {"annotated": 0, "error": str(e)}
-            ws = parse_llm_wires(text, s, legend, ids, model, wd)
             stats["llm ok" if ws[0].type != "unknown" else "llm rejected by sop check (unknown wire)"] += 1; doc.wires += ws
-    p = os.path.join(wd, "examples", f"annotated_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}.sop")
+    p = os.path.join(wd, "examples", f"annotated_{datetime.datetime.now().strftime('%Y-%m-%d_%H%M%S')}.sop")
     with open(p, "w") as f: f.write(soplang.write(doc))
     rep = Report(p); check_doc(soplang.load(p), {wname(wd): legend}, rep)
     return {"annotated": len(todo), "file": os.path.relpath(p, wd), "by": dict(stats), "check_ok": rep.ok, "check_errors": rep.errors[:5]}
@@ -131,6 +138,12 @@ def annotation_prompt_header(legend):
             f"Events (wire types) and their verbs: {json.dumps(legend.events)}\nRoles (keys of event wires): {legend.roles}\n"
             f"Operators: {legend.operators} (not: scope=$w|word; says: speaker=, scope=$w); entity wires: head=, attr=, det=.\n"
             "Format: '@w1 <type>' then 'key=value' lines; the top-level wire first, with _text=<the sentence>.\n")
+
+
+def check_errors(text, legend):
+    body = "\n".join(l for l in text.strip().strip("`").split("\n") if not l.startswith("!"))
+    try: d = soplang.parse(body); rep = Report("llm"); check_doc(d, legend, rep); return [m for _, m in rep.errors][:5]
+    except soplang.SopError as e: return [f"line {e.lineno}: {e.msg}"]
 
 
 def parse_llm_wires(text, sentence, legend, ids, model, wd):
@@ -156,48 +169,180 @@ def train(wd, train_args="", splits=None):
     return {"run": os.path.dirname(runs[-1]) if runs else None, "log_tail": [l for l in r.stdout.splitlines() if l.startswith("[eval]")]}
 
 
-# ------------------------------------------------------------------ 4. second look
+# ------------------------------------------------------------------ 4. second look (spec 6b)
+def last_splits(wd):
+    runs = sorted(glob.glob(os.path.join(wd, "runs", "*", "splits.json")))
+    return json.load(open(runs[-1])) if runs else None
+
+
+def replace_graph(path, old_top_id, new_wires):
+    """the annotation of one sentence replaced in its file (the second look kept the other reading): old graph out, new graph in, _changed=yes"""
+    d = soplang.load(path); by = d.by_id(); gone, stack = set(), [old_top_id]
+    while stack:
+        x = stack.pop()
+        if x in gone or x not in by: continue
+        gone.add(x); stack += by[x].refs()
+    used = {w.id for w in d.wires if w.id not in gone}; ids = (f"s{i}" for i in range(1, 10 ** 9))
+    fresh = (x for x in ids if x not in used); ws = copy_graph(new_wires[0], {w.id: w for w in new_wires}, fresh)
+    ws[0].lines = [l for l in ws[0].lines if l.key != "_changed"]; ws[0].lines.insert(1, soplang.line("_changed", "yes"))
+    pos = next(i for i, w in enumerate(d.wires) if w.id == old_top_id)
+    d.wires = [w for w in d.wires[:pos] if w.id not in gone] + ws + [w for w in d.wires[pos:] if w.id not in gone]
+    with open(path, "w") as f: f.write(soplang.write(d))
+
+
 def second_look(wd, annotator="llm", n_max=2000):
+    """6b: the trained reader re-reads the TRAINING sentences; where every margin is >= tau (status ok) and its frame disagrees with the
+    annotation, the second_look model re-annotates the sentence with both readings in front of it and keeps one (written in place with
+    _changed=yes). audit/disagreements.sop holds the cases (both readings). Rules (world.json): escalation of annotate / second_look to the
+    large class when the disagreement rate > second_look_escalate (default 0.05; raw/ re-annotated once); retrain once when the share of
+    annotations CHANGED > second_look_retrain (default 0.05)."""
     from sop.infer import Reader
     rd = Reader(os.path.join(wd, "model")); legend = rd.legend; rows = []
+    sp = last_splits(wd); train_texts = set(sp["texts"].get("train", [])) if sp else None
     for p, d in read_examples(wd):
         by = d.by_id()
         for t in d.top_level():
-            if t.value("_text") is not None: rows.append((p, t, by))
+            if t.value("_text") is not None and (train_texts is None or t.value("_text") in train_texts): rows.append((p, t, by))
     rows = rows[:n_max]; dis = []; conf = 0; ids = (f"r{i}" for i in range(10 ** 9))
+    pred = legend.reader["predicate_role"]; drop = tuple(legend.reader.get("full_excludes") or ())
     for p, t, by in rows:
         g = world.frame_of(t, by, legend); ws, f, info = rd.formalize(t.value("_text"), 0, ids)
-        if g["shape"] == "ok" and legend.reader["predicate_role"] and not g.get("lemma"): g["lemma"] = rd.comp.lemma_for(g["event"], info["tokens"], set())
+        if g["shape"] == "ok" and pred and not g.get("lemma"): g["lemma"] = rd.comp.lemma_for(g["event"], info["tokens"], set())
         if info["status"] != "ok": continue
         conf += 1
-        if world.canon(f, legend.reader["predicate_role"]) != world.canon(g, legend.reader["predicate_role"]): dis.append((p, t, ws))
+        if world.canon(f, pred, drop) != world.canon(g, pred, drop): dis.append((p, t, by, ws))
     rate = len(dis) / max(1, len(rows)); changed = 0; note = ""
-    audit = soplang.Doc(directives=[("world", wname(wd), None), ("legend", legend.sha, None)])
-    for p, t, ws in dis: audit.wires += ws
-    if dis:
-        os.makedirs(os.path.join(wd, "audit"), exist_ok=True)
-        with open(os.path.join(wd, "audit", "reader_disagreements.sop"), "w") as f: f.write(soplang.write(audit))
+    audit = soplang.Doc(directives=[("world", wname(wd), None), ("legend", legend.sha, None)]); aid = (f"d{i}" for i in range(1, 10 ** 9))
+    for p, t, by, ws in dis:
+        ann = copy_graph(t, by, aid); ann[0].lines.insert(1, soplang.line("_reading", "annotation")); audit.wires += ann
+        rdr = copy_graph(ws[0], {w.id: w for w in ws}, aid); rdr[0].lines = [l for l in rdr[0].lines if l.key != "_text"]
+        rdr[0].lines[:0] = [soplang.line("_text", t.value("_text")), soplang.line("_reading", "reader")]; audit.wires += rdr
+    os.makedirs(os.path.join(wd, "audit"), exist_ok=True)
+    with open(os.path.join(wd, "audit", "disagreements.sop"), "w") as f: f.write(soplang.write(audit))
     if dis and annotator.startswith("oracle:"):
         note = "second look by the oracle (generator gold): the gold is the annotation, so nothing changes; the disagreements are the reader's errors"
     elif dis:
         try:
-            for p, t, ws in dis[:200]:
-                llm_call("second_look", annotation_prompt_header(legend) + "\nTwo readings of the same sentence; return the correct SOP wires.\n"
-                         f"Annotation:\n{t.value('_text')}\nReader:\n{soplang.write(soplang.Doc(wires=ws))}", wd)
-            note = "second look done by " + model_for("second_look", wd) + " (TODO(section 6 missing): replacing the annotation in place, with _changed=yes)"
+            for p, t, by, ws in dis:
+                text = llm_call("second_look", annotation_prompt_header(legend) + "\nTwo readings of the same sentence are given; return the correct "
+                                f"SOP wires (one of the two, or a corrected one).\nAnnotation:\n{soplang.write(soplang.Doc(wires=copy_graph(t, by, iter(f'x{i}' for i in range(1, 999)))))}"
+                                f"\nReader:\n{soplang.write(soplang.Doc(wires=ws))}\nReply with the SOP wires only.", wd)
+                new = parse_llm_wires(text, t.value("_text"), legend, soplang_ids(), model_for("second_look", wd), wd)
+                g_old = world.frame_of(t, by, legend); g_new = world.frame_of(new[0], {w.id: w for w in new}, legend)
+                if new[0].type != "unknown" and world.canon(g_new, False, drop) != world.canon(g_old, False, drop):
+                    replace_graph(p, t.id, new); changed += 1
+            note = f"second look by {model_for('second_look', wd)}: {changed} annotations replaced in place (_changed=yes)"
         except LLMUnavailable as e: note = f"{e}: second look not done; annotations unchanged"
-    wj = world_json(wd); thr = wj.get("second_look_escalate", 0.05); esc = None
+    wj = world_json(wd); thr = wj.get("second_look_escalate", 0.05); rthr = wj.get("second_look_retrain", 0.05); esc = None
     if rate > thr and not annotator.startswith("oracle:"):
-        esc = escalate(wd, rate); note += f"; disagreement rate {rate:.3f} > {thr}: annotate / second_look escalated to {esc['to']} (raw/ to be re-annotated once)"
+        esc = escalate(wd, rate); note += f"; disagreement rate {rate:.3f} > {thr}: annotate / second_look escalated to {esc['to']}"
     elif rate > thr: note += f"; disagreement rate {rate:.3f} > {thr}, but the annotator is the oracle (gold): escalation would not change annotations, not applied"
-    out = {"rows_read": len(rows), "confident": conf, "disagreements": len(dis), "disagreement_rate": rate, "changed": changed,
-           "escalation_threshold": thr, "escalated": esc, "note": note, "measured_label_noise": changed / max(1, len(rows))}
+    share = changed / max(1, len(rows))
+    out = {"rows_read": len(rows), "rows": "the training split of the last run's splits.json" if train_texts is not None else "all examples (no splits.json)",
+           "confident": conf, "disagreements": len(dis), "disagreement_rate": rate, "changed": changed, "measured_label_noise": share,
+           "escalation_threshold": thr, "escalated": esc, "retrain_threshold": rthr, "retrain": share > rthr, "note": note}
     jdump(out, os.path.join(wd, "model", "second_look.json"))
     with open(os.path.join(wd, "model", "REPORT.md"), "a") as f:
-        f.write(f"\n## Loop: annotation and second look (BUILT)\nAnnotator of examples/: {annotator if annotator.startswith('oracle:') else 'llm:' + model_for('annotate', wd)}. "
-                f"The reader re-read {len(rows)} training sentences: confident (status ok) on {conf}; confident AND disagreeing with the annotation: "
-                f"{len(dis)} (rate {rate:.3f}, against the escalation threshold {thr}). Annotations changed by the second look: {changed} "
-                f"(measured label noise {changed / max(1, len(rows)):.3f}). {note}\nDisagreements for people: audit/reader_disagreements.sop.\n")
+        f.write(f"\n## Loop: annotation and second look (spec 6b; BUILT)\nAnnotator of examples/: {annotator if annotator.startswith('oracle:') else 'llm:' + model_for('annotate', wd)}. "
+                f"The reader re-read {len(rows)} training sentences: confident (every margin >= tau) on {conf}; confident AND disagreeing with the "
+                f"annotation: {len(dis)} (disagreement rate {rate:.3f}; escalation threshold {thr}). Annotations changed by the second look: {changed} "
+                f"(measured label noise {share:.3f}; retrain threshold {rthr}). {note}\nCases (both readings): audit/disagreements.sop.\n")
+    return out
+
+
+def reannotate_raw(wd):
+    """escalation (indications section 1): raw/ re-annotated ONCE with the escalated model; the previous annotations go to audit/superseded/"""
+    sup = os.path.join(wd, "audit", "superseded"); os.makedirs(sup, exist_ok=True)
+    for p in glob.glob(os.path.join(wd, "examples", "annotated_*.sop")): shutil.move(p, os.path.join(sup, os.path.basename(p)))
+    return annotate(wd, "llm")
+
+
+# ------------------------------------------------------------------ 1. inventory (spec 6.1)
+def inventory(wd):
+    out = {"world_json": world_json(wd), "files": {}}
+    for d in ("examples", "raw", "audit"):
+        out["files"][d] = sorted(os.path.relpath(p, wd) for p in glob.glob(os.path.join(wd, d, "**", "*"), recursive=True) if os.path.isfile(p))
+    lp = os.path.join(wd, "legend.json")
+    if not os.path.exists(lp): out["stop"] = None; out["legend"] = "missing (step 1.1.1: propose one)"; return out
+    lg = Legend(lp); out["legend"] = {"sha": lg.sha, "version": lg.version, "roles": lg.roles, "events": list(lg.events), "errors": lg.errors}
+    reasons = list(lg.errors)
+    ex = [p for p in out["files"]["examples"] if p.endswith(".sop")]
+    if ex:
+        r = subprocess.run([SOP, "check", "--json", "--legend", f"{wname(wd)}={lp}"] + [os.path.join(wd, p) for p in ex], capture_output=True, text=True)
+        try:
+            rep = json.loads(r.stdout); bad = [f for f in rep["files"] if not f["ok"]]
+            out["check"] = {"files": len(rep["files"]), "failed": [{"file": os.path.relpath(f["file"], wd), "errors": f["errors"][:5]} for f in bad]}
+            reasons += [f"{os.path.relpath(f['file'], wd)}: {e['reason']} (line {e['line']})" for f in bad for e in f["errors"][:3]]
+        except ValueError: reasons.append("sop check failed: " + (r.stderr or r.stdout)[:500])
+    out["stop"] = reasons or None
+    return out
+
+
+# ------------------------------------------------------------------ 7. package (spec 6.7) and the acceptance of a training
+def package(wd, n=50):
+    """formalize a held-out slice and put the reader's wires next to the annotation's, with the verdicts (audit/heldout_*.sop)"""
+    from sop.infer import Reader, formalize_text
+    from sop.diff import diff_docs
+    rd = Reader(os.path.join(wd, "model")); sp = last_splits(wd); held = set(sp["texts"].get("heldout_sentences", [])) if sp else set()
+    ann = soplang.Doc(directives=[("world", wname(wd), None), ("legend", rd.legend.sha, None)]); texts = []; ids = (f"h{i}" for i in range(1, 10 ** 9))
+    for p, d in read_examples(wd):
+        by = d.by_id()
+        for t in d.top_level():
+            if t.value("_text") in held and len(texts) < n:
+                ws = copy_graph(t, by, ids); ws[0].set("_sentence", str(len(texts))); ann.wires += ws; texts.append(t.value("_text"))
+    rdoc, _ = formalize_text(rd, texts); out, counts = diff_docs(ann, rdoc, "audit/heldout_annotation.sop", "audit/heldout_reader.sop", rd.tau, rd.legend)
+    for name, doc in (("heldout_annotation.sop", ann), ("heldout_reader.sop", rdoc), ("heldout_verdicts.sop", out)):
+        with open(os.path.join(wd, "audit", name), "w") as f: f.write(soplang.write(doc))
+    return {"n": len(texts), "verdicts": counts}
+
+
+REQUIRED_METRICS = ["FULL", "FULL [depth given]", "structure (depth, negation)", "heads FULL (lexical bag baseline, trained on the same training rows)",
+                    "heads FULL (lexical order baseline)", "occupancy: known filler"]
+
+
+def accept_training(wd, k=10, seed=0):
+    """the acceptance of a training (spec 6, last paragraph), checked before declaring BUILT: sop check passes on model/legend.json +
+    examples; metrics.json has every field of step 6; REPORT.md states n, provenance and the 6b disagreement rate; confident-wrong at tau is
+    reported (no threshold on it); the CLI formalizes the _text of ten random examples of the seen split and reproduces their role lines."""
+    from sop.infer import Reader
+    md = os.path.join(wd, "model"); checks = {}
+    ex = [p for p, _ in read_examples(wd)]
+    r = subprocess.run([SOP, "check", "--legend", f"{wname(wd)}={os.path.join(md, 'legend.json')}"] + ex, capture_output=True, text=True)
+    checks["sop check on model/legend.json + examples"] = r.returncode == 0
+    m = json.load(open(os.path.join(md, "metrics.json"))); seed0 = m["per_seed"][0]
+    splits_have = {s: v["catalog candidates"] for s, v in seed0.items()}
+    spd = (last_splits(wd) or {}).get("definitions", {}); none_forms = (spd.get("heldout_formulations") or {}).get("by") == "none"
+    need_splits = ["heldout_sentences", "new_identities"] + ([] if none_forms else ([s for s in splits_have if s.startswith("heldout_formulations")][:1] or ["heldout_formulations*"]))
+    missing = [s for s in need_splits if not any(x == s or (s.endswith("*") and x.startswith(s[:-1])) for x in splits_have)]
+    acc0 = splits_have.get("heldout_sentences", {}).get("acc", {})
+    missing += [f for f in REQUIRED_METRICS if f not in acc0] + ([] if any(k_.startswith("role ") for k_ in acc0) else ["per-role accuracy"])
+    missing += [] if "roles (pooled)" in splits_have.get("heldout_sentences", {}).get("calibration", {}) else ["calibration"]
+    checks["metrics.json has every field of step 6"] = not missing
+    rep = open(os.path.join(md, "REPORT.md")).read()
+    checks["REPORT.md states n, provenance, the 6b disagreement rate"] = ("annotated sentences" in rep and "provenance" in rep and "disagreement rate" in rep)
+    checks["confident-wrong at tau reported"] = "confident-wrong" in rep and "confident_wrong" in json.dumps(seed0)
+    rd = Reader(md); sp = last_splits(wd); seen = sp["texts"].get("train", []) if sp else []
+    rows = []
+    for p, d in read_examples(wd):
+        by = d.by_id()
+        for t in d.top_level():
+            if t.value("_text") in set(seen): rows.append((t, by))
+    pick = [rows[i] for i in sorted(np.random.default_rng(seed).choice(len(rows), min(k, len(rows)), replace=False))] if rows else []
+    repro = []
+    ids = (f"q{i}" for i in range(10 ** 9))
+    for t, by in pick:
+        g = world.frame_of(t, by, rd.legend); ws, f, info = rd.formalize(t.value("_text"), 0, ids)
+        repro.append({"text": t.value("_text"), "reproduced": json.dumps(f.get("roles"), sort_keys=True) == json.dumps(g["roles"], sort_keys=True)})
+    checks[f"role lines of {len(pick)} random seen examples reproduced"] = bool(pick) and all(x["reproduced"] for x in repro)
+    out = {"checks": checks, "missing_metrics": missing, "reproduction": repro, "met": all(checks.values())}
+    jdump(out, os.path.join(md, "acceptance.json"))
+    stp = os.path.join(wd, "status.json"); st = json.load(open(stp)) if os.path.exists(stp) else {}
+    st["label"] = "BUILT" if out["met"] else "FAILED"; st["acceptance_of_training"] = checks
+    if not out["met"]: st["reason"] = "acceptance of the training not met: " + ", ".join(k_ for k_, v in checks.items() if not v)
+    jdump(st, stp)
+    with open(os.path.join(md, "REPORT.md"), "a") as f:
+        f.write("\n## Acceptance of this training (spec 6, last paragraph; BUILT)\n" + "".join(f"- {k_}: {'yes' if v else 'NO'}\n" for k_, v in checks.items())
+                + f"Label: {st['label']}.\n")
     return out
 
 
@@ -396,15 +541,31 @@ def promote(wd, vd, st, acc):
     jdump(s, stp)
 
 
-def step(wd, train_args):
+def llm_reannotate(stage_wd, migration):
+    """spec 6.8 with an API: the annotate model re-annotates, under the NEW legend, the sentences the migration lists; offline the migration's
+    rule (filler token -> role line) stands. Returns the number of sentences re-annotated, or the reason it could not be done."""
+    lg = Legend(os.path.join(stage_wd, "legend.json")); fillers = {w for r in migration["rules"] for w in r["fillers"]}; n = 0
+    try:
+        for p, d in read_examples(stage_wd):
+            for t in list(d.top_level()):
+                if not fillers & set(tokenize(t.value("_text") or "")): continue
+                text = llm_call("annotate", annotation_prompt_header(lg) + "\nSentence: " + t.value("_text") + "\nReply with the SOP wires only.", stage_wd)
+                new = parse_llm_wires(text, t.value("_text"), lg, soplang_ids(), model_for("annotate", stage_wd), stage_wd)
+                if new[0].type != "unknown": replace_graph(p, t.id, new); n += 1
+    except LLMUnavailable as e: return f"{e}: the migration's rule stands"
+    return n
+
+
+def step(wd, train_args, annotator="oracle"):
     pinned = [os.path.dirname(m) for m in glob.glob(os.path.join(wd, "versions", "v*", "mark.json")) if json.load(open(m)).get("mark") == "pinned"]
     fb = feedback(wd); ev = evolve(wd, fb)
     if not ev["changes"]: return {"feedback": summarize_fb(fb), "evolve": ev, "accepted": None}
     vd = ev["dir"]; st = stage_world(wd, vd); mig = json.load(open(os.path.join(vd, "migration.json")))
     n_changed = migrate(wd, st, mig, os.path.join(vd, "legend.json"))
+    reann = llm_reannotate(st, mig) if annotator == "llm" else "offline (oracle annotator): the migration's rule stands"
     runs = sorted(glob.glob(os.path.join(wd, "runs", "*", "splits.json"))); prev_splits = runs[-1] if runs else None
     train(st, train_args, splits=prev_splits)
-    acc = accept(os.path.join(wd, "model"), os.path.join(st, "model")); acc["migrated_examples"] = n_changed
+    acc = accept(os.path.join(wd, "model"), os.path.join(st, "model")); acc["migrated_examples"] = n_changed; acc["llm_reannotation"] = reann
     jdump(acc, os.path.join(vd, "acceptance.json"))
     with open(os.path.join(vd, "CHANGES.md"), "a") as f:
         f.write(f"\n## Acceptance (held-out set fixed before the change; {acc['held_out']})\n| criterion | v | v+1 | met |\n|---|---|---|---|\n")
@@ -426,30 +587,49 @@ def summarize_fb(fb):
            {"unplaced_clusters": [{k: c[k] for k in ("words", "kinds", "sentences", "routes", "supported", "novel", "proposable", "residual_share_mean")} for c in fb["unplaced_clusters"]]}
 
 
+def seeds_for(wd, train_args):
+    """spec 6.5: 5 seeds when the data allow it (here: at least min_examples annotated sentences), 1 otherwise and said so; --seeds in
+    train_args wins (and is stated in REPORT.md as given)"""
+    if "--seeds" in train_args.split(): return train_args, "as given in --train-args"
+    n = sum(1 for _, d in read_examples(wd) for t in d.top_level() if t.value("_text"))
+    k = 5 if n >= world_json(wd).get("min_examples", 500) else 1
+    return f"{train_args} --seeds {k}", f"{k} (spec 6.5: 5 when the data allow it — {n} annotated sentences vs min_examples {world_json(wd).get('min_examples', 500)})"
+
+
 def run(wd, annotator, train_args, steps=None):
     log = {"world": wname(wd), "started": now()}; wj = world_json(wd)
-    if not os.path.exists(os.path.join(wd, "legend.json")):
+    inv = inventory(wd); log["inventory"] = {k: v for k, v in inv.items() if k != "world_json"}
+    if inv.get("legend", "").__class__ is str:
         leg, how = propose_legend(wd); log["legend"] = how
         if leg is None: log["stopped"] = f"no legend.json and the legend proposal needs the evolve model: {how}"; return log
+        inv = inventory(wd)
+    if inv["stop"]: log["stopped"] = "inventory (spec 6.1): " + "; ".join(inv["stop"][:10]); return log
     log["annotate"] = annotate(wd, annotator)
     if log["annotate"].get("error"): log["stopped"] = log["annotate"]["error"]; return log
     n = sum(1 for _, d in read_examples(wd) for t in d.top_level() if t.value("_text"))
     if n < wj.get("min_examples", 500): log["stopped"] = f"{n} annotated examples < min_examples {wj.get('min_examples', 500)}: add raw sentences"; return log
-    log["train"] = train(wd, train_args); log["second_look"] = second_look(wd, annotator)
+    targs, log["seeds"] = seeds_for(wd, train_args)
+    log["train"] = train(wd, targs); log["second_look"] = sl = second_look(wd, annotator)
+    if sl["escalated"] and not annotator.startswith("oracle:"):
+        log["reannotated"] = reannotate_raw(wd); log["train_after_escalation"] = train(wd, targs); log["second_look_after_escalation"] = second_look(wd, annotator)
+    elif sl["retrain"]:
+        log["retrain_after_second_look"] = train(wd, targs); second_look(wd, annotator)
+    log["package"] = package(wd); log["acceptance_of_training"] = accept_training(wd)
     k = wj.get("max_versions_per_run", 3) if steps is None else steps; log["steps"] = []
     for _ in range(k):
-        s = step(wd, train_args); log["steps"].append(s)
-        if not s["evolve"]["changes"]: break
+        s_ = step(wd, targs, "llm" if annotator == "llm" else "oracle"); log["steps"].append(s_)
+        if not s_["evolve"]["changes"]: break
     log["finished"] = now(); jdump(log, os.path.join(wd, "runs", f"loop_{datetime.datetime.now().strftime('%Y%m%d-%H%M%S')}.json"))
     return log
 
 
 def main():
-    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["annotate", "train", "second-look", "feedback", "evolve", "step", "run", "propose-legend"]); ap.add_argument("world")
+    ap = argparse.ArgumentParser(); ap.add_argument("cmd", choices=["inventory", "annotate", "train", "second-look", "package", "accept-training", "feedback", "evolve", "step", "run", "propose-legend"]); ap.add_argument("world")
     ap.add_argument("--annotator", default="llm"); ap.add_argument("--train-args", default=""); ap.add_argument("--steps", type=int)
     a = ap.parse_args(); wd = os.path.abspath(a.world)
-    out = {"annotate": lambda: annotate(wd, a.annotator), "train": lambda: train(wd, a.train_args), "second-look": lambda: second_look(wd, a.annotator),
-           "feedback": lambda: summarize_fb(feedback(wd)), "evolve": lambda: evolve(wd, feedback(wd)), "step": lambda: step(wd, a.train_args),
+    out = {"inventory": lambda: inventory(wd), "package": lambda: package(wd), "accept-training": lambda: accept_training(wd),
+           "annotate": lambda: annotate(wd, a.annotator), "train": lambda: train(wd, a.train_args), "second-look": lambda: second_look(wd, a.annotator),
+           "feedback": lambda: summarize_fb(feedback(wd)), "evolve": lambda: evolve(wd, feedback(wd)), "step": lambda: step(wd, a.train_args, "llm" if a.annotator == "llm" else "oracle"),
            "run": lambda: run(wd, a.annotator, a.train_args, a.steps), "propose-legend": lambda: {"result": propose_legend(wd)[1]}}[a.cmd]()
     print(json.dumps(out, indent=1, default=str))
 

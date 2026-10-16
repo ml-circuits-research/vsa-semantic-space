@@ -7,6 +7,7 @@
 set -euo pipefail
 TOOL="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"; SOP="$TOOL/bin/sop"; W="${WORLDS_DIR:-$TOOL/worlds}"; OUT="$TOOL/tests/out"; mkdir -p "$OUT"
 FAILS=0
+PY="${SOP_PYTHON:-}"; for c in "$TOOL/../.venv/bin/python3" "$TOOL/../../../../.venv/bin/python3"; do [ -z "$PY" ] && [ -x "$c" ] && PY="$c"; done; PY="${PY:-python3}"
 "$SOP" export --out "$W" --n 2000 --n_eval 20 | grep -v "^  T"
 for w in reference commands quantifiers; do
   echo "== $w"
@@ -35,6 +36,28 @@ head -3 "$OUT/sentences_reference.txt" > "$OUT/mixed.txt"; head -3 "$OUT/sentenc
 nr=$(grep -c "^_world=reference" "$OUT/dispatched.sop"); nc=$(grep -c "^_world=commands" "$OUT/dispatched.sop")
 [ "$nr" = 3 ] && [ "$nc" = 3 ] && echo "PASS dispatcher by fit: 3 sentences to reference, 3 to commands" || { echo "FAIL dispatcher: reference $nr, commands $nc"; FAILS=$((FAILS+1)); }
 "$SOP" check --legends "$W" "$OUT/dispatched.sop" > /dev/null && echo "PASS the dispatched file (two worlds) passes sop check --legends" || { echo "FAIL dispatched check"; FAILS=$((FAILS+1)); }
+# the quantifier world v2 (C2c, `_scope`): v1 kept under versions/; _scope emitted on the ambiguous (never trained) sentences; FULL with
+# the depth given and estimated side by side (author C3)
+Q="$W/quantifiers"
+"$PY" - "$Q" "$OUT/formalized_quantifiers.sop" "$OUT/sentences_quantifiers.txt" <<'EOF2'
+import json, os, sys
+q, form, sents = sys.argv[1], sys.argv[2], sys.argv[3]; fails = 0
+def ok(c, m):
+    global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
+v2 = json.load(open(os.path.join(q, "legend.json"))); v1 = json.load(open(os.path.join(q, "versions", "v1", "legend.json")))
+ok(v2["version"] == 2 and v1["version"] == 1 and "scope_terms" in v2["reader"] and "scope_terms" not in v1.get("reader", {}),
+   "quantifiers: legend v2 (C2c, readout rule in the legend) current, v1 (no scope) under versions/v1/")
+text = open(form).read(); n_scope = text.count("\n_scope=")
+amb = [l.strip() for l in open(os.path.join(q, "examples", "eval_ambiguous_d0.sop")) if l.startswith("_text=")]
+ok(n_scope > 0, f"quantifiers: sop formalize emits _scope ({n_scope} wires; {text.count('_scope=both')} 'both')")
+m = json.load(open(os.path.join(q, "model", "metrics.json")))["per_seed"][0]
+for s in ("ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both)", "heldout_sentences"):
+    a = m[s]["catalog candidates"]["acc"]
+    ok("FULL [depth given]" in a and "_scope (wide role / both / absent)" in a and "FULL incl. det (previous definition)" in a,
+       f"quantifiers {s[:12]}: FULL est. {a['FULL']:.3f} / depth given {a['FULL [depth given]']:.3f}; _scope {a['_scope (wide role / both / absent)']:.3f}; FULL incl. det {a['FULL incl. det (previous definition)']:.3f}")
+sys.exit(fails)
+EOF2
+FAILS=$((FAILS+$?))
 set -e
 echo; [ $FAILS -eq 0 ] && echo "test2 (formalize): PASS" || echo "test2: $FAILS FAILED"
 exit $FAILS

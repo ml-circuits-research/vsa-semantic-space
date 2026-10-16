@@ -84,12 +84,24 @@ NEG = {
     "unknown wire type": (good.replace("@w3 transfer", "@w3 donation"), "unknown wire type 'donation'"),
     "two _text lines": (good.replace("_sentence=0", "_text=again"), "has 2 _text lines"),
     "bare value with spaces": (good.replace("recipient=Anna", "recipient=Anna Maria"), "must be quoted"),
+    "_scope on a non-event wire": (good.replace("head=files", "head=files\n_scope=agent"), "_scope is only allowed on event wires"),
+    "_scope with a value that is not a role": (good.replace("recipient=Anna", "recipient=Anna\n_scope=price"), "must be a legend role"),
+    "event without verbs (legend)": (None, None),
 }
 for name, (text, want) in NEG.items():
+    if text is None: continue
     p = os.path.join(tmp, name.replace(" ", "_").replace("$", "") + ".sop"); open(p, "w").write(text)
     rep, _ = check_file(p, lg)
     hit = [(l, m) for l, m in rep.errors if want in m]
     ok(bool(hit) and hit[0][0] is not None, f"negative case '{name}' rejected: " + (f"line {hit[0][0]}: {hit[0][1]}" if hit else f"got {rep.errors}"))
+
+# _scope (spec 3.3, quantifier world v2): accepted on an event wire with a legend role or 'both'
+for v in ("agent", "both"):
+    p = os.path.join(tmp, f"scope_{v}.sop"); open(p, "w").write(good.replace("recipient=Anna", f"recipient=Anna\n_scope={v}"))
+    rep, _ = check_file(p, lg); ok(rep.ok, f"_scope={v} on the event wire accepted")
+bad_leg = dict(LEGEND, events=[{"id": "transfer", "verbs": []}]); nv = tempfile.mkdtemp(prefix="sop_t1nv_"); os.makedirs(os.path.join(nv, "noverbs"), exist_ok=True)
+json.dump(bad_leg, open(os.path.join(nv, "noverbs", "legend.json"), "w")); ok(any("has no verbs" in e for e in Legend(os.path.join(nv, "noverbs", "legend.json")).errors),
+                                                                              "legend inconsistency: an event without verbs is an error (spec 6.1)")
 
 # several worlds in one file (amendment): each top-level wire is checked against the legend of ITS _world
 os.makedirs(os.path.join(tmp, "commands"), exist_ok=True); os.makedirs(os.path.join(tmp, "shop"), exist_ok=True)
