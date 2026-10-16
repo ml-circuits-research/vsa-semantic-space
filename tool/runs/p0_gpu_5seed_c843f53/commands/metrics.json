@@ -1,0 +1,8608 @@
+{
+ "world": "commands",
+ "legend": "sha256:0782b57ac43091381c039aa502c4a12acb236dbbab3e41e3d1f1b76151600ff1",
+ "legend_version": 1,
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ],
+ "label": "BUILT",
+ "splits": {
+  "heldout_depth2": 105,
+  "new_identities": 210,
+  "train": 35340,
+  "heldout_sentences": 4660
+ },
+ "chance": {
+  "action": 0.2,
+  "patient": 0.1111111111111111,
+  "destination": 0.25
+ },
+ "lexical_ranks": {
+  "action": 0,
+  "patient": 0,
+  "destination": -1
+ },
+ "per_seed": [
+  {
+   "heldout_depth2": {
+    "catalog candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5523809523809524,
+      "structure (depth, negation)": 0.638095238095238,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.780952380952381,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7619047619047619,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8380952380952381,
+      "FULL [depth and negation given]": 0.8380952380952381
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.11321841987426567,
+       "margin_p10": 0.0726217640591518,
+       "tau": 0.05,
+       "coverage": 0.9714285714285714,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.02857142857142857,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.9714285714285714
+        ],
+        "0.10": [
+         1.0,
+         0.6476190476190476
+        ],
+        "0.15": [
+         1.0,
+         0.047619047619047616
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8977777777777778,
+       "margin_mean": 0.10427698363723521,
+       "margin_p10": 0.05370060300896238,
+       "tau": 0.05,
+       "coverage": 0.9244444444444444,
+       "confident_wrong": 0.07111111111111111,
+       "abstain_right": 0.044444444444444446,
+       "abstain_wrong": 0.03111111111111111,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8977777777777778,
+         1.0
+        ],
+        "0.02": [
+         0.9099099099099099,
+         0.9866666666666667
+        ],
+        "0.05": [
+         0.9230769230769231,
+         0.9244444444444444
+        ],
+        "0.10": [
+         0.9262295081967213,
+         0.5422222222222223
+        ],
+        "0.15": [
+         0.8571428571428571,
+         0.06222222222222222
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.780952380952381,
+       "margin_mean": 0.09781689912788169,
+       "margin_p10": 0.04800798464485018,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.1523809523809524,
+       "abstain_right": 0.06666666666666667,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.780952380952381,
+         1.0
+        ],
+        "0.02": [
+         0.803921568627451,
+         0.9714285714285714
+        ],
+        "0.05": [
+         0.8241758241758241,
+         0.8666666666666667
+        ],
+        "0.10": [
+         0.8301886792452831,
+         0.5047619047619047
+        ],
+        "0.15": [
+         0.7777777777777778,
+         0.08571428571428572
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.2049488672564768,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.23809523809523808,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.05": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.7142857142857143
+        ],
+        "0.15": [
+         1.0,
+         0.5333333333333333
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.08690752154349661,
+       "margin_p10": 0.07230914647735726,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         0.06666666666666667
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9146093805239567,
+     "status": {
+      "abstain": 103,
+      "ok": 2
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 7,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.16666666666666666
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5523809523809524,
+      "structure (depth, negation)": 0.638095238095238,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.780952380952381,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7619047619047619,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8380952380952381,
+      "FULL [depth and negation given]": 0.8380952380952381
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.11321841987426567,
+       "margin_p10": 0.0726217640591518,
+       "tau": 0.05,
+       "coverage": 0.9714285714285714,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.02857142857142857,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.9714285714285714
+        ],
+        "0.10": [
+         1.0,
+         0.6476190476190476
+        ],
+        "0.15": [
+         1.0,
+         0.047619047619047616
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8977777777777778,
+       "margin_mean": 0.10587020531922099,
+       "margin_p10": 0.054035063697438754,
+       "tau": 0.05,
+       "coverage": 0.9333333333333333,
+       "confident_wrong": 0.07111111111111111,
+       "abstain_right": 0.035555555555555556,
+       "abstain_wrong": 0.03111111111111111,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8977777777777778,
+         1.0
+        ],
+        "0.02": [
+         0.9099099099099099,
+         0.9866666666666667
+        ],
+        "0.05": [
+         0.9238095238095239,
+         0.9333333333333333
+        ],
+        "0.10": [
+         0.926829268292683,
+         0.5466666666666666
+        ],
+        "0.15": [
+         0.8333333333333334,
+         0.08
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.780952380952381,
+       "margin_mean": 0.10123094558927982,
+       "margin_p10": 0.04956121555427508,
+       "tau": 0.05,
+       "coverage": 0.8857142857142857,
+       "confident_wrong": 0.1523809523809524,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.780952380952381,
+         1.0
+        ],
+        "0.02": [
+         0.803921568627451,
+         0.9714285714285714
+        ],
+        "0.05": [
+         0.8279569892473119,
+         0.8857142857142857
+        ],
+        "0.10": [
+         0.8333333333333334,
+         0.5142857142857142
+        ],
+        "0.15": [
+         0.7692307692307693,
+         0.12380952380952381
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.2049488672564768,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.23809523809523808,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.05": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.7142857142857143
+        ],
+        "0.15": [
+         1.0,
+         0.5333333333333333
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.08690752154349661,
+       "margin_p10": 0.07230914647735726,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         0.06666666666666667
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9146093805239567,
+     "status": {
+      "abstain": 103,
+      "ok": 2
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 7,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.16666666666666666
+      }
+     ]
+    }
+   },
+   "heldout_sentences": {
+    "catalog candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 0.9983333333333333,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.9983333333333333,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 0.9983333333333333,
+      "FULL [depth and negation given]": 0.9983333333333333,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5473022137612678,
+       "margin_p10": 0.4600291437949415,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 0.9992169146436961,
+       "margin_mean": 0.524515217185616,
+       "margin_p10": 0.4297329457251818,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0007830853563038371,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.02": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.05": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.10": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.15": [
+         0.9992169146436961,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 0.9983333333333333,
+       "margin_mean": 0.5103920903214595,
+       "margin_p10": 0.40998752121439735,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0016666666666666668,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.02": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.05": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.10": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.15": [
+         0.9983333333333333,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.4570045441090306,
+       "margin_p10": 0.39544099268762806,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5082005470844921,
+       "margin_p10": 0.4604560147059172,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24176786010340492,
+     "status": {
+      "ok": 589,
+      "abstain": 11
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC says that do not ACT the NATTR PAT .",
+       "n": 9,
+       "FULL": 0.8888888888888888
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 0.9983333333333333,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.9983333333333333,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 0.9983333333333333,
+      "FULL [depth and negation given]": 0.9983333333333333,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5473022137612678,
+       "margin_p10": 0.4600291437949415,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 0.9992169146436961,
+       "margin_mean": 0.5253856082768265,
+       "margin_p10": 0.4315440377153649,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0007830853563038371,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.02": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.05": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.10": [
+         0.9992169146436961,
+         1.0
+        ],
+        "0.15": [
+         0.9992169146436961,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 0.9983333333333333,
+       "margin_mean": 0.512244572693919,
+       "margin_p10": 0.4135293878813862,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0016666666666666668,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.02": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.05": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.10": [
+         0.9983333333333333,
+         1.0
+        ],
+        "0.15": [
+         0.9983333333333333,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.4570045441090306,
+       "margin_p10": 0.39544099268762806,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5082005470844921,
+       "margin_p10": 0.4604560147059172,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24176786010340492,
+     "status": {
+      "ok": 589,
+      "abstain": 11
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC says that do not ACT the NATTR PAT .",
+       "n": 9,
+       "FULL": 0.8888888888888888
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "new_identities": {
+    "catalog candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5658749052643276,
+       "margin_p10": 0.5038550313098247,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5455548445219807,
+       "margin_p10": 0.47502811689350133,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5342123704246048,
+       "margin_p10": 0.4652407129955647,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.48271173800718203,
+       "margin_p10": 0.44998751106499996,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23793728496908215,
+     "status": {
+      "ok": 207,
+      "abstain": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5658749052643276,
+       "margin_p10": 0.5038550313098247,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5594683093522502,
+       "margin_p10": 0.48303325979291206,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5640269379180396,
+       "margin_p10": 0.4880291566255207,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.48271173800718203,
+       "margin_p10": 0.44998751106499996,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23793728496908215,
+     "status": {
+      "ok": 207,
+      "abstain": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 35340,
+     "acc": {
+      "FULL": 0.9966666666666667,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.9966666666666667,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.88,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "speakers": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.88,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 0.9966666666666667,
+      "FULL [depth and negation given]": 0.9966666666666667
+     },
+     "calibration": {
+      "role action": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5449866813994514,
+       "margin_p10": 0.4649744560658342,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 636,
+       "acc": 0.9984276729559748,
+       "margin_mean": 0.5206425755680772,
+       "margin_p10": 0.42626437837663556,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0015723270440251573,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.02": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.05": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.10": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.15": [
+         0.9984276729559748,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 300,
+       "acc": 0.9966666666666667,
+       "margin_mean": 0.5051794689301323,
+       "margin_p10": 0.40849663877491554,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0033333333333333335,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.02": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.05": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.10": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.15": [
+         0.9966666666666667,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 93,
+       "acc": 1.0,
+       "margin_mean": 0.5114450793904096,
+       "margin_p10": 0.4616478805706265,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 36,
+       "acc": 1.0,
+       "margin_mean": 0.4466342489561679,
+       "margin_p10": 0.3995681445543026,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24713456820306134,
+     "status": {
+      "ok": 290,
+      "abstain": 10
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that do not ACT the NATTR PAT .",
+       "n": 11,
+       "FULL": 0.9090909090909091
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 41,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 35,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the NATTR PAT .",
+       "n": 33,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 27,
+       "FULL": 1.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "heldout_depth2": {
+    "catalog candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5714285714285714,
+      "structure (depth, negation)": 0.7238095238095238,
+      "role action": 0.9904761904761905,
+      "head action": 0.9904761904761905,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.7619047619047619,
+      "head patient": 0.9714285714285714,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9523809523809523,
+      "head destination": 0.9523809523809523,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 0.9444444444444444,
+      "speakers": 0.8,
+      "heads FULL (model)": 0.9238095238095239,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.819047619047619,
+      "FULL [depth and negation given]": 0.819047619047619
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 0.9904761904761905,
+       "margin_mean": 0.10084887957252013,
+       "margin_p10": 0.0593403118704005,
+       "tau": 0.05,
+       "coverage": 0.9428571428571428,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.009523809523809525,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9904761904761905,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9809523809523809
+        ],
+        "0.05": [
+         1.0,
+         0.9428571428571428
+        ],
+        "0.10": [
+         1.0,
+         0.5333333333333333
+        ],
+        "0.15": [
+         1.0,
+         0.05714285714285714
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8844444444444445,
+       "margin_mean": 0.10094690291471765,
+       "margin_p10": 0.05516827713057522,
+       "tau": 0.05,
+       "coverage": 0.9155555555555556,
+       "confident_wrong": 0.08444444444444445,
+       "abstain_right": 0.05333333333333334,
+       "abstain_wrong": 0.03111111111111111,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8844444444444445,
+         1.0
+        ],
+        "0.02": [
+         0.9036697247706422,
+         0.9688888888888889
+        ],
+        "0.05": [
+         0.9077669902912622,
+         0.9155555555555556
+        ],
+        "0.10": [
+         0.9224137931034483,
+         0.5155555555555555
+        ],
+        "0.15": [
+         0.8947368421052632,
+         0.08444444444444445
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.10241139958237341,
+       "margin_p10": 0.04652778894945964,
+       "tau": 0.05,
+       "coverage": 0.8952380952380953,
+       "confident_wrong": 0.18095238095238095,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.05714285714285714,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         0.79,
+         0.9523809523809523
+        ],
+        "0.05": [
+         0.7978723404255319,
+         0.8952380952380953
+        ],
+        "0.10": [
+         0.8301886792452831,
+         0.5047619047619047
+        ],
+        "0.15": [
+         0.8461538461538461,
+         0.12380952380952381
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.8,
+       "margin_mean": 0.21374782089100083,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.8,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.2,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8
+        ],
+        "0.05": [
+         1.0,
+         0.8
+        ],
+        "0.10": [
+         1.0,
+         0.7380952380952381
+        ],
+        "0.15": [
+         1.0,
+         0.5238095238095238
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.09138158963650973,
+       "margin_p10": 0.046277826248451344,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.13333333333333333,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.4666666666666667
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9137865735667984,
+     "status": {
+      "abstain": 104,
+      "ok": 1
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.16666666666666666
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5714285714285714,
+      "structure (depth, negation)": 0.7238095238095238,
+      "role action": 0.9904761904761905,
+      "head action": 0.9904761904761905,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.7619047619047619,
+      "head patient": 0.9714285714285714,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9523809523809523,
+      "head destination": 0.9523809523809523,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 0.9444444444444444,
+      "speakers": 0.8,
+      "heads FULL (model)": 0.9238095238095239,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.819047619047619,
+      "FULL [depth and negation given]": 0.819047619047619
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 0.9904761904761905,
+       "margin_mean": 0.10084887957252013,
+       "margin_p10": 0.0593403118704005,
+       "tau": 0.05,
+       "coverage": 0.9428571428571428,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.009523809523809525,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9904761904761905,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9809523809523809
+        ],
+        "0.05": [
+         1.0,
+         0.9428571428571428
+        ],
+        "0.10": [
+         1.0,
+         0.5333333333333333
+        ],
+        "0.15": [
+         1.0,
+         0.05714285714285714
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8844444444444445,
+       "margin_mean": 0.10271586852121505,
+       "margin_p10": 0.05562056780110083,
+       "tau": 0.05,
+       "coverage": 0.92,
+       "confident_wrong": 0.08444444444444445,
+       "abstain_right": 0.04888888888888889,
+       "abstain_wrong": 0.03111111111111111,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8844444444444445,
+         1.0
+        ],
+        "0.02": [
+         0.9036697247706422,
+         0.9688888888888889
+        ],
+        "0.05": [
+         0.9082125603864735,
+         0.92
+        ],
+        "0.10": [
+         0.9024390243902439,
+         0.5466666666666666
+        ],
+        "0.15": [
+         0.8947368421052632,
+         0.08444444444444445
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.10620204016772504,
+       "margin_p10": 0.05380036496926449,
+       "tau": 0.05,
+       "coverage": 0.9047619047619048,
+       "confident_wrong": 0.18095238095238095,
+       "abstain_right": 0.0380952380952381,
+       "abstain_wrong": 0.05714285714285714,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         0.79,
+         0.9523809523809523
+        ],
+        "0.05": [
+         0.8,
+         0.9047619047619048
+        ],
+        "0.10": [
+         0.8,
+         0.5714285714285714
+        ],
+        "0.15": [
+         0.8461538461538461,
+         0.12380952380952381
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.8,
+       "margin_mean": 0.21374782089100083,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.8,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.2,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8
+        ],
+        "0.05": [
+         1.0,
+         0.8
+        ],
+        "0.10": [
+         1.0,
+         0.7380952380952381
+        ],
+        "0.15": [
+         1.0,
+         0.5238095238095238
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.09138158963650973,
+       "margin_p10": 0.046277826248451344,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.13333333333333333,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.4666666666666667
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9137772179967593,
+     "status": {
+      "abstain": 104,
+      "ok": 1
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.16666666666666666
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      }
+     ]
+    }
+   },
+   "heldout_sentences": {
+    "catalog candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5330415636953522,
+       "margin_p10": 0.4547317290638653,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.519548845495386,
+       "margin_p10": 0.43422604696801514,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.513595218859911,
+       "margin_p10": 0.41500833406053195,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.46080267746039405,
+       "margin_p10": 0.4056072099559252,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5198062340268167,
+       "margin_p10": 0.47125585863799474,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23602580100473658,
+     "status": {
+      "ok": 594,
+      "abstain": 6
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5330415636953522,
+       "margin_p10": 0.4547317290638653,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5196966423534908,
+       "margin_p10": 0.43422604696801514,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5139097798395769,
+       "margin_p10": 0.41500833406053195,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.46080267746039405,
+       "margin_p10": 0.4056072099559252,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5198062340268167,
+       "margin_p10": 0.47125585863799474,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23602580100473658,
+     "status": {
+      "ok": 594,
+      "abstain": 6
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "new_identities": {
+    "catalog candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5618492735025975,
+       "margin_p10": 0.49988705786023235,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5480573494721667,
+       "margin_p10": 0.4711481017672544,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5440359525696553,
+       "margin_p10": 0.47179361457821345,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.47966365957673074,
+       "margin_p10": 0.45358296125702074,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.2343158473447055,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5618492735025975,
+       "margin_p10": 0.49988705786023235,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5537383725964052,
+       "margin_p10": 0.478149861499051,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5562095735501665,
+       "margin_p10": 0.4886925617753393,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.47966365957673074,
+       "margin_p10": 0.45358296125702074,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.2343158473447055,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 35340,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.88,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "speakers": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.88,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5311790386646217,
+       "margin_p10": 0.45058706658059156,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 636,
+       "acc": 1.0,
+       "margin_mean": 0.5162578054031824,
+       "margin_p10": 0.4318033725703859,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5082487613848832,
+       "margin_p10": 0.40923843510585417,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 93,
+       "acc": 1.0,
+       "margin_mean": 0.5236824637312291,
+       "margin_p10": 0.4738833680645591,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 36,
+       "acc": 1.0,
+       "margin_mean": 0.45865622837701614,
+       "margin_p10": 0.4008209216344334,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24092005074284042,
+     "status": {
+      "ok": 295,
+      "abstain": 5
+     },
+     "worst_formulations": [
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 41,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 35,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the NATTR PAT .",
+       "n": 33,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 27,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 24,
+       "FULL": 1.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "heldout_depth2": {
+    "catalog candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.7047619047619048,
+      "structure (depth, negation)": 0.7904761904761904,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 0.9955555555555555,
+      "role patient": 0.8095238095238095,
+      "head patient": 0.9714285714285714,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9904761904761905,
+      "head destination": 0.9904761904761905,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.8523809523809524,
+      "heads FULL (model)": 0.9619047619047619,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8666666666666667,
+      "FULL [depth and negation given]": 0.8666666666666667
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.09955431849361228,
+       "margin_p10": 0.05690251588274695,
+       "tau": 0.05,
+       "coverage": 0.9047619047619048,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.09523809523809523,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9904761904761905
+        ],
+        "0.05": [
+         1.0,
+         0.9047619047619048
+        ],
+        "0.10": [
+         1.0,
+         0.5619047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.01904761904761905
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.9066666666666666,
+       "margin_mean": 0.10078536222557598,
+       "margin_p10": 0.04659596611417692,
+       "tau": 0.05,
+       "coverage": 0.8933333333333333,
+       "confident_wrong": 0.057777777777777775,
+       "abstain_right": 0.07111111111111111,
+       "abstain_wrong": 0.035555555555555556,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9066666666666666,
+         1.0
+        ],
+        "0.02": [
+         0.9216589861751152,
+         0.9644444444444444
+        ],
+        "0.05": [
+         0.9353233830845771,
+         0.8933333333333333
+        ],
+        "0.10": [
+         0.9242424242424242,
+         0.5866666666666667
+        ],
+        "0.15": [
+         0.9090909090909091,
+         0.04888888888888889
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.8095238095238095,
+       "margin_mean": 0.10599711629232403,
+       "margin_p10": 0.057139587544725784,
+       "tau": 0.05,
+       "coverage": 0.9142857142857143,
+       "confident_wrong": 0.12380952380952381,
+       "abstain_right": 0.01904761904761905,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8095238095238095,
+         1.0
+        ],
+        "0.02": [
+         0.83,
+         0.9523809523809523
+        ],
+        "0.05": [
+         0.8645833333333334,
+         0.9142857142857143
+        ],
+        "0.10": [
+         0.855072463768116,
+         0.6571428571428571
+        ],
+        "0.15": [
+         0.8888888888888888,
+         0.08571428571428572
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.8523809523809524,
+       "margin_mean": 0.23344497145079937,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.8523809523809524,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.14761904761904762,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8523809523809524,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8523809523809524
+        ],
+        "0.05": [
+         1.0,
+         0.8523809523809524
+        ],
+        "0.10": [
+         1.0,
+         0.819047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.6571428571428571
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 0.9333333333333333,
+       "margin_mean": 0.07292038988208532,
+       "margin_p10": 0.01615684858063216,
+       "tau": 0.05,
+       "coverage": 0.6666666666666666,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.26666666666666666,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9333333333333333,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.05": [
+         1.0,
+         0.6666666666666666
+        ],
+        "0.10": [
+         1.0,
+         0.26666666666666666
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9023713443175403,
+     "status": {
+      "abstain": 100,
+      "ok": 5
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the NATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.25
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.3333333333333333
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.7047619047619048,
+      "structure (depth, negation)": 0.7904761904761904,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 0.9955555555555555,
+      "role patient": 0.8095238095238095,
+      "head patient": 0.9714285714285714,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9904761904761905,
+      "head destination": 0.9904761904761905,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.8523809523809524,
+      "heads FULL (model)": 0.9619047619047619,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8666666666666667,
+      "FULL [depth and negation given]": 0.8666666666666667
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.09955431849361228,
+       "margin_p10": 0.05690251588274695,
+       "tau": 0.05,
+       "coverage": 0.9047619047619048,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.09523809523809523,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9904761904761905
+        ],
+        "0.05": [
+         1.0,
+         0.9047619047619048
+        ],
+        "0.10": [
+         1.0,
+         0.5619047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.01904761904761905
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.9066666666666666,
+       "margin_mean": 0.1021608359465314,
+       "margin_p10": 0.04659596611417692,
+       "tau": 0.05,
+       "coverage": 0.8933333333333333,
+       "confident_wrong": 0.057777777777777775,
+       "abstain_right": 0.07111111111111111,
+       "abstain_wrong": 0.035555555555555556,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9066666666666666,
+         1.0
+        ],
+        "0.02": [
+         0.9216589861751152,
+         0.9644444444444444
+        ],
+        "0.05": [
+         0.9353233830845771,
+         0.8933333333333333
+        ],
+        "0.10": [
+         0.9130434782608695,
+         0.6133333333333333
+        ],
+        "0.15": [
+         0.8571428571428571,
+         0.06222222222222222
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.8095238095238095,
+       "margin_mean": 0.1089445599800857,
+       "margin_p10": 0.059175005462162915,
+       "tau": 0.05,
+       "coverage": 0.9142857142857143,
+       "confident_wrong": 0.12380952380952381,
+       "abstain_right": 0.01904761904761905,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8095238095238095,
+         1.0
+        ],
+        "0.02": [
+         0.83,
+         0.9523809523809523
+        ],
+        "0.05": [
+         0.8645833333333334,
+         0.9142857142857143
+        ],
+        "0.10": [
+         0.84,
+         0.7142857142857143
+        ],
+        "0.15": [
+         0.8333333333333334,
+         0.11428571428571428
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.8523809523809524,
+       "margin_mean": 0.23344497145079937,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.8523809523809524,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.14761904761904762,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8523809523809524,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8523809523809524
+        ],
+        "0.05": [
+         1.0,
+         0.8523809523809524
+        ],
+        "0.10": [
+         1.0,
+         0.819047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.6571428571428571
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 0.9333333333333333,
+       "margin_mean": 0.07292038988208532,
+       "margin_p10": 0.01615684858063216,
+       "tau": 0.05,
+       "coverage": 0.6666666666666666,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.26666666666666666,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9333333333333333,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.05": [
+         1.0,
+         0.6666666666666666
+        ],
+        "0.10": [
+         1.0,
+         0.26666666666666666
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9023713443175403,
+     "status": {
+      "abstain": 100,
+      "ok": 5
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the PAT that are not ATTR .",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the NATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.25
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.3333333333333333
+      }
+     ]
+    }
+   },
+   "heldout_sentences": {
+    "catalog candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5438828417579624,
+       "margin_p10": 0.4619516686932106,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5261080569424891,
+       "margin_p10": 0.42972358747420897,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.517949635332871,
+       "margin_p10": 0.4152070247738637,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.45117535663712355,
+       "margin_p10": 0.3976971461543643,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5243085084131016,
+       "margin_p10": 0.46838833135295216,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24195710899035353,
+     "status": {
+      "ok": 588,
+      "abstain": 12
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5438828417579624,
+       "margin_p10": 0.4619516686932106,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5272909696596288,
+       "margin_p10": 0.4300925283493358,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5204672678991833,
+       "margin_p10": 0.41667378767423807,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.45117535663712355,
+       "margin_p10": 0.3976971461543643,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5243085084131016,
+       "margin_p10": 0.46838833135295216,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24195710899035353,
+     "status": {
+      "ok": 588,
+      "abstain": 12
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "new_identities": {
+    "catalog candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5652717156806385,
+       "margin_p10": 0.5130659950035682,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5475388752799885,
+       "margin_p10": 0.46718576572259485,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5411007200352465,
+       "margin_p10": 0.4589583223611869,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.46847607918863227,
+       "margin_p10": 0.44729959299452854,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.235128421521188,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5652717156806385,
+       "margin_p10": 0.5130659950035682,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.553752030630654,
+       "margin_p10": 0.47202639754367404,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5544146243581013,
+       "margin_p10": 0.47184311832328973,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.46847607918863227,
+       "margin_p10": 0.44729959299452854,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.235128421521188,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 35340,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.88,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "speakers": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.88,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5421932412785527,
+       "margin_p10": 0.4643002920089842,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 636,
+       "acc": 1.0,
+       "margin_mean": 0.5216235058235414,
+       "margin_p10": 0.42323105183702325,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5094390321614809,
+       "margin_p10": 0.40843529665620354,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 93,
+       "acc": 1.0,
+       "margin_mean": 0.5255443282354169,
+       "margin_p10": 0.4807645433634483,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 36,
+       "acc": 1.0,
+       "margin_mean": 0.4517463242156179,
+       "margin_p10": 0.38547671368653186,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.2470603379448236,
+     "status": {
+      "ok": 295,
+      "abstain": 5
+     },
+     "worst_formulations": [
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 41,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 35,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the NATTR PAT .",
+       "n": 33,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 27,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 24,
+       "FULL": 1.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "heldout_depth2": {
+    "catalog candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.580952380952381,
+      "structure (depth, negation)": 0.6571428571428571,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.8476190476190476,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7619047619047619,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8761904761904762,
+      "FULL [depth and negation given]": 0.8761904761904762
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.10527191809267936,
+       "margin_p10": 0.07182884923553906,
+       "tau": 0.05,
+       "coverage": 0.9809523809523809,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.01904761904761905,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.9809523809523809
+        ],
+        "0.10": [
+         1.0,
+         0.5619047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.0380952380952381
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.9288888888888889,
+       "margin_mean": 0.0987152128133079,
+       "margin_p10": 0.06323594769483211,
+       "tau": 0.05,
+       "coverage": 0.9377777777777778,
+       "confident_wrong": 0.04888888888888889,
+       "abstain_right": 0.04,
+       "abstain_wrong": 0.022222222222222223,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9288888888888889,
+         1.0
+        ],
+        "0.02": [
+         0.9288888888888889,
+         1.0
+        ],
+        "0.05": [
+         0.9478672985781991,
+         0.9377777777777778
+        ],
+        "0.10": [
+         0.9545454545454546,
+         0.4888888888888889
+        ],
+        "0.15": [
+         0.8333333333333334,
+         0.02666666666666667
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.8476190476190476,
+       "margin_mean": 0.09386050412033792,
+       "margin_p10": 0.051756947351897266,
+       "tau": 0.05,
+       "coverage": 0.9047619047619048,
+       "confident_wrong": 0.10476190476190476,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.047619047619047616,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8476190476190476,
+         1.0
+        ],
+        "0.02": [
+         0.8476190476190476,
+         1.0
+        ],
+        "0.05": [
+         0.8842105263157894,
+         0.9047619047619048
+        ],
+        "0.10": [
+         0.8936170212765957,
+         0.44761904761904764
+        ],
+        "0.15": [
+         0.5,
+         0.01904761904761905
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.2006232126014883,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.23809523809523808,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.05": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.7142857142857143
+        ],
+        "0.15": [
+         1.0,
+         0.5333333333333333
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.08680123670849753,
+       "margin_p10": 0.055135781756281005,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.13333333333333333,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.26666666666666666
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9152917444534565,
+     "status": {
+      "abstain": 104,
+      "ok": 1
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC asks that never ACT the ATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the NATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.25
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.580952380952381,
+      "structure (depth, negation)": 0.6571428571428571,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.8476190476190476,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7619047619047619,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8761904761904762,
+      "FULL [depth and negation given]": 0.8761904761904762
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.10527191809267936,
+       "margin_p10": 0.07182884923553906,
+       "tau": 0.05,
+       "coverage": 0.9809523809523809,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.01904761904761905,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.9809523809523809
+        ],
+        "0.10": [
+         1.0,
+         0.5619047619047619
+        ],
+        "0.15": [
+         1.0,
+         0.0380952380952381
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.9288888888888889,
+       "margin_mean": 0.10005952901751093,
+       "margin_p10": 0.06323594769483211,
+       "tau": 0.05,
+       "coverage": 0.9377777777777778,
+       "confident_wrong": 0.04888888888888889,
+       "abstain_right": 0.04,
+       "abstain_wrong": 0.022222222222222223,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9288888888888889,
+         1.0
+        ],
+        "0.02": [
+         0.9288888888888889,
+         1.0
+        ],
+        "0.05": [
+         0.9478672985781991,
+         0.9377777777777778
+        ],
+        "0.10": [
+         0.9557522123893806,
+         0.5022222222222222
+        ],
+        "0.15": [
+         0.8888888888888888,
+         0.04
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.8476190476190476,
+       "margin_mean": 0.09674118170077298,
+       "margin_p10": 0.051756947351897266,
+       "tau": 0.05,
+       "coverage": 0.9047619047619048,
+       "confident_wrong": 0.10476190476190476,
+       "abstain_right": 0.047619047619047616,
+       "abstain_wrong": 0.047619047619047616,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8476190476190476,
+         1.0
+        ],
+        "0.02": [
+         0.8476190476190476,
+         1.0
+        ],
+        "0.05": [
+         0.8842105263157894,
+         0.9047619047619048
+        ],
+        "0.10": [
+         0.9,
+         0.47619047619047616
+        ],
+        "0.15": [
+         0.8,
+         0.047619047619047616
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7619047619047619,
+       "margin_mean": 0.2006232126014883,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.23809523809523808,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7619047619047619,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.05": [
+         1.0,
+         0.7619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.7142857142857143
+        ],
+        "0.15": [
+         1.0,
+         0.5333333333333333
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 1.0,
+       "margin_mean": 0.08680123670849753,
+       "margin_p10": 0.055135781756281005,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.13333333333333333,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.26666666666666666
+        ],
+        "0.15": [
+         null,
+         0.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9152917444534565,
+     "status": {
+      "abstain": 104,
+      "ok": 1
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC asks that never ACT the ATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC asks that ACT the NATTR PAT .",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that do not ACT the NATTR PAT .",
+       "n": 5,
+       "FULL": 0.2
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.25
+      }
+     ]
+    }
+   },
+   "heldout_sentences": {
+    "catalog candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5494838453058103,
+       "margin_p10": 0.45668110508008,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5257537207004952,
+       "margin_p10": 0.43050999747877716,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5101358948990216,
+       "margin_p10": 0.40960247942220546,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.46254100274848303,
+       "margin_p10": 0.38987880514878337,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5193979152669643,
+       "margin_p10": 0.46082033173635284,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24003442161520847,
+     "status": {
+      "ok": 580,
+      "abstain": 20
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5494838453058103,
+       "margin_p10": 0.45668110508008,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5266948889107923,
+       "margin_p10": 0.4313876927422462,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5121390145732706,
+       "margin_p10": 0.40960247942220546,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.46254100274848303,
+       "margin_p10": 0.38987880514878337,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5193979152669643,
+       "margin_p10": 0.46082033173635284,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24003442161520847,
+     "status": {
+      "ok": 580,
+      "abstain": 20
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "new_identities": {
+    "catalog candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5711339299002207,
+       "margin_p10": 0.5121120718080345,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5483163542999077,
+       "margin_p10": 0.4801958647765958,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5355515366546498,
+       "margin_p10": 0.4682394714722815,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.4779470486145208,
+       "margin_p10": 0.4463752874136121,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23715720061452925,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5711339299002207,
+       "margin_p10": 0.5121120718080345,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5618486827654232,
+       "margin_p10": 0.4887157105281508,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5645493833664689,
+       "margin_p10": 0.49119123063129194,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.4779470486145208,
+       "margin_p10": 0.4463752874136121,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23715720061452925,
+     "status": {
+      "ok": 210
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 35340,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.88,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "speakers": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.88,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5458279932916793,
+       "margin_p10": 0.45704557424988673,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 636,
+       "acc": 1.0,
+       "margin_mean": 0.52039424470555,
+       "margin_p10": 0.42234388976446824,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5032604194822087,
+       "margin_p10": 0.4037270703846443,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 93,
+       "acc": 1.0,
+       "margin_mean": 0.5189146516743329,
+       "margin_p10": 0.4667949224949043,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 36,
+       "acc": 1.0,
+       "margin_mean": 0.4512282166823163,
+       "margin_p10": 0.3963081158596762,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24541812947462996,
+     "status": {
+      "ok": 291,
+      "abstain": 9
+     },
+     "worst_formulations": [
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 41,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 35,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the NATTR PAT .",
+       "n": 33,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 27,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 24,
+       "FULL": 1.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "heldout_depth2": {
+    "catalog candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5428571428571428,
+      "structure (depth, negation)": 0.6095238095238096,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 0.9955555555555555,
+      "role patient": 0.6952380952380952,
+      "head patient": 0.9142857142857143,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9904761904761905,
+      "head destination": 0.9904761904761905,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7857142857142857,
+      "heads FULL (model)": 0.9047619047619048,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8857142857142857,
+      "FULL [depth and negation given]": 0.8857142857142857
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.10760461543479989,
+       "margin_p10": 0.07629659091238507,
+       "tau": 0.05,
+       "coverage": 0.9619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0380952380952381,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9904761904761905
+        ],
+        "0.05": [
+         1.0,
+         0.9619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.5904761904761905
+        ],
+        "0.15": [
+         1.0,
+         0.08571428571428572
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8533333333333334,
+       "margin_mean": 0.10051096433425985,
+       "margin_p10": 0.0419818223788885,
+       "tau": 0.05,
+       "coverage": 0.8533333333333334,
+       "confident_wrong": 0.06666666666666667,
+       "abstain_right": 0.06666666666666667,
+       "abstain_wrong": 0.08,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8533333333333334,
+         1.0
+        ],
+        "0.02": [
+         0.9004739336492891,
+         0.9377777777777778
+        ],
+        "0.05": [
+         0.921875,
+         0.8533333333333334
+        ],
+        "0.10": [
+         0.9236641221374046,
+         0.5822222222222222
+        ],
+        "0.15": [
+         1.0,
+         0.08
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.6952380952380952,
+       "margin_mean": 0.09495320283363583,
+       "margin_p10": 0.016759952711586965,
+       "tau": 0.05,
+       "coverage": 0.7428571428571429,
+       "confident_wrong": 0.14285714285714285,
+       "abstain_right": 0.09523809523809523,
+       "abstain_wrong": 0.1619047619047619,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6952380952380952,
+         1.0
+        ],
+        "0.02": [
+         0.7741935483870968,
+         0.8857142857142857
+        ],
+        "0.05": [
+         0.8076923076923077,
+         0.7428571428571429
+        ],
+        "0.10": [
+         0.84375,
+         0.6095238095238096
+        ],
+        "0.15": [
+         1.0,
+         0.0761904761904762
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7857142857142857,
+       "margin_mean": 0.23565670186034926,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7857142857142857,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.21428571428571427,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7857142857142857,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7857142857142857
+        ],
+        "0.05": [
+         1.0,
+         0.7857142857142857
+        ],
+        "0.10": [
+         1.0,
+         0.7761904761904762
+        ],
+        "0.15": [
+         1.0,
+         0.7095238095238096
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 0.9333333333333333,
+       "margin_mean": 0.08975973713484772,
+       "margin_p10": 0.040211357615088796,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.06666666666666667,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9333333333333333,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9333333333333333
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.3333333333333333
+        ],
+        "0.15": [
+         1.0,
+         0.06666666666666667
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9056202866214593,
+     "status": {
+      "abstain": 102,
+      "ok": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 7,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 105,
+     "of": 105,
+     "acc": {
+      "FULL": 0.5428571428571428,
+      "structure (depth, negation)": 0.6095238095238096,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 0.9955555555555555,
+      "role patient": 0.6952380952380952,
+      "head patient": 0.9142857142857143,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 0.9904761904761905,
+      "head destination": 0.9904761904761905,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 0.9047619047619048,
+      "occupancy: not given": 1.0,
+      "speakers": 0.7857142857142857,
+      "heads FULL (model)": 0.9047619047619048,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.9047619047619048,
+      "FULL [depth given]": 0.8857142857142857,
+      "FULL [depth and negation given]": 0.8857142857142857
+     },
+     "calibration": {
+      "role action": {
+       "n": 105,
+       "acc": 1.0,
+       "margin_mean": 0.10760461543479989,
+       "margin_p10": 0.07629659091238507,
+       "tau": 0.05,
+       "coverage": 0.9619047619047619,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0380952380952381,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9904761904761905
+        ],
+        "0.05": [
+         1.0,
+         0.9619047619047619
+        ],
+        "0.10": [
+         1.0,
+         0.5904761904761905
+        ],
+        "0.15": [
+         1.0,
+         0.08571428571428572
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 225,
+       "acc": 0.8533333333333334,
+       "margin_mean": 0.10168501596823182,
+       "margin_p10": 0.04246867120300068,
+       "tau": 0.05,
+       "coverage": 0.8622222222222222,
+       "confident_wrong": 0.07555555555555556,
+       "abstain_right": 0.06666666666666667,
+       "abstain_wrong": 0.07111111111111111,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8533333333333334,
+         1.0
+        ],
+        "0.02": [
+         0.9004739336492891,
+         0.9377777777777778
+        ],
+        "0.05": [
+         0.9123711340206185,
+         0.8622222222222222
+        ],
+        "0.10": [
+         0.9253731343283582,
+         0.5955555555555555
+        ],
+        "0.15": [
+         1.0,
+         0.08888888888888889
+        ]
+       }
+      },
+      "role patient": {
+       "n": 105,
+       "acc": 0.6952380952380952,
+       "margin_mean": 0.09746902776357573,
+       "margin_p10": 0.016759952711586965,
+       "tau": 0.05,
+       "coverage": 0.7619047619047619,
+       "confident_wrong": 0.1619047619047619,
+       "abstain_right": 0.09523809523809523,
+       "abstain_wrong": 0.14285714285714285,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6952380952380952,
+         1.0
+        ],
+        "0.02": [
+         0.7741935483870968,
+         0.8857142857142857
+        ],
+        "0.05": [
+         0.7875,
+         0.7619047619047619
+        ],
+        "0.10": [
+         0.8507462686567164,
+         0.638095238095238
+        ],
+        "0.15": [
+         1.0,
+         0.09523809523809523
+        ]
+       }
+      },
+      "speakers": {
+       "n": 210,
+       "acc": 0.7857142857142857,
+       "margin_mean": 0.23565670186034926,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.7857142857142857,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.21428571428571427,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7857142857142857,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.7857142857142857
+        ],
+        "0.05": [
+         1.0,
+         0.7857142857142857
+        ],
+        "0.10": [
+         1.0,
+         0.7761904761904762
+        ],
+        "0.15": [
+         1.0,
+         0.7095238095238096
+        ]
+       }
+      },
+      "role destination": {
+       "n": 15,
+       "acc": 0.9333333333333333,
+       "margin_mean": 0.08975973713484772,
+       "margin_p10": 0.040211357615088796,
+       "tau": 0.05,
+       "coverage": 0.8666666666666667,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.06666666666666667,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9333333333333333,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         0.9333333333333333
+        ],
+        "0.05": [
+         1.0,
+         0.8666666666666667
+        ],
+        "0.10": [
+         1.0,
+         0.3333333333333333
+        ],
+        "0.15": [
+         1.0,
+         0.06666666666666667
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.9056202866214593,
+     "status": {
+      "abstain": 102,
+      "ok": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 7,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC says that ACT the NATTR PAT .",
+       "n": 6,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC asks that the PRINC asks that ACT the NATTR PAT .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the PAT that are not ATTR .",
+       "n": 4,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "the PRINC says that the PRINC says that ACT the ATTR PAT to the DEST .",
+       "n": 3,
+       "FULL": 0.0
+      }
+     ]
+    }
+   },
+   "heldout_sentences": {
+    "catalog candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5382985612836014,
+       "margin_p10": 0.4567067066475159,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5170281201228021,
+       "margin_p10": 0.41770564903092,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.503348225089628,
+       "margin_p10": 0.40408966546690434,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.4578810074400065,
+       "margin_p10": 0.4001400255897797,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5280576484652992,
+       "margin_p10": 0.46957537998105714,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24405174310030367,
+     "status": {
+      "ok": 576,
+      "abstain": 24
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 600,
+     "of": 4660,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8716666666666667,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8716666666666667,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0,
+      "speakers": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5382985612836014,
+       "margin_p10": 0.4567067066475159,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 1277,
+       "acc": 1.0,
+       "margin_mean": 0.5191783734712072,
+       "margin_p10": 0.4224695697623858,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 600,
+       "acc": 1.0,
+       "margin_mean": 0.5079246809661504,
+       "margin_p10": 0.4056013706864729,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 77,
+       "acc": 1.0,
+       "margin_mean": 0.4578810074400065,
+       "margin_p10": 0.4001400255897797,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 157,
+       "acc": 1.0,
+       "margin_mean": 0.5280576484652992,
+       "margin_p10": 0.46957537998105714,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24405174310030367,
+     "status": {
+      "ok": 576,
+      "abstain": 24
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 81,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 72,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 70,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 65,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 63,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "new_identities": {
+    "catalog candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5616472753201472,
+       "margin_p10": 0.4954082666058337,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5434019144495144,
+       "margin_p10": 0.477926505790978,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5340865510158004,
+       "margin_p10": 0.46994855435505833,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.48089193239108213,
+       "margin_p10": 0.45565967202893987,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23738289858523268,
+     "status": {
+      "ok": 207,
+      "abstain": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    },
+    "experiment candidates": {
+     "n": 210,
+     "of": 210,
+     "acc": {
+      "FULL": 1.0,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 1.0,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "occupancy: unknown filler": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.8571428571428571,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.8571428571428571,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 1.0,
+      "FULL [depth and negation given]": 1.0
+     },
+     "calibration": {
+      "role action": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5616472753201472,
+       "margin_p10": 0.4954082666058337,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 450,
+       "acc": 1.0,
+       "margin_mean": 0.5533644764288002,
+       "margin_p10": 0.48486083217349557,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 210,
+       "acc": 1.0,
+       "margin_mean": 0.5554348981142702,
+       "margin_p10": 0.4907340544823461,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 30,
+       "acc": 1.0,
+       "margin_mean": 0.48089193239108213,
+       "margin_p10": 0.45565967202893987,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.23738289858523268,
+     "status": {
+      "ok": 207,
+      "abstain": 3
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT to the DEST .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "never ACT the ATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 30,
+       "FULL": 1.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 35340,
+     "acc": {
+      "FULL": 0.9966666666666667,
+      "structure (depth, negation)": 1.0,
+      "role action": 1.0,
+      "head action": 1.0,
+      "lexical order head action": 1.0,
+      "lexical bag head action": 1.0,
+      "occupancy: known filler": 1.0,
+      "role patient": 0.9966666666666667,
+      "head patient": 1.0,
+      "lexical order head patient": 1.0,
+      "lexical bag head patient": 1.0,
+      "role destination": 1.0,
+      "head destination": 1.0,
+      "lexical order head destination": 0.88,
+      "lexical bag head destination": 1.0,
+      "occupancy: not given": 1.0,
+      "speakers": 1.0,
+      "heads FULL (model)": 1.0,
+      "heads FULL (lexical order baseline)": 0.88,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 1.0,
+      "FULL [depth given]": 0.9966666666666667,
+      "FULL [depth and negation given]": 0.9966666666666667
+     },
+     "calibration": {
+      "role action": {
+       "n": 300,
+       "acc": 1.0,
+       "margin_mean": 0.5365180637323739,
+       "margin_p10": 0.447383526716103,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 636,
+       "acc": 0.9984276729559748,
+       "margin_mean": 0.5133172864988629,
+       "margin_p10": 0.4222405956215106,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0015723270440251573,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.02": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.05": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.10": [
+         0.9984276729559748,
+         1.0
+        ],
+        "0.15": [
+         0.9984276729559748,
+         1.0
+        ]
+       }
+      },
+      "role patient": {
+       "n": 300,
+       "acc": 0.9966666666666667,
+       "margin_mean": 0.49793299119013645,
+       "margin_p10": 0.4038182060034699,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0033333333333333335,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.02": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.05": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.10": [
+         0.9966666666666667,
+         1.0
+        ],
+        "0.15": [
+         0.9966666666666667,
+         1.0
+        ]
+       }
+      },
+      "speakers": {
+       "n": 93,
+       "acc": 1.0,
+       "margin_mean": 0.5291940234670689,
+       "margin_p10": 0.4806983437650867,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      },
+      "role destination": {
+       "n": 36,
+       "acc": 1.0,
+       "margin_mean": 0.4481799371256579,
+       "margin_p10": 0.3950304198109606,
+       "tau": 0.05,
+       "coverage": 1.0,
+       "confident_wrong": 0.0,
+       "abstain_right": 0.0,
+       "abstain_wrong": 0.0,
+       "acc_at_coverage": {
+        "0.00": [
+         1.0,
+         1.0
+        ],
+        "0.02": [
+         1.0,
+         1.0
+        ],
+        "0.05": [
+         1.0,
+         1.0
+        ],
+        "0.10": [
+         1.0,
+         1.0
+        ],
+        "0.15": [
+         1.0,
+         1.0
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.24943680872522825,
+     "status": {
+      "ok": 288,
+      "abstain": 12
+     },
+     "worst_formulations": [
+      {
+       "formulation": "ACT the NATTR PAT .",
+       "n": 24,
+       "FULL": 0.9583333333333334
+      },
+      {
+       "formulation": "do not ACT the ATTR PAT .",
+       "n": 41,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the ATTR PAT .",
+       "n": 35,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "do not ACT the NATTR PAT .",
+       "n": 33,
+       "FULL": 1.0
+      },
+      {
+       "formulation": "ACT the PAT that are not ATTR .",
+       "n": 27,
+       "FULL": 1.0
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "training": [
+  {
+   "t_train_s": 88.1,
+   "calibration": {
+    "presence:action": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "attr_presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:destination": {
+     "mean_present": 0.9666283118601879,
+     "mean_absent": 0.027975814968398308,
+     "threshold": 0.4973020634142931,
+     "n_present": 57,
+     "n_absent": 343
+    }
+   },
+   "gates": {
+    ".": 0.0005062373911772823,
+    "ACT": 0.0002801711097046793,
+    "ATTR": 0.7366587949897001,
+    "DEST": 0.8161578033559606,
+    "NATTR": 0.0007009935630596419,
+    "PAT": 0.4249055523000273,
+    "PRINC": 0.02080857610193041,
+    "are": 0.0023055858568302038,
+    "asks": 0.008154406556086374,
+    "do": 0.9997794903650317,
+    "never": 0.9983215064507026,
+    "not": 0.3198796245137463,
+    "says": 0.008805866672404516,
+    "that": 0.9986545619622919,
+    "the": 0.999548807853209,
+    "to": 0.00018249703656414998,
+    "unknown": 0.11920292202211755
+   },
+   "numpy_torch_diff": 1.0922912394602231e-07,
+   "kinds": {
+    "tokens": 312906,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 87.6,
+   "calibration": {
+    "presence:action": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "attr_presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:destination": {
+     "mean_present": 0.983220892740198,
+     "mean_absent": 0.022528918128108137,
+     "threshold": 0.502874905434153,
+     "n_present": 66,
+     "n_absent": 334
+    }
+   },
+   "gates": {
+    ".": 0.0005554102239534797,
+    "ACT": 0.0003418601815438618,
+    "ATTR": 0.0011798284911278575,
+    "DEST": 0.8069913764380561,
+    "NATTR": 0.8496427870749432,
+    "PAT": 0.4777113562439084,
+    "PRINC": 0.0005164130429041616,
+    "are": 0.00039643763804873437,
+    "asks": 0.0008895545418521697,
+    "do": 0.999734671112689,
+    "never": 0.9989060762411496,
+    "not": 0.36629369764157504,
+    "says": 0.00039509435356592954,
+    "that": 0.7028169683290764,
+    "the": 0.9996085305650442,
+    "to": 0.9529805912300423,
+    "unknown": 0.11920292202211755
+   },
+   "numpy_torch_diff": 1.1200282244765946e-07,
+   "kinds": {
+    "tokens": 312906,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 87.6,
+   "calibration": {
+    "presence:action": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "attr_presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:destination": {
+     "mean_present": 0.9936734326929022,
+     "mean_absent": 0.04093595333232227,
+     "threshold": 0.5173046930126123,
+     "n_present": 67,
+     "n_absent": 333
+    }
+   },
+   "gates": {
+    ".": 0.0005998154072598044,
+    "ACT": 0.00027839657502828723,
+    "ATTR": 0.0007533627977010392,
+    "DEST": 0.6890570042480278,
+    "NATTR": 0.7970521251905439,
+    "PAT": 0.4296506894795602,
+    "PRINC": 0.08748583957342985,
+    "are": 0.0005265422210884265,
+    "asks": 0.001965865976272749,
+    "do": 0.9997897301984904,
+    "never": 0.9987901003212064,
+    "not": 0.30450059183817035,
+    "says": 0.001548021871707181,
+    "that": 0.9979570160892316,
+    "the": 0.999595156015188,
+    "to": 0.15909835128852773,
+    "unknown": 0.11920292202211755
+   },
+   "numpy_torch_diff": 1.1058663666833693e-07,
+   "kinds": {
+    "tokens": 312906,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 85.7,
+   "calibration": {
+    "presence:action": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "attr_presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:destination": {
+     "mean_present": 1.0036395304401275,
+     "mean_absent": 0.035086370046940034,
+     "threshold": 0.5193629502435337,
+     "n_present": 46,
+     "n_absent": 354
+    }
+   },
+   "gates": {
+    ".": 0.0002840723824207665,
+    "ACT": 0.00040950098837969545,
+    "ATTR": 0.0012899126198920917,
+    "DEST": 0.7499812904007386,
+    "NATTR": 0.8142707233689414,
+    "PAT": 0.3672057785588376,
+    "PRINC": 0.999752955753867,
+    "are": 0.0001596821237764778,
+    "asks": 0.0003902396099903708,
+    "do": 0.9986436671366786,
+    "never": 0.9990273352318447,
+    "not": 0.9094907410964499,
+    "says": 0.0006200263777655869,
+    "that": 0.23904021407654058,
+    "the": 0.9996843557225854,
+    "to": 0.0006149018122092196,
+    "unknown": 0.11920292202211755
+   },
+   "numpy_torch_diff": 1.1707691745059527e-07,
+   "kinds": {
+    "tokens": 312906,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 86.7,
+   "calibration": {
+    "presence:action": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "attr_presence:patient": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:destination": {
+     "mean_present": 1.0062597597685572,
+     "mean_absent": 0.05273784566819336,
+     "threshold": 0.5294988027183752,
+     "n_present": 61,
+     "n_absent": 339
+    }
+   },
+   "gates": {
+    ".": 0.0007081758534854069,
+    "ACT": 0.0003048598530749078,
+    "ATTR": 0.006899619434650993,
+    "DEST": 0.7457104648485978,
+    "NATTR": 0.5802161381314273,
+    "PAT": 0.5317435859797278,
+    "PRINC": 0.03880822469697606,
+    "are": 0.0003807014979757195,
+    "asks": 0.003495543760344239,
+    "do": 0.9997213098453968,
+    "never": 0.9986500727810534,
+    "not": 0.2199662547754029,
+    "says": 0.004396909606871051,
+    "that": 0.9986906702241222,
+    "the": 0.99957953526128,
+    "to": 0.00024056339098256537,
+    "unknown": 0.11920292202211755
+   },
+   "numpy_torch_diff": 1.080380770634951e-07,
+   "kinds": {
+    "tokens": 312906,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  }
+ ],
+ "labels_rule22": "every number BUILT by this run",
+ "mean_over_seeds": {
+  "heldout_depth2": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 0.5904761904761905,
+     "std": 0.05870870479018075
+    },
+    "structure (depth, negation)": {
+     "mean": 0.6838095238095238,
+     "std": 0.06526415885337832
+    },
+    "role action": {
+     "mean": 0.9980952380952381,
+     "std": 0.003809523809523796
+    },
+    "head action": {
+     "mean": 0.9980952380952381,
+     "std": 0.003809523809523796
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 0.9982222222222223,
+     "std": 0.0021773242158072835
+    },
+    "role patient": {
+     "mean": 0.779047619047619,
+     "std": 0.05089672082242815
+    },
+    "head patient": {
+     "mean": 0.9714285714285715,
+     "std": 0.031298431857438073
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 0.9866666666666667,
+     "std": 0.01766403522951565
+    },
+    "head destination": {
+     "mean": 0.9866666666666667,
+     "std": 0.01766403522951565
+    },
+    "lexical order head destination": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 0.9047619047619048,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 0.9888888888888889,
+     "std": 0.022222222222222233
+    },
+    "speakers": {
+     "mean": 0.7923809523809523,
+     "std": 0.033346936000022094
+    },
+    "heads FULL (model)": {
+     "mean": 0.9580952380952381,
+     "std": 0.03884967248451645
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.9047619047619048,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.8571428571428571,
+     "std": 0.024835056781724374
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.8571428571428571,
+     "std": 0.024835056781724374
+    }
+   },
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.5904761904761905,
+     "std": 0.05870870479018075
+    },
+    "structure (depth, negation)": {
+     "mean": 0.6838095238095238,
+     "std": 0.06526415885337832
+    },
+    "role action": {
+     "mean": 0.9980952380952381,
+     "std": 0.003809523809523796
+    },
+    "head action": {
+     "mean": 0.9980952380952381,
+     "std": 0.003809523809523796
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 0.9982222222222223,
+     "std": 0.0021773242158072835
+    },
+    "role patient": {
+     "mean": 0.779047619047619,
+     "std": 0.05089672082242815
+    },
+    "head patient": {
+     "mean": 0.9714285714285715,
+     "std": 0.031298431857438073
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 0.9866666666666667,
+     "std": 0.01766403522951565
+    },
+    "head destination": {
+     "mean": 0.9866666666666667,
+     "std": 0.01766403522951565
+    },
+    "lexical order head destination": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 0.9047619047619048,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 0.9888888888888889,
+     "std": 0.022222222222222233
+    },
+    "speakers": {
+     "mean": 0.7923809523809523,
+     "std": 0.033346936000022094
+    },
+    "heads FULL (model)": {
+     "mean": 0.9580952380952381,
+     "std": 0.03884967248451645
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.9047619047619048,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.8571428571428571,
+     "std": 0.024835056781724374
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.8571428571428571,
+     "std": 0.024835056781724374
+    }
+   }
+  },
+  "heldout_sentences": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role patient": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head destination": {
+     "mean": 0.8716666666666667,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8716666666666667,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "speakers": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   },
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role patient": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head destination": {
+     "mean": 0.8716666666666667,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8716666666666667,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.9996666666666666,
+     "std": 0.000666666666666682
+    },
+    "speakers": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   }
+  },
+  "new_identities": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: unknown filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head destination": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth and negation given]": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   },
+   "experiment candidates": {
+    "FULL": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: unknown filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head destination": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "lexical bag head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8571428571428571,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth and negation given]": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   }
+  },
+  "train (sample)": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 0.9986666666666666,
+     "std": 0.0016329931618554352
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head action": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role patient": {
+     "mean": 0.9986666666666666,
+     "std": 0.0016329931618554352
+    },
+    "head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head patient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head destination": {
+     "mean": 0.8800000000000001,
+     "std": 1.1102230246251565e-16
+    },
+    "lexical bag head destination": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "speakers": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.8800000000000001,
+     "std": 1.1102230246251565e-16
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.9986666666666666,
+     "std": 0.0016329931618554352
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.9986666666666666,
+     "std": 0.0016329931618554352
+    }
+   }
+  }
+ }
+}

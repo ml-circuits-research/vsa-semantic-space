@@ -1,0 +1,105 @@
+{
+ "version": 2,
+ "roles": [
+  {
+   "id": "agent",
+   "question": "who gives?"
+  },
+  {
+   "id": "object",
+   "question": "what?"
+  },
+  {
+   "id": "recipient",
+   "question": "to whom?"
+  }
+ ],
+ "events": [
+  {
+   "id": "transfer",
+   "verbs": [
+    "give",
+    "receive"
+   ]
+  },
+  {
+   "id": "sale",
+   "verbs": [
+    "sell",
+    "buy"
+   ]
+  },
+  {
+   "id": "shipment",
+   "verbs": [
+    "send",
+    "get"
+   ]
+  },
+  {
+   "id": "loan",
+   "verbs": [
+    "lend",
+    "borrow"
+   ]
+  },
+  {
+   "id": "display",
+   "verbs": [
+    "show",
+    "see"
+   ]
+  },
+  {
+   "id": "proposal",
+   "verbs": [
+    "offer",
+    "accept"
+   ]
+  }
+ ],
+ "operators": [
+  "says"
+ ],
+ "moods": [
+  "statement"
+ ],
+ "kinds": {
+  "source": "lexicon",
+  "lexicon": "kinds.tsv"
+ },
+ "values": [],
+ "reader": {
+  "predicate_role": false,
+  "occupancy_marker": false,
+  "definite_dets": [
+   "the"
+  ],
+  "scope_terms": {
+   "wide": [
+    "each",
+    "a certain"
+   ],
+   "q": [
+    "every",
+    "some"
+   ]
+  },
+  "scope_rule": "R_wide present -> that slot is wide; one R_q -> the quantifier; two R_q and no R_wide -> both; _scope written only with two or more quantified slots (absent with zero or one: det= on the entity says the word)",
+  "rel_emitters": {
+   "emitters": [
+    "every",
+    "each",
+    "some",
+    "certain"
+   ],
+   "takers": [
+    "NP",
+    "NO"
+   ]
+  },
+  "full_excludes": [
+   "det"
+  ]
+ }
+}

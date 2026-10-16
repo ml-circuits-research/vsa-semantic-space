@@ -1,0 +1,125 @@
+# P0 GPU 5 seeds, commit c843f53, 2026-10-16T22:49:35+02:00; worlds exported to /tmp/sop_p0_gpu_UDCz; runs in /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53
+export_worlds: n=30000 training-distribution sentences per world, n_eval=30 per eval template/form, seed 0
+  reference: /tmp/sop_p0_gpu_UDCz/reference — files train.sop (30000), eval_new_identities.sop (240), eval_role_cues_seen.sop (60), eval_unseen_transitions.sop (180), eval_seen_transitions.sop (60), eval_depth3_unseen.sop (120); legend sha256:a90d0a429f56…
+export_worlds: n=40000 training-distribution sentences per world, n_eval=30 per eval template/form, seed 0
+  commands: /tmp/sop_p0_gpu_UDCz/commands — files train.sop (40000), eval_new_identities.sop (210), eval_depth2_unseen.sop (105); legend sha256:0782b57ac430…
+  quantifiers: /tmp/sop_qv1_wif93nsy/quantifiers — files train.sop (40000), eval_new_identities.sop (180), eval_depth2_quantified_unseen.sop (90), eval_depth2_affirmative.sop (90); legend sha256:c4e983c31aba…
+  quantifiers: /tmp/sop_p0_gpu_UDCz/quantifiers — files train.sop (40000), eval_new_identities.sop (180), eval_depth2_quantified_unseen.sop (90), eval_depth2_affirmative.sop (90), eval_ambiguous_d0.sop (90); legend sha256:c52ccef3fc2e…
+[train seed 0] end: RSS 2.64 GB | torch alloc 0.59 GB reserved 0.65 GB | MemAvailable 112.6 GB (127s)
+[export] numpy reader vs torch states: max relative difference 1.12e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth3: FULL catalog candidates 0.700 | experiment candidates 0.700 | residual 0.671
+[eval] seed 0 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.592
+[eval] seed 0 heldout_formulations_seen_transitions: FULL catalog candidates 0.683 | experiment candidates 0.683 | residual 0.686
+[eval] seed 0 heldout_formulations_unseen_transitions: FULL catalog candidates 0.506 | experiment candidates 0.506 | residual 0.759
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.391
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.394
+[eval] seed 0 train (sample): FULL catalog candidates 0.993 | residual 0.385
+[train seed 1] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (126s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth3: FULL catalog candidates 0.692 | experiment candidates 0.692 | residual 0.642
+[eval] seed 1 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.587
+[eval] seed 1 heldout_formulations_seen_transitions: FULL catalog candidates 0.583 | experiment candidates 0.583 | residual 0.656
+[eval] seed 1 heldout_formulations_unseen_transitions: FULL catalog candidates 0.489 | experiment candidates 0.489 | residual 0.774
+[eval] seed 1 heldout_sentences: FULL catalog candidates 0.977 | experiment candidates 0.977 | residual 0.394
+[eval] seed 1 new_identities: FULL catalog candidates 0.988 | experiment candidates 1.000 | residual 0.400
+[eval] seed 1 train (sample): FULL catalog candidates 0.977 | residual 0.386
+[train seed 2] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.14e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth3: FULL catalog candidates 0.750 | experiment candidates 0.750 | residual 0.652
+[eval] seed 2 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.597
+[eval] seed 2 heldout_formulations_seen_transitions: FULL catalog candidates 0.617 | experiment candidates 0.617 | residual 0.673
+[eval] seed 2 heldout_formulations_unseen_transitions: FULL catalog candidates 0.667 | experiment candidates 0.667 | residual 0.752
+[eval] seed 2 heldout_sentences: FULL catalog candidates 0.975 | experiment candidates 0.975 | residual 0.393
+[eval] seed 2 new_identities: FULL catalog candidates 0.983 | experiment candidates 1.000 | residual 0.394
+[eval] seed 2 train (sample): FULL catalog candidates 0.980 | residual 0.383
+[train seed 3] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (124s)
+[export] numpy reader vs torch states: max relative difference 1.21e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth3: FULL catalog candidates 0.792 | experiment candidates 0.792 | residual 0.637
+[eval] seed 3 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.588
+[eval] seed 3 heldout_formulations_seen_transitions: FULL catalog candidates 0.733 | experiment candidates 0.733 | residual 0.659
+[eval] seed 3 heldout_formulations_unseen_transitions: FULL catalog candidates 0.656 | experiment candidates 0.661 | residual 0.749
+[eval] seed 3 heldout_sentences: FULL catalog candidates 0.973 | experiment candidates 0.977 | residual 0.392
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.398
+[eval] seed 3 train (sample): FULL catalog candidates 0.980 | residual 0.382
+[train seed 4] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.17e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth3: FULL catalog candidates 0.775 | experiment candidates 0.775 | residual 0.662
+[eval] seed 4 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.614
+[eval] seed 4 heldout_formulations_seen_transitions: FULL catalog candidates 0.683 | experiment candidates 0.683 | residual 0.715
+[eval] seed 4 heldout_formulations_unseen_transitions: FULL catalog candidates 0.506 | experiment candidates 0.506 | residual 0.792
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.388
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.395
+[eval] seed 4 train (sample): FULL catalog candidates 0.997 | residual 0.382
+[done] model written to /tmp/sop_p0_gpu_UDCz/reference/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/reference/train.log
+[train seed 0] end: RSS 2.80 GB | torch alloc 0.64 GB reserved 0.71 GB | MemAvailable 112.4 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.09e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth2: FULL catalog candidates 0.552 | experiment candidates 0.552 | residual 0.915
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.242
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.238
+[eval] seed 0 train (sample): FULL catalog candidates 0.997 | residual 0.247
+[train seed 1] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.12e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth2: FULL catalog candidates 0.571 | experiment candidates 0.571 | residual 0.914
+[eval] seed 1 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.236
+[eval] seed 1 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.234
+[eval] seed 1 train (sample): FULL catalog candidates 1.000 | residual 0.241
+[train seed 2] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth2: FULL catalog candidates 0.705 | experiment candidates 0.705 | residual 0.902
+[eval] seed 2 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.242
+[eval] seed 2 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.235
+[eval] seed 2 train (sample): FULL catalog candidates 1.000 | residual 0.247
+[train seed 3] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (86s)
+[export] numpy reader vs torch states: max relative difference 1.17e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth2: FULL catalog candidates 0.581 | experiment candidates 0.581 | residual 0.915
+[eval] seed 3 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.240
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.237
+[eval] seed 3 train (sample): FULL catalog candidates 1.000 | residual 0.245
+[train seed 4] end: RSS 3.33 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 111.9 GB (87s)
+[export] numpy reader vs torch states: max relative difference 1.08e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth2: FULL catalog candidates 0.543 | experiment candidates 0.543 | residual 0.906
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.244
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.237
+[eval] seed 4 train (sample): FULL catalog candidates 0.997 | residual 0.249
+[done] model written to /tmp/sop_p0_gpu_UDCz/commands/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/commands/train.log
+[train seed 0] end: RSS 3.00 GB | torch alloc 0.76 GB reserved 0.81 GB | MemAvailable 112.1 GB (225s)
+[export] numpy reader vs torch states: max relative difference 1.06e-07 (float32 phases in the route book)
+[eval] seed 0 ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.474
+[eval] seed 0 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.459
+[eval] seed 0 heldout_depth2_quantified: FULL catalog candidates 0.989 | experiment candidates 0.989 | residual 0.622
+[eval] seed 0 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.500
+[eval] seed 0 new_identities: FULL catalog candidates 0.994 | experiment candidates 0.994 | residual 0.571
+[eval] seed 0 train (sample): FULL catalog candidates 1.000 | residual 0.502
+[train seed 1] end: RSS 3.56 GB | torch alloc 0.76 GB reserved 0.84 GB | MemAvailable 111.5 GB (222s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 1 ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.501
+[eval] seed 1 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.489
+[eval] seed 1 heldout_depth2_quantified: FULL catalog candidates 0.956 | experiment candidates 0.956 | residual 0.635
+[eval] seed 1 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.520
+[eval] seed 1 new_identities: FULL catalog candidates 0.989 | experiment candidates 0.989 | residual 0.580
+[eval] seed 1 train (sample): FULL catalog candidates 0.997 | residual 0.522
+[train seed 2] end: RSS 3.53 GB | torch alloc 0.76 GB reserved 0.84 GB | MemAvailable 111.6 GB (224s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 2 ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.476
+[eval] seed 2 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.466
+[eval] seed 2 heldout_depth2_quantified: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.630
+[eval] seed 2 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.498
+[eval] seed 2 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.567
+[eval] seed 2 train (sample): FULL catalog candidates 1.000 | residual 0.504
+[train seed 3] end: RSS 3.53 GB | torch alloc 0.76 GB reserved 0.85 GB | MemAvailable 111.6 GB (223s)
+[export] numpy reader vs torch states: max relative difference 1.13e-07 (float32 phases in the route book)
+[eval] seed 3 ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both): FULL catalog candidates 0.967 | experiment candidates 0.967 | residual 0.520
+[eval] seed 3 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.502
+[eval] seed 3 heldout_depth2_quantified: FULL catalog candidates 0.944 | experiment candidates 0.944 | residual 0.656
+[eval] seed 3 heldout_sentences: FULL catalog candidates 0.993 | experiment candidates 0.993 | residual 0.541
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.604
+[eval] seed 3 train (sample): FULL catalog candidates 0.987 | residual 0.542
+[train seed 4] end: RSS 3.53 GB | torch alloc 0.76 GB reserved 0.84 GB | MemAvailable 111.6 GB (224s)
+[export] numpy reader vs torch states: max relative difference 1.07e-07 (float32 phases in the route book)
+[eval] seed 4 ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both): FULL catalog candidates 0.967 | experiment candidates 0.967 | residual 0.517
+[eval] seed 4 depth2_affirmative (seen depth, fresh sentences): FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.502
+[eval] seed 4 heldout_depth2_quantified: FULL catalog candidates 0.922 | experiment candidates 0.922 | residual 0.653
+[eval] seed 4 heldout_sentences: FULL catalog candidates 0.983 | experiment candidates 0.983 | residual 0.538
+[eval] seed 4 new_identities: FULL catalog candidates 0.983 | experiment candidates 0.983 | residual 0.606
+[eval] seed 4 train (sample): FULL catalog candidates 0.993 | residual 0.538
+[done] model written to /tmp/sop_p0_gpu_UDCz/quantifiers/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/quantifiers/train.log

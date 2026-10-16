@@ -1,0 +1,115 @@
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/reference/splits.json before training: heldout_depth3 120, heldout_formulations_role_cues_seen 60, heldout_formulations_seen_transitions 60, heldout_formulations_unseen_transitions 180, heldout_sentences 3072, new_identities 240, train 26928
+[schema] roles ['agent', 'object', 'recipient'] (core ['agent', 'object']), max depth 2, event negation False
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+[train] seed 0: 26928 training rows x 1 epoch(s) -> 26928 steps' sentences; D=1024; kinds 33; vocab 67; predicate lemma not found in 0 targets
+[trace] text: to p7 , p9 sells o3 .
+[trace] tokens/kinds: to/to p7/P ,/, p9/P sells/sells o3/O ./.
+[trace] gold frame: {"event": "sale", "lemma": "sell", "neg": false, "roles": {"agent": ["word", "p9"], "object": ["word", "o3"], "recipient": ["word", "p7"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 84.50 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 1.74 GB | torch alloc 0.45 GB reserved 0.49 GB | MemAvailable 113.5 GB
+[train seed 0] step 500 sent 4000/26928 loss -0.842 (19s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.3 GB
+[train seed 0] step 1000 sent 8000/26928 loss -0.892 (38s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.4 GB
+[train seed 0] step 1500 sent 12000/26928 loss -0.901 (56s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.4 GB
+[train seed 0] step 2000 sent 16000/26928 loss -0.897 (75s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.4 GB
+[train seed 0] step 2500 sent 20000/26928 loss -0.908 (94s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.4 GB
+[train seed 0] step 3000 sent 24000/26928 loss -0.928 (113s) | RSS 2.64 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.4 GB
+[train seed 0] end: RSS 2.64 GB | torch alloc 0.59 GB reserved 0.65 GB | MemAvailable 112.6 GB (127s)
+[export] numpy reader vs torch states: max relative difference 1.12e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth3: FULL catalog candidates 0.700 | experiment candidates 0.700 | residual 0.671
+[eval] seed 0 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.592
+[eval] seed 0 heldout_formulations_seen_transitions: FULL catalog candidates 0.683 | experiment candidates 0.683 | residual 0.686
+[eval] seed 0 heldout_formulations_unseen_transitions: FULL catalog candidates 0.506 | experiment candidates 0.506 | residual 0.759
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.391
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.394
+[eval] seed 0 train (sample): FULL catalog candidates 0.993 | residual 0.385
+[mem] after seed 0: RSS 2.29 GB | torch alloc 0.06 GB reserved 0.65 GB | MemAvailable 113.0 GB
+[train] seed 1: 26928 training rows x 1 epoch(s) -> 26928 steps' sentences; D=1024; kinds 33; vocab 67; predicate lemma not found in 0 targets
+[trace] text: to p7 , p9 sells o3 .
+[trace] tokens/kinds: to/to p7/P ,/, p9/P sells/sells o3/O ./.
+[trace] gold frame: {"event": "sale", "lemma": "sell", "neg": false, "roles": {"agent": ["word", "p9"], "object": ["word", "o3"], "recipient": ["word", "p7"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 81.92 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 3.04 GB | torch alloc 0.51 GB reserved 0.65 GB | MemAvailable 112.2 GB
+[train seed 1] step 500 sent 4000/26928 loss -0.744 (19s) | RSS 3.04 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] step 1000 sent 8000/26928 loss -0.872 (37s) | RSS 3.04 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] step 1500 sent 12000/26928 loss -0.894 (56s) | RSS 3.04 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] step 2000 sent 16000/26928 loss -0.895 (75s) | RSS 3.04 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] step 2500 sent 20000/26928 loss -0.906 (94s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] step 3000 sent 24000/26928 loss -0.929 (113s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 1] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (126s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth3: FULL catalog candidates 0.692 | experiment candidates 0.692 | residual 0.642
+[eval] seed 1 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.587
+[eval] seed 1 heldout_formulations_seen_transitions: FULL catalog candidates 0.583 | experiment candidates 0.583 | residual 0.656
+[eval] seed 1 heldout_formulations_unseen_transitions: FULL catalog candidates 0.489 | experiment candidates 0.489 | residual 0.774
+[eval] seed 1 heldout_sentences: FULL catalog candidates 0.977 | experiment candidates 0.977 | residual 0.394
+[eval] seed 1 new_identities: FULL catalog candidates 0.988 | experiment candidates 1.000 | residual 0.400
+[eval] seed 1 train (sample): FULL catalog candidates 0.977 | residual 0.386
+[mem] after seed 1: RSS 2.62 GB | torch alloc 0.06 GB reserved 0.61 GB | MemAvailable 112.7 GB
+[train] seed 2: 26928 training rows x 1 epoch(s) -> 26928 steps' sentences; D=1024; kinds 33; vocab 67; predicate lemma not found in 0 targets
+[trace] text: to p7 , p9 sells o3 .
+[trace] tokens/kinds: to/to p7/P ,/, p9/P sells/sells o3/O ./.
+[trace] gold frame: {"event": "sale", "lemma": "sell", "neg": false, "roles": {"agent": ["word", "p9"], "object": ["word", "o3"], "recipient": ["word", "p7"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 83.83 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 3.05 GB | torch alloc 0.51 GB reserved 0.61 GB | MemAvailable 112.3 GB
+[train seed 2] step 500 sent 4000/26928 loss -0.749 (19s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] step 1000 sent 8000/26928 loss -0.853 (37s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] step 1500 sent 12000/26928 loss -0.878 (55s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] step 2000 sent 16000/26928 loss -0.882 (74s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] step 2500 sent 20000/26928 loss -0.906 (92s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] step 3000 sent 24000/26928 loss -0.927 (111s) | RSS 3.05 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 2] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.14e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth3: FULL catalog candidates 0.750 | experiment candidates 0.750 | residual 0.652
+[eval] seed 2 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.597
+[eval] seed 2 heldout_formulations_seen_transitions: FULL catalog candidates 0.617 | experiment candidates 0.617 | residual 0.673
+[eval] seed 2 heldout_formulations_unseen_transitions: FULL catalog candidates 0.667 | experiment candidates 0.667 | residual 0.752
+[eval] seed 2 heldout_sentences: FULL catalog candidates 0.975 | experiment candidates 0.975 | residual 0.393
+[eval] seed 2 new_identities: FULL catalog candidates 0.983 | experiment candidates 1.000 | residual 0.394
+[eval] seed 2 train (sample): FULL catalog candidates 0.980 | residual 0.383
+[mem] after seed 2: RSS 2.62 GB | torch alloc 0.06 GB reserved 0.61 GB | MemAvailable 112.7 GB
+[train] seed 3: 26928 training rows x 1 epoch(s) -> 26928 steps' sentences; D=1024; kinds 33; vocab 67; predicate lemma not found in 0 targets
+[trace] text: to p7 , p9 sells o3 .
+[trace] tokens/kinds: to/to p7/P ,/, p9/P sells/sells o3/O ./.
+[trace] gold frame: {"event": "sale", "lemma": "sell", "neg": false, "roles": {"agent": ["word", "p9"], "object": ["word", "o3"], "recipient": ["word", "p7"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 87.94 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 3] start: RSS 3.03 GB | torch alloc 0.51 GB reserved 0.61 GB | MemAvailable 112.3 GB
+[train seed 3] step 500 sent 4000/26928 loss -0.744 (18s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] step 1000 sent 8000/26928 loss -0.835 (37s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] step 1500 sent 12000/26928 loss -0.886 (55s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] step 2000 sent 16000/26928 loss -0.890 (74s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] step 2500 sent 20000/26928 loss -0.907 (92s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] step 3000 sent 24000/26928 loss -0.928 (111s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 3] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (124s)
+[export] numpy reader vs torch states: max relative difference 1.21e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth3: FULL catalog candidates 0.792 | experiment candidates 0.792 | residual 0.637
+[eval] seed 3 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.588
+[eval] seed 3 heldout_formulations_seen_transitions: FULL catalog candidates 0.733 | experiment candidates 0.733 | residual 0.659
+[eval] seed 3 heldout_formulations_unseen_transitions: FULL catalog candidates 0.656 | experiment candidates 0.661 | residual 0.749
+[eval] seed 3 heldout_sentences: FULL catalog candidates 0.973 | experiment candidates 0.977 | residual 0.392
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.398
+[eval] seed 3 train (sample): FULL catalog candidates 0.980 | residual 0.382
+[mem] after seed 3: RSS 2.64 GB | torch alloc 0.06 GB reserved 0.61 GB | MemAvailable 112.7 GB
+[train] seed 4: 26928 training rows x 1 epoch(s) -> 26928 steps' sentences; D=1024; kinds 33; vocab 67; predicate lemma not found in 0 targets
+[trace] text: to p7 , p9 sells o3 .
+[trace] tokens/kinds: to/to p7/P ,/, p9/P sells/sells o3/O ./.
+[trace] gold frame: {"event": "sale", "lemma": "sell", "neg": false, "roles": {"agent": ["word", "p9"], "object": ["word", "o3"], "recipient": ["word", "p7"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 84.24 (sqrt(D) per unit term = 32.0); initial gates all 0.12 (closed start)
+[train seed 4] start: RSS 3.03 GB | torch alloc 0.51 GB reserved 0.61 GB | MemAvailable 112.3 GB
+[train seed 4] step 500 sent 4000/26928 loss -0.834 (19s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] step 1000 sent 8000/26928 loss -0.885 (37s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] step 1500 sent 12000/26928 loss -0.904 (56s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] step 2000 sent 16000/26928 loss -0.903 (74s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] step 2500 sent 20000/26928 loss -0.908 (93s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] step 3000 sent 24000/26928 loss -0.926 (111s) | RSS 3.03 GB | torch alloc 0.59 GB reserved 0.90 GB | MemAvailable 112.0 GB
+[train seed 4] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.17e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth3: FULL catalog candidates 0.775 | experiment candidates 0.775 | residual 0.662
+[eval] seed 4 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.614
+[eval] seed 4 heldout_formulations_seen_transitions: FULL catalog candidates 0.683 | experiment candidates 0.683 | residual 0.715
+[eval] seed 4 heldout_formulations_unseen_transitions: FULL catalog candidates 0.506 | experiment candidates 0.506 | residual 0.792
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.388
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.395
+[eval] seed 4 train (sample): FULL catalog candidates 0.997 | residual 0.382
+[mem] after seed 4: RSS 2.64 GB | torch alloc 0.06 GB reserved 0.61 GB | MemAvailable 112.7 GB
+[done] model written to /tmp/sop_p0_gpu_UDCz/reference/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/p0_gpu_5seed_c843f53/reference/train.log
+checklist: [x] addresses from the world [x] shared identities [x] chance printed [x] seen/unseen axes separated [x] margin [x] >=3 seeds [x] trivial control (lexical order baseline) [x] calibration (18) [x] memory logged (21) [x] thresholds on calibration rows (25) [x] given vs learned stated (20)
