@@ -57,3 +57,7 @@ Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pyto
 [train seed 2] step 2500 sent 20000/30000 loss -0.938 (97s) | RSS 2.66 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.5 GB
 [train seed 2] step 3000 sent 24000/30000 loss -0.927 (117s) | RSS 2.66 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 111.6 GB
 [train seed 2] step 3500 sent 28000/30000 loss -0.936 (135s) | RSS 2.66 GB | torch alloc 0.64 GB reserved 1.13 GB | MemAvailable 112.2 GB
+[train seed 2] end: RSS 2.66 GB | torch alloc 0.64 GB reserved 0.73 GB | MemAvailable 112.6 GB (145s)
+  seed 2 (145s) 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.608 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000  || presence cos: known 0.35 unknown 0.35 absent 0.04 (thr 0.20 from training rows: known 0.37 / absent 0.04; same-rows midpoint would be 0.19) || gates OPEN: ['by', 'from', 'that', 'to', 'who']
+  relation-marker gates GIVEN open (rule 20, not learned; E1b): ['to', 'by', 'from']
+[train seed 3] start: RSS 2.52 GB | torch alloc 0.56 GB reserved 1.14 GB | MemAvailable 112.3 GB

@@ -2,8 +2,10 @@
 the confident-wrong SELECTED-COLUMN decodings on gold, broken down (a) by the number of columns of the table and (b) by whether the gold column's
 name appears verbatim in the question; plus the agg confident-wrong rate; and a sample of 50 confident-wrong sel cases (seed 0) written to
 logs/audit_confident_wrong_sel_50.jsonl for the team's hand audit (WikiSQL gold carries label noise). Re-scoring only."""
-import json, numpy as np, torch, v11_wikisql as v11
-dev, dtabs = v11.load("dev"); saved = torch.load("logs/.ckpt_v17_reader_frames.pt", weights_only=False); frames = saved["frames"]; tau = 0.05
+import json, sys, numpy as np, torch, v11_wikisql as v11
+FR = sys.argv[1] if len(sys.argv) > 1 else "logs/.ckpt_v17_reader_frames.pt"      # 4c: the frames of a reader trained on 1k / 5k questions
+dev, dtabs = v11.load("dev"); saved = torch.load(FR, weights_only=False); frames = saved["frames"]; tau = 0.05
+print(f"frames: {FR} (reader trained on {saved.get('n_train', 56355)} questions)")
 tok = v11.tok; rows = []
 for i in range(1, len(dev), 2):
     r = dev[i]; f = frames[i]; cols = dtabs[r["table_id"]]; gold = r["sql"]["sel"]; pred, mg = f["sel"]
@@ -21,7 +23,7 @@ for flag in (True, False):
     b = [x for x in rows if x["name_in_q"] == flag]; c = [x for x in b if x["sel_conf"] and not x["sel_right"]]
     print(f"  {'name in question' if flag else 'name NOT in question':22s} | {len(b):5d} | {np.mean([x['sel_right'] for x in b]):.3f} | {len(c)/max(len(b),1):.3f} | {len(c)/max(len(cw),1):.3f}")
 rng = np.random.default_rng(0); pick = rng.choice(len(cw), min(50, len(cw)), replace=False)
-with open("logs/audit_confident_wrong_sel_50.jsonl", "w") as fh:
+with open("logs/audit_confident_wrong_sel_50.jsonl" if FR.endswith("frames.pt") else "logs/.audit_tmp.jsonl", "w") as fh:   # the audit file is written only for the full reader
     for j in pick: fh.write(json.dumps({k: cw[j][k] for k in ("i", "table_id", "question", "gold_col", "pred_col", "margin", "n_cols", "name_in_q")} | {"audit_verdict": None}) + "\n")
 print(f"\n50 confident-wrong selected-column cases (seed 0) written to logs/audit_confident_wrong_sel_50.jsonl for the hand audit (fields: question, gold_col, pred_col, margin; audit_verdict to fill: 'reader wrong' | 'gold noise / ambiguous')")
 print("\nchecklist: [x] re-scoring only, saved frames [x] odd half (report rows) [x] breakdown by table size and lexical match [x] audit sample of stated size and seed [x] confident-wrong at the stated tau (18)")
