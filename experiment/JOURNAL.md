@@ -290,3 +290,6 @@ the rendered order 1.000, the never-trained reversed order 0.98 (E3) / 0.00 (E1,
 quantifier world v2, depth given vs estimated, model sizes merged; 6 tests pass on main; the 5-seed GPU round trip starts after this push.
 Process: a run started from a shell without the venv crashed on import (log removed, lock cleared); run.sh is now launched with the venv active.
 Push = judgment point.
+B5c trace (trace_b5c.py, logs/trace_b5c.txt, no training): (a) and (b) reachable for every word except the subject before its stacked
+operators, whose address is identical in 'A must give' / 'A must not give' (one re-seating hop = one level) -> STOP per the instruction;
+nothing built (RESULTS 12-bis).

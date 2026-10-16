@@ -18,16 +18,15 @@ STATUS.md; experiment/JOURNAL.md; tool/README.md.
 | rule 27 | criterion on the mean, per-seed list, "5/5 seeds" | — | added; AGENTS.md rules 1-27 |
 | P0 follow-up (agent, merged) | section 6 implemented (LLM steps report "API unavailable"); quantifier world v2 = C2c with `_scope` in exporter / check / formalize (v1 kept under versions/); FULL with depth estimated vs given vs given+negation; model sizes (per-category-pair keys 96-98%: 11.9 / 15.0 / 3.0 MB); p0_full_gpu.sh prepared with the lock | 6 tests PASS on main | 5-seed GPU round trip starts now (GPU free), runs committed under tool/runs/ |
 
-## B. B5c — what the trace must show, and the concern stated before it (instruction after the stop, step 2)
-World: op(X) = R_op (x) f_op + R_lvl (x) X for sentential operators (not, must, may, says); 'if' keeps its two roles; word-level negation unchanged;
-gates learned, nothing given. Trace (rule 11) on "A must not give B to C" / "A does not have to give B to C" at depth 0 and inside one report:
-(a) the operator word's star lands at R_op at its own level; (b) the words after it carry the extra R_lvl.
-Concern, stated before the trace: for the words AFTER both operators (a) and (b) can hold with the existing pair keys (hop into the operator
-word = R_op at its level; hop out of it = R_lvl, as after 'that'). For the SUBJECT, which precedes the two stacked operators in English, the
-chain gives one left re-seating key EL[A <- first open operator]; that key cannot be R_lvl R_A in "A must give" and R_lvl^2 R_A in "A must not
-give" at the same time — unless the first operator's own address differs between the two sentences, which it does not (it is first). If the
-trace shows this, B5c stops per the instruction and the report says: operators that follow their subject are, for the subject, the
-right-announced case inside one clause. The decision is the trace's, not mine.
+## B. B5c — the rule-11 trace ran; the result is a STOP (RESULTS 12-bis, logs/trace_b5c.txt)
+Method independent of key values and training: with the real reader, random parameters (3 draws) and hard gates, the address of every token is
+compared across sentence pairs; two cases with different B5c targets must have different addresses. Result: (a) the operator stars and (b) the
+words after the operators get distinct addresses wherever their targets differ — reachable. The SUBJECT that precedes two stacked operators
+("p0 must give" vs "p0 must not give", also inside a report) has the IDENTICAL address in both sentences in every draw (cos 1.000) while the
+targets differ (cos −0.08): a closed word's address depends on the words before it and on the first open emitter after it only, so it carries
+exactly one operator level. With soft gates the two would differ only through the leak past a partially closed operator gate — not a level.
+Per the instruction: B5c as specified is not implementable without a model change -> STOP, nothing built. Operator-initial forms satisfy the
+condition throughout (which is why every operator so far composed: they all precede what they scope over).
 
 ## C. HYPOTHESIS
 - Order of two stacked wrapping operators: not representable by commutative binding (B5.0: exact collision); B5c is the candidate (PLANNED).
@@ -48,5 +47,7 @@ arrives; the annotator measurement when the API is available; the 5-seed GPU rou
    verifier kept at tau 0.05 with its confident-wrong 0.053 and coverage 0.757 (the row as it stands)?
 4. Section 6's LLM steps exist but have never run (no API); the tool's annotation path is therefore untested end to end. Does the team
    want a key on this machine, or will annotation happen elsewhere?
-5. B5c (B above): if the trace shows the subject problem, the instruction says STOP. Confirm that "operators after their subject" would then
-   be recorded under the declared limit (chapter 8), with B5.0's list as its measured extent, and B5c not run.
+5. B5c stopped at the trace (B above). Confirm the recording: "operators that follow their subject" under the declared limit (chapter 8), with
+   B5.0's list as its measured extent; B5c not run. If a model change is to be considered at all, the trace names exactly what it would have to
+   do: let a closed word be re-seated through ALL open emitters of its clause (a product of hops), not the first one only — that is a change
+   of principle in the reader and is NOT proposed here, only named.

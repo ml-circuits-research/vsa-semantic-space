@@ -1341,3 +1341,25 @@ reversed sentence ("X never says that ...") is read as the trained order (0.000)
 0.72 against bags 1.00 / 0.86) but not along the witness — the 'never' before 'says' does not move the speaker's star under R_neg, because that
 displacement was never trained. The bag control cannot tell E1's pair at all (1.000). This list is the measured extent of the chapter-8 limit
 and the record B5c is judged against.
+
+### 12-bis. B5c — rule 11 trace before the run: operators as levels with an identity term (trace_b5c.py; logs/trace_b5c.txt; no training; real V8 reader, random parameters, 3 draws, HARD gates: operators / auxiliaries / 'to' / 'that' open, content words closed)
+World under test (instruction after the stop, step 2): op(X) = R_op (x) f_op + R_lvl (x) X for sentential operators; targets per token from the
+sentence's operator structure. Method, independent of key values and of training: the ADDRESS of each token (the reader's state with that
+word as the only non-zero identity) is compared across two sentences; a necessary condition for any learnable match is that two cases with
+DIFFERENT targets have DIFFERENT addresses.
+| pair | token | cos(addresses) | cos(targets) | reading |
+|---|---|---|---|---|
+| "p0 must give o0 to p1" vs "p0 must not give o0 to p1" | must | < 1 where targets differ | — | (a) reachable |
+| same | give, o0, p1 | distinct (0.3-0.4 and below) | distinct | (b) reachable: the extra R_lvl can be carried by the hop out of the operator |
+| same | **p0 (the subject)** | **1.000, every draw** | −0.084 | **unlearnable**: identical address, different targets |
+| "p0 does not give" vs "p0 does not have to give" | p0 | **1.000** | −0.084 | unlearnable |
+| "p2 says that p0 must give" vs "... p0 must not give" | p0 | **1.000** | −0.084 | unlearnable (inside a report too) |
+Why: a closed word's address is a function of the words BEFORE it (path, bigram) and of the FIRST open emitter after it (one left re-seating
+key); it never sees the second operator. With hard gates "p0 must give" and "p0 must not give" give the subject the same address in every code.
+With SOFT gates the subject's address would differ only through the leak past the first operator (the share 1 − g_must that re-seats to 'not'
+instead), i.e. a separation that rests on a partially closed operator gate, not on a level — not the mechanism B5c names.
+Verdict, by the instruction's rule: (a) and (b) hold for every word except the subject that PRECEDES its stacked operators; for that subject the
+existing key structure gives exactly one level. B5c as specified is not fully implementable without a model change -> **STOP, report, nothing
+built**. Operator-initial material (an operator before the whole clause: 'perhaps', 'if', a report) satisfies the condition throughout, which is
+why the composition regularity held for every operator so far: those operators all precede what they scope over. The post-subject auxiliary
+("A must not ...") is the right-announced case inside one clause (chapter 8), with B5.0's list as its measured extent.

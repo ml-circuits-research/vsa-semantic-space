@@ -1,0 +1,108 @@
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+trace_b5c (rule 11, before any run): real V8 reader, random parameters, HARD gates (open: must, not, does, have, to, that, says; closed: content words). Pairs of (sentence, token) with different B5c targets must have different reader addresses.
+
+-- parameter draw 0
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | give  | cos(addresses) +0.010 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | o0    | cos(addresses) +0.352 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | to    | cos(addresses) +0.351 | cos(targets) +nan
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p1    | cos(addresses) +0.362 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | does  | cos(addresses) +1.000 | cos(targets) +nan
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | not   | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | give  | cos(addresses) -0.041 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | o0    | cos(addresses) +0.350 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p1    | cos(addresses) +0.340 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p2    | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | says  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | that  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | give  | cos(addresses) -0.042 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | o0    | cos(addresses) +0.406 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | to    | cos(addresses) +0.375 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p1    | cos(addresses) +0.345 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p0    | cos(addresses) +0.686 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | o0    | cos(addresses) -0.018 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | to    | cos(addresses) +0.388 | cos(targets) +nan
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p1    | cos(addresses) +0.381 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p0    | cos(addresses) +0.097 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | must  | cos(addresses) +0.332 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | give  | cos(addresses) +0.350 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | o0    | cos(addresses) +0.369 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | to    | cos(addresses) +0.337 | cos(targets) +nan
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p1    | cos(addresses) +0.387 | cos(targets) -0.084  ok: addresses differ
+-- parameter draw 1
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | give  | cos(addresses) -0.037 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | o0    | cos(addresses) +0.386 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | to    | cos(addresses) +0.313 | cos(targets) +nan
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p1    | cos(addresses) +0.322 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | does  | cos(addresses) +1.000 | cos(targets) +nan
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | not   | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | give  | cos(addresses) -0.010 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | o0    | cos(addresses) +0.288 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p1    | cos(addresses) +0.321 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p2    | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | says  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | that  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | give  | cos(addresses) -0.054 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | o0    | cos(addresses) +0.359 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | to    | cos(addresses) +0.256 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p1    | cos(addresses) +0.328 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p0    | cos(addresses) +0.690 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | o0    | cos(addresses) -0.083 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | to    | cos(addresses) +0.307 | cos(targets) +nan
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p1    | cos(addresses) +0.291 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p0    | cos(addresses) +0.020 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | must  | cos(addresses) +0.362 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | give  | cos(addresses) +0.356 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | o0    | cos(addresses) +0.356 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | to    | cos(addresses) +0.374 | cos(targets) +nan
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p1    | cos(addresses) +0.304 | cos(targets) -0.084  ok: addresses differ
+-- parameter draw 2
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | give  | cos(addresses) -0.085 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | o0    | cos(addresses) +0.277 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | to    | cos(addresses) +0.331 | cos(targets) +nan
+   S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | p1    | cos(addresses) +0.250 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | does  | cos(addresses) +1.000 | cos(targets) +nan
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | not   | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | give  | cos(addresses) +0.015 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | o0    | cos(addresses) +0.308 | cos(targets) -0.084  ok: addresses differ
+   S2 'p0 does not give' vs S4 'p0 does not have to give'       | p1    | cos(addresses) +0.325 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p2    | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | says  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | that  | cos(addresses) +1.000 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p0    | cos(addresses) +1.000 | cos(targets) -0.084  <- IDENTICAL address, DIFFERENT target: unlearnable
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | must  | cos(addresses) +1.000 | cos(targets) +1.000  ok: same address, same target
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | give  | cos(addresses) -0.104 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | o0    | cos(addresses) +0.325 | cos(targets) -0.084  ok: addresses differ
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | to    | cos(addresses) +0.278 | cos(targets) +nan
+   S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must n | p1    | cos(addresses) +0.308 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p0    | cos(addresses) +0.656 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | o0    | cos(addresses) +0.035 | cos(targets) -0.084  ok: addresses differ
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | to    | cos(addresses) +0.392 | cos(targets) +nan
+   S0 'p0 gives o0 to p1' vs S1 'p0 must give o0 to p1'         | p1    | cos(addresses) +0.300 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p0    | cos(addresses) -0.035 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | must  | cos(addresses) +0.302 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | give  | cos(addresses) +0.345 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | o0    | cos(addresses) +0.274 | cos(targets) -0.084  ok: addresses differ
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | to    | cos(addresses) +0.316 | cos(targets) +nan
+   S1 'p0 must give' vs S6 'p2 says that p0 must give' (the sam | p1    | cos(addresses) +0.372 | cos(targets) -0.084  ok: addresses differ
+
+== verdict of the trace (a case is structural when it holds for every parameter draw)
+   STRUCTURAL: S1 'p0 must give o0 to p1' vs S3 'p0 must not give o0 to p1' | token p0: the reader gives it the SAME address in both sentences; the B5c targets differ -> no training can separate them
+   STRUCTURAL: S2 'p0 does not give' vs S4 'p0 does not have to give' | token p0: the reader gives it the SAME address in both sentences; the B5c targets differ -> no training can separate them
+   STRUCTURAL: S6 'p2 says that p0 must give' vs S5 'p2 says that p0 must not give' | token p0: the reader gives it the SAME address in both sentences; the B5c targets differ -> no training can separate them
+   (a) operator stars: 'must' and 'not' get distinct addresses wherever their targets are distinct -> a learned displacement CAN put each at R_op at its level (necessary condition met).
+   (b) words after the operator: 'give', 'o0', 'p1' get distinct addresses in S1 vs S3 and in S2 vs S4 -> the extra R_lvl is reachable (necessary condition met).
+   (c) the SUBJECT 'p0' before the stacked operators: identical address in 'p0 must give' and 'p0 must not give' (and in the two report sentences): a closed word's address is a function of the words BEFORE it and of the FIRST open emitter after it only (path, bigram, left re-seating) — it never sees the second operator.
+   Consequence: with the existing key structure (a) and (b) hold for every word except the subject that precedes its operators; for that subject the one-hop re-seating gives exactly one level. B5c as specified is not fully implementable without a model change -> per the instruction: STOP and report; nothing is built. For operator-initial forms (no subject before the operators) the condition holds throughout.
