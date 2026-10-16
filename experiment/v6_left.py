@@ -14,6 +14,7 @@ The code is called 'chainL' and replaces 'chain' in the bundle: path+chainL+bigr
 Criterion (judgment 2026-10-15): X2 at depth 2 > 0.9, with no PER-ROLE losses in the round 5 table.
 Run: python3 v6_left.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8]   (same world as v5_scale.py)
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v4, v4_torch, v5_scale as v5

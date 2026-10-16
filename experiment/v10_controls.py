@@ -23,6 +23,7 @@ limited rank aligns equally well, the claim narrows to "limited capacity is nece
   - Evaluation: the round-7 table (same decoder with the world's addresses): seen / new identities / new formulations / depths 1-3.
 Run: python3 v10_controls.py [--seeds 5] [--N 30000] [--D 1024]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v5_scale as v5, v6_left as v6, v7_nested as v7

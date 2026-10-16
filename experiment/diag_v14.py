@@ -2,6 +2,7 @@
 Trains one E2 model (seed 0, same regime) and reports, per depth 0/1/2 and per case (one quantifier | two with a marker | ambiguous):
 noun accuracy, determiner accuracy, scope accuracy, FULL; plus the scope-score profile (mean score of the true wide role vs the others)
 and the determiner-threshold check (is the 'the' heuristic what fails at depth 2?). Also: per pattern at depth 0."""
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, numpy as np, torch, v5_scale as v5, v14_quantifiers as q
 
 ap = argparse.ArgumentParser(); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--seed", type=int, default=0); a = ap.parse_args()

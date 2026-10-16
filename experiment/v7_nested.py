@@ -17,6 +17,7 @@ Model: v4 codes (path, chain, bigram) and chainL (v6_left), unchanged; no rule f
 of v5_scale (6 frames x 16 formulations, nesting 0-3). Training depths 0-2, test depth 3.
 Run: python3 v7_nested.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--lang en]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v5_scale as v5, v6_left as v6

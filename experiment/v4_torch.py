@@ -14,6 +14,7 @@ margin, >=3 seeds, trivial control.
 
 Run: python3 v4_torch.py [--lr 0.02] [--seeds 3] [--N 10000] [--D 512] [--batch 1] [--device cuda] [--variants all|all4]  ('toate4' is still accepted)
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time, sys
 import numpy as np, torch
 import v2, v4

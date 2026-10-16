@@ -2,6 +2,7 @@
 Model: v8 bundle (path + chainL + bigram) with the LEARNED gates (start closed), reference world (compositional, English, prefixed
 reporting), trained on depths 0-2; the round trip is run on fresh sentences at depths 0-3 (depth 3 UNSEEN), with the depth ESTIMATED from S.
 Reports: full-frame accuracy (all roles at once, depth included), Prolog-query accuracy, SMT consistency, per depth. 3 seeds."""
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, numpy as np, torch, v2, v5_scale as v5, v7_nested as v7, v8_gates as v8, frame as fr
 ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=3); ap.add_argument("--N", type=int, default=30000); ap.add_argument("--n_test", type=int, default=100)
 a = ap.parse_args(); v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]; D = 1024

@@ -21,6 +21,7 @@ AND for the transformer; at 1k/5k the model sees 1k/5k labelled (question, SQL) 
 "data efficiency" claim must say: "with distributional categories from the whole training corpus, without labels".
 Run: python3 v12_wikisql_baselines.py [--sizes 1000,5000,56355] [--seeds 3] [--D 512]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, json, re, time, math, collections
 import numpy as np, torch, torch.nn as nn
 import v11_wikisql as v11, v10_controls as v10

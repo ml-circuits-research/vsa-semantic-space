@@ -19,6 +19,7 @@ cos(P, may P), cos(P, must P), cos(may P, must P) with the lexical bag on the sa
 Criteria: FULL > 0.95 at depth 0; separation gap > 0.5; scope > 0.9; unseen depth 2 > 0.9 (the composition rule; reserve applies).
 Run: python3 v15_modality.py [--seeds 5] [--N 40000] [--D 1024]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v5_scale as v5, v7_nested as v7, v8_gates as v8

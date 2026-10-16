@@ -183,3 +183,9 @@ added by the E1b protocol have an empty scope list and the world divided by sqrt
 (GPU idle, no leftover process, 114 GB free). Fix: no scope term when no quantifier; plus an assertion in E1/E2/E3 training that the loss is
 finite (a silent garbage log must be impossible). Lesson for the process: a run that keeps going with a constant, chance-level output is a
 bug, not a result; the guard makes it stop. Background runs die with the terminal: long runs go under tmux or are relaunched next morning.
+Correction (same morning, after the author's report): the machine DID hang on 2026-10-15 evening — no SSH, hard reset — so the earlier
+"the machine was fine" referred only to its state after the reset. Unified memory on the DGX Spark: a runaway process starves the OS.
+Protection added (experiment/guard.py, imported first in every training script; run.sh): cgroup MemoryMax does NOT bound CUDA unified
+allocations (tested: a 3 GB cuda tensor survived a 2 GB cap), so the cap is in-process — torch allocator limited to 50% of the unified
+memory (a 70 GB allocation is refused with an OOM error, tested), a watchdog that exits when MemAvailable < 16 GB, a 6 h wall-clock limit;
+run.sh refuses a second concurrent run and refuses to start under 40 GB available. The session now runs under tmux.

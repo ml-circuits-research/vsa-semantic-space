@@ -12,6 +12,7 @@ Evaluation axes (EVALUATION_PRINCIPLES.md), separate:
 Criterion §5.1: the columns shared with round 3 within +-0.03 of v4 on the small world (0.94 / 0.90 for 'all 4').
 Run: python3 v5_scale.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--depth_train 2] [--variants all|all4]  ('toate4' is still accepted)
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import camp as cp, v2, v4, v4_torch

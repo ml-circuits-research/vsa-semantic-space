@@ -20,6 +20,7 @@ Mandatory baseline: bag of words + logistic regression — aggregator: 6-way LR 
 table's columns. Trivial controls printed: chance, majority aggregator, 'overlap only' column pick.
 Run: python3 v11_wikisql.py [--epochs 3] [--D 512] [--batch 32] [--seeds 1] [--inputs q,qh] [--n_train 56355] [--n_dev 8421]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, json, re, time, math, collections
 import numpy as np, torch
 import v10_controls as v10

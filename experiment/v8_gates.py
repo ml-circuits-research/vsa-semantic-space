@@ -23,6 +23,7 @@ learned from an all-closed start (s = -2, g = 0.12); learned from an all-open st
 Evaluation = v7_nested (compositional world, unbinding conj(R_rep)^k), per role at depths 2 and 3; gates printed per category per seed.
 Run: python3 v8_gates.py [--seeds 5] [--N 30000] [--D 1024] [--batch 8] [--outer prefixed]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v5_scale as v5, v6_left as v6, v7_nested as v7

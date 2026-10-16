@@ -20,6 +20,7 @@ Criteria (judgment): negated frame decoded > 0.95; separation gap > 0.5; scope >
 Postposed/right-announced negation (e.g. "X gives B to C , or not") is NOT in this world: it falls under the declared limit (RESULTS 6c).
 Run: python3 v13_negation.py [--seeds 5] [--N 40000] [--D 1024] [--batch 8]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time, copy
 import numpy as np, torch
 import v2, v5_scale as v5, v7_nested as v7, v8_gates as v8

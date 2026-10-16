@@ -14,6 +14,7 @@ selected on seed 0 by VALIDATION = fresh training-distribution sentences (depths
 on the test axes; the chosen config is then run on all seeds.
 Run: python3 v9_transformer.py [--seeds 5] [--N 30000] [--epochs 12] [--D 1024] [--d_model 128] [--layers 2]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time, math
 import numpy as np, torch, torch.nn as nn
 import v5_scale as v5, v7_nested as v7

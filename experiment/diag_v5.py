@@ -1,6 +1,7 @@
 """Diagnostic v5 (EVALUATION_PRINCIPLES §11: trace before interpreting): accuracy per FORMULATION x ROLE, seed 0, large world.
 Questions: (1) why does 'all 4' give 0.84 on T9/T10 (seen transitions) when path+chain+bigram gives 0.998? which role, which formulation?
            (2) at depth 3, what is lost: the role X3 (never a target during training => chance by construction) or A/B/C/X1/X2 as well?"""
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import sys, numpy as np, torch, v2, v5_scale as v5
 
 def per_role(m, world, w, t, persons, objects, depth, n=40):

@@ -21,6 +21,7 @@ FULL frame on unambiguous (nouns + determiners + scope + depth) | the unseen dep
 the reserve of RESULTS 9b-bis) | lexical bag control on the scope question (it cannot represent scope: reported for completeness).
 Run: python3 v14_quantifiers.py [--seeds 5] [--N 40000] [--D 1024]
 """
+import guard  # process-level memory/time protection (see guard.py; the machine hung on 2026-10-15)
 import argparse, time
 import numpy as np, torch
 import v2, v5_scale as v5, v7_nested as v7, v8_gates as v8
