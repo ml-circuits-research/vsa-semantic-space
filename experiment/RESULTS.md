@@ -710,3 +710,14 @@ combination with ZERO exposures (a modal inside a consequent, never seen in any 
 negation inside reporting; the rule is "after one exposure", and E3b (running) gives this pair its one exposure at depth 0 and tests it
 inside reporting. (iv) Two modals that the world distinguishes (may vs must) are separated by the state (0.13) although the lexical bag
 cannot (0.86): the modal word's displacement, not its identity, carries the distinction.
+### 9d-bis. E3b — the mixed construction given ONE exposure at depth 0 (--p_mixed 0.15), tested inside reporting (logs/2026-10-16_0925_v15_modality_f31f4e5.txt; 5 seeds)
+| axis | E3 (zero exposures) | E3b (one exposure at depth 0) |
+|---|---|---|
+| MIXED "if P then Q may" d0: operator+scope / FULL | 0.035 / 0.000 | **1.000 / 1.000** (seen) |
+| MIXED inside reporting, d1 (UNSEEN combination) FULL | 0.000 | **1.000±0.000** |
+| everything else (modals, conditionals, unseen depth 2) | 1.000 | 1.000 (unchanged) |
+| 'Q if P' (right-announced) | 0.203 | 0.440±0.121 (still at the limit; high variance) |
+| separation (P, may P) / (P, must P) / (may, must) | 0.12 / 0.09 / 0.13 | 0.15 / 0.13 / 0.17 (bag 0.77 / 0.77 / 0.86) |
+Gates: that, ',', has, may, must, perhaps 1.00; to 0.69; if 0.60; then closed. Same pattern as E1 -> E1b: zero exposures of a combination
+fail, one exposure composes to the unseen level. The empirical rule now holds on reporting, negation, modality, conditionals and the
+modal-in-conditional pair; quantifiers remain the single exception (9c-bis, world-side hypothesis pending).

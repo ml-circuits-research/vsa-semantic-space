@@ -1,4 +1,4 @@
-# Current status (rewritten at every judgment point; last: 2026-10-16 09:35, E3 done; E3b running)
+# Current status (rewritten at every judgment point; last: 2026-10-16 09:50, E3 and E3b done; nothing running)
 
 ## Deliverables requested in the post-8d judgment (section F) — status
 - EMPIRICAL_NOTE.md: full draft; curve as figure 1 (to draw), same-input table, hard-pair table with n, budget check (gate PASSED: 10x
@@ -51,10 +51,10 @@ keeps "scope as a role": R_sc (x) f_noun_wide (the wide-scope quantified noun, p
 | conditional 'Q if P' (right-announced) | **0.203** | the declared limit, confirmed |
 | separation cos(P, may P) / (P, must P) / (may, must) | 0.12 / 0.09 / 0.13 (bag 0.77 / 0.77 / 0.86) | MET |
 | MIXED modal-inside-consequent, ZERO exposures: d0 / d1 | 0.00 / 0.00 | zero-exposure case fails, as E1 did |
-Gates: if, may, must, perhaps, has, ',' open; 'then' closed. E3b (running): the mixed construction seen at depth 0 (15%), tested inside
-reporting — the one-exposure test for this pair.
+Gates: if, may, must, perhaps, has, ',' open; 'then' closed. E3b (done, RESULTS 9d-bis): the mixed construction given ONE exposure at depth 0
+-> inside reporting (unseen combination) **1.000** (5 seeds), from 0.000 with zero exposures. Same pattern as E1 -> E1b.
 Tally of the empirical composition rule (one exposure inside another operator, test one level deeper): reporting YES, negation YES, modality
-YES, conditional YES, quantifiers NO. Zero-exposure combinations fail every time.
+YES, conditional YES, modal-in-conditional YES (E3b), quantifiers NO. Zero-exposure combinations fail every time; one exposure suffices.
 
 ## Conclusions relative to the new programme
 1. "Operator = role" holds for negation on its own, every scope, no rule, scope right 100%: Prolog/Z3 is a plan, not a promise, for

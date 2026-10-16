@@ -197,3 +197,5 @@ for judgment: the world's scope filler is a ROLE identity (not a word) => not re
 Ran: run.sh v15_modality.py (5 seeds) -> logs/2026-10-16_0902_v15_modality_b2b8f34.txt. E3b (mixed construction seen at depth 0, --p_mixed 0.15) launched.
 Tally of the composition rule (one exposure, test one level deeper): reporting YES (6c), negation YES (E1b), modality YES, conditional YES,
 quantifiers NO (9c-bis; world-side hypothesis for judgment). Zero-exposure combinations fail every time (E1 sentential, E3 mixed).
+E3b (09:50): the mixed modal-in-consequent construction, one exposure at depth 0 -> inside reporting (unseen) 1.000 (5 seeds). Rule holds
+on five operator cases; quantifiers the single exception. Awaiting judgment on E2c (world correction R_sc (x) f_noun) and on the rule as a claim.
