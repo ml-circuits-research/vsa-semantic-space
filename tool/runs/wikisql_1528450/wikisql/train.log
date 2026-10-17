@@ -1,0 +1,53 @@
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450/wikisql/splits.json before training: dev 8421, train 56355
+[schema] roles ['select', 'aggregate', 'condition'] (core ['select', 'aggregate']), max depth 0, event negation False
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+[train] seed 0: 56355 training rows x 3 epoch(s) -> 169065 steps' sentences; D=512; kinds 89; vocab 32220; predicate lemma not found in 0 targets
+[trace] text: name the mens singles when mens doubles is george georgoudis gerostergiou
+[trace] tokens/kinds: name/name the/the mens/C40 singles/C13 when/when mens/C40 doubles/C13 is/is george/C0 georgoudis/C23 gerostergiou/C19
+[trace] gold frame: {"event": "query", "lemma": null, "neg": false, "roles": {"aggregate": ["word", "NONE"], "condition": ["entity", "Mens doubles", ["word", "EQ"], null], "select": ["word", "Mens singles"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 65.35 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 0] start: RSS 4.52 GB | torch alloc 1.81 GB reserved 1.82 GB | MemAvailable 109.3 GB
+[train seed 0] step 1000 sent 32000/169065 loss -0.670 (78s) | RSS 5.13 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 103.7 GB
+[train seed 0] step 2000 sent 64000/169065 loss -0.574 (166s) | RSS 5.13 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 103.8 GB
+[train seed 0] step 3000 sent 96000/169065 loss -0.803 (249s) | RSS 5.13 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 103.8 GB
+[train seed 0] step 4000 sent 128000/169065 loss -0.746 (339s) | RSS 5.13 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 103.8 GB
+[train seed 0] step 5000 sent 160000/169065 loss -0.809 (423s) | RSS 5.13 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 103.8 GB
+[train seed 0] end: RSS 5.13 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 108.5 GB (448s)
+[export] numpy reader vs torch states: max relative difference 5.77e-08 (float32 phases in the route book)
+[eval] seed 0 dev: FULL catalog candidates 0.220 | residual 0.881
+[eval] seed 0 train (sample): FULL catalog candidates 0.323 | residual 0.874
+[mem] after seed 0: RSS 3.65 GB | torch alloc 0.06 GB reserved 2.17 GB | MemAvailable 110.0 GB
+[train] seed 1: 56355 training rows x 3 epoch(s) -> 169065 steps' sentences; D=512; kinds 89; vocab 32220; predicate lemma not found in 0 targets
+[trace] text: what was the last game where the record was 6 3
+[trace] tokens/kinds: what/what was/was the/the last/C21 game/game where/C41 the/the record/record was/was 6/C3 3/C3
+[trace] gold frame: {"event": "query", "lemma": null, "neg": false, "roles": {"aggregate": ["word", "MAX"], "condition": ["entity", "Record", ["word", "EQ"], null], "select": ["word", "Game"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 54.86 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 1] start: RSS 6.55 GB | torch alloc 1.87 GB reserved 2.17 GB | MemAvailable 107.0 GB
+[train seed 1] step 1000 sent 32000/169065 loss -0.633 (83s) | RSS 6.55 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 1] step 2000 sent 64000/169065 loss -0.637 (168s) | RSS 6.55 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 1] step 3000 sent 96000/169065 loss -0.799 (257s) | RSS 6.55 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 1] step 4000 sent 128000/169065 loss -0.725 (344s) | RSS 6.55 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 1] step 5000 sent 160000/169065 loss -0.713 (429s) | RSS 6.55 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 1] end: RSS 6.55 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 107.1 GB (453s)
+[export] numpy reader vs torch states: max relative difference 6.88e-08 (float32 phases in the route book)
+[eval] seed 1 dev: FULL catalog candidates 0.209 | residual 0.886
+[eval] seed 1 train (sample): FULL catalog candidates 0.263 | residual 0.881
+[mem] after seed 1: RSS 4.67 GB | torch alloc 0.06 GB reserved 2.17 GB | MemAvailable 109.0 GB
+[train] seed 2: 56355 training rows x 3 epoch(s) -> 169065 steps' sentences; D=512; kinds 89; vocab 32220; predicate lemma not found in 0 targets
+[trace] text: when south melbourne was the away team what was their score
+[trace] tokens/kinds: when/when south/C1 melbourne/C45 was/was the/the away/away team/team what/what was/was their/C15 score/score
+[trace] gold frame: {"event": "query", "lemma": null, "neg": false, "roles": {"aggregate": ["word", "NONE"], "condition": ["entity", "Away team", ["word", "EQ"], null], "select": ["word", "Away team score"]}, "scope": null, "shape": "ok", "speakers": []}
+[trace] target |S_world| = 65.81 (sqrt(D) per unit term = 22.6); initial gates all 0.12 (closed start)
+[train seed 2] start: RSS 6.64 GB | torch alloc 1.87 GB reserved 2.17 GB | MemAvailable 106.9 GB
+[train seed 2] step 1000 sent 32000/169065 loss -0.655 (72s) | RSS 6.64 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.2 GB
+[train seed 2] step 2000 sent 64000/169065 loss -0.645 (158s) | RSS 6.64 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.2 GB
+[train seed 2] step 3000 sent 96000/169065 loss -0.710 (244s) | RSS 6.64 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.2 GB
+[train seed 2] step 4000 sent 128000/169065 loss -0.689 (331s) | RSS 6.64 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.2 GB
+[train seed 2] step 5000 sent 160000/169065 loss -0.654 (417s) | RSS 6.64 GB | torch alloc 2.15 GB reserved 6.85 GB | MemAvailable 102.3 GB
+[train seed 2] end: RSS 6.64 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 107.0 GB (440s)
+[export] numpy reader vs torch states: max relative difference 6.16e-08 (float32 phases in the route book)
+[eval] seed 2 dev: FULL catalog candidates 0.223 | residual 0.886
+[eval] seed 2 train (sample): FULL catalog candidates 0.323 | residual 0.881
+[mem] after seed 2: RSS 4.36 GB | torch alloc 0.06 GB reserved 2.17 GB | MemAvailable 109.3 GB
+[done] model written to /tmp/sop_wikisql_BMQv/wikisql/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450/wikisql/train.log
+checklist: [x] addresses from the world [x] shared identities [x] chance printed [x] seen/unseen axes separated [x] margin [x] >=3 seeds [x] trivial control (lexical order baseline) [x] calibration (18) [x] memory logged (21) [x] thresholds on calibration rows (25) [x] given vs learned stated (20)

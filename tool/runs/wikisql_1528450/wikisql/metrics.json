@@ -1,0 +1,1869 @@
+{
+ "world": "wikisql",
+ "legend": "sha256:9b7ddb62bd1851f2b29a8fd0fba0977fab6f5e558ec19f0daaf0b6f3723f8b67",
+ "legend_version": 1,
+ "seeds": [
+  0,
+  1,
+  2
+ ],
+ "label": "BUILT",
+ "splits": {
+  "dev": 8421,
+  "train": 56355
+ },
+ "chance": {
+  "select": 3.1849162367029746e-05,
+  "aggregate": 0.00025940337224383917,
+  "condition": 3.1849162367029746e-05
+ },
+ "lexical_ranks": {
+  "select": -1,
+  "aggregate": -1,
+  "condition": -1
+ },
+ "per_seed": [
+  {
+   "dev": {
+    "catalog candidates": {
+     "n": 8421,
+     "of": 8421,
+     "acc": {
+      "FULL": 0.21980762379764873,
+      "FULL incl. attr (previous definition)": 0.001187507421921387,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.3162332264576654,
+      "set condition: first gold member in the decoded set": 0.6669857604403494,
+      "role select": 0.8113050706566916,
+      "head select": 0.8113050706566916,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.0043937774611091315,
+      "occupancy: known filler": 0.9445049997630444,
+      "role aggregate": 0.822705141907137,
+      "head aggregate": 0.822705141907137,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.3162332264576654,
+      "head condition": 0.3162332264576654,
+      "lexical order head condition": 0.007600047500296877,
+      "lexical bag head condition": 0.0033250207813798837,
+      "heads FULL (model)": 0.21980762379764873,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "FULL [pooled midpoint (comparison)]": 0.22966393539959626,
+      "role select [pooled midpoint (comparison)]": 0.8113050706566916,
+      "role aggregate [pooled midpoint (comparison)]": 0.822705141907137,
+      "role condition [pooled midpoint (comparison)]": 0.33618335114594466,
+      "heads FULL (model) [pooled midpoint (comparison)]": 0.22966393539959626,
+      "FULL incl. attr (previous definition) [pooled midpoint (comparison)]": 0.0015437596484978032,
+      "occupancy: unknown filler": 0.9048316251830161,
+      "occupancy: not given": 0.59375
+     },
+     "calibration": {
+      "role select": {
+       "n": 8421,
+       "acc": 0.8113050706566916,
+       "margin_mean": 0.14555437655476666,
+       "margin_p10": 0.015007890156488957,
+       "tau": 0.05,
+       "coverage": 0.747417171357321,
+       "confident_wrong": 0.051656572853580336,
+       "abstain_right": 0.11554447215295095,
+       "abstain_wrong": 0.13703835648972806,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8113050706566916,
+         1.0
+        ],
+        "0.02": [
+         0.8775371202833402,
+         0.8717491984324902
+        ],
+        "0.05": [
+         0.9308865586272641,
+         0.747417171357321
+        ],
+        "0.10": [
+         0.963887198214648,
+         0.5853224082650517
+        ],
+        "0.15": [
+         0.9788043478260869,
+         0.4370027312670704
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 25199,
+       "acc": 0.6502242152466368,
+       "margin_mean": 0.1685563540818612,
+       "margin_p10": 0.0074935921666412055,
+       "tau": 0.05,
+       "coverage": 0.734791063137426,
+       "confident_wrong": 0.156712567959046,
+       "abstain_right": 0.07214572006825667,
+       "abstain_wrong": 0.19306321679431723,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6502242152466368,
+         1.0
+        ],
+        "0.02": [
+         0.7353425172786685,
+         0.8440414302154847
+        ],
+        "0.05": [
+         0.7867249945992655,
+         0.734791063137426
+        ],
+        "0.10": [
+         0.8499796720422822,
+         0.5856581610381364
+        ],
+        "0.15": [
+         0.8978177150192554,
+         0.46370887733640226
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 8421,
+       "acc": 0.822705141907137,
+       "margin_mean": 0.2869521165867739,
+       "margin_p10": 0.07168464148324324,
+       "tau": 0.05,
+       "coverage": 0.9275620472627953,
+       "confident_wrong": 0.13490084313026957,
+       "abstain_right": 0.03004393777461109,
+       "abstain_wrong": 0.04239401496259352,
+       "acc_at_coverage": {
+        "0.00": [
+         0.822705141907137,
+         1.0
+        ],
+        "0.02": [
+         0.83634131368938,
+         0.9672247951549697
+        ],
+        "0.05": [
+         0.8545640763026501,
+         0.9275620472627953
+        ],
+        "0.10": [
+         0.8838231255149684,
+         0.8647429046431541
+        ],
+        "0.15": [
+         0.9074706668646962,
+         0.7995487471796698
+        ]
+       }
+      },
+      "role condition": {
+       "n": 8357,
+       "acc": 0.31410793346894816,
+       "margin_mean": 0.07243201959601621,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.527820988392964,
+       "confident_wrong": 0.28455187268158433,
+       "abstain_right": 0.0708388177575685,
+       "abstain_wrong": 0.4013401938494675,
+       "acc_at_coverage": {
+        "0.00": [
+         0.31410793346894816,
+         1.0
+        ],
+        "0.02": [
+         0.41258862182258343,
+         0.6919947349527342
+        ],
+        "0.05": [
+         0.46089322149172524,
+         0.527820988392964
+        ],
+        "0.10": [
+         0.5327836670592855,
+         0.304774440588728
+        ],
+        "0.15": [
+         0.6124213836477987,
+         0.15220773004666746
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.8813992180045468,
+     "status": {
+      "abstain": 4391,
+      "ok": 4030
+     },
+     "worst_formulations": [
+      {
+       "formulation": "what is pronunciation spelled free when pronunciation spelled checked is",
+       "n": 3,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the party for south carolina 3",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the most played",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the worst highest score",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the sexual abuse rate where the conflict is the burundi civil war",
+       "n": 2,
+       "FULL": 0.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 56355,
+     "acc": {
+      "FULL": 0.3233333333333333,
+      "FULL incl. attr (previous definition)": 0.0033333333333333335,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.38666666666666666,
+      "set condition: first gold member in the decoded set": 0.7583892617449665,
+      "role select": 0.91,
+      "head select": 0.91,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.01,
+      "occupancy: known filler": 0.9583333333333334,
+      "role aggregate": 0.8366666666666667,
+      "head aggregate": 0.8366666666666667,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.38666666666666666,
+      "head condition": 0.38666666666666666,
+      "lexical order head condition": 0.006666666666666667,
+      "lexical bag head condition": 0.01,
+      "heads FULL (model)": 0.3233333333333333,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "occupancy: unknown filler": 0.9056603773584906,
+      "occupancy: not given": 1.0
+     },
+     "calibration": {
+      "role select": {
+       "n": 300,
+       "acc": 0.91,
+       "margin_mean": 0.1579678770814872,
+       "margin_p10": 0.02063568845164783,
+       "tau": 0.05,
+       "coverage": 0.7733333333333333,
+       "confident_wrong": 0.03333333333333333,
+       "abstain_right": 0.17,
+       "abstain_wrong": 0.056666666666666664,
+       "acc_at_coverage": {
+        "0.00": [
+         0.91,
+         1.0
+        ],
+        "0.02": [
+         0.9444444444444444,
+         0.9
+        ],
+        "0.05": [
+         0.9568965517241379,
+         0.7733333333333333
+        ],
+        "0.10": [
+         0.9792746113989638,
+         0.6433333333333333
+        ],
+        "0.15": [
+         0.9932432432432432,
+         0.49333333333333335
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 898,
+       "acc": 0.7104677060133631,
+       "margin_mean": 0.17564281976797888,
+       "margin_p10": 0.012046564476122654,
+       "tau": 0.05,
+       "coverage": 0.7616926503340757,
+       "confident_wrong": 0.14142538975501115,
+       "abstain_right": 0.09020044543429843,
+       "abstain_wrong": 0.14810690423162584,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7104677060133631,
+         1.0
+        ],
+        "0.02": [
+         0.7810499359795134,
+         0.8697104677060133
+        ],
+        "0.05": [
+         0.814327485380117,
+         0.7616926503340757
+        ],
+        "0.10": [
+         0.8880866425992779,
+         0.6169265033407573
+        ],
+        "0.15": [
+         0.9175946547884187,
+         0.5
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 300,
+       "acc": 0.8366666666666667,
+       "margin_mean": 0.2868313723413305,
+       "margin_p10": 0.06557403695371385,
+       "tau": 0.05,
+       "coverage": 0.9233333333333333,
+       "confident_wrong": 0.12333333333333334,
+       "abstain_right": 0.03666666666666667,
+       "abstain_wrong": 0.04,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8366666666666667,
+         1.0
+        ],
+        "0.02": [
+         0.8546712802768166,
+         0.9633333333333334
+        ],
+        "0.05": [
+         0.8664259927797834,
+         0.9233333333333333
+        ],
+        "0.10": [
+         0.8988326848249028,
+         0.8566666666666667
+        ],
+        "0.15": [
+         0.925,
+         0.8
+        ]
+       }
+      },
+      "role condition": {
+       "n": 298,
+       "acc": 0.3825503355704698,
+       "margin_mean": 0.0815016017610729,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.587248322147651,
+       "confident_wrong": 0.2684563758389262,
+       "abstain_right": 0.06375838926174497,
+       "abstain_wrong": 0.348993288590604,
+       "acc_at_coverage": {
+        "0.00": [
+         0.3825503355704698,
+         1.0
+        ],
+        "0.02": [
+         0.4864864864864865,
+         0.7449664429530202
+        ],
+        "0.05": [
+         0.5428571428571428,
+         0.587248322147651
+        ],
+        "0.10": [
+         0.6923076923076923,
+         0.348993288590604
+        ],
+        "0.15": [
+         0.7049180327868853,
+         0.20469798657718122
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.8743400588559592,
+     "status": {
+      "abstain": 144,
+      "ok": 156
+     },
+     "worst_formulations": [
+      {
+       "formulation": "what s the salmonella with escherichia being sepb escn",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "how many villains appeared in the episode titled the tale of the virtual pets",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the sepal width for i virginica with petal length of 5 1",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the highest of ayr united",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what was the result of round 2r",
+       "n": 1,
+       "FULL": 0.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "dev": {
+    "catalog candidates": {
+     "n": 8421,
+     "of": 8421,
+     "acc": {
+      "FULL": 0.20888255551597198,
+      "FULL incl. attr (previous definition)": 0.0007125044531528322,
+      "presence condition: present read present": 0.8834509991623788,
+      "presence condition: share of 'present' readings that abstain": 0.47096861107368987,
+      "presence condition: share of true 'present' readings that abstain": 0.47081132331030745,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.28856430352689705,
+      "set condition: first gold member in the decoded set": 0.7260978820150772,
+      "role select": 0.8174801092506828,
+      "head select": 0.8174801092506828,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.0043937774611091315,
+      "occupancy: known filler": 0.9648831808919008,
+      "role aggregate": 0.8259114119463247,
+      "head aggregate": 0.8259114119463247,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.28856430352689705,
+      "head condition": 0.28856430352689705,
+      "lexical order head condition": 0.007600047500296877,
+      "lexical bag head condition": 0.0033250207813798837,
+      "heads FULL (model)": 0.20888255551597198,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "FULL [pooled midpoint (comparison)]": 0.23690773067331672,
+      "role select [pooled midpoint (comparison)]": 0.8174801092506828,
+      "role aggregate [pooled midpoint (comparison)]": 0.8259114119463247,
+      "role condition [pooled midpoint (comparison)]": 0.33855836598978745,
+      "heads FULL (model) [pooled midpoint (comparison)]": 0.23690773067331672,
+      "FULL incl. attr (previous definition) [pooled midpoint (comparison)]": 0.001187507421921387,
+      "presence condition: present read present [pooled midpoint (comparison)]": 0.7400981213354074,
+      "occupancy: unknown filler": 0.9431429965836994,
+      "presence condition: absent read absent": 0.375,
+      "occupancy: not given": 0.375,
+      "presence condition: absent read absent [pooled midpoint (comparison)]": 0.65625,
+      "presence condition: share of FALSE 'present' readings that abstain": 0.5
+     },
+     "calibration": {
+      "role select": {
+       "n": 8421,
+       "acc": 0.8174801092506828,
+       "margin_mean": 0.14632733676713833,
+       "margin_p10": 0.015918602963178832,
+       "tau": 0.05,
+       "coverage": 0.7503859399121244,
+       "confident_wrong": 0.04999406246289039,
+       "abstain_right": 0.11708823180144876,
+       "abstain_wrong": 0.13252582828642678,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8174801092506828,
+         1.0
+        ],
+        "0.02": [
+         0.8745113896751584,
+         0.8810117563234771
+        ],
+        "0.05": [
+         0.9333755341034974,
+         0.7503859399121244
+        ],
+        "0.10": [
+         0.9663442160419186,
+         0.5892411827573922
+        ],
+        "0.15": [
+         0.9804499196572041,
+         0.4434152713454459
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 25199,
+       "acc": 0.6446684392237787,
+       "margin_mean": 0.1591111342754793,
+       "margin_p10": 0.010592403656314621,
+       "tau": 0.05,
+       "coverage": 0.7156236358585658,
+       "confident_wrong": 0.15087900313504504,
+       "abstain_right": 0.07992380650025795,
+       "abstain_wrong": 0.20445255764117623,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6446684392237787,
+         1.0
+        ],
+        "0.02": [
+         0.7206761299962645,
+         0.8498749950394857
+        ],
+        "0.05": [
+         0.7891643098763378,
+         0.7156236358585658
+        ],
+        "0.10": [
+         0.8692599756429543,
+         0.5539505535933965
+        ],
+        "0.15": [
+         0.9182230281051678,
+         0.43771578237231634
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 8421,
+       "acc": 0.8259114119463247,
+       "margin_mean": 0.27129979387904424,
+       "margin_p10": 0.06841060404896507,
+       "tau": 0.05,
+       "coverage": 0.9270870442940269,
+       "confident_wrong": 0.1313383208645054,
+       "abstain_right": 0.03016268851680323,
+       "abstain_wrong": 0.04275026718916993,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8259114119463247,
+         1.0
+        ],
+        "0.02": [
+         0.8400735294117647,
+         0.9690060562878517
+        ],
+        "0.05": [
+         0.8583322659152043,
+         0.9270870442940269
+        ],
+        "0.10": [
+         0.8862598588625986,
+         0.8582116138225864
+        ],
+        "0.15": [
+         0.9132530120481928,
+         0.788504928155801
+        ]
+       }
+      },
+      "role condition": {
+       "n": 8357,
+       "acc": 0.2879023573052531,
+       "margin_mean": 0.05894500483861431,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.46751226516692596,
+       "confident_wrong": 0.27222687567308845,
+       "abstain_right": 0.09261696781141558,
+       "abstain_wrong": 0.4398707670216585,
+       "acc_at_coverage": {
+        "0.00": [
+         0.2879023573052531,
+         1.0
+        ],
+        "0.02": [
+         0.3582319684769573,
+         0.6984563838698098
+        ],
+        "0.05": [
+         0.4177117993345278,
+         0.46751226516692596
+        ],
+        "0.10": [
+         0.5276836158192091,
+         0.21179849228191935
+        ],
+        "0.15": [
+         0.614329268292683,
+         0.0784970683259543
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.8857768270471816,
+     "status": {
+      "abstain": 5010,
+      "ok": 3411
+     },
+     "worst_formulations": [
+      {
+       "formulation": "what is pronunciation spelled free when pronunciation spelled checked is",
+       "n": 3,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the party for south carolina 3",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the most played",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the worst highest score",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the sexual abuse rate where the conflict is the burundi civil war",
+       "n": 2,
+       "FULL": 0.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 56355,
+     "acc": {
+      "FULL": 0.2633333333333333,
+      "FULL incl. attr (previous definition)": 0.0,
+      "presence condition: present read present": 0.9362416107382551,
+      "presence condition: share of 'present' readings that abstain": 0.4659498207885305,
+      "presence condition: share of true 'present' readings that abstain": 0.4659498207885305,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.34,
+      "set condition: first gold member in the decoded set": 0.8087248322147651,
+      "role select": 0.8933333333333333,
+      "head select": 0.8933333333333333,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.01,
+      "occupancy: known filler": 0.9797979797979798,
+      "role aggregate": 0.8366666666666667,
+      "head aggregate": 0.8366666666666667,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.34,
+      "head condition": 0.34,
+      "lexical order head condition": 0.006666666666666667,
+      "lexical bag head condition": 0.01,
+      "heads FULL (model)": 0.2633333333333333,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "occupancy: unknown filler": 0.9716981132075472,
+      "presence condition: absent read absent": 1.0,
+      "occupancy: not given": 1.0
+     },
+     "calibration": {
+      "role select": {
+       "n": 300,
+       "acc": 0.8933333333333333,
+       "margin_mean": 0.15531307218691814,
+       "margin_p10": 0.016185490265344635,
+       "tau": 0.05,
+       "coverage": 0.7866666666666666,
+       "confident_wrong": 0.02666666666666667,
+       "abstain_right": 0.13333333333333333,
+       "abstain_wrong": 0.08,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8933333333333333,
+         1.0
+        ],
+        "0.02": [
+         0.9550561797752809,
+         0.89
+        ],
+        "0.05": [
+         0.9661016949152542,
+         0.7866666666666666
+        ],
+        "0.10": [
+         0.9720670391061452,
+         0.5966666666666667
+        ],
+        "0.15": [
+         0.9865771812080537,
+         0.49666666666666665
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 898,
+       "acc": 0.6893095768374164,
+       "margin_mean": 0.16337759475006433,
+       "margin_p10": 0.012942916900484427,
+       "tau": 0.05,
+       "coverage": 0.7338530066815144,
+       "confident_wrong": 0.13251670378619154,
+       "abstain_right": 0.08797327394209355,
+       "abstain_wrong": 0.17817371937639198,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6893095768374164,
+         1.0
+        ],
+        "0.02": [
+         0.7586649550706034,
+         0.8674832962138085
+        ],
+        "0.05": [
+         0.8194233687405159,
+         0.7338530066815144
+        ],
+        "0.10": [
+         0.8831683168316832,
+         0.5623608017817372
+        ],
+        "0.15": [
+         0.9326923076923077,
+         0.46325167037861914
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 300,
+       "acc": 0.8366666666666667,
+       "margin_mean": 0.26942691906928756,
+       "margin_p10": 0.05983700879145231,
+       "tau": 0.05,
+       "coverage": 0.9133333333333333,
+       "confident_wrong": 0.11,
+       "abstain_right": 0.03333333333333333,
+       "abstain_wrong": 0.05333333333333334,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8366666666666667,
+         1.0
+        ],
+        "0.02": [
+         0.8546712802768166,
+         0.9633333333333334
+        ],
+        "0.05": [
+         0.8795620437956204,
+         0.9133333333333333
+        ],
+        "0.10": [
+         0.912,
+         0.8333333333333334
+        ],
+        "0.15": [
+         0.9240506329113924,
+         0.79
+        ]
+       }
+      },
+      "role condition": {
+       "n": 298,
+       "acc": 0.33557046979865773,
+       "margin_mean": 0.06473517687481901,
+       "margin_p10": 0.0043358460388877645,
+       "tau": 0.05,
+       "coverage": 0.5,
+       "confident_wrong": 0.26174496644295303,
+       "abstain_right": 0.09731543624161074,
+       "abstain_wrong": 0.40268456375838924,
+       "acc_at_coverage": {
+        "0.00": [
+         0.33557046979865773,
+         1.0
+        ],
+        "0.02": [
+         0.3991031390134529,
+         0.7483221476510067
+        ],
+        "0.05": [
+         0.47651006711409394,
+         0.5
+        ],
+        "0.10": [
+         0.5789473684210527,
+         0.2550335570469799
+        ],
+        "0.15": [
+         0.7333333333333333,
+         0.10067114093959731
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.8811070975519806,
+     "status": {
+      "ok": 129,
+      "abstain": 171
+     },
+     "worst_formulations": [
+      {
+       "formulation": "how many villains appeared in the episode titled the tale of the virtual pets",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the sepal width for i virginica with petal length of 5 1",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "how many episodes were titled identity crisis",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the highest of ayr united",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the fastest lap for the european grand prix",
+       "n": 1,
+       "FULL": 0.0
+      }
+     ]
+    }
+   }
+  },
+  {
+   "dev": {
+    "catalog candidates": {
+     "n": 8421,
+     "of": 8421,
+     "acc": {
+      "FULL": 0.22301389383683648,
+      "FULL incl. attr (previous definition)": 0.0016625103906899418,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.31552072200451253,
+      "set condition: first gold member in the decoded set": 0.6533445016154122,
+      "role select": 0.8194988718679492,
+      "head select": 0.8194988718679492,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.0043937774611091315,
+      "occupancy: known filler": 0.9423250082934458,
+      "role aggregate": 0.8327989549934687,
+      "head aggregate": 0.8327989549934687,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.31552072200451253,
+      "head condition": 0.31552072200451253,
+      "lexical order head condition": 0.007600047500296877,
+      "lexical bag head condition": 0.0033250207813798837,
+      "heads FULL (model)": 0.22301389383683648,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "FULL [pooled midpoint (comparison)]": 0.23097019356370976,
+      "role select [pooled midpoint (comparison)]": 0.8194988718679492,
+      "role aggregate [pooled midpoint (comparison)]": 0.8327989549934687,
+      "role condition [pooled midpoint (comparison)]": 0.3320270751692198,
+      "heads FULL (model) [pooled midpoint (comparison)]": 0.23097019356370976,
+      "FULL incl. attr (previous definition) [pooled midpoint (comparison)]": 0.0016625103906899418,
+      "occupancy: unknown filler": 0.8921425085407516,
+      "occupancy: not given": 0.5625
+     },
+     "calibration": {
+      "role select": {
+       "n": 8421,
+       "acc": 0.8194988718679492,
+       "margin_mean": 0.14752781004291662,
+       "margin_p10": 0.015631644733785616,
+       "tau": 0.05,
+       "coverage": 0.7558484740529628,
+       "confident_wrong": 0.05130032062700392,
+       "abstain_right": 0.11495071844199026,
+       "abstain_wrong": 0.1292008075050469,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8194988718679492,
+         1.0
+        ],
+        "0.02": [
+         0.8830957230142567,
+         0.8745992162451015
+        ],
+        "0.05": [
+         0.9321288295365279,
+         0.7558484740529628
+        ],
+        "0.10": [
+         0.9644803229061554,
+         0.5884099275620472
+        ],
+        "0.15": [
+         0.981629392971246,
+         0.44602778767367296
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 25199,
+       "acc": 0.6561768324139847,
+       "margin_mean": 0.15918956703506237,
+       "margin_p10": 0.006324771688068262,
+       "tau": 0.05,
+       "coverage": 0.7232429858327711,
+       "confident_wrong": 0.1412754474383904,
+       "abstain_right": 0.07420929401960395,
+       "abstain_wrong": 0.2025477201476249,
+       "acc_at_coverage": {
+        "0.00": [
+         0.6561768324139847,
+         1.0
+        ],
+        "0.02": [
+         0.7488980520403811,
+         0.8372951307591571
+        ],
+        "0.05": [
+         0.8046639231824417,
+         0.7232429858327711
+        ],
+        "0.10": [
+         0.8684228769497401,
+         0.572443350926624
+        ],
+        "0.15": [
+         0.9136375580275028,
+         0.45307353466407396
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 8421,
+       "acc": 0.8327989549934687,
+       "margin_mean": 0.26283307422851426,
+       "margin_p10": 0.06665344324868955,
+       "tau": 0.05,
+       "coverage": 0.9235245220282626,
+       "confident_wrong": 0.1202945018406365,
+       "abstain_right": 0.029568934805842537,
+       "abstain_wrong": 0.046906543165894786,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8327989549934687,
+         1.0
+        ],
+        "0.02": [
+         0.8487044086945843,
+         0.9669872936705854
+        ],
+        "0.05": [
+         0.8697441172688698,
+         0.9235245220282626
+        ],
+        "0.10": [
+         0.895191637630662,
+         0.8520365752285952
+        ],
+        "0.15": [
+         0.9152490886998785,
+         0.7818548865930413
+        ]
+       }
+      },
+      "role condition": {
+       "n": 8357,
+       "acc": 0.31362929280842405,
+       "margin_mean": 0.06650339754299604,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.48857245422998685,
+       "confident_wrong": 0.25308124925212394,
+       "abstain_right": 0.07813808783056121,
+       "abstain_wrong": 0.43328945793945195,
+       "acc_at_coverage": {
+        "0.00": [
+         0.31362929280842405,
+         1.0
+        ],
+        "0.02": [
+         0.426757288499374,
+         0.6690199832475768
+        ],
+        "0.05": [
+         0.4819985304922851,
+         0.48857245422998685
+        ],
+        "0.10": [
+         0.5773420479302832,
+         0.274620078975709
+        ],
+        "0.15": [
+         0.6666666666666666,
+         0.12887399784611703
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.8860303160987324,
+     "status": {
+      "ok": 3952,
+      "abstain": 4469
+     },
+     "worst_formulations": [
+      {
+       "formulation": "what is pronunciation spelled free when pronunciation spelled checked is",
+       "n": 3,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the party for south carolina 3",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the most played",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the worst highest score",
+       "n": 2,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the sexual abuse rate where the conflict is the burundi civil war",
+       "n": 2,
+       "FULL": 0.0
+      }
+     ]
+    }
+   },
+   "train (sample)": {
+    "catalog candidates": {
+     "n": 300,
+     "of": 56355,
+     "acc": {
+      "FULL": 0.3233333333333333,
+      "FULL incl. attr (previous definition)": 0.0,
+      "structure (depth, negation)": 1.0,
+      "depth estimate: fit (check)": 1.0,
+      "set condition: exact": 0.4166666666666667,
+      "set condition: first gold member in the decoded set": 0.761744966442953,
+      "role select": 0.9033333333333333,
+      "head select": 0.9033333333333333,
+      "lexical order head select": 0.0,
+      "lexical bag head select": 0.01,
+      "occupancy: known filler": 0.9633838383838383,
+      "role aggregate": 0.8333333333333334,
+      "head aggregate": 0.8333333333333334,
+      "lexical order head aggregate": 0.0,
+      "lexical bag head aggregate": 0.0,
+      "role condition": 0.4166666666666667,
+      "head condition": 0.4166666666666667,
+      "lexical order head condition": 0.006666666666666667,
+      "lexical bag head condition": 0.01,
+      "heads FULL (model)": 0.3233333333333333,
+      "heads FULL (lexical order baseline)": 0.0,
+      "heads FULL (lexical bag baseline, trained on the same training rows)": 0.0,
+      "occupancy: unknown filler": 0.9433962264150944,
+      "occupancy: not given": 0.5
+     },
+     "calibration": {
+      "role select": {
+       "n": 300,
+       "acc": 0.9033333333333333,
+       "margin_mean": 0.1560897002505794,
+       "margin_p10": 0.02557371359468823,
+       "tau": 0.05,
+       "coverage": 0.7933333333333333,
+       "confident_wrong": 0.03,
+       "abstain_right": 0.14,
+       "abstain_wrong": 0.06666666666666667,
+       "acc_at_coverage": {
+        "0.00": [
+         0.9033333333333333,
+         1.0
+        ],
+        "0.02": [
+         0.9377289377289377,
+         0.91
+        ],
+        "0.05": [
+         0.9621848739495799,
+         0.7933333333333333
+        ],
+        "0.10": [
+         0.9732620320855615,
+         0.6233333333333333
+        ],
+        "0.15": [
+         1.0,
+         0.48
+        ]
+       }
+      },
+      "roles (pooled)": {
+       "n": 898,
+       "acc": 0.7182628062360802,
+       "margin_mean": 0.1641446695698178,
+       "margin_p10": 0.01475163571002167,
+       "tau": 0.05,
+       "coverage": 0.7572383073496659,
+       "confident_wrong": 0.12472160356347439,
+       "abstain_right": 0.08574610244988864,
+       "abstain_wrong": 0.15701559020044542,
+       "acc_at_coverage": {
+        "0.00": [
+         0.7182628062360802,
+         1.0
+        ],
+        "0.02": [
+         0.7842639593908629,
+         0.8775055679287305
+        ],
+        "0.05": [
+         0.8352941176470589,
+         0.7572383073496659
+        ],
+        "0.10": [
+         0.8861940298507462,
+         0.5968819599109132
+        ],
+        "0.15": [
+         0.9401913875598086,
+         0.46547884187082406
+        ]
+       }
+      },
+      "role aggregate": {
+       "n": 300,
+       "acc": 0.8333333333333334,
+       "margin_mean": 0.2571217201211219,
+       "margin_p10": 0.048521101358312356,
+       "tau": 0.05,
+       "coverage": 0.8933333333333333,
+       "confident_wrong": 0.09333333333333334,
+       "abstain_right": 0.03333333333333333,
+       "abstain_wrong": 0.07333333333333333,
+       "acc_at_coverage": {
+        "0.00": [
+         0.8333333333333334,
+         1.0
+        ],
+        "0.02": [
+         0.8596491228070176,
+         0.95
+        ],
+        "0.05": [
+         0.8955223880597015,
+         0.8933333333333333
+        ],
+        "0.10": [
+         0.9083665338645418,
+         0.8366666666666667
+        ],
+        "0.15": [
+         0.9383259911894273,
+         0.7566666666666667
+        ]
+       }
+      },
+      "role condition": {
+       "n": 298,
+       "acc": 0.4161073825503356,
+       "margin_mean": 0.07865264148384567,
+       "margin_p10": 0.0,
+       "tau": 0.05,
+       "coverage": 0.5838926174496645,
+       "confident_wrong": 0.2516778523489933,
+       "abstain_right": 0.08389261744966443,
+       "abstain_wrong": 0.33221476510067116,
+       "acc_at_coverage": {
+        "0.00": [
+         0.4161073825503356,
+         1.0
+        ],
+        "0.02": [
+         0.508695652173913,
+         0.7718120805369127
+        ],
+        "0.05": [
+         0.5689655172413793,
+         0.5838926174496645
+        ],
+        "0.10": [
+         0.6632653061224489,
+         0.3288590604026846
+        ],
+        "0.15": [
+         0.7659574468085106,
+         0.15771812080536912
+        ]
+       }
+      }
+     },
+     "residual_mean": 0.881238282269073,
+     "status": {
+      "ok": 153,
+      "abstain": 147
+     },
+     "worst_formulations": [
+      {
+       "formulation": "how many villains appeared in the episode titled the tale of the virtual pets",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "name the sepal width for i virginica with petal length of 5 1",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "how many episodes were titled identity crisis",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the highest of ayr united",
+       "n": 1,
+       "FULL": 0.0
+      },
+      {
+       "formulation": "what is the fastest lap for the european grand prix",
+       "n": 1,
+       "FULL": 0.0
+      }
+     ]
+    }
+   }
+  }
+ ],
+ "training": [
+  {
+   "t_train_s": 448.0,
+   "calibration": {
+    "set_member:condition": {
+     "mean_present": 0.7267705283992599,
+     "mean_absent": 0.1388555426926252,
+     "threshold": 0.3407346239481427,
+     "pooled_midpoint": 0.4328130355459426,
+     "rule": "fit",
+     "n_present": 528,
+     "n_absent": 2031
+    },
+    "presence:select": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:aggregate": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:condition": {
+     "threshold": null,
+     "n_present": 398,
+     "n_absent": 2,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    }
+   },
+   "gates": {
+    "1": 0.00014673411615232065,
+    "2": 9.345027069896107e-05,
+    "C0": 0.1932521249125361,
+    "C1": 0.0003520538731469933,
+    "C10": 0.0815650161597974,
+    "C11": 0.00012467271502016348,
+    "C12": 0.11920292202211755,
+    "C13": 0.00015220865388314474,
+    "C14": 0.0001378174036204913,
+    "C15": 0.0003126372652885353,
+    "C16": 3.5922164437152994e-05,
+    "C17": 8.908579104419679e-05,
+    "C18": 8.701856706451806e-05,
+    "C19": 6.772992792070372e-05,
+    "C2": 5.1109532281235284e-05,
+    "C20": 7.707825007518083e-05,
+    "C21": 3.852543578259098e-05,
+    "C22": 0.19532612080027317,
+    "C23": 0.000220225251770372,
+    "C24": 0.00010720919607163032,
+    "C25": 8.211399782925273e-05,
+    "C26": 0.00010549261251863175,
+    "C27": 5.8078268805425586e-05,
+    "C28": 5.524661276492988e-05,
+    "C29": 5.8457122398983824e-05,
+    "C3": 8.953222029731943e-05,
+    "C30": 6.584501784570585e-05,
+    "C31": 0.2794323618590452,
+    "C32": 4.122361143766592e-05,
+    "C33": 6.595111688036885e-05,
+    "C34": 0.000132447989067092,
+    "C35": 0.5010737312120913,
+    "C36": 5.341984494298805e-05,
+    "C37": 5.898325982906082e-05,
+    "C38": 8.450915345306398e-05,
+    "C39": 0.11920292202211755,
+    "C4": 0.00010201337994518778,
+    "C40": 0.00023578819141115007,
+    "C41": 6.566918667361312e-05,
+    "C42": 0.33539235606316276,
+    "C43": 0.11920292202211755,
+    "C44": 0.06604568707076314,
+    "C45": 0.0002750490482199051,
+    "C46": 9.975511139523541e-05,
+    "C47": 0.2667735624929114,
+    "C5": 0.11920292202211755,
+    "C6": 0.00010566102618970258,
+    "C7": 8.011912400063528e-05,
+    "C8": 9.267086866599981e-05,
+    "C9": 3.996953851869704e-05,
+    "a": 0.00011066422033658658,
+    "and": 5.812633668357207e-05,
+    "attendance": 6.92550924558146e-05,
+    "away": 0.0006935008247833481,
+    "country": 0.00018909696775736037,
+    "date": 5.741293523343514e-05,
+    "for": 0.00011203065288865695,
+    "game": 5.973281752203379e-05,
+    "has": 0.0001209014466596259,
+    "home": 0.00022787552344386355,
+    "in": 5.529621234407474e-05,
+    "is": 0.658747410792353,
+    "location": 0.00012189998987543467,
+    "name": 0.00011643376246162072,
+    "number": 4.557087744824596e-05,
+    "of": 0.6109296083098408,
+    "opponent": 9.881375224178857e-05,
+    "player": 5.16676192728444e-05,
+    "points": 8.939209260698576e-05,
+    "position": 6.973431414682633e-05,
+    "rank": 8.65530402389883e-05,
+    "record": 9.197930811302395e-05,
+    "result": 0.0001182898886344491,
+    "s": 7.117984176290312e-05,
+    "score": 7.125118510655716e-05,
+    "team": 0.00020615186234959688,
+    "than": 0.6667611575003857,
+    "the": 0.9299136011729491,
+    "time": 7.98810467673365e-05,
+    "total": 3.730759234053366e-05,
+    "unknown": 0.11920292202211755,
+    "venue": 0.00020473405048064598,
+    "was": 8.146821630811653e-05,
+    "what": 0.9958547813648068,
+    "when": 7.573269085133886e-05,
+    "which": 0.996990859524572,
+    "who": 0.31990379826211657,
+    "with": 6.328180191991935e-05,
+    "year": 5.520170346373013e-05
+   },
+   "numpy_torch_diff": 5.768210348695773e-08,
+   "kinds": {
+    "tokens": 782849,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 453.1,
+   "calibration": {
+    "set_member:condition": {
+     "mean_present": 0.699396721352162,
+     "mean_absent": 0.12462794632292512,
+     "threshold": 0.26510692666879987,
+     "pooled_midpoint": 0.41201233383754354,
+     "rule": "fit",
+     "n_present": 530,
+     "n_absent": 1938
+    },
+    "presence:select": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:aggregate": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:condition": {
+     "mean_present": 0.7683547394417114,
+     "mean_absent": 0.3151632392804524,
+     "threshold": 0.4063471192194503,
+     "pooled_midpoint": 0.5417589893610819,
+     "rule": "fit",
+     "n_present": 395,
+     "n_absent": 5
+    }
+   },
+   "gates": {
+    "1": 0.00010821219891671441,
+    "2": 0.00029975608276439986,
+    "C0": 0.000556433472923458,
+    "C1": 0.0003420662561324777,
+    "C10": 0.18522967278607852,
+    "C11": 0.00014611309186274431,
+    "C12": 0.11920292202211755,
+    "C13": 0.00019232611809496476,
+    "C14": 0.00022331486103308173,
+    "C15": 0.0001276746032357123,
+    "C16": 3.643490414513593e-05,
+    "C17": 9.3486805769938e-05,
+    "C18": 0.00012192405859117336,
+    "C19": 5.141341054684564e-05,
+    "C2": 5.0312847928331975e-05,
+    "C20": 7.094356176628846e-05,
+    "C21": 5.283863002976068e-05,
+    "C22": 0.20143308986284283,
+    "C23": 0.0003104360712333964,
+    "C24": 9.50087805535972e-05,
+    "C25": 7.782088606076272e-05,
+    "C26": 0.00010898332103005746,
+    "C27": 4.8373312454308614e-05,
+    "C28": 8.797368394574573e-05,
+    "C29": 7.473054062765951e-05,
+    "C3": 6.321456003317887e-05,
+    "C30": 7.403123440177514e-05,
+    "C31": 0.4196794264771935,
+    "C32": 5.420869502958838e-05,
+    "C33": 8.842479391761838e-05,
+    "C34": 0.00012796735723751872,
+    "C35": 0.462747125957939,
+    "C36": 5.189639199537587e-05,
+    "C37": 0.0004061712141065444,
+    "C38": 5.679872982598584e-05,
+    "C39": 0.11920292202211755,
+    "C4": 7.251221519631694e-05,
+    "C40": 4.9597629802351675e-05,
+    "C41": 6.878601127903683e-05,
+    "C42": 0.34608702661602453,
+    "C43": 0.11920292202211755,
+    "C44": 0.13705832792447362,
+    "C45": 0.0008005208182529941,
+    "C46": 7.864495118469664e-05,
+    "C47": 0.27505618246478936,
+    "C5": 0.11920292202211755,
+    "C6": 0.0002485721609185873,
+    "C7": 7.458530360348115e-05,
+    "C8": 9.986462973220294e-05,
+    "C9": 3.5995649382455995e-05,
+    "a": 0.653738015577881,
+    "and": 4.988426370376373e-05,
+    "attendance": 7.90912305454827e-05,
+    "away": 0.0002748237155026691,
+    "country": 0.0001434959279395076,
+    "date": 4.094059926811458e-05,
+    "for": 7.734635016882642e-05,
+    "game": 5.9580656544268416e-05,
+    "has": 8.315929547686316e-05,
+    "home": 0.00018944511061620917,
+    "in": 0.000145834875677773,
+    "is": 0.6834156768254082,
+    "location": 0.0001173573597127087,
+    "name": 0.00011244919914545132,
+    "number": 4.1211957541545955e-05,
+    "of": 0.6911250528877517,
+    "opponent": 9.250405156238656e-05,
+    "player": 7.749044692771473e-05,
+    "points": 0.0001093811017010481,
+    "position": 8.173237218401452e-05,
+    "rank": 6.797594662945063e-05,
+    "record": 5.770790262245783e-05,
+    "result": 7.074399480753905e-05,
+    "s": 0.00012716088191091866,
+    "score": 0.00010278055037446761,
+    "team": 0.00010746919890570421,
+    "than": 0.0014900724173020567,
+    "the": 0.936028551705117,
+    "time": 9.447724017163336e-05,
+    "total": 5.0914529829422707e-05,
+    "unknown": 0.11920292202211755,
+    "venue": 0.00012708044730415905,
+    "was": 6.437069343653773e-05,
+    "what": 0.9840174466829846,
+    "when": 6.420033936011773e-05,
+    "which": 0.9152186291614591,
+    "who": 0.000330492540760766,
+    "with": 3.6535765275315016e-05,
+    "year": 5.235638176612576e-05
+   },
+   "numpy_torch_diff": 6.875590132779154e-08,
+   "kinds": {
+    "tokens": 782849,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  },
+  {
+   "t_train_s": 440.5,
+   "calibration": {
+    "set_member:condition": {
+     "mean_present": 0.7036456258257807,
+     "mean_absent": 0.13309080780208055,
+     "threshold": 0.3264866781469512,
+     "pooled_midpoint": 0.41836821681393066,
+     "rule": "fit",
+     "n_present": 535,
+     "n_absent": 2062
+    },
+    "presence:select": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:aggregate": {
+     "threshold": null,
+     "n_present": 400,
+     "n_absent": 0,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    },
+    "presence:condition": {
+     "threshold": null,
+     "n_present": 397,
+     "n_absent": 3,
+     "rule": "one class missing in the calibration rows: read by the training rate (always / never)"
+    }
+   },
+   "gates": {
+    "1": 0.00010505411060474794,
+    "2": 9.398799928908127e-05,
+    "C0": 0.0006206825510547993,
+    "C1": 0.00011941928601575255,
+    "C10": 0.0002372113920224591,
+    "C11": 7.73090220907201e-05,
+    "C12": 0.11920292202211755,
+    "C13": 0.00023551427885926365,
+    "C14": 0.00020850649344967008,
+    "C15": 0.00010090975754113679,
+    "C16": 4.823451749312059e-05,
+    "C17": 7.337301889130206e-05,
+    "C18": 6.646013168324636e-05,
+    "C19": 5.902740415057047e-05,
+    "C2": 8.765227041585673e-05,
+    "C20": 6.692716718691673e-05,
+    "C21": 3.8507830485000806e-05,
+    "C22": 0.21818403538911083,
+    "C23": 0.00013422183839815774,
+    "C24": 8.717778367737638e-05,
+    "C25": 7.798412128360529e-05,
+    "C26": 5.836557177648316e-05,
+    "C27": 7.910487599189566e-05,
+    "C28": 7.334838639362007e-05,
+    "C29": 5.609512245121193e-05,
+    "C3": 0.00010948325663934173,
+    "C30": 5.1691150235985216e-05,
+    "C31": 0.21875381084680942,
+    "C32": 3.391829634102859e-05,
+    "C33": 4.344835999769783e-05,
+    "C34": 9.752064063122564e-05,
+    "C35": 0.5282736485829088,
+    "C36": 5.88415514682545e-05,
+    "C37": 0.0002302352353756477,
+    "C38": 7.475097013234116e-05,
+    "C39": 0.11920292202211755,
+    "C4": 6.539663778823764e-05,
+    "C40": 0.00012589316056680854,
+    "C41": 7.692729834031757e-05,
+    "C42": 0.1795908619420281,
+    "C43": 0.11920292202211755,
+    "C44": 0.0002965629964757856,
+    "C45": 9.409089467090002e-05,
+    "C46": 0.00010011520568310992,
+    "C47": 0.0002784608848464298,
+    "C5": 0.11920292202211755,
+    "C6": 0.00011622338843009469,
+    "C7": 9.966971180750451e-05,
+    "C8": 9.895556034903027e-05,
+    "C9": 5.2087404419788874e-05,
+    "a": 5.937249347428939e-05,
+    "and": 7.071492415759698e-05,
+    "attendance": 7.713774894653103e-05,
+    "away": 0.0005581204621371115,
+    "country": 0.0002413018590966572,
+    "date": 6.771989837449449e-05,
+    "for": 0.0001881012317593889,
+    "game": 4.782670329066479e-05,
+    "has": 0.00014071399263407836,
+    "home": 0.0002549725962180645,
+    "in": 5.482523668235847e-05,
+    "is": 0.00012388774208460358,
+    "location": 0.0001490469401767826,
+    "name": 0.0001340395353724487,
+    "number": 3.970282764993245e-05,
+    "of": 0.5529142106609007,
+    "opponent": 8.670574504309927e-05,
+    "player": 7.236809818030592e-05,
+    "points": 8.554856558422515e-05,
+    "position": 9.881426521404137e-05,
+    "rank": 7.652236408169091e-05,
+    "record": 5.988239941553059e-05,
+    "result": 7.927380791059213e-05,
+    "s": 8.02232319152903e-05,
+    "score": 5.1655991380743604e-05,
+    "team": 0.00019044759769377195,
+    "than": 0.8330674720907295,
+    "the": 0.84867359969428,
+    "time": 9.855284535543461e-05,
+    "total": 5.729989544197341e-05,
+    "unknown": 0.11920292202211755,
+    "venue": 0.00014805214381025087,
+    "was": 0.00010677704223638051,
+    "what": 0.9988188905329753,
+    "when": 6.777538620508332e-05,
+    "which": 0.9985059673042123,
+    "who": 0.7219649706136291,
+    "with": 3.683738422375161e-05,
+    "year": 6.738006947795318e-05
+   },
+   "numpy_torch_diff": 6.158191460484608e-08,
+   "kinds": {
+    "tokens": 782849,
+    "unknown_kind_tokens": 0,
+    "unknown_share": 0.0
+   }
+  }
+ ],
+ "labels_rule22": "every number BUILT by this run",
+ "mean_over_seeds": {
+  "dev": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 0.2172346910501524,
+     "std": 0.006049168971962876
+    },
+    "FULL incl. attr (previous definition)": {
+     "mean": 0.001187507421921387,
+     "std": 0.00038783829993004445
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "depth estimate: fit (check)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "set condition: exact": {
+     "mean": 0.306772750663025,
+     "std": 0.012878601786964686
+    },
+    "set condition: first gold member in the decoded set": {
+     "mean": 0.6821427146902795,
+     "std": 0.03157597754090331
+    },
+    "role select": {
+     "mean": 0.8160946839251079,
+     "std": 0.0034856034457905367
+    },
+    "head select": {
+     "mean": 0.8160946839251079,
+     "std": 0.0034856034457905367
+    },
+    "lexical order head select": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head select": {
+     "mean": 0.0043937774611091315,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 0.9505710629827969,
+     "std": 0.0101592529247955
+    },
+    "role aggregate": {
+     "mean": 0.8271385029489767,
+     "std": 0.0042111423550736365
+    },
+    "head aggregate": {
+     "mean": 0.8271385029489767,
+     "std": 0.0042111423550736365
+    },
+    "lexical order head aggregate": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head aggregate": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "role condition": {
+     "mean": 0.306772750663025,
+     "std": 0.012878601786964686
+    },
+    "head condition": {
+     "mean": 0.306772750663025,
+     "std": 0.012878601786964686
+    },
+    "lexical order head condition": {
+     "mean": 0.007600047500296876,
+     "std": 8.673617379884035e-19
+    },
+    "lexical bag head condition": {
+     "mean": 0.0033250207813798837,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.2172346910501524,
+     "std": 0.006049168971962876
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "FULL [pooled midpoint (comparison)]": {
+     "mean": 0.23251395321220758,
+     "std": 0.0031523047527315944
+    },
+    "role select [pooled midpoint (comparison)]": {
+     "mean": 0.8160946839251079,
+     "std": 0.0034856034457905367
+    },
+    "role aggregate [pooled midpoint (comparison)]": {
+     "mean": 0.8271385029489767,
+     "std": 0.0042111423550736365
+    },
+    "role condition [pooled midpoint (comparison)]": {
+     "mean": 0.335589597434984,
+     "std": 0.0026992403311138567
+    },
+    "heads FULL (model) [pooled midpoint (comparison)]": {
+     "mean": 0.23251395321220758,
+     "std": 0.0031523047527315944
+    },
+    "FULL incl. attr (previous definition) [pooled midpoint (comparison)]": {
+     "mean": 0.0014645924870363774,
+     "std": 0.0002018374505637805
+    },
+    "occupancy: unknown filler": {
+     "mean": 0.9133723767691557,
+     "std": 0.021679034009795796
+    },
+    "occupancy: not given": {
+     "mean": 0.5104166666666666,
+     "std": 0.09660019266141358
+    }
+   }
+  },
+  "train (sample)": {
+   "catalog candidates": {
+    "FULL": {
+     "mean": 0.3033333333333333,
+     "std": 0.0282842712474619
+    },
+    "FULL incl. attr (previous definition)": {
+     "mean": 0.0011111111111111111,
+     "std": 0.0015713484026367726
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "depth estimate: fit (check)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "set condition: exact": {
+     "mean": 0.3811111111111111,
+     "std": 0.03154459903684086
+    },
+    "set condition: first gold member in the decoded set": {
+     "mean": 0.7762863534675616,
+     "std": 0.022978342935317832
+    },
+    "role select": {
+     "mean": 0.9022222222222221,
+     "std": 0.0068493488921877715
+    },
+    "head select": {
+     "mean": 0.9022222222222221,
+     "std": 0.0068493488921877715
+    },
+    "lexical order head select": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head select": {
+     "mean": 0.01,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 0.9671717171717171,
+     "std": 0.009163106505503874
+    },
+    "role aggregate": {
+     "mean": 0.8355555555555556,
+     "std": 0.0015713484026367562
+    },
+    "head aggregate": {
+     "mean": 0.8355555555555556,
+     "std": 0.0015713484026367562
+    },
+    "lexical order head aggregate": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head aggregate": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "role condition": {
+     "mean": 0.3811111111111111,
+     "std": 0.03154459903684086
+    },
+    "head condition": {
+     "mean": 0.3811111111111111,
+     "std": 0.03154459903684086
+    },
+    "lexical order head condition": {
+     "mean": 0.006666666666666667,
+     "std": 0.0
+    },
+    "lexical bag head condition": {
+     "mean": 0.01,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.3033333333333333,
+     "std": 0.0282842712474619
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "occupancy: unknown filler": {
+     "mean": 0.940251572327044,
+     "std": 0.027051337317744104
+    },
+    "occupancy: not given": {
+     "mean": 0.8333333333333334,
+     "std": 0.23570226039551584
+    }
+   }
+  }
+ }
+}

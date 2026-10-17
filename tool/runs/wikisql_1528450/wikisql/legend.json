@@ -1,0 +1,76 @@
+{
+ "version": 1,
+ "roles": [
+  {
+   "id": "select",
+   "question": "which column is asked for?"
+  },
+  {
+   "id": "aggregate",
+   "question": "which aggregate of it?"
+  },
+  {
+   "id": "condition",
+   "question": "which columns constrain the rows (a set)?"
+  }
+ ],
+ "events": [
+  {
+   "id": "query",
+   "verbs": [
+    "what",
+    "which",
+    "how",
+    "who",
+    "when",
+    "where",
+    "name",
+    "tell",
+    "list",
+    "give"
+   ]
+  }
+ ],
+ "operators": [],
+ "moods": [
+  "question"
+ ],
+ "kinds": {
+  "source": "lexicon",
+  "lexicon": "kinds.tsv"
+ },
+ "values": [],
+ "reader": {
+  "predicate_role": false,
+  "occupancy_marker": false,
+  "definite_dets": [],
+  "value_identity": "bundle_alnum",
+  "closed_values": {
+   "aggregate": [
+    "NONE",
+    "MAX",
+    "MIN",
+    "COUNT",
+    "SUM",
+    "AVG"
+   ],
+   "attr": [
+    "EQ",
+    "GT",
+    "LT"
+   ]
+  },
+  "table_roles": [
+   "select",
+   "condition"
+  ],
+  "set_roles": [
+   "condition"
+  ],
+  "value_terms": true,
+  "no_sense_share": 1.0,
+  "full_excludes": [
+   "attr"
+  ]
+ }
+}

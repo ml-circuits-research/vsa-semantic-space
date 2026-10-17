@@ -1,0 +1,2 @@
+sop train /tmp/sop_wikisql_BMQv/wikisql --D 512 --epochs 3 --batch 32 --length_buckets --seeds 3 --device cuda --n_eval 8421 --log_every 1000 --eval_modes primary --candidate_sets catalog --no_ckpt --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450/wikisql
+commit 1528450

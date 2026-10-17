@@ -1,0 +1,41 @@
+GPU lock: /home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/logs/.run.lock
+# wikisql, commit 1528450, 2026-10-17T15:07:04+02:00; worlds in /tmp/sop_wikisql_BMQv; runs in /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450
+# FIRST ATTEMPT (commit f9e27b0, 2026-10-17 14:42): stopped after 20 minutes in seed 0 for the quadratic padding cost (every batch padded to the longest question of the whole set; the chain code is quadratic in the length) and produced nothing; this run batches by length (--length_buckets: v11's bucketing, each batch trimmed to its longest question — exact, tested in test 7).
+# CRITERION (written before the run, judgment 934fbae E2): the package reproduces RESULTS 8c / 8d within seed variance — dev: selected column 0.810±0.004 (8c) / 0.816 (8d 56k), condition-1 column 0.632±0.004 / 0.626 (here: the first gold condition column in the decoded SET), FULL query 0.376±0.003 / 0.368 — and the frames round-trip through SOP Lang (write -> check -> read, byte-identical; frames equal the SQL). Sizes: 56,355 train questions, 3 epochs, D = 512, batch 32, lr 0.02, 3 seeds, identities fixed across seeds (as v11), question only; condition as a SET value (one role, & of entity wires), not indexed slots (judgment d8f8a98 Q1).
+export_wikisql: /tmp/sop_wikisql_BMQv/wikisql — train 56355, dev 8421; kinds 88 (40 frequent tokens + clusters) over 32219 question words; legend sha256:9b7ddb62bd18…
+## wikisql: sop train /tmp/sop_wikisql_BMQv/wikisql --D 512 --epochs 3 --batch 32 --length_buckets --seeds 3 --device cuda --n_eval 8421 --eval_modes primary --candidate_sets catalog --no_ckpt
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450/wikisql/splits.json before training: dev 8421, train 56355
+[schema] roles ['select', 'aggregate', 'condition'] (core ['select', 'aggregate']), max depth 0, event negation False
+[train seed 0] end: RSS 5.13 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 108.5 GB (448s)
+[export] numpy reader vs torch states: max relative difference 5.77e-08 (float32 phases in the route book)
+[eval] seed 0 dev: FULL catalog candidates 0.220 | residual 0.881
+[eval] seed 0 train (sample): FULL catalog candidates 0.323 | residual 0.874
+[train seed 1] end: RSS 6.55 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 107.1 GB (453s)
+[export] numpy reader vs torch states: max relative difference 6.88e-08 (float32 phases in the route book)
+[eval] seed 1 dev: FULL catalog candidates 0.209 | residual 0.886
+[eval] seed 1 train (sample): FULL catalog candidates 0.263 | residual 0.881
+[train seed 2] end: RSS 6.64 GB | torch alloc 2.15 GB reserved 2.17 GB | MemAvailable 107.0 GB (440s)
+[export] numpy reader vs torch states: max relative difference 6.16e-08 (float32 phases in the route book)
+[eval] seed 2 dev: FULL catalog candidates 0.223 | residual 0.886
+[eval] seed 2 train (sample): FULL catalog candidates 0.323 | residual 0.881
+[done] model written to /tmp/sop_wikisql_BMQv/wikisql/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450/wikisql/train.log
+WikiSQL through the tool (question only; dev 8,421), mean ± std over the seeds of the run; RESULTS 8c (3 seeds, D = 512, 3 epochs, 56,355 train) and 8d (56k row) beside it.
+
+| axis | package | RESULTS 8c (dev) | RESULTS 8d (56k, dev) |
+|---|---|---|---|
+| selected column | 0.816±0.003 | 0.810±0.004 | 0.816 |
+| aggregator | 0.827±0.004 | 0.814±0.003 | 0.801 |
+| condition column: the first gold condition column in the decoded SET (8c's condition-1 analog) | 0.682±0.032 | 0.632±0.004 (condition-1 column) | 0.626 |
+| condition columns: the decoded set EXACT | 0.307±0.013 | — (8c: indexed slots) | — |
+| FULL query (select + aggregate + the condition column set; operators and values not read) | 0.217±0.006 | 0.376±0.003 (all condition columns, indexed) | 0.368 |
+| FULL, pooled-midpoint thresholds (the comparison) | 0.233±0.003 | | |
+| condition presence: present read present / absent read absent | — / — | | |
+
+seeds [0, 1, 2]; chance {'select': 3.1849162367029746e-05, 'aggregate': 0.00025940337224383917, 'condition': 3.1849162367029746e-05}
+
+SOP round trip (write -> sop check -> read -> write; frames read back vs the SQL):
+| file | questions | sop check | byte-identical | frames differing from the SQL |
+|---|---|---|---|---|
+| train.sop | 56355 | yes | yes | 0 |
+| dev.sop | 8421 | yes | yes | 0 |
+done: commit /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_1528450 (git add tool/runs/wikisql_1528450)
