@@ -320,3 +320,10 @@ block-sparse chart at 25% free. B7 (RESULTS 14, log _1040): the round-1 position
 0.678, depth 3 0.968 -> 0.998; the reference bundle becomes four codes (confirmation asked). Push = judgment point.
 Tool round 4 (agent; RESULTS 11-quinquies): presence thresholds calibrated with held-out formulations move the recipient by +0.005 -> presence
 calibration across formulations recorded as a limit of the reader (the agent's reservation on the midpoint rule left for judgment). Push.
+
+## 2026-10-17 (DGX, midday) — judgment d8f8a98 applied: documents, B7 settlement, tool round 5
+Documents: slot-1 sentence in 10c-nonies, 10d labelled (A) with its reason, RESULTS 14 hypothesis marked then withdrawn, B6 adoption deferred.
+B7 settlement (log _1225, RESULTS 14-bis): the +0.051 is a surface-position prior (T11 +0.37 vs T4 −0.71, T7 −0.44), the depth-3 gain comes from
+trained positions, untrained positions inert (omission rule adopted), terms +33% — the reference decision left to the reviewing session. Tool
+round 5 (agent, RESULTS 11-sexies): stored presence ratios — by the rule the reader's limit (~10% overlap; no 0.9 / 0.9 in 3 of 5 seeds), but the
+fitted threshold takes the recipient 0.64 -> 0.87 at 0.91 absent; adopting the fit is a product decision for the reviewing session. Push.

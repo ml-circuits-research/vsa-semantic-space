@@ -1629,3 +1629,24 @@ bundles are far beyond it and the capacity at D = 1024 is untested there (00_REA
 Settlement, for the reviewing session's decision (not taken here): the position code is kept as a measured variant with the omission rule; its
 unseen-transition gain is a surface-position prior with wins and losses by template, not a compositional mechanism; its depth-3 gain is real
 on these draws (0.977 -> 0.998) and comes from trained positions; it adds a third more terms per sentence.
+
+### 11-sexies. Tool round 5 — stored presence ratios: midpoint rule vs fitted threshold (tool/tests/gpu_round5.sh at commit 1ed4306; tool/runs/round5_1ed4306/ with presence_ratios_seed0..4.json and round5_table.md; one retrain of the reference world in round 4 F's regime, 5 seeds; judgment d8f8a98 Q5)
+Classes (stated in the header, the log and the caption): present / calibration = the calibration halves of the held-out formulations (n 156);
+present / report = the reported halves (n 87); absent / calibration = the training sample's recipient-less sentences (the held-out formulations
+carry none); absent / report = the held-out sentences without a recipient (n 603). Decision rule (verbatim, before the run): no threshold separating
+present and absent above 0.9 / 0.9 on the report rows -> the READER's limit; a threshold fitted on the calibration rows separating them -> the
+midpoint RULE's limit.
+| readout, role recipient | threshold | present read present | absent read absent | balanced | present on all held-out formulations |
+|---|---|---|---|---|---|
+| (i) product today: pooled midpoint (training sample + calibration half) | 0.651±0.036 | 0.639±0.040 | 1.000 | 0.820±0.020 | 0.782±0.024 |
+| **(ii) fitted** (max balanced accuracy on the calibration rows) | **0.336**±0.047 | **0.871**±0.064 | 0.912±0.061 | **0.892**±0.011 | 0.922±0.039 |
+Overlap on the report rows: 0.103±0.016 of the present ratios lie below the absent class's 90th percentile; the best balanced accuracy of ANY
+threshold chosen on the report rows (a separability diagnostic, not a readout) is 0.908±0.008; a threshold reaching 0.9 present AND 0.9 absent
+exists in 2 of 5 seeds (seeds 1, 3). Per seed, fitted present / absent: 0.759 / 0.997, 0.885 / 0.922, 0.931 / 0.859, 0.931 / 0.829, 0.851 / 0.954.
+OUTCOME by the rule as written: **the READER's limit** (the 0.9 / 0.9 separation fails in 3 of 5 seeds) — stays recorded. Reading, both statements
+hold: the classes overlap by about 10%, so no threshold reaches 0.9 / 0.9 everywhere; AND most of the round-4 gap was the midpoint RULE, not the
+overlap — the pooled midpoint sits at 0.65 where every absent sentence reads absent and a third of the present recipients fall below it; fitted on
+the calibration rows the threshold drops to 0.34 and the product goes 0.64 -> 0.87 present at 0.91 absent, balanced 0.82 -> 0.89, close to the
+separability ceiling (0.908), and 0.922 present over all held-out formulations. Whether the tool's calibration becomes the fit anyway — a stated
+trade: more recipients read, about 9% of recipient-less sentences then read as having one — is a decision for the reviewing session; nothing in
+the tool's calibration was changed.

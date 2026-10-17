@@ -1,46 +1,35 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-17 — judgment 45ccd1d applied in full: F1 recording, per-seed readout, C5 closed, B6 and B7 done; tool round 4 running)
+# Current status (rewritten whole at every judgment point; last: 2026-10-17 — judgment d8f8a98 applied: documents, B7 settlement, tool round 5)
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_45ccd1d.md (saved verbatim), experiment/RESULTS.md
-12-quinquies, 10c-nonies, 13, 14; STATUS.md; experiment/JOURNAL.md; tool/README.md.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_d8f8a98.md (saved verbatim), experiment/RESULTS.md 14-bis,
+11-sexies, 10c-nonies, 14; STATUS.md; experiment/JOURNAL.md; tool/README.md; tool/runs/round5_1ed4306/round5_table.md.
 
-## A. Done since 45ccd1d, in the instructed order
-| step | result | criterion / decision rule (written before) | outcome |
+## A. Done since d8f8a98, in the instructed order
+| step | result | criterion / expectation (written before) | outcome |
 |---|---|---|---|
-| F1 recording (one commit) | regularity row: ONE NAMED EXCEPTION (may_neg at the unseen depth 0.855) and the rule-29 (A)/(B) labels on 6c, 10b-quinquies, 10d (seen-hop case stated with its reason: 'the' is an open emitter between the openers), 9c-sexies, 12-quater; the two-limits row carries the trace's cosines (subject's address identical for one pair, closer to the other target for two); B5.1 row "below criterion"; B5d -> HYPOTHESIS ("needed if a legend requires the subject's term as a structure witness"); N8 PLANNED; rule 29; "soft" wording removed everywhere | — | done |
-| per-seed readout of 12-quater (rescore_v20, log 2026-10-17_1028; RESULTS 12-quinquies) | the means reproduce the run's digits exactly (deterministic readout); may_neg at depth 2 per seed **0.850, 0.800, 0.950, 0.675, 1.000** (2/5 above 0.9); must 0.925-1.000 (5/5); every other form 0.975-1.000 | rule 27 | the exception is on record per seed |
-| **C5 per-slot thresholds** (rescore_v17_c5_slots, log _1029; RESULTS 10c-nonies) | slots 2+ present 0.616 -> **0.760**; slot 1 0.995 -> **0.330** (33 absent examples; their marker cosine is above the present class's, the midpoint is unsettable); false alarm 0.153; by slot index 0.995 / 0.726 / 0.129, by number of conditions 0.995 / 0.835 / 0.664 | present >= 0.9 on slots 2+ AND false alarm <= 0.152 | **NOT met -> C5 CLOSED** as "bounded by the presence reading of the later slots"; the drop follows the slot index more than the number of conditions -> the later slot roles have too few examples (slot 3+ = 295 of 16,840 slots), not superposition |
-| **B6** sparse block codes / phase quantization (rescore_v16_b6, log 2026-10-17_1037; RESULTS 13; saved 10b-quinquies models, no training) | route book at 4 bits per phase and catalog / legend stars at 4 bits: every axis within 0.02 of dense; chart as unit phasors: NOT (unseen transitions −0.05, depth 3 −0.03 at every L); chart block-sparse 25%: within 0.02, 12.5% at the edge; capacity: 32 terms clean at D = 1024, 64 start to fail (dense 0.989, top-8 0.850) | every axis within 0.02 of dense (written before) | BUILT: recommendation = 4-bit route book and stars (routebook.npz 8x smaller), chart sparse at 25% with magnitudes kept |
-| **B7** fourth address code: the round-1 position code added to the bundle (v16 --codes path,chainL,bigram,pos; log _1040; RESULTS 14; 5 seeds, regime of 10b-quinquies) | unseen transitions 0.627 -> **0.678**±0.007 (5/5 seeds 0.675-0.692); depth 3 UNSEEN 0.968 -> **0.998**±0.003; every other axis 1.000 | keep only if new-construction does not drop > 0.02 and no other axis loses | **KEPT**: the reference bundle is path + chainL + bigram + position from RESULTS 14 on (10b-quinquies stays the three-code record); the tool should carry the code list (agent, PLANNED) |
-| Tool round 4 (agent; RESULTS 11-quinquies; tool/runs/round4_39063ed/) | presence thresholds calibrated with the calibration half of the held-out formulations: recipient 0.625 -> **0.630** on identical rows (every-role-read 0.809); thresholds moved 0.636 -> 0.622 only (the midpoint of ~480 present rows at 1.1-1.2 vs absent 0.1-0.2); no cost elsewhere | expectation (written before): the recipient recovers toward 0.839 without reading every role | **NOT met** -> per the judgment: presence calibration across formulations is a recorded limit of the READER, not of the tool; product first in every table; depth estimator stated as a GIVEN |
+| documents (Q1, Q2, B1, Q4) | 10c-nonies: for slot 1 the marker carries no presence signal (its cosine is higher on the absent class), the filler cleanup does; 10d labelled (A) — depth unseen, hops seen; reason: 'the' between the openers; RESULTS 14's depth-3 sentence marked as a hypothesis, then withdrawn by the trace; B6 adoption deferred (4-bit route book as an EXPORT option when size is asked for; chart sparsity not adopted) | — | done |
+| **B7 settlement** (rescore_v16_b7, log 2026-10-17_1225; RESULTS 14-bis; saved three- and four-code models, no training) | (a) the +0.051 on unseen transitions is a surface-position PRIOR: T11 +0.37 (object at sentence-final position 5, as in training templates T6 / T9) against T4 subject −0.71 and T7 recipient −0.44 — not compositional; (b) omitting the position term beyond the trained range (positions >= 15) gives identical digits on every axis: the untrained positions contribute nothing; depth 3 0.977 -> 0.998 on the same draws comes from the trained positions; (c) terms per sentence +33% (depth 3: 66 vs 49; P1 lengths 80-120 vs 60-90) — the four-code depth-3 bundle already exceeds B6's 64 and reads 0.998, so the synthetic curve is not the reader's binding constraint | (b): no loss, possibly a small gain | (b) met on the no-loss side (identical); the omission rule adopted as the position code's stated behaviour (V8 `pos_max`); **the reference decision is the reviewing session's** (D, 1) |
+| **Tool round 5** (agent; RESULTS 11-sexies; tool/runs/round5_1ed4306/) | stored presence ratios, role recipient: pooled midpoint (product) 0.639 present / 1.000 absent; threshold FITTED on the calibration rows 0.871 / 0.912 (balanced 0.820 -> 0.892; ceiling 0.908); overlap ~10% of present ratios below the absent 90th percentile; a 0.9 / 0.9 threshold exists in 2 of 5 seeds | the judgment's rule, verbatim in the header | **OUTCOME by the rule: the READER's limit** (no 0.9 / 0.9 in 3 of 5 seeds); but most of the round-4 gap was the midpoint RULE: the fit takes the product 0.64 -> 0.87 present at 0.91 absent — adopting the fit (a stated trade: ~9% of recipient-less sentences then read as having one) is for the reviewing session (D, 2); nothing changed in the tool |
 
 ## B. HYPOTHESIS
-- Presence calibration across formulations (RESULTS 11-quinquies): the training-row midpoint does not transfer to unseen formulations (one
-  recipient in five below it). Open, not run: a threshold fitted on the held-out formulations alone; whether their presence ratios overlap the
-  absent class (the per-sentence ratios were not stored — a short retrain would store them). The agent's reservation, left for judgment.
-- Verifier condition axis (C5 closed): the presence reading of the second and later condition slots is bounded by the number of training examples
-  of those slot roles (slot 3+ 0.129 vs slot 1 0.995); the diagnostic that would decide it further is a training set re-weighted toward
-  multi-condition questions, or one condition role with a count — neither proposed now.
-- B5d multi-hop left re-seating: needed only if a legend requires the subject's term as a structure witness (judgment 45ccd1d A2).
+- Presence calibration across formulations: ~10% overlap of the present and absent presence-ratio classes on unseen formulations (reader); the
+  midpoint rule adds a further third of missed recipients on top (rule). Fit vs midpoint is a product decision (D, 2).
+- B5d multi-hop left re-seating: needed only if a legend requires the subject's term as a structure witness.
+- Verifier condition axis (C5 closed): the later slot roles have too few examples; the legend choice (indexed slots vs one condition role with a
+  SET value) is made when P1's legend is written.
 - N5 "resolve before drawing": diagnostic to print in the next kinds run.
 
 ## C. PLANNED, in the instructed order
-Tool round 4 (presence thresholds on held-out formulations; running); tool: the position code in `sop train`; N6; N8 (verb-final world, low
-priority); P1 when the team's data arrives (the annotation path once with a key, wherever the team runs it); N7 after N1; B8-B9; capacity at
-64-1,000 identities and D = 4,096-16,384 (00_READ_FIRST §7).
+N6 on the settled bundle (after D, 1); N8 (verb-final world, low priority); P1 when the team's data arrives (the annotation path once with a key,
+wherever the team runs it); N7 after N1; B8-B9; capacity at 64-1,000 identities and D = 4,096-16,384 (00_READ_FIRST §7); the position code in
+`sop train` only if the reference changes; the 4-bit route book as an export option when a deployment asks for size.
 
-## D. Questions for the reviewing session
-1. C5 is closed as instructed. The diagnostic points at data per slot role, not capacity. Is a re-weighted training set (more multi-condition
-   questions) worth one retraining later, or does the verifier stay as it is until P1?
-2. 10d's rule-29 label: training at depths 0-1 only, yet every hop at depth 2 occurs at depth 1 because 'the' (an open emitter) sits between the
-   openers and also follows 'that' inside the commands — labelled "seen-hop case, stated". Agreed, or should 10d be re-labelled (A) with a
-   depth-2 training re-run under the E1b protocol for uniformity?
-3. B7 KEPT the position code by its decision rule (new construction +0.05, depth 3 0.998). Recording: the reference bundle becomes path + chainL
-   + bigram + position from RESULTS 14 on, with 10b-quinquies as the three-code record, and the tool's `sop train` exposes the code list so the
-   reference model carries it. Confirm the change of reference, or keep 10b-quinquies as the reference with B7 recorded as a kept variant?
-4. B6: the recommendation (4-bit route book and stars; chart block-sparse at 25% with magnitudes) is a storage format for the tool's model and
-   wire, not a change in the reader. Should the tool adopt it now (one engineering round: quantized routebook.npz, sparse chart option) or stay
-   dense until P1?
-5. Tool round 4: the held-out calibration moved the recipient by +0.005; recorded as a limit of the reader, as instructed. The agent's reservation:
-   only the pooled-midpoint rule was tested, and the reported rows' presence ratios were not stored. One short retrain that stores them would say
-   whether the ratios overlap the absent class (a reader limit) or only the midpoint rule fails to move (a calibration-rule limit). Run it, or
-   leave the limit recorded as is?
+## D. Decisions for the reviewing session
+1. The reference bundle (B7): the numbers of 14-bis — the unseen-transition gain is a surface-position prior with wins and losses by template
+   (T11 +0.37; T4 −0.71 on the subject; T7 −0.44 on the recipient), the depth-3 gain 0.977 -> 0.998 is real and comes from trained positions, the
+   untrained positions are inert under the omission rule, terms per sentence +33%. Three codes (10b-quinquies) or four (B7)? N6 waits on this.
+2. The tool's presence calibration: keep the pooled midpoint (product today: recipient 0.64 present / 1.00 absent on unseen formulations), or
+   adopt the threshold fitted on calibration rows that include held-out formulations (0.87 / 0.91, balanced 0.89, ceiling 0.908) — a stated
+   trade of ~9% false "present" on recipient-less sentences for a third more recipients read? By the rule as written the limit is the reader's
+   and is recorded so; the fit is a separate product decision.
+3. B6 facts for the books (on your side): the chart must keep its magnitudes; 32 terms clean / 64 failing at D = 1024 for synthetic bundles — with
+   the caveat from 14-bis (c) that the reader's structured depth-3 bundles read 0.998 at 66 terms.
