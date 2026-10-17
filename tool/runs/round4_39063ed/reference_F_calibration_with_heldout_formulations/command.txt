@@ -1,0 +1,2 @@
+sop train /tmp/sop_round4_itmb/reference --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --calibrate_on_heldout_formulations --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round4_39063ed/reference_F_calibration_with_heldout_formulations
+commit 39063ed
