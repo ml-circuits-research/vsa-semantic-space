@@ -64,7 +64,16 @@ rm = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "metr
 ok("depth estimate: level gates (primary)" in rm and "FULL [fit estimate]" in rm,
    f"reference depth 3: depth from the level gates {rm['depth estimate: level gates (primary)']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
    f"FULL gates / fit / given {rm['FULL']:.3f} / {rm['FULL [fit estimate]']:.3f} / {rm['FULL [depth given]']:.3f}")
-ok("_depth.gates=" in open(form.replace("quantifiers", "reference")).read(), "formalize writes _depth.gates and _depth.fit on the top-level wire")
+rt = open(form.replace("quantifiers", "reference")).read()
+ok("_depth.gates=" in rt and "_depth.kinds=" in rt and "_depth.fit=" in rt, "formalize writes _depth.gates, _depth.kinds and _depth.fit on the top-level wire")
+ok("depth estimate: opener-kind count" in rm and "FULL [kind-count estimate]" in rm,
+   f"reference depth 3: the opener-kind count right on {rm.get('depth estimate: opener-kind count', float('nan')):.3f}; FULL [kind-count] {rm.get('FULL [kind-count estimate]', float('nan')):.3f}")
+import subprocess
+sop = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(form))), "bin", "sop")
+md = os.path.join(os.path.dirname(q), "reference", "model"); txt = "p3 gives o1 .\n"
+d1 = subprocess.run([sop, "formalize", "--model", md, "-"], input=txt, capture_output=True, text=True).stdout
+d2 = subprocess.run([sop, "formalize", "--model", md, "--presence", "all", "-"], input=txt, capture_output=True, text=True).stdout
+ok("recipient=" not in d1.split("@w")[1] and "recipient=" in d2, "--presence all reads every role (a recipient-less sentence gets a recipient line); the default decides presence")
 sys.exit(fails)
 EOF2
 FAILS=$((FAILS+$?))

@@ -234,7 +234,9 @@ def bag_baseline(train_rows, legend, schema):
     return predict
 
 
-STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}))
+STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("gate-count estimate", {"estimator": "gates"}),
+                ("kind-count estimate", {"estimator": "kinds"}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}),
+                ("presence not decided", {"presence": "all"}))
 
 
 def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
@@ -254,17 +256,27 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if kw.get("force"): kk["force"] = (len(g["speakers"]), g["neg"])
             if kk and g["shape"] != "ok": kk = {}
             if kw.get("estimator"): kk["estimator"] = kw["estimator"]
-            if mode == "fit estimate" and not legend.reader.get("level_openers"): continue      # the primary IS the fit here
+            if kw.get("presence"):
+                if not getattr(reader, "_eval_presence_all", False): continue                 # only with --also_presence_all (round 3, run D)
+                kk["presence"] = kw["presence"]
+            if mode in ("fit estimate", "gate-count estimate", "kind-count estimate") and not legend.reader.get("level_openers"): continue
+            if {"gates": "gate-count estimate", "kinds": "kind-count estimate", "fit": "fit estimate"}[reader.cfg.get("depth_estimator", "gates")] == mode: continue  # = the primary
             wires, f, info = reader.formalize(row["text"], 0, ids, filt, **kk)
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
             acc["FULL" + label].append(same(drop))
+            if mode == "presence not decided":
+                for r in schema["role_order"]:
+                    acc[f"role {r} [presence not decided]"].append(json.dumps(g["roles"].get(r)) == json.dumps(f["roles"].get(r) if f_ok else None))
+                acc["heads FULL (model) [presence not decided]"].append(all(head_word(g["roles"].get(r)) == head_word(f["roles"].get(r) if f_ok else None)
+                                                                             for r in schema["role_order"]))
             if drop: acc["FULL incl. " + "+".join(drop) + " (previous definition)" + label].append(same(()))
             if mode != "estimated": continue
             status[info["status"]] += 1; resid.append(info["residual"]); per_form[signature(row, legend)].append(same(drop))
             acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
             if f.get("depth_gates") is not None: acc["depth estimate: level gates (primary)"].append(f["depth_gates"] == len(g["speakers"]))
             if f.get("depth_fit") is not None: acc["depth estimate: fit (check)"].append(f["depth_fit"] == len(g["speakers"]))
+            if f.get("depth_kinds") is not None: acc["depth estimate: opener-kind count"].append(f["depth_kinds"] == len(g["speakers"]))
             mg = f.get("margins", {})
             if pred:
                 ok = f_ok and f.get("lemma") == g.get("lemma"); acc["predicate (surface lemma)"].append(ok); cal.add("predicate", ok, mg.get("event", 0))
@@ -386,7 +398,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     with open(os.path.join(model_dir, "catalog.json"), "w") as f: json.dump(catalog, f, indent=1, sort_keys=True)
     cfg = {"world": a.world_name, "D": a.D, "seed": seed, "language": a.language, "legend_sha256": legend.sha, "legend_version": legend.version,
            "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": ["path", "chainL", "bigram"],
-           "gate_init": "closed", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
+           "gate_init": "closed", "depth_estimator": a.depth_estimator, "presence_readout": "decided", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
            "thresholds": {"tau": a.tau, "tau_source": "stated (the repository's v16 value), not fitted on any rows", "no_sense_share": 0.5,
                           "no_sense_source": "stated", "no_fit_residual": 0.9, "no_fit_source": "stated (dispatcher only, spec section 9)",
                           "presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}}
@@ -445,6 +457,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
 
 
 def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None):
+    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False))
     by = collections.defaultdict(list)
     for r in rows: by[r["split"]].append(r)
     out = {}
@@ -543,6 +556,10 @@ def main(argv=None):
     ap.add_argument("--splits", help="reuse the split assignment of an earlier run (held-out set fixed before a legend change)")
     ap.add_argument("--resume", action="store_true"); ap.add_argument("--force", action="store_true", help="accept examples whose !legend hash differs (inspection only)")
     ap.add_argument("--out", help="model folder (default <world>/model)")
+    ap.add_argument("--depth_estimator", default="gates", choices=["gates", "kinds", "fit"], help="the primary depth estimator written into "
+                    "model/config.json: open level gates passed (default), level-opener kinds counted (gate-independent), or the fit")
+    ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
+                    "v16), next to the decided readout (round 3, run D); the model's default readout stays 'decided'")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")
     ap.add_argument("--run_dir", help="write this run's folder here instead of <world>/runs/<timestamp>")
     ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")

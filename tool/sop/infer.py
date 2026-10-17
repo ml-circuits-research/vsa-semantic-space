@@ -155,7 +155,7 @@ class Reader:
         if self.legend.reader["predicate_role"]: tops.append(self.best(Sn * K * np.conj(self.st.op("pred")), self.verb_cands())[2])
         return float(np.mean(tops)) if tops else 0.0
 
-    def read_role(self, Sn, K, r, core, filt=None):
+    def read_role(self, Sn, K, r, core, filt=None, presence="decided"):
         rs = self.schema["roles"][r]; key = K * np.conj(self.st.role(r)); out = {"margins": {}}
         if self.legend.reader["occupancy_marker"]:
             mk = self.st.marker() / np.sqrt(self.D); pres = float(np.real(np.sum(Sn * key * np.conj(mk))))
@@ -163,6 +163,7 @@ class Reader:
         ratio = pres / core if core > 1e-9 else 0.0; out["presence"] = ratio
         thr = self.th.get("presence", {}).get(r)
         present = (ratio >= thr) if thr is not None else rs["rate"] >= 0.5
+        if presence == "all": present = True
         out["present"] = present
         if not present: return out
         if rs["main"] == "entity":
@@ -203,12 +204,20 @@ class Reader:
         gate = lambda k: float(g[self.rb.cat_id[k]]) if k in self.rb.cat_id else 0.0
         return sum(1 for i, k in enumerate(ks) if k in ops and (gate(k) >= 0.5 or (i + 1 < len(ks) and gate(ks[i + 1]) >= 0.5)))
 
-    def read(self, S, tokens, filt=None, force=None, force_depth=None, estimator="gates"):
+    def depth_from_kinds(self, tokens):
+        """the depth as the number of tokens of a level-opener KIND (legend reader.level_openers), deterministic from the kinds on the token
+        sequence, independent of the learned gate values (round 3, run E). None when the legend names no level openers."""
+        ops = set(self.legend.reader.get("level_openers") or [])
+        return sum(1 for t in tokens if self.kind(t) in ops) if ops else None
+
+    def read(self, S, tokens, filt=None, force=None, force_depth=None, estimator="gates", presence="decided"):
         """S -> decoded frame (same layout as world.frame_of) with margins and presence scores.
         force = (depth, negation) GIVEN; force_depth = depth GIVEN, negation estimated; otherwise the depth is ESTIMATED — by the open level
         gates passed (estimator 'gates', the primary one, when the legend names level openers) or by the fit (estimator 'fit': the depth whose
-        role readout is best, frame.py style; kept as a check). The negation is always chosen by the fit at the chosen depth. Both depth
-        estimates are kept on the frame (depth_gates, depth_fit) and written on the top-level wire."""
+        role readout is best, frame.py style; kept as a check) or by the count of level-opener kinds (estimator 'kinds', gate-independent).
+        The negation is always chosen by the fit at the chosen depth. The depth estimates are kept on the frame (depth_gates, depth_kinds,
+        depth_fit) and written on the top-level wire. presence='all' reads every role of the schema without the presence decision (as the
+        repository's v16 readout, which always reads C); the default 'decided' applies the calibrated presence thresholds."""
         nS = np.linalg.norm(S)
         f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None, "margins": {}, "presence": {}}
         if nS < 1e-9: f["shape"] = "unknown"; return f
@@ -218,9 +227,10 @@ class Reader:
         scores = {h: self.structure_score(Sn, rep ** h[0] * (nott if h[1] else 1), filt) for h in hyps}
         order = sorted(hyps, key=lambda h: -scores[h])
         f["depth_fit"] = order[0][0]; f["depth_gates"] = dg = self.depth_from_gates(tokens) if tokens is not None else None
+        f["depth_kinds"] = dk = self.depth_from_kinds(tokens) if tokens is not None else None
         if force is not None: h = force
         else:
-            fd = force_depth if force_depth is not None else (dg if estimator == "gates" else None)
+            fd = force_depth if force_depth is not None else (dg if estimator == "gates" else dk if estimator == "kinds" else None)
             if fd is not None:
                 for n in negs:
                     if (fd, n) not in scores: scores[(fd, n)] = self.structure_score(Sn, rep ** fd * (nott if n else 1), filt)
@@ -238,7 +248,7 @@ class Reader:
         else:
             f["event"] = sch.get("single_event") or next((self.legend.event_of_lemma(self.lemma(t)) for t in tokens if self.legend.event_of_lemma(self.lemma(t))), None)
         for r in sch["role_order"]:
-            o = self.read_role(Sn, K, r, core, filt); f["presence"][r] = o["presence"]
+            o = self.read_role(Sn, K, r, core, filt, presence); f["presence"][r] = o["presence"]
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
             if o.get("present") and o.get("filler") is not None:
@@ -381,10 +391,11 @@ class Reader:
         for fl in f["roles"].values(): ws |= set(world.filler_words(fl))
         return ws
 
-    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator="gates"):
+    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None):
         """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both)"""
         tokens = tokenize(text); S, kept, unknown, addr = self.chart(tokens)
-        f = self.read(S, tokens, filt, force, force_depth, estimator) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
+        estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
+        f = self.read(S, tokens, filt, force, force_depth, estimator, presence) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
         unplaced = [i for i in unknown]
         for i in kept:
@@ -411,6 +422,7 @@ class Reader:
         top.set("_residual", fmt(res))
         if unplaced: top.set("_unplaced", ",".join(tokens[i] for i in unplaced))
         if f.get("depth_gates") is not None: top.set("_depth.gates", str(f["depth_gates"]))
+        if f.get("depth_kinds") is not None: top.set("_depth.kinds", str(f["depth_kinds"]))
         if f.get("depth_fit") is not None: top.set("_depth.fit", str(f["depth_fit"]))
         self.wire_lines(wires, status)
         info = {"tokens": tokens, "S": S, "kept": kept, "unplaced": unplaced, "addr": addr, "residual": res, "status": status}

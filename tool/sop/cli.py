@@ -58,6 +58,8 @@ def cmd_formalize(a):
         except (OSError, ValueError, KeyError) as e: print(f"sop formalize: model unreadable: {e}", file=sys.stderr); return 2
     for rd in rds:
         if a.tau is not None: rd.tau = a.tau
+        if a.presence: rd.cfg["presence_readout"] = a.presence
+        if a.depth_estimator: rd.cfg["depth_estimator"] = a.depth_estimator
     try: text = sys.stdin.read() if a.input in (None, "-") else open(a.input, encoding="utf-8").read()
     except (OSError, UnicodeDecodeError) as e: print(f"sop formalize: {e}", file=sys.stderr); return 1
     doc, _ = formalize_text(rds if len(rds) > 1 else rds[0], split_sentences(text, a.paragraphs))
@@ -141,6 +143,8 @@ def main(argv=None):
     p.add_argument("--worlds", help="DATA_ROOT: every <world>/model under it reads each sentence; the dispatcher picks by fit (spec section 9)"); p.add_argument("input", nargs="?"); p.add_argument("-o")
     p.add_argument("--tau", type=float); p.add_argument("--json", action="store_true"); p.add_argument("--legend"); p.add_argument("--force", action="store_true")
     p.add_argument("--paragraphs", action="store_true", help="split paragraphs into sentences (default: one sentence per line)")
+    p.add_argument("--presence", choices=["decided", "all"], help="'all' = read every role without the presence decision (as v16); default: the model's (decided)")
+    p.add_argument("--depth_estimator", choices=["gates", "kinds", "fit"], help="override the model's primary depth estimator")
     p = sub.add_parser("check"); p.add_argument("--legend", action="append", help="legend.json, or name=legend.json; repeatable (one per world)")
     p.add_argument("--legends", help="a folder of worlds: <dir>/<name>/legend.json"); p.add_argument("files", nargs="*"); p.add_argument("--json", action="store_true")
     p.add_argument("--force", action="store_true"); p.add_argument("--no-text", dest="no_text", action="store_true", help="do not require _text on top-level wires")
