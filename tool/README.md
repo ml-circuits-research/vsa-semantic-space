@@ -79,16 +79,26 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   term's cosine to the structure score >= a threshold set on CALIBRATION rows (midpoint of true terms vs the others; `thresholds.scope_term`).
   The presence of a quantifier on a slot is read from its term (as v14's C2c decoder); the determiner word from the determiner channel.
   Written only with two or more quantified slots (`both` when two plain quantifiers and no marker).
-- **Depth: two estimators** (judgment e9274a9 Q6). PRIMARY: the reader's own count of open level gates passed on the token sequence,
-  deterministic from the learned gate values — a level is opened by a token of a level-opener kind named in the legend (`reader.level_openers`:
-  the reporting verbs says / claims / asks in the three worlds); the gate that opens it is the opener's own or, when that one is closed, the
-  gate of the token right after it (the complementizer 'that', open in every P0 run; 'says' is closed, ~0.01). CHECK: the fit (the depth
-  whose role readout is best, frame.py style). Both are on the top-level wire (`_depth.gates=`, `_depth.fit=`) and in metrics.json
-  (`depth estimate: level gates (primary)`, `depth estimate: fit (check)`). The negation is chosen by the fit at the chosen depth. Without
-  level openers in the legend, the fit is the primary estimator.
-- **Structure given vs estimated** (author C3): metrics.json and REPORT.md give FULL four ways: `FULL` (depth from the primary estimator),
-  `FULL [fit estimate]`, `FULL [depth given]` (as the repository scripts), `FULL [depth and negation given]`. In the runs before e9274a9
-  (p0_cpu_1seed_60f284d, p0_gpu_5seed_c843f53) `FULL` was the fit estimate.
+- **Depth: three estimators** (judgment e9274a9 Q6; rounds 2-3). PRIMARY (the default since round 3, `model/config.json
+  depth_estimator=kinds`): the count of tokens of a level-opener KIND named in the legend (`reader.level_openers`: the reporting verbs says /
+  claims / asks in the three worlds), deterministic from the kinds on the token sequence, independent of the learned gates. CHECKS: the
+  open-gate count (a level-opener token whose own gate or the next token's gate — the complementizer 'that' — is open; round 2's primary) and
+  the fit (the depth whose role readout is best, frame.py style). All three are on the top-level wire (`_depth.kinds=`, `_depth.gates=`,
+  `_depth.fit=`) and in metrics.json (`depth estimate: opener-kind count`, `depth estimate: open-gate count` — named `level gates (primary)`
+  in the round-2 metrics —, `depth estimate: fit (check)`, `depth estimate: primary (<estimator>)`). Why the kind count is the default: on
+  commands depth 2 (tool/runs/round3_1d660ee, 5 seeds) it is right on every sentence of every seed (1.000) and its FULL equals the depth-given
+  FULL (0.857±0.025), while the gate count fails on the seed whose 'that' gate learned 0.24 (0.000 there; 0.682±0.342 over the seeds).
+  `sop train --depth_estimator gates|fit` and `sop formalize --depth_estimator` choose another; a model trained before round 3 (no key in its
+  config) keeps the open-gate count. The negation is chosen by the fit at the chosen depth; without level openers the fit is the primary.
+- **Structure given vs estimated** (author C3): metrics.json and REPORT.md give FULL by estimator side by side: `FULL` (the primary),
+  `FULL [gate-count estimate]` / `FULL [kind-count estimate]` (whichever is not primary), `FULL [fit estimate]`, `FULL [depth given]` (as the
+  repository scripts), `FULL [depth and negation given]`. In the runs before e9274a9 (p0_cpu_1seed_60f284d, p0_gpu_5seed_c843f53) `FULL` was
+  the fit estimate; in round 2 the open-gate count.
+- **Presence readout**: the DEFAULT decides presence (calibrated thresholds; spec `_empty` depends on it). `sop formalize --presence all` reads
+  every role of the schema, as v16 (which always reads C). REPORT.md always prints both readouts on the unseen-formulation splits: on the
+  reference world with to / by / from given open (round3_1d660ee, D) unseen transitions are 0.428±0.047 decided and 0.596±0.048 with every
+  role read (10b-quinquies 0.627±0.024); the recipient goes 0.619 -> 0.839. Whether the reference world should read every role is a question
+  for the reviewing session; the default is unchanged.
 - **Gates given** (rule 20; judgment e9274a9 Q6): `reader.gates_given = {"open": [kinds], "closed": [kinds]}` in legend.json; `sop train`
   applies it with experiment/v8_gates.V8.fix_gates (logit +-8, gradient masked) — as v16's `--rel_gates open`; `sop check` (the legend
   loader) rejects a kind that is not a kind of the lexicon, a kind both open and closed, and unknown kinds in `level_openers` / `rel_emitters`.
@@ -155,9 +165,10 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | C2 P0 runs committed | done by the coordinator | `tool/runs/p0_cpu_1seed_60f284d/` |
 | C3 FULL with depth given and estimated, side by side | done (NEW) | `train.evaluate`, `tests/p0_compare.py` |
 | C4 size breakdown | done (NEW) | below |
-| e9274a9 Q6: the primary depth estimate = the open level gates passed; the fit as a check; both reported | done (NEW) | `Reader.depth_from_gates`, `read(estimator=)`; `_depth.gates`, `_depth.fit`; test 2 |
+| e9274a9 Q6 / round 3: the primary depth estimate = the count of level-opener KINDS (default since round 3); the open-gate count and the fit as checks; all reported | done (CHANGED in round 3: was the open-gate count) | `Reader.depth_from_kinds`, `depth_from_gates`, `read(estimator=)`; `_depth.kinds`, `_depth.gates`, `_depth.fit`; test 2 asserts the default; tool/runs/round3_1d660ee (E) |
+| round 3: presence readout — decided by default; both readouts in REPORT.md on the unseen-formulation splits | done (NEW) | `train.run_eval`, `write_report`; `sop formalize --presence`; test 2; tool/runs/round3_1d660ee (D) |
 | e9274a9 Q6: `gates_given` in legend.json, applied with V8.fix_gates, kinds validated | done (NEW) | `legend.py`, `train.py`; tests 1, 2 |
-| e9274a9 C2 / rule 28: the reference gap isolated one change per run | PLANNED (GPU) | `tests/gpu_round2.sh`, `tests/isolation_table.py` |
+| e9274a9 C2 / rule 28: the reference gap isolated one change per run | done | tool/runs/round2_815e5f9 (A, B, C), tool/runs/round3_1d660ee (D, E) |
 | e9274a9 Q4: the annotator measurement runs anywhere with a key | done | `measure_annotators.py` + `skills/train-world/data/commands_500/` |
 
 ## Model size (author C4)
@@ -239,7 +250,7 @@ Reading (rule 10: evaluation first):
   stated set of categories (here to / by / from)"; the participle-gate run, 10b-quater, did not meet its criterion, 0.850). Not reproduced within seed variance on those three rows; the differences of
   this run from the script: identities per seed from the tool's star function, the depth estimated, the candidates = the whole catalog.
 
-### Round 2 (judgment e9274a9 Q6, C2): prepared, not run
+### Round 2 (judgment e9274a9 Q6, C2): RUN — tool/runs/round2_815e5f9/isolation_table.md; round 3: tool/runs/round3_1d660ee/round3_table.md (the plan as it was)
 `tool/tests/gpu_round2.sh` (the lock and guards of p0_full_gpu.sh; 5 seeds, the regime of p0_gpu_5seed_c843f53), ONE change per run:
 - `commands_depth_from_gates`: commands legend v2 — FULL with the depth from the open level gates, against the fit and against the depth
   given (0.857±0.025 in c843f53; 10d 0.854±0.031);
