@@ -327,3 +327,10 @@ B7 settlement (log _1225, RESULTS 14-bis): the +0.051 is a surface-position prio
 trained positions, untrained positions inert (omission rule adopted), terms +33% — the reference decision left to the reviewing session. Tool
 round 5 (agent, RESULTS 11-sexies): stored presence ratios — by the rule the reader's limit (~10% overlap; no 0.9 / 0.9 in 3 of 5 seeds), but the
 fitted threshold takes the recipient 0.64 -> 0.87 at 0.91 absent; adopting the fit is a product decision for the reviewing session. Push.
+
+## 2026-10-17 (DGX, afternoon) — judgment 752853c applied: decisions recorded, N6
+Reference bundle stays three codes (B7 a declared option, reason recorded); fitted threshold adopted as the tool's calibration rule (round 6 to
+confirm). N6 (log _1343, RESULTS 15): the training legend lacks the recipient — the residual SHARE goes the wrong way (0.337 with vs 0.462
+without; gap −0.267) and the true-R_C oracle is at chance (0.110): NOT met as written; the missing filler is recoverable from the residual at
+the reader's own calibrated address (0.963, 5/5 seeds) and the residuals cluster by filler without any vector (1-NN 0.57): detectable by
+direction, not by share — the detector the tool's `_unplaced` loop already implements. Push = judgment point.

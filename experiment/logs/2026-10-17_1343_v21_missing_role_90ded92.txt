@@ -1,0 +1,64 @@
+# 2026-10-17T13:43:39+02:00  commit=90ded92  cmd: python3 v21_missing_role.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v21_missing_role (N6): device=cuda, D=1024, N=30000, seeds=5; reference world (10b-quinquies regime), training legend WITHOUT the recipient role; measured at depth 0; chance for the hidden filler 1/12
+[train seed 0] start: RSS 1.37 GB | torch alloc 0.50 GB reserved 0.53 GB | MemAvailable 113.8 GB
+[train seed 0] step 500 sent 4000/30000 loss -0.855 (19s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] step 1000 sent 8000/30000 loss -0.890 (38s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] step 1500 sent 12000/30000 loss -0.919 (56s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.5 GB
+[train seed 0] step 2000 sent 16000/30000 loss -0.932 (74s) | RSS 2.46 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] step 2500 sent 20000/30000 loss -0.936 (93s) | RSS 2.49 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] step 3000 sent 24000/30000 loss -0.943 (112s) | RSS 2.49 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] step 3500 sent 28000/30000 loss -0.922 (130s) | RSS 2.49 GB | torch alloc 0.64 GB reserved 0.96 GB | MemAvailable 112.4 GB
+[train seed 0] end: RSS 2.49 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.7 GB (140s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:139: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (141s) 1.000 | 0.337 | 0.502 | -0.328 | 0.069 | 0.070 | 0.931 | 0.184 | 0.053 | 0.606  || gates OPEN: ['.', 'by', 'from', 'that', 'to', 'who']
+[train seed 1] start: RSS 2.58 GB | torch alloc 0.57 GB reserved 1.20 GB | MemAvailable 112.0 GB
+[train seed 1] step 500 sent 4000/30000 loss -0.829 (18s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 112.1 GB
+[train seed 1] step 1000 sent 8000/30000 loss -0.899 (37s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 112.1 GB
+[train seed 1] step 1500 sent 12000/30000 loss -0.926 (55s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 112.0 GB
+[train seed 1] step 2000 sent 16000/30000 loss -0.924 (74s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 111.6 GB
+[train seed 1] step 2500 sent 20000/30000 loss -0.924 (94s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 111.5 GB
+[train seed 1] step 3000 sent 24000/30000 loss -0.935 (113s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 112.0 GB
+[train seed 1] step 3500 sent 28000/30000 loss -0.939 (132s) | RSS 2.60 GB | torch alloc 0.65 GB reserved 1.21 GB | MemAvailable 111.6 GB
+[train seed 1] end: RSS 2.60 GB | torch alloc 0.65 GB reserved 0.69 GB | MemAvailable 112.1 GB (141s)
+  seed 1 (142s) 1.000 | 0.344 | 0.431 | -0.203 | 0.081 | 0.124 | 0.988 | 0.188 | 0.055 | 0.619  || gates OPEN: ['.', 'by', 'from', 'that', 'to']
+[train seed 2] start: RSS 2.64 GB | torch alloc 0.57 GB reserved 1.32 GB | MemAvailable 111.8 GB
+[train seed 2] step 500 sent 4000/30000 loss -0.839 (18s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.9 GB
+[train seed 2] step 1000 sent 8000/30000 loss -0.888 (37s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.9 GB
+[train seed 2] step 1500 sent 12000/30000 loss -0.919 (55s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.6 GB
+[train seed 2] step 2000 sent 16000/30000 loss -0.923 (75s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.3 GB
+[train seed 2] step 2500 sent 20000/30000 loss -0.934 (95s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.3 GB
+[train seed 2] step 3000 sent 24000/30000 loss -0.931 (114s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.3 GB
+[train seed 2] step 3500 sent 28000/30000 loss -0.937 (133s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.33 GB | MemAvailable 111.8 GB
+[train seed 2] end: RSS 2.67 GB | torch alloc 0.65 GB reserved 0.69 GB | MemAvailable 112.5 GB (143s)
+  seed 2 (144s) 1.000 | 0.334 | 0.482 | -0.309 | 0.031 | 0.098 | 0.981 | 0.183 | 0.051 | 0.456  || gates OPEN: ['.', 'by', 'from', 'that', 'to', 'who']
+[train seed 3] start: RSS 2.58 GB | torch alloc 0.57 GB reserved 1.18 GB | MemAvailable 112.1 GB
+[train seed 3] step 500 sent 4000/30000 loss -0.811 (18s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 112.1 GB
+[train seed 3] step 1000 sent 8000/30000 loss -0.898 (37s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.5 GB
+[train seed 3] step 1500 sent 12000/30000 loss -0.921 (57s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.6 GB
+[train seed 3] step 2000 sent 16000/30000 loss -0.925 (76s) | RSS 2.58 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.6 GB
+[train seed 3] step 2500 sent 20000/30000 loss -0.931 (96s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.6 GB
+[train seed 3] step 3000 sent 24000/30000 loss -0.936 (115s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.5 GB
+[train seed 3] step 3500 sent 28000/30000 loss -0.930 (134s) | RSS 2.59 GB | torch alloc 0.65 GB reserved 1.20 GB | MemAvailable 111.6 GB
+[train seed 3] end: RSS 2.59 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 112.1 GB (144s)
+  seed 3 (145s) 1.000 | 0.334 | 0.468 | -0.287 | 0.275 | 0.089 | 0.925 | 0.182 | 0.048 | 0.606  || gates OPEN: ['.', 'by', 'from', 'that', 'to']
+[train seed 4] start: RSS 2.64 GB | torch alloc 0.57 GB reserved 1.30 GB | MemAvailable 111.4 GB
+[train seed 4] step 500 sent 4000/30000 loss -0.854 (19s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.5 GB
+[train seed 4] step 1000 sent 8000/30000 loss -0.877 (39s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.3 GB
+[train seed 4] step 1500 sent 12000/30000 loss -0.908 (58s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.3 GB
+[train seed 4] step 2000 sent 16000/30000 loss -0.917 (78s) | RSS 2.64 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.3 GB
+[train seed 4] step 2500 sent 20000/30000 loss -0.936 (98s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.3 GB
+[train seed 4] step 3000 sent 24000/30000 loss -0.943 (117s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.4 GB
+[train seed 4] step 3500 sent 28000/30000 loss -0.938 (136s) | RSS 2.67 GB | torch alloc 0.65 GB reserved 1.31 GB | MemAvailable 111.2 GB
+[train seed 4] end: RSS 2.67 GB | torch alloc 0.65 GB reserved 0.71 GB | MemAvailable 112.0 GB (146s)
+  seed 4 (147s) 1.000 | 0.337 | 0.425 | -0.208 | 0.094 | 0.086 | 0.988 | 0.191 | 0.055 | 0.562  || gates OPEN: ['.', 'by', 'from', 'that', 'to']
+
+== MEANS over 5 seeds: FULL remaining roles | rel. residual WITH C | rel. residual WITHOUT C | gap (with-without)/without | hidden filler: oracle = true R_C | random vectors (mean of 5) | reader's own address (calibrated) | cos residuals same filler | different filler | 1-NN filler acc (no vector)
+  1.000±0.000 | 0.337±0.004 | 0.462±0.029 | -0.267±0.052 | 0.110±0.085 | 0.093±0.018 | 0.963±0.028 | 0.186±0.003 | 0.052±0.003 | 0.570±0.060
+== criterion (addendum N6): residual gap > 0.3 relative -> -0.267 NOT met; hidden filler from the residual with the true R_C > 0.8 -> 0.110 NOT met; random vectors at chance (1/12 = 0.083) -> 0.093; with the reader's own calibrated address -> 0.963 (> 0.8); 1-NN over residuals alone -> 0.570
+== decision rule (written before the run): (ii) and (iii-a) met -> detectable and addressable at the legend's vector; (ii) and (iii-c) met, (iii-a) not -> detectable and addressable at the reader's own address; (ii) not met -> not exposed in this world.
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] legend lacks the role in every target (16) [x] residual with the least-squares scale (18) [x] oracle as the addendum writes it AND the reader's own calibrated address, both stated [x] random-vector control [x] calibration rows = training sentences, scored rows fresh (25) [x] cosine structure and 1-NN without any vector [x] decision rule before the run [x] memory logged (21) [x] 5 seeds

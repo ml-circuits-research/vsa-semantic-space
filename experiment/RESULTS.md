@@ -1650,3 +1650,30 @@ the calibration rows the threshold drops to 0.34 and the product goes 0.64 -> 0.
 separability ceiling (0.908), and 0.922 present over all held-out formulations. Whether the tool's calibration becomes the fit anyway — a stated
 trade: more recipients read, about 9% of recipient-less sentences then read as having one — is a decision for the reviewing session; nothing in
 the tool's calibration was changed.
+
+## 15. N6 — a missing question in the legend: does the residual point to it? (v21_missing_role.py; logs/2026-10-17_1343_v21_missing_role_90ded92.txt; 5 seeds, D = 1024, 30k; the 10b-quinquies world, training legend WITHOUT the recipient role; depth 0; chance for the hidden filler 1/12)
+Criterion (addendum N6), written before the run: residual gap (with − without the hidden role) / without > 0.3; the hidden role's fillers recoverable
+from the residual with the ORACLE (the world's true R_C) > 0.8, with random vectors at chance. Added and stated before the run: recovery with the
+READER'S OWN address for the hidden slot (estimated on 120 calibration training sentences with their gold fillers), the cosine structure of the
+residuals, and leave-one-out 1-NN over the residuals with no vector at all.
+| axis (5 seeds) | value | criterion |
+|---|---|---|
+| FULL on the remaining roles (A, B, predicate) | 1.000 | holds |
+| relative residual, sentences WITH a recipient / recipient-less sentences | 0.337±0.004 / **0.462**±0.029 | — |
+| gap (with − without) / without | **−0.267**±0.052 (the residual SHARE is LOWER when the hidden role is present) | > 0.3: **NOT met** |
+| hidden filler from the residual: oracle = the world's true R_C | 0.110±0.085 (seeds 0.07, 0.08, 0.03, 0.28, 0.09) | > 0.8: **NOT met** (at chance, as the random vectors: 0.093) |
+| hidden filler from the residual: the READER'S OWN address, calibrated | **0.963**±0.028 (0.931, 0.988, 0.981, 0.925, 0.988) | > 0.8 (added axis): met, 5/5 seeds |
+| cos between residuals: same hidden filler / different fillers | 0.186±0.003 / 0.052±0.003 | one direction per filler, not noise |
+| 1-NN filler accuracy over the residuals alone (no vector) | 0.570±0.060 (chance 0.083) | reported (the step from detectable to proposed) |
+Reading, by the decision rule written before the run — third branch: **the residual SHARE does not expose the missing question in this world**
+(gap negative), and the addendum's oracle criterion fails (0.110): a reader trained without the question does not put the missing filler at the
+legend's vector R_C, which it never saw in a target. What the run shows beyond the rule: the missing filler IS in the residual, at the reader's
+own address (0.963 with the calibrated address, five seeds above 0.92), and the residuals cluster by filler without any vector (same / different
+cosine 0.19 vs 0.05; 1-NN 0.57 against chance 0.08) — the hidden role is DETECTABLE BY DIRECTION, not by share. Why the share goes the wrong way
+(a hypothesis, marked as such): the relative residual ||S − αr|| / ||S|| is dominated by the function-word terms the legend never explains ('gives',
+'to', 'is', 'by', '.'), and a sentence with a recipient has more tokens, so a larger ||S|| and a smaller share; the recipient-less forms are also
+the rarer templates (share 0.2, three forms) and fit worse. A detector of a missing question therefore has to look at the residual's DIRECTION
+across sentences (do the unexplained stars cluster at one address?), which is exactly what the tool's legend loop already does with `_unplaced`
+words clustered by residual direction (tool test 5b recovered the removed `destination` role). The addendum's oracle test, as written, cannot
+succeed for a reader trained without the role; the measurement that does succeed is stated above. For the reviewing session: record N6 as "NOT met
+as written; the missing question is detectable by residual direction (0.963 at the reader's address; 1-NN 0.57), not by residual share".
