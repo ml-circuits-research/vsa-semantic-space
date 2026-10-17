@@ -1475,3 +1475,24 @@ new identities only; the identity draw changes nothing beyond seed noise. One NE
 gates given (v16: 0.627). The per-role numbers point at the tool's PRESENCE decision (a filled role read as filled 0.927 -> 0.874; recipient 0.619;
 v16 never decides presence on that split) — round 3 run D tests it as the single change. The gate-count depth estimator holds only when the
 complementizer's gate opens — round 3 run E counts the level-opener KIND itself (deterministic from the legend), no gate involved.
+
+### 11-quater. Tool round 3 — two single changes (tool/tests/gpu_round3.sh at commit 1d660ee; tool/runs/round3_1d660ee/ with round3_table.md; 5 seeds; built and run by the tool agent)
+| D — reference, to / by / from given open, unseen transitions | readout | heads FULL | agent | object | recipient |
+|---|---|---|---|---|---|
+| round 2 A | presence decided | 0.428±0.047 | 0.833 | 0.811±0.063 | 0.619±0.047 |
+| D (= A retrained: identical at every digit — training is deterministic) | presence decided | 0.428±0.047 | 0.833 | 0.811 | 0.619 |
+| **D** | **presence NOT decided (every role read, as v16)** | **0.596**±0.048 | 0.833 | 0.811 | **0.839**±0.004 |
+| RESULTS 10b-quinquies (v16, C always read) | — | 0.627±0.024 | | | |
+| E — commands, depth 2 UNSEEN, per seed | learned 'that' gate | depth right: opener KINDS / open gates | FULL kind count / gate count / depth given |
+|---|---|---|---|
+| seeds 0, 1, 2, 4 | 1.00 / 0.70 / 1.00 / 1.00 | 1.000 / 1.000 | 0.838, 0.819, 0.867, 0.886 — identical under the three |
+| seed 3 | **0.24** | **1.000** / 0.000 | **0.876** / 0.000 / 0.876 |
+| mean | | 1.000 / 0.800±0.400 | **0.857**±0.025 / 0.682±0.342 / 0.857±0.025 (10d 0.854±0.031) |
+Reading: (D) the round-2 drop on unseen transitions was the tool's PRESENCE decision: with every role read the recipient goes 0.619 -> 0.839 and the
+split 0.428 -> 0.596, within about one standard deviation of v16's 0.627; the decided readout fails because the unseen formulations put the
+recipient's presence ratio under the threshold set on training rows. (E) counting the level-opener KIND (deterministic from the legend's
+level_openers on the token sequence) gets the depth right on every sentence of every seed, including the seed whose 'that' gate learned 0.24
+and broke the gate count; FULL with the kind count equals FULL with the depth given (0.857 = 10d). The tool's reference world now reproduces
+10b-quinquies on every axis (seen 1.000, new ids 1.000, depth 3 0.987, unseen transitions 0.596 vs 0.627 with every role read), and the commands
+world reproduces 10d with its own depth estimate. Defaults after this round: depth estimator = opener kinds (gate count and fit as checks);
+presence decided (the spec's `_empty` depends on it) — whether the reference world should read every role is a question for the reviewing session.

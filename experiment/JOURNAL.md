@@ -306,3 +306,5 @@ role accuracy — the identity cleanup reads a blended address and the structure
 _0840, 12-quater): everything composes to the unseen depth (subject 0.948 under two operators; may_neg 0.855 the one soft cell) -> B5d dropped.
 C5 re-scoring (log _0757): the marker's margin trades unverifiable for false alarms one for one. Tool round 2 (agent): given gates close the
 reference gaps (depth 3 0.987) and open one (unseen transitions 0.428, presence decision suspected); round 3 prepared. Push = judgment point.
+Tool round 3 (agent; RESULTS 11-quater): presence not decided brings unseen transitions to 0.596 (v16 0.627); the opener-kind depth count is
+right on 5/5 seeds, FULL 0.857 = 10d — the tool reproduces the reference and commands tables on every axis.

@@ -12,13 +12,12 @@ Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_202
 | **B5.1, E1b protocol** (--p_aff2 0.3; log _0840; RESULTS 12-quater) | depth 2 UNSEEN for the operator forms: structure 1.000, B / C / pred 1.000, subject 1.000 (0 ops) / 0.988 (1 op) / **0.948** (2 ops); may_neg 0.855±0.114 the one soft cell; colliding pair frames differ 0.000 / 0.000 / 0.007 | the judgment's decision rule | **the subject does not fail -> B5d DROPPED**; subject + modal + negation joins the composition regularity (seen at depths 0-1, tested at 2) with one soft spot named |
 | C5 re-scoring (log _0757; RESULTS 10c-octies) | marker's margin as the condition verdict statistic: drop / add detection 0.15 -> 0.75 / 0.76, unverifiable 0.83 -> 0.23, FALSE ALARM on gold 0.15 -> 0.43, precision 0.943 -> 0.899 | report, no tuning | a one-for-one trade of abstention for false alarms; C5 stays NOT met (present 0.890); the limit is the presence reading of the later slots |
 | Tool round 2 (agent; RESULTS 11-ter; tool/runs/round2_815e5f9/) | `gates_given` in legend.json; depth from the gate count; one change per run: A gates given -> depth 3 **0.987**, seen 1.000, unseen transitions **0.428** (v16 0.627); B candidates -> new ids only; C identities -> nothing; commands gate-count depth right on 4/5 seeds, seed 3's 'that' gate 0.24 breaks it | one change per run (C2) | both reference gaps closed by the given gates; one NEW gap (unseen transitions) not isolated; the gate-count estimator depends on a learned gate |
-| Tool round 3 (agent; prepared, GPU next) | run D = A with presence NOT decided (every role read, as v16); run E = commands with the depth counted from the level-opener KIND (no gate) | one change per run | PLANNED, runs next |
+| Tool round 3 (agent; RESULTS 11-quater; tool/runs/round3_1d660ee/) | D: presence NOT decided -> unseen transitions 0.428 -> **0.596** (v16 0.627), recipient 0.619 -> 0.839; the retrain of A is identical at every digit (deterministic); E: the opener-KIND count gets the depth right on 5/5 seeds (the gate count failed on the seed whose 'that' gate learned 0.24), FULL 0.857 = depth given = 10d | one change per run | both gaps explained; the tool reproduces 10b-quinquies and 10d on every axis; defaults: depth = opener kinds; presence decided kept (question 5) |
 
 ## B. HYPOTHESIS
 - Verifier conditions: the presence reading of the second and later condition slots (0.890) bounds the condition axis; neither the column cosine nor
   the marker's margin as the verdict statistic changes that (10c-sexies, 10c-octies).
 - N5 "resolve before drawing": HYPOTHESIS, diagnostic to print in the next kinds run.
-- Tool unseen-transitions gap (0.428 vs 0.627): the presence decision — tested by round 3 run D.
 
 ## C. PLANNED, in the instructed order
 B6 sparse block codes; B7 fourth address code remeasured; tool round 3 (D, E) then the remaining tool gaps; N6; P1 when the team's data arrives
@@ -37,6 +36,8 @@ B6 sparse block codes; B7 fourth address code remeasured; tool round 3 (D, E) th
    form). Add the per-seed list to v20's printout for the record, without re-running?
 4. C5: with both verdict statistics tried, the condition axis is bounded by the per-slot presence reading (0.890 on the present side). Close C5
    as "not met, bounded by presence", or try the marker with per-slot thresholds (second and later slots have fewer examples) — a re-scoring?
-5. Tool: round 2 closed the reference gaps with the given gates (0.987 at depth 3) and opened one (unseen transitions 0.428); round 3 tests the
-   presence decision as the single change. If D closes it, the tool's reference world reproduces 10b-quinquies on every axis; proceed to the
-   remaining tool items (annotation path with a key) without a decision?
+5. Tool: round 3 closed the last gap (presence decision: unseen transitions 0.596 vs v16's 0.627 with every role read). The tool's default
+   readout still DECIDES presence (the spec's `_empty` and the occupancy marker depend on it), which costs 0.17 on unseen formulations where the
+   recipient's presence ratio falls under the training-row threshold. Keep the decided readout as the product default (and report both), or make
+   "every role read" the default for worlds whose legend has no optional role? Depth estimator default switched to the opener-kind count (no
+   decision needed: it is right on 5/5 seeds where the gate count was right on 4/5).
