@@ -471,6 +471,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
                                    f"formulations ({len(cal_forms)} sentences, splits calibration_*), disjoint from the reported half (rule 25)")
     with open(os.path.join(model_dir, "config.json"), "w") as f: json.dump(cfg, f, indent=1)
     rd = Reader(model_dir); resid = []
+    if getattr(a, "store_presence_ratios", False): store_presence_ratios(rd, rows, cal_rows, schema, seed, run_dir)
     ids = (f"c{i}" for i in range(10 ** 9))
     for row in cal_rows: resid.append(rd.formalize(row["text"], 0, ids)[2]["residual"])
     pres = {k: np.array(v["present"] + v["absent"]) for (kk, r), v in stats.items() for k in [f"{kk}:{r}"]}
@@ -478,6 +479,40 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
              residual_std=np.std(resid) if resid else 0.0, **{f"presence_{k}": v for k, v in pres.items()})
     gates = {c: float(g) for c, g in zip(m.cats, torch.sigmoid(m.logits).detach().cpu().numpy())}
     return rd, {"t_train_s": round(t_train, 1), "calibration": calrep, "gates": gates, "numpy_torch_diff": worst, "kinds": kinds_report}
+
+
+def store_presence_ratios(rd, rows, cal_rows, schema, seed, run_dir):
+    """round 5 (judgment d8f8a98 Q5): the per-sentence presence ratios (the presence score of a role / the structure score; the quantity the
+    presence threshold is compared with), read with the gold structure as the calibration reads them, for every role that has a presence
+    threshold, stored per seed in run_dir/presence_ratios_seed<k>.json. Classes:
+      present / calibration  = the calibration_* halves of the held-out formulations (the role filled);
+      present / report       = the reported heldout_formulations* halves (the role filled), per split;
+      absent  / calibration  = the training-sample calibration rows where the role is not given (the held-out formulations have no sentence
+                               without the role, so the absent class can only come from the seen recipient-less forms);
+      absent  / report       = the held-out SENTENCES where the role is not given (disjoint from the calibration rows);
+      present / training     = the training-sample calibration rows with the role filled (the pooled midpoint's other input)."""
+    roles = [r for r in schema["role_order"] if rd.th.get("presence", {}).get(r) is not None]
+    def ratio(row, r):
+        g = row["frame"]; S, _, _, _ = rd.chart(row["tokens"]); f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
+        return float(f["presence"].get(r, 0.0))
+    out = {"seed": seed, "definition": store_presence_ratios.__doc__, "thresholds": {"product (pooled midpoint)": {r: rd.th["presence"][r] for r in roles},
+           "training rows only": {r: (rd.cfg.get("thresholds_training_rows_only") or {}).get("presence", {}).get(r) for r in roles}}, "roles": {}}
+    ok = lambda row: row["frame"]["shape"] == "ok"
+    for r in roles:
+        filled = lambda row: row["frame"]["roles"].get(r) is not None
+        d = {"present_calibration": [ratio(x, r) for x in rows if x.get("split", "").startswith("calibration_heldout_formulations") and ok(x) and filled(x)],
+             "present_training": [ratio(x, r) for x in cal_rows if ok(x) and filled(x)],
+             "absent_calibration": [ratio(x, r) for x in cal_rows if ok(x) and not filled(x)],
+             "absent_report": [ratio(x, r) for x in rows if x.get("split") == "heldout_sentences" and ok(x) and not filled(x)],
+             "present_report": {}}
+        for x in rows:
+            s = x.get("split", "")
+            if s.startswith("heldout_formulations") and ok(x) and filled(x): d["present_report"].setdefault(s, []).append(ratio(x, r))
+        out["roles"][r] = d
+    with open(os.path.join(run_dir, f"presence_ratios_seed{seed}.json"), "w") as f: json.dump(out, f)
+    print(f"[presence ratios] seed {seed}: " + "; ".join(f"{r}: present cal {len(d['present_calibration'])}, report "
+          f"{sum(len(v) for v in d['present_report'].values())}, absent cal {len(d['absent_calibration'])}, report {len(d['absent_report'])}"
+          for r, d in out["roles"].items()), flush=True)
 
 
 def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None):
@@ -610,6 +645,8 @@ def main(argv=None):
     ap.add_argument("--calibrate_on_heldout_formulations", action="store_true", help="round 4: set the presence thresholds on the training "
                     "sample + one half of every held-out formulation split (calibration_*), report the other half; the training-rows-only "
                     "thresholds are kept in config.json and scored next to them")
+    ap.add_argument("--store_presence_ratios", action="store_true", help="round 5: store the per-sentence presence ratios of the calibration and "
+                    "report rows (present and absent classes) per seed in the run folder (presence_ratios_seed<k>.json)")
     ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
                     "v16), next to the decided readout (round 3, run D); the model's default readout stays 'decided'")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")

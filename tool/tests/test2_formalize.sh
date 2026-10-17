@@ -84,13 +84,17 @@ sys.exit(fails)
 EOF2
 FAILS=$((FAILS+$?))
 # round 4 (judgment 45ccd1d D): presence thresholds set on the training sample + the calibration half of the held-out formulations
-"$SOP" train "$W/reference" --D 256 --epochs 1 --n_eval 60 --log_every 5000 --no_ckpt --calibrate_on_heldout_formulations --out "$OUT/ref_cal_model" > "$OUT/train_ref_cal.log" 2>&1
+rm -rf "$OUT/r5"; "$SOP" train "$W/reference" --D 256 --epochs 1 --n_eval 60 --log_every 5000 --no_ckpt --calibrate_on_heldout_formulations --store_presence_ratios \
+  --out "$OUT/ref_cal_model" --run_dir "$OUT/r5/reference_G_presence_ratios" > "$OUT/train_ref_cal.log" 2>&1
+"$PY" "$TOOL/tests/round5_table.py" --root "$OUT/r5" > "$OUT/r5_table.txt" && grep -q "OUTCOME:" "$OUT/r5_table.txt" && grep -q "(ii) fitted" "$OUT/r5_table.txt" \
+  && echo "PASS round 5: presence ratios stored per seed (present / absent, calibration / report) and the two readouts + the overlap computed from them ($(grep OUTCOME "$OUT/r5_table.txt" | cut -c1-90))" \
+  || { echo "FAIL round 5 presence-ratio table"; FAILS=$((FAILS+1)); }
 "$PY" - "$W/reference" "$OUT/ref_cal_model" <<'EOF3'
 import glob, json, os, sys
 wd, md = sys.argv[1], sys.argv[2]; fails = 0
 def ok(c, m):
     global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
-sp = json.load(open(sorted(glob.glob(os.path.join(wd, "runs", "*", "splits.json")), key=os.path.getmtime)[-1]))
+sp = json.load(open(os.path.join(os.path.dirname(md), "r5", "reference_G_presence_ratios", "splits.json")))
 cal = [k for k in sp["rows"] if k.startswith("calibration_")]; rep = [k for k in sp["rows"] if k.startswith("heldout_formulations")]
 ok(cal and rep and all(not (set(sp["texts"][c]) & set(sp["texts"][c[len("calibration_"):]])) for c in cal) and "calibration_of_heldout_formulations" in sp["definitions"],
    f"splits.json (written before training) holds the calibration halves {cal}, disjoint from the reported halves")

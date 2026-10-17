@@ -1,0 +1,50 @@
+{
+ "world": "reference",
+ "D": 1024,
+ "seed": 0,
+ "language": "en",
+ "legend_sha256": "sha256:e221118d4315b12442aa8b568466a6a5c8b08a36eae4a022c464d30b34a3dc77",
+ "legend_version": 2,
+ "training_code_commit": "1ed4306",
+ "trained": "2026-10-17T12:30:26",
+ "codes": [
+  "path",
+  "chainL",
+  "bigram"
+ ],
+ "gate_init": "closed",
+ "depth_estimator": "kinds",
+ "presence_readout": "decided",
+ "batch": 8,
+ "lr": 0.02,
+ "epochs": 1,
+ "n_train_steps_sentences": 26928,
+ "thresholds": {
+  "tau": 0.05,
+  "tau_source": "stated (the repository's v16 value), not fitted on any rows",
+  "no_sense_share": 0.5,
+  "no_sense_source": "stated",
+  "no_fit_residual": 0.9,
+  "no_fit_source": "stated (dispatcher only, spec section 9)",
+  "presence": {
+   "agent": null,
+   "object": null,
+   "recipient": 0.6222416271573876
+  },
+  "attr_presence": {},
+  "det_presence": {},
+  "scope_term": null,
+  "calibration_split": "train (a sample of 400 training sentences, rng 1234+seed) + the CALIBRATION half of the held-out formulations (156 sentences, splits calibration_*), disjoint from the reported half (rule 25)"
+ },
+ "thresholds_training_rows_only": {
+  "presence": {
+   "agent": null,
+   "object": null,
+   "recipient": 0.636042517031197
+  },
+  "attr_presence": {},
+  "det_presence": {},
+  "scope_term": null,
+  "calibration_split": "train (a sample of 400 training sentences, rng 1234+seed); never the scored rows (rule 25)"
+ }
+}
