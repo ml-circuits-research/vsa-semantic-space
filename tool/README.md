@@ -107,7 +107,10 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   --calibrate_on_heldout_formulations`: each heldout_formulations* split cut in two halves by hash, written to splits.json before training;
   the calibration half sets the thresholds with the training sample, the other half is reported — rule 25). REPORT.md prints, in this order:
   the product readout, the round-3 product thresholds (training rows only) on the same rows when round 4's calibration was used, and the v16
-  protocol, each labelled. `sop formalize --presence all` exists for that comparison only.
+  protocol, each labelled. `sop formalize --presence all` exists for that comparison only. Round 4 (tool/runs/round4_39063ed): the
+  expectation was NOT met — recipient 0.630±0.037 with the round-4 thresholds vs 0.625±0.042 with the training-row ones on the same 87 rows
+  (v16 protocol 0.809). Round 5 (`tests/gpu_round5.sh`, PLANNED) stores the per-sentence presence ratios and decides, by the rule written in
+  its header, whether the limit is the reader's (the classes overlap) or the pooled-midpoint rule's (a fitted threshold separates them).
 - **Gates given** (rule 20; judgment e9274a9 Q6): `reader.gates_given = {"open": [kinds], "closed": [kinds]}` in legend.json; `sop train`
   applies it with experiment/v8_gates.V8.fix_gates (logit +-8, gradient masked) — as v16's `--rel_gates open`; `sop check` (the legend
   loader) rejects a kind that is not a kind of the lexicon, a kind both open and closed, and unknown kinds in `level_openers` / `rel_emitters`.
@@ -179,6 +182,7 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | 45ccd1d D: product number first, protocol named on each row; every-role-read never a default | done (NEW) | `write_report`, README; test 2 |
 | 45ccd1d D: presence thresholds on calibration rows including held-out formulations, one run | code done; run PLANNED (GPU) | `train --calibrate_on_heldout_formulations`; `tests/gpu_round4.sh`, `tests/round4_table.py`; test 2 |
 | 45ccd1d D: the opener-kind depth estimator stated as a GIVEN (rule 20) | done | README, depth bullet |
+| d8f8a98 Q5: round 5 — the per-sentence presence ratios stored (present / absent, calibration / report), pooled midpoint vs a FITTED threshold, the overlap; decision rule in the run header | code done; run PLANNED (GPU) | `train --store_presence_ratios`; `tests/gpu_round5.sh`, `tests/round5_table.py`; test 2 |
 | e9274a9 Q6: `gates_given` in legend.json, applied with V8.fix_gates, kinds validated | done (NEW) | `legend.py`, `train.py`; tests 1, 2 |
 | e9274a9 C2 / rule 28: the reference gap isolated one change per run | done | tool/runs/round2_815e5f9 (A, B, C), tool/runs/round3_1d660ee (D, E) |
 | e9274a9 Q4: the annotator measurement runs anywhere with a key | done | `measure_annotators.py` + `skills/train-world/data/commands_500/` |
