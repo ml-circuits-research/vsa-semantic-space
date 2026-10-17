@@ -344,3 +344,5 @@ N6 row: the identity of the omitted role remains in the residual at a consistent
 PLANNED. Wording: WikiSQL question-only encoder with the schema as the decoder's candidate set; confident-wrong defined (share of all items
 accepted and wrong) with the conditional risk and the rule-of-three bound; 7b as the mean over roles; quantifier cells as scope markers read
 through the legend rule. No number moved. Push = the snapshot for the paper's supplementary material is taken after it.
+Tool E1 / E2 (agent; RESULTS 11-octies): WikiSQL through the tool — selected column and aggregator reproduce 8c, the SOP round trip is exact;
+FULL 0.217 vs 0.376 because the product must decide the number of conditions (given in v11's protocol; with the count given 0.423). Push.

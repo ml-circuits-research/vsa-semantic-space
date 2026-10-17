@@ -29,10 +29,14 @@ the team runs it); N7 after N1; B8-B9; capacity at 64-1,000 identities and D = 4
   defined once in rule 18 with the conditional risk among accepted answers and the rule-of-three bound on zeros; 7b numbers labelled as the mean
   over roles; the regularity row's quantifier cell reads "scope markers read through the declared legend rule".
 - Round 6 adopted as written; the asymmetry field stays a per-legend option.
-- Tool: E1 committed (legend-gap report prints the N6 statistics); E2 (WikiSQL through the tool) restarted with length buckets after the first
-  attempt was stopped for the quadratic padding cost; result at the next push.
+- Tool E1 / E2 done (RESULTS 11-octies): the legend-gap report prints the N6 statistics; WikiSQL through the tool reproduces the selected column
+  (0.816 vs 0.810) and the aggregator (0.827 vs 0.814) and round-trips every frame through SOP Lang; FULL 0.217 vs 0.376 NOT reproduced — the
+  gap is the SET-SIZE decision (how many conditions), which v11 is given; with the count given FULL 0.423. The C5 legend question is answered
+  on data (a set-valued condition role works; its size is the open item). The agent waits for the P1 data.
 
 ## E. Questions for the reviewing session
+0. E2: reading the SIZE of a set-valued role is the one gap between the tool's FULL (0.217) and v11's (0.376, given the count). Build the single
+   change now (a member margin on the set role, or a count role in the legend) on the WikiSQL world, or leave it for P1's legend?
 1. N6's recording: "NOT met as written; detectable by residual direction (0.963 at the reader's address; 1-NN 0.57), not by residual share" —
    agreed? The addendum's oracle test presumes the reader places the missing filler at the legend's vector, which a reader trained without the
    role cannot do; the measurement that succeeds uses the reader's own address, calibrated on 120 gold sentences (a supervised step) or no

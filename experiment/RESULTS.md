@@ -1719,3 +1719,33 @@ Reading: the fitted rule is adopted as the tool's calibration rule (judgment 752
 0.476 in seed 3) — the asymmetry option (a legend preferring misses to false alarms for an optional role) is reported, not built. The product
 number for the reference world's unseen formulations is 0.444 heads FULL (presence decided, fitted); the v16 protocol's 0.556 and 10b-quinquies'
 0.627 are the comparisons. The reader's limit stays recorded (the overlap of the classes).
+
+### 11-octies. Tool E1 and E2 — the legend-gap statistics, and WikiSQL through the tool end to end (the P1 rehearsal; judgment 934fbae E; tool/tests/gpu_wikisql.sh at commit 1528450; tool/runs/wikisql_1528450/ with wikisql_table.md and rescore_count_given_seed0.md; 3 seeds, D = 512, 3 epochs, 56,355 training questions, dev 8,421; built and run by the tool agent)
+E1 (reporting, no model change): every proposed `_unplaced` cluster of the legend-gap report carries the residual cosine same / different filler
+and the leave-one-out 1-NN filler accuracy with its chance (on the commands smoke reader the proposed destination cluster reads 0.128 / 0.026 and
+1-NN 0.556, chance 0.25; the constructed-world reference is RESULTS 15: 0.19 / 0.05, 0.57 vs 0.08).
+E2: WikiSQL as a world folder — questions as the text (v11's normalization, question only), gold frames from the SQL, kinds by v11's procedure (88
+kinds), a hand-written legend with select, aggregate (closed set) and ONE condition role whose value is a SET (`condition=$c1 & $c2`, members =
+entities head / attr / quantity; no indexed slots, per judgment d8f8a98 Q1); column-valued roles take their candidates from the sentence's table
+(`_table`). Criterion written before the run: reproduce RESULTS 8c / 8d within seed variance (selected column, condition column, full query) and
+round-trip the frames through SOP Lang. The first attempt was stopped after 20 min with no result (every batch padded to the longest question of
+the set; the chain's cost is quadratic in length); the restart uses v11's length buckets (`--length_buckets`, off by default; exact).
+| axis (dev 8,421, question only; 3 seeds) | package | RESULTS 8c (dev) | 8d (56k row) |
+|---|---|---|---|
+| selected column | **0.816**±0.003 | 0.810±0.004 | 0.816 |
+| aggregator | 0.827±0.004 | 0.814±0.003 | 0.801 |
+| first gold condition column in the decoded SET (8c's condition-1 analog; more lenient than slot-1 argmax: stated) | 0.682±0.032 | 0.632±0.004 | 0.626 |
+| condition column set exact | 0.307±0.013 | — (indexed slots) | — |
+| **FULL** (select + aggregate + condition columns; operators and values not read) | **0.217**±0.006 | 0.376±0.003 | 0.368 |
+| FULL with the pooled-midpoint member thresholds (comparison) | 0.233±0.003 | | |
+SOP round trip on all questions: train 56,355 and dev 8,421 pass `sop check`; write -> read -> write byte-identical; 0 frames differ from the SQL.
+One re-scoring of the seed-0 model (one change: the NUMBER of conditions given, as v11's FULL is — it decodes COND_k for k below the GOLD count):
+first condition column 0.667 -> 0.698; condition set exact 0.316 -> **0.628**; FULL 0.220 -> **0.423** (8c 0.376).
+Reading: selected column and aggregator reproduce 8c / 8d within seed variance, the SOP round trip is exact; FULL is NOT reproduced as written
+(0.217 vs 0.376), and the whole gap is the product's SET-SIZE decision — how many conditions the question has, which v11's protocol is GIVEN
+(the gold count) and the product must decide from a member threshold (fitted on training rows at 0.34; midpoint 0.43). Given the same count the
+set readout reaches FULL 0.423, above 8c. This is the C5 legend question answered on data: one condition role with a SET value reads the columns
+as well as or better than indexed slots, and the open problem moves to reading the set's SIZE (a member margin or a count role — one further single
+change, not built). Stated differences from v11: the set role instead of COND_k; float64 V8 instead of complex64; length buckets; the skip-gram
+retrained here. The P1 path (export -> legend -> train -> formalize -> check -> diff) is exercised end to end on real sentences; the annotator step
+still needs a key.
