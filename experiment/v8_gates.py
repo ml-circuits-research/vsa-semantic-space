@@ -37,6 +37,12 @@ class V8(v6.V6):
         self.ibg = torch.tensor([[m.pid[f"bg:{c1}:{c2}"] for c2 in self.cats] for c1 in self.cats], device=device)
         self.iA = torch.tensor([[m.pid[f"A:{c1}:{c2}"] for c2 in self.cats] for c1 in self.cats], device=device)   # [c_emitter, c_taker]
         self.iL = torch.tensor([[m.pid[f"L:{c1}:{c2}"] for c2 in self.cats] for c1 in self.cats], device=device)
+        if "pos" in codes:   # B7: the round-1 POSITION code brought into V8 — term_i = exp(i (pos[i] + pc[c_i])) (x) f_i: one displacement per
+            # absolute position (shared by all categories) plus one per category; positions 16-39 added to the parameter table (V4 had 16)
+            extra = [f"pos:{i}" for i in range(16, 40)]; m.names += extra; m.pid = {n: i for i, n in enumerate(m.names)}
+            th = torch.cat([self.theta.detach(), torch.tensor(np.random.default_rng(int(rng.integers(1 << 30))).uniform(-np.pi, np.pi, (len(extra), D)), dtype=self.dtype, device=device)])
+            self.theta = torch.nn.Parameter(th); self.P = len(m.names); self.root_mask = torch.ones(self.P, 1, dtype=self.dtype, device=device); self.root_mask[0] = 0
+            self.ipos = torch.tensor([m.pid[f"pos:{i}"] for i in range(40)], device=device); self.ipc = torch.tensor([m.pid[f"pc:{c}"] for c in self.cats], device=device)
         if gate_init == "hand":
             s = torch.tensor([6.0 if (hand or v2.HAND_GATES(self.cats))[c] else -6.0 for c in self.cats], dtype=self.dtype, device=device)
             self.logits = torch.nn.Parameter(s, requires_grad=False)
@@ -59,6 +65,8 @@ class V8(v6.V6):
             terms = terms + E(torch.cumsum(th[self.ipath[cats]] * mask.unsqueeze(-1), 1))
         if "bigram" in self.codes:
             ph = th[self.ibg[cats[:, :-1], cats[:, 1:]]]; ph = torch.cat([th[self.ibg0[cats[:, :1]]], ph], 1); terms = terms + E(ph)
+        if "pos" in self.codes:                                                       # B7: position code (round 1), see __init__
+            posidx = torch.arange(T, device=self.device).clamp(max=39); terms = terms + E(th[self.ipos[posidx]].unsqueeze(0) + th[self.ipc[cats]])
         if "chainL" in self.codes or "chain" in self.codes:
             g = torch.sigmoid(self.logits)[cats] * mask                                   # B x T
             u = torch.log1p(-g + 1e-9); Sx = torch.cat([torch.zeros(B, 1, dtype=self.dtype, device=self.device), torch.cumsum(u, 1)], 1)   # Sx[i] = sum_{j<i} u_j

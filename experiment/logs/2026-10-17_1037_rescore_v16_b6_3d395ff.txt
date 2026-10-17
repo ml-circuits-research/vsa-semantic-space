@@ -1,0 +1,52 @@
+# 2026-10-17T10:37:29+02:00  commit=3d395ff  cmd: python3 rescore_v16_b6.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+
+rescore_v16_b6 (B6): saved 10b-quinquies models, 5 seeds, D = 1024; formats: dense | routebook L | identities+roles L | state phasor L | state block top-k (block 32); bits per vector = D log2 L (dense: 64 per coordinate)
+  seed 0 | dense                      | 1.000 | 1.000 | 0.583 | 1.000 | 0.975 | 1.000 | 1.000 | 1.000
+  seed 0 | routebook L=16             | 1.000 | 1.000 | 0.583 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 0 | routebook L=64             | 1.000 | 1.000 | 0.575 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 0 | routebook L=256            | 1.000 | 1.000 | 0.567 | 1.000 | 0.958 | 1.000 | 1.000 | 1.000
+  seed 0 | identities+roles L=16      | 1.000 | 1.000 | 0.617 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 0 | identities+roles L=64      | 1.000 | 1.000 | 0.550 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000
+  seed 0 | identities+roles L=256     | 1.000 | 1.000 | 0.592 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 0 | state phasor L=16          | 1.000 | 1.000 | 0.517 | 1.000 | 0.900 | 1.000 | 1.000 | 1.000
+  seed 0 | state phasor L=64          | 1.000 | 1.000 | 0.525 | 1.000 | 0.933 | 1.000 | 1.000 | 1.000
+  seed 0 | state phasor L=256         | 1.000 | 1.000 | 0.575 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 0 | state block top-16/32      | 1.000 | 1.000 | 0.600 | 1.000 | 0.975 | 1.000 | 1.000 | 1.000
+  seed 0 | state block top-8/32       | 1.000 | 1.000 | 0.592 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 0 | state block top-4/32       | 1.000 | 1.000 | 0.575 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000
+  seed 1 | dense                      | 1.000 | 1.000 | 0.633 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | routebook L=16             | 1.000 | 1.000 | 0.592 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 1 | routebook L=64             | 1.000 | 1.000 | 0.667 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | routebook L=256            | 1.000 | 1.000 | 0.658 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000
+  seed 1 | identities+roles L=16      | 1.000 | 1.000 | 0.575 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | identities+roles L=64      | 1.000 | 1.000 | 0.642 | 1.000 | 0.950 | 1.000 | 1.000 | 1.000
+  seed 1 | identities+roles L=256     | 1.000 | 1.000 | 0.625 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | state phasor L=16          | 1.000 | 1.000 | 0.592 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | state phasor L=64          | 1.000 | 1.000 | 0.558 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 1 | state phasor L=256         | 1.000 | 1.000 | 0.583 | 1.000 | 0.933 | 1.000 | 1.000 | 1.000
+  seed 1 | state block top-16/32      | 1.000 | 1.000 | 0.608 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 1 | state block top-8/32       | 1.000 | 1.000 | 0.642 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 1 | state block top-4/32       | 1.000 | 1.000 | 0.633 | 1.000 | 0.875 | 1.000 | 1.000 | 1.000
+  seed 2 | dense                      | 1.000 | 1.000 | 0.600 | 1.000 | 0.950 | 1.000 | 1.000 | 1.000
+  seed 2 | routebook L=16             | 1.000 | 1.000 | 0.617 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 2 | routebook L=64             | 1.000 | 1.000 | 0.592 | 1.000 | 0.975 | 1.000 | 1.000 | 1.000
+  seed 2 | routebook L=256            | 1.000 | 1.000 | 0.608 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 2 | identities+roles L=16      | 1.000 | 1.000 | 0.633 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 2 | identities+roles L=64      | 1.000 | 1.000 | 0.633 | 1.000 | 0.950 | 1.000 | 1.000 | 1.000
+  seed 2 | identities+roles L=256     | 1.000 | 1.000 | 0.633 | 1.000 | 0.975 | 1.000 | 1.000 | 1.000
+  seed 2 | state phasor L=16          | 1.000 | 1.000 | 0.592 | 1.000 | 0.967 | 1.000 | 1.000 | 1.000
+  seed 2 | state phasor L=64          | 1.000 | 1.000 | 0.550 | 1.000 | 0.958 | 1.000 | 1.000 | 1.000
+  seed 2 | state phasor L=256         | 1.000 | 1.000 | 0.575 | 1.000 | 0.942 | 1.000 | 1.000 | 1.000
+  seed 2 | state block top-16/32      | 1.000 | 1.000 | 0.658 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 2 | state block top-8/32       | 1.000 | 1.000 | 0.642 | 1.000 | 0.992 | 1.000 | 1.000 | 1.000
+  seed 2 | state block top-4/32       | 1.000 | 1.000 | 0.617 | 1.000 | 0.983 | 1.000 | 1.000 | 1.000

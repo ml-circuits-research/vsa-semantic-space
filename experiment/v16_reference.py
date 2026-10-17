@@ -93,9 +93,9 @@ if __name__ == "__main__":
     ap.add_argument("--verb_gates", default="learned", choices=["learned", "closed"], help="E4 (c): verb gates GIVEN closed (rule 20)")
     ap.add_argument("--part_gates", default="learned", choices=["learned", "open"], help="E1 (ii) (judgment 3b4f837): PARTICIPLE gates GIVEN open (rule 20): the participle is an emitter by construction")
     ap.add_argument("--rel_gates", default="learned", choices=["learned", "open"], help="E1b (indications 013c490 §1): relation-marker gates 'to', 'by', 'from' GIVEN open (rule 20), as 7c learned them")
-    ap.add_argument("--tau", type=float, default=0.05); ap.add_argument("--p_omit", type=float, default=0.2); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="ref")
+    ap.add_argument("--codes", default="path,chainL,bigram", help="B7: add 'pos' (the round-1 position code) to remeasure the fourth address code on the X5 splits"); ap.add_argument("--tau", type=float, default=0.05); ap.add_argument("--p_omit", type=float, default=0.2); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--ckpt", action="store_true"); ap.add_argument("--resume", action="store_true"); ap.add_argument("--tag", default="ref")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
-    print(f"v16_reference (B1 + B2): device={a.device}, D={D}, N={N}, seeds={a.seeds}, tau={a.tau}; predicate role (surface lemma, option a) + occupancy marker m; calibration on every readout")
+    print(f"v16_reference (B1 + B2): device={a.device}, D={D}, N={N}, seeds={a.seeds}, tau={a.tau}; predicate role (surface lemma, option a) + occupancy marker m; calibration on every readout" + f"; codes {a.codes}" + ("; B7: the position code (one displacement per absolute position + one per category) ADDED to the bundle; decision rule: keep only if the unseen-transitions (new construction) FULL does not drop by more than 0.02 against 10b-quinquies and no other axis loses" if "pos" in a.codes else ""))
     print(f"world: R_pred x f_lemma + sum_r R_r x (f + m); reporting R_X x (f_X + m) + R_rep x S; recipient-less forms (share {a.p_omit}) {OMIT_C}; synonym table {EVENT}")
     w0 = RefWorld(a.n_id, np.random.default_rng(0)); held_seen, held_new = v5.split_templates(w0); cues_ok, _ = v5.split_templates_rolecues(w0)
     verbs = sorted(set(LEMMA.values())); print(f"predicate candidates ({len(verbs)}): {verbs}; chance 1/{len(verbs)}; roles: chance 1/12 (new ids 1/6)\n")
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     for seed in range(a.seeds):
         w = RefWorld(a.n_id, np.random.default_rng(seed)); trP, teP, trO, teO = w.persons[:12], w.persons[12:], w.objects[:12], w.objects[12:]
         F = np.exp(1j * np.random.default_rng(300 + seed).uniform(-np.pi, np.pi, (len(w.vocab), D))); world = RefRoleWorld(F, w, np.random.default_rng(100 + seed))
-        m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
+        m = v8.V8(w, D, np.random.default_rng(200 + seed), a.codes.split(","), a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
         if a.verb_gates == "closed": print(f"  verb gates GIVEN closed (rule 20, not learned; E4 c): {m.fix_gates([c for c in m.cats if c in LEMMA], False)}")
         if a.part_gates == "open": print(f"  PARTICIPLE gates GIVEN open (rule 20, not learned; E1 ii): {m.fix_gates(PARTICIPLES, True)}")
         if a.rel_gates == "open": print(f"  relation-marker gates GIVEN open (rule 20, not learned; E1b): {m.fix_gates(['to', 'by', 'from'], True)}")
