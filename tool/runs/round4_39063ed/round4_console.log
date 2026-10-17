@@ -1,0 +1,72 @@
+GPU lock: /home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/logs/.run.lock
+# round 4, commit 39063ed, 2026-10-17T10:54:33+02:00; worlds in /tmp/sop_round4_itmb; runs in /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round4_39063ed
+# EXPECTATION (written before the run, judgment 45ccd1d D): with the presence thresholds set on calibration rows that include held-out FORMULATIONS, the recipient's presence on the reported half of the unseen formulations recovers toward the every-role-read value (round 3 D: role recipient 0.619 decided -> 0.839 every role read) without reading every role. If it does not, presence calibration across formulations is a recorded limit of the reader, not of the tool.
+export_worlds: n=30000 training-distribution sentences per world, n_eval=30 per eval template/form, seed 0
+  reference: /tmp/sop_round4_itmb/reference — files train.sop (30000), eval_new_identities.sop (240), eval_role_cues_seen.sop (60), eval_unseen_transitions.sop (180), eval_seen_transitions.sop (60), eval_depth3_unseen.sop (120); legend sha256:e221118d4315…
+## reference_F_calibration_with_heldout_formulations: sop train /tmp/sop_round4_itmb/reference --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --calibrate_on_heldout_formulations
+[splits] written to /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round4_39063ed/reference_F_calibration_with_heldout_formulations/splits.json before training: calibration_heldout_formulations_role_cues_seen 27, calibration_heldout_formulations_seen_transitions 36, calibration_heldout_formulations_unseen_transitions 93, heldout_depth3 120, heldout_formulations_role_cues_seen 33, heldout_formulations_seen_transitions 24, heldout_formulations_unseen_transitions 87, heldout_sentences 3072, new_identities 240, train 26928
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 0] end: RSS 2.64 GB | torch alloc 0.59 GB reserved 0.65 GB | MemAvailable 112.6 GB (126s)
+[export] numpy reader vs torch states: max relative difference 1.16e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.628
+[eval] seed 0 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.551
+[eval] seed 0 heldout_formulations_seen_transitions: FULL catalog candidates 0.542 | experiment candidates 0.542 | residual 0.681
+[eval] seed 0 heldout_formulations_unseen_transitions: FULL catalog candidates 0.333 | experiment candidates 0.333 | residual 0.791
+[eval] seed 0 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.347
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.334
+[eval] seed 0 train (sample): FULL catalog candidates 1.000 | residual 0.338
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 1] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.2 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.18e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.622
+[eval] seed 1 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.553
+[eval] seed 1 heldout_formulations_seen_transitions: FULL catalog candidates 0.542 | experiment candidates 0.542 | residual 0.683
+[eval] seed 1 heldout_formulations_unseen_transitions: FULL catalog candidates 0.437 | experiment candidates 0.448 | residual 0.792
+[eval] seed 1 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.349
+[eval] seed 1 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.344
+[eval] seed 1 train (sample): FULL catalog candidates 1.000 | residual 0.342
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 2] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.2 GB (123s)
+[export] numpy reader vs torch states: max relative difference 1.16e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.630
+[eval] seed 2 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.554
+[eval] seed 2 heldout_formulations_seen_transitions: FULL catalog candidates 0.583 | experiment candidates 0.583 | residual 0.683
+[eval] seed 2 heldout_formulations_unseen_transitions: FULL catalog candidates 0.448 | experiment candidates 0.471 | residual 0.792
+[eval] seed 2 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.348
+[eval] seed 2 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.336
+[eval] seed 2 train (sample): FULL catalog candidates 1.000 | residual 0.339
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 3] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.2 GB (124s)
+[export] numpy reader vs torch states: max relative difference 1.20e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth3: FULL catalog candidates 0.983 | experiment candidates 0.983 | residual 0.625
+[eval] seed 3 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.556
+[eval] seed 3 heldout_formulations_seen_transitions: FULL catalog candidates 0.542 | experiment candidates 0.542 | residual 0.677
+[eval] seed 3 heldout_formulations_unseen_transitions: FULL catalog candidates 0.506 | experiment candidates 0.506 | residual 0.788
+[eval] seed 3 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.348
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.343
+[eval] seed 3 train (sample): FULL catalog candidates 1.000 | residual 0.340
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 4] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.2 GB (123s)
+[export] numpy reader vs torch states: max relative difference 1.24e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth3: FULL catalog candidates 0.975 | experiment candidates 0.975 | residual 0.641
+[eval] seed 4 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.548
+[eval] seed 4 heldout_formulations_seen_transitions: FULL catalog candidates 0.542 | experiment candidates 0.542 | residual 0.683
+[eval] seed 4 heldout_formulations_unseen_transitions: FULL catalog candidates 0.368 | experiment candidates 0.368 | residual 0.786
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.349
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.342
+[eval] seed 4 train (sample): FULL catalog candidates 1.000 | residual 0.340
+[done] model written to /tmp/sop_round4_itmb/reference/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round4_39063ed/reference_F_calibration_with_heldout_formulations/train.log
+Reference world (to / by / from given open), heldout_formulations_unseen_transitions, 5 seeds; candidates = the role's catalog (18 per person / object role)
+
+| run | rows | readout (protocol) | thresholds set on | heads FULL | agent | object | recipient |
+|---|---|---|---|---|---|---|---|
+| round 3 D | 180 (all) | product readout: presence decided | training rows | 0.428±0.047 | 0.833±0.000 | 0.811±0.063 | 0.619±0.047 |
+| round 3 D | 180 (all) | v16 protocol: every role read, not available to the product | — | 0.596±0.048 | 0.833±0.000 | 0.811±0.063 | 0.839±0.004 |
+| **round 4 F** | 87 (reported half) | **product readout: presence decided** | training rows + the calibration half of the held-out formulations | 0.418±0.061 | 0.839±0.000 | 0.779±0.086 | 0.630±0.037 |
+| round 4 F | 87 (reported half) | presence decided | training rows only (the round-3 product, same rows) | 0.418±0.061 | 0.839±0.000 | 0.779±0.086 | 0.625±0.042 |
+| round 4 F | 87 (reported half) | v16 protocol: every role read, not available to the product | — | 0.556±0.061 | 0.839±0.000 | 0.779±0.086 | 0.809±0.006 |
+| RESULTS 10b-quinquies (v16) | | v16 protocol (C always read) | — | 0.627±0.024 | | | |
+
+Presence thresholds, seed 0 (ratio to the structure score): agent: None -> None; object: None -> None; recipient: 0.636042517031197 -> 0.6222416271573876 (calibration: train (a sample of 400 training sentences, rng 1234+seed) + the CALIBRATION half of the held-out formulations (156 sentences, splits calibration_*), disjoint from the reported half (rule 25))
+Expectation written before the run: the recipient recovers toward the every-role-read value (0.619 -> toward 0.839) without reading every role; if not, presence calibration across formulations is a recorded limit of the reader.
+done: commit /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round4_39063ed (git add tool/runs/round4_39063ed)
