@@ -1,4 +1,4 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-17 — judgment 752853c applied: decisions recorded, N6 run; tool round 6 next)
+# Current status (rewritten whole at every judgment point; last: 2026-10-17 — judgments 752853c and 8d335f8 applied: N6 recorded with the corrected claim, round 6 adopted, four wording corrections from the external review; tool E1 done, E2 running)
 
 Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_752853c.md (saved verbatim), experiment/RESULTS.md 15, 14-bis,
 11-sexies; STATUS.md; experiment/JOURNAL.md; tool/README.md.
@@ -22,7 +22,17 @@ Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_202
 Tool round 6 (running next); N8 (verb-final world, low priority); P1 when the team's data arrives (the annotation path once with a key, wherever
 the team runs it); N7 after N1; B8-B9; capacity at 64-1,000 identities and D = 4,096-16,384 (00_READ_FIRST §7).
 
-## D. Questions for the reviewing session
+## D. Done since 8d335f8
+- N6 row reworded to the claim the measurement supports (identity remains at a consistent address; recoverable once named; separable by filler
+  with neighbours' labels; share not a signal; "detectable" NOT claimed); N6-bis PLANNED with its criterion.
+- Wording from the external review: WikiSQL row (question-only encoder, schema as the decoder's candidate set; what is scored); confident-wrong
+  defined once in rule 18 with the conditional risk among accepted answers and the rule-of-three bound on zeros; 7b numbers labelled as the mean
+  over roles; the regularity row's quantifier cell reads "scope markers read through the declared legend rule".
+- Round 6 adopted as written; the asymmetry field stays a per-legend option.
+- Tool: E1 committed (legend-gap report prints the N6 statistics); E2 (WikiSQL through the tool) restarted with length buckets after the first
+  attempt was stopped for the quadratic padding cost; result at the next push.
+
+## E. Questions for the reviewing session
 1. N6's recording: "NOT met as written; detectable by residual direction (0.963 at the reader's address; 1-NN 0.57), not by residual share" —
    agreed? The addendum's oracle test presumes the reader places the missing filler at the legend's vector, which a reader trained without the
    role cannot do; the measurement that succeeds uses the reader's own address, calibrated on 120 gold sentences (a supervised step) or no

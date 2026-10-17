@@ -45,6 +45,9 @@ Added 2026-10-16 (external review of the positioning document; round 10):
 18. **Every accuracy is accompanied by: the margin distribution, the confident-wrong rate at a stated threshold, and the reconstruction
     residual** ||S - sum_r R_r (x) f_best(r)|| / ||S||. "The model knows when it does not know" is never written; "the model reports X and Y,
     calibrated as follows" is.
+    DEFINITION (judgment 8d335f8 C2): confident-wrong = the share of ALL items that are accepted (margin above the threshold) AND wrong; wherever
+    a product operating point is stated, the conditional risk among the accepted answers (confident-wrong / coverage) is printed beside it; a
+    confident-wrong of 0.000 is reported with its count and the rule-of-three bound (3 / n).
 19. **Any claim of the form "the geometry produces / guarantees ..." is either a proof or is replaced by "we observed ... (round, seeds)".**
 20. **The world's roles are an input.** Documents say what is given (roles, identities, categories) and what is learned (moves, relative
     addresses, gates) in the same sentence whenever either is mentioned. Supervision wording: "structured per-sentence targets with

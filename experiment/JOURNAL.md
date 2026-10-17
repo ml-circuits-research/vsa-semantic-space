@@ -338,3 +338,9 @@ N6 per-term decomposition (log _1420, RESULTS 15-bis): function words carry 0.44
 hypothesis dropped; the share inverted because the recipient-less forms' content fit error carries 0.73 of their residual. Rule 30 added.
 Tool round 6 (agent; RESULTS 11-septies): the fitted calibration rule adopted — recipient presence on unseen formulations 0.639 -> 0.772 at a
 0.009 cost on absent sentences; 0.70 of the remaining errors abstain (0.48-0.89 per seed). Push = judgment point.
+
+## 2026-10-17 (DGX, afternoon) — judgment 8d335f8 applied: N6 claim corrected, wording from the external review
+N6 row: the identity of the omitted role remains in the residual at a consistent address (0.963 once named); "detectable" not claimed; N6-bis
+PLANNED. Wording: WikiSQL question-only encoder with the schema as the decoder's candidate set; confident-wrong defined (share of all items
+accepted and wrong) with the conditional risk and the rule-of-three bound; 7b as the mean over roles; quantifier cells as scope markers read
+through the legend rule. No number moved. Push = the snapshot for the paper's supplementary material is taken after it.
