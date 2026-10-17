@@ -1677,3 +1677,21 @@ across sentences (do the unexplained stars cluster at one address?), which is ex
 words clustered by residual direction (tool test 5b recovered the removed `destination` role). The addendum's oracle test, as written, cannot
 succeed for a reader trained without the role; the measurement that does succeed is stated above. For the reviewing session: record N6 as "NOT met
 as written; the missing question is detectable by residual direction (0.963 at the reader's address; 1-NN 0.57), not by residual share".
+
+### 15-bis. N6 per-term decomposition of the residual (rescore_v21_terms.py; logs/2026-10-17_1420_rescore_v21_terms_c01862a.txt; saved N6 models, 5 seeds, same templates and draws as RESULTS 15; judgment 934fbae B)
+The residual r = S − αrecon split exactly into three pieces — the hidden-role token's term, the function-word terms, and the fit error of the
+other content words (S_content − αrecon) — each attributed ALONG the residual (Re<piece, r>/||r||², summing to one; the raw norm ratios are not
+shares: the class pieces cancel each other, ||S_function||/||r|| = 1.87).
+| sentences | ||r||/||S|| | share: hidden-role token | share: content fit error | share: function words | content-share residual (function words excluded) |
+|---|---|---|---|---|---|
+| WITH the recipient | 0.336±0.003 | **0.302** | 0.259 | 0.438 | 0.861±0.007 |
+| WITHOUT (recipient-less forms) | 0.462±0.030 | — | **0.729** | 0.271 | 0.799±0.012 |
+Gap re-scored on the content share: +0.079±0.022 (> 0.3 needed).
+Decision, by the rule written before the run: the function words are NOT the majority of the residual (0.44 with the recipient, 0.27 without) ->
+the RESULTS 15 hypothesis "function-word terms dominate the unexplained part" is **DROPPED**; the N6 row stays as recorded; direction is the
+detector. What the decomposition shows instead (the reading of the numbers, not a new hypothesis): on recipient-less sentences the residual is
+carried by the FIT ERROR of the content words (0.73) — the three recipient-less forms are the rarer templates (share 0.2) and their known roles
+are reconstructed less exactly — while on sentences with the recipient the hidden token itself carries 0.30 and the fit error only 0.26. The
+share went the wrong way because the comparison class fits worse, not because the hidden information is small; even restricted to content
+words the share gap is +0.08, far from 0.3. The tool's `_residual` stays ONE number; the legend loop's detector stays the direction of the
+unexplained stars across sentences (RESULTS 15: 1-NN 0.57 with no vector and no label).

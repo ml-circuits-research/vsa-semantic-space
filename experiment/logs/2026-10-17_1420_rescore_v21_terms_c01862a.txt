@@ -1,0 +1,15 @@
+# 2026-10-17T14:20:03+02:00  commit=c01862a  cmd: python3 rescore_v21_terms.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v21_terms (N6 per-term decomposition): saved N6 models, 5 seeds; pieces: hidden-role token | other content words | function words | fit error of the content words
+  seed 0 0.334 | 0.298 | 0.269 | 0.433 | 1.872 | 0.502 | 0.733 | 0.267 | 0.853 | 0.813 | 0.050
+  seed 1 0.342 | 0.306 | 0.242 | 0.452 | 1.838 | 0.432 | 0.733 | 0.267 | 0.864 | 0.788 | 0.096
+  seed 2 0.335 | 0.297 | 0.265 | 0.437 | 1.878 | 0.483 | 0.719 | 0.281 | 0.859 | 0.813 | 0.056
+  seed 3 0.333 | 0.302 | 0.269 | 0.429 | 1.885 | 0.467 | 0.733 | 0.267 | 0.857 | 0.789 | 0.086
+  seed 4 0.335 | 0.308 | 0.252 | 0.440 | 1.895 | 0.424 | 0.729 | 0.271 | 0.872 | 0.790 | 0.105
+
+== MEANS over 5 seeds: WITH C: ||r||/||S|| | share along r: hidden | content fit | function words | (raw ||function||/||r||) | WITHOUT C: ||r||/||S|| | share: content fit | function words | CONTENT-share residual WITH | WITHOUT | gap on the content share
+  0.336±0.003 | 0.302±0.004 | 0.259±0.011 | 0.438±0.008 | 1.874±0.019 | 0.462±0.030 | 0.729±0.006 | 0.271±0.006 | 0.861±0.007 | 0.799±0.012 | 0.079±0.022
+== decision rule: function-word share ALONG the residual = 0.438 (with C) / 0.271 (without): NOT the majority of the residual -> the RESULTS 15 hypothesis (function words dominate) is DROPPED; the row stays as recorded; direction is the detector
+
+checklist: [x] saved params, no retraining [x] same templates and draws as RESULTS 15 [x] exact three-piece split of the residual, shares along r sum to one [x] content-share gap re-scored [x] decision rule written before the run [x] 5 seeds
