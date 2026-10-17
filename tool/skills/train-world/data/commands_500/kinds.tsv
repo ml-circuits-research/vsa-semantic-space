@@ -1,0 +1,41 @@
+# word	kind	lemma — the world's own categories (GIVEN, rule 20)
+.	.
+admin	PRINC
+archive	DEST
+are	are
+asks	asks
+backups	PAT
+cloud	DEST
+copy	ACT
+delete	ACT
+do	do
+drafts	PAT
+files	PAT
+folder	DEST
+logs	PAT
+messages	PAT
+move	ACT
+never	never
+new	NATTR	old
+not	not
+notes	PAT
+old	ATTR
+photos	PAT
+reports	PAT
+save	ACT
+saved	ATTR
+says	says
+send	ACT
+sent	ATTR
+shared	ATTR
+signed	ATTR
+that	that
+the	the
+tickets	PAT
+to	to
+trash	DEST
+unsaved	NATTR	saved
+unsent	NATTR	sent
+unshared	NATTR	shared
+unsigned	NATTR	signed
+user	PRINC

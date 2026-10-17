@@ -1,0 +1,7996 @@
+!world commands_measure
+!legend sha256:07c3d4ddbdbbc4bf064b8e80b8e6479731cef5a9df297084259a60b0ad92f15b
+!generated export_worlds.py from experiment generators (2026-10-17)
+
+@w1 not
+_text=do not copy the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w2
+
+@w2 command
+action=copy
+patient=$w3
+
+@w3 entity
+head=photos
+attr=shared
+
+@w4 command
+_text=copy the unshared drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w5
+
+@w5 entity
+head=drafts
+attr=$w6
+
+@w6 not
+scope=shared
+
+@w7 command
+_text=send the new drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w8
+
+@w8 entity
+head=drafts
+attr=$w9
+
+@w9 not
+scope=old
+
+@w10 not
+_text=never copy the signed files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w11
+
+@w11 command
+action=copy
+patient=$w12
+
+@w12 entity
+head=files
+attr=signed
+
+@w13 says
+_text=the user asks that do not move the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w14
+
+@w14 not
+scope=$w15
+
+@w15 command
+action=move
+patient=$w16
+
+@w16 entity
+head=messages
+attr=$w17
+
+@w17 not
+scope=saved
+
+@w18 command
+_text=save the signed logs to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w19
+destination=archive
+
+@w19 entity
+head=logs
+attr=signed
+
+@w20 not
+_text=do not delete the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w21
+
+@w21 command
+action=delete
+patient=$w22
+
+@w22 entity
+head=photos
+attr=sent
+
+@w23 command
+_text=delete the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w24
+
+@w24 entity
+head=logs
+attr=$w25
+
+@w25 not
+scope=sent
+
+@w26 not
+_text=do not delete the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w27
+
+@w27 command
+action=delete
+patient=$w28
+
+@w28 entity
+head=logs
+attr=saved
+
+@w29 command
+_text=move the signed reports to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w30
+destination=cloud
+
+@w30 entity
+head=reports
+attr=signed
+
+@w31 says
+_text=the user asks that never move the shared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w32
+
+@w32 not
+scope=$w33
+
+@w33 command
+action=move
+patient=$w34
+
+@w34 entity
+head=logs
+attr=shared
+
+@w35 not
+_text=never send the old reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w36
+
+@w36 command
+action=send
+patient=$w37
+
+@w37 entity
+head=reports
+attr=old
+
+@w38 not
+_text=do not move the unsaved files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w39
+
+@w39 command
+action=move
+patient=$w40
+
+@w40 entity
+head=files
+attr=$w41
+
+@w41 not
+scope=saved
+
+@w42 command
+_text=send the shared messages to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=send
+patient=$w43
+destination=trash
+
+@w43 entity
+head=messages
+attr=shared
+
+@w44 not
+_text=do not save the unsaved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w45
+
+@w45 command
+action=save
+patient=$w46
+
+@w46 entity
+head=logs
+attr=$w47
+
+@w47 not
+scope=saved
+
+@w48 says
+_text=the admin says that do not save the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w49
+
+@w49 not
+scope=$w50
+
+@w50 command
+action=save
+patient=$w51
+
+@w51 entity
+head=photos
+attr=$w52
+
+@w52 not
+scope=signed
+
+@w53 not
+_text=do not save the old reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w54
+
+@w54 command
+action=save
+patient=$w55
+
+@w55 entity
+head=reports
+attr=old
+
+@w56 says
+_text=the user says that do not move the old reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w57
+
+@w57 not
+scope=$w58
+
+@w58 command
+action=move
+patient=$w59
+
+@w59 entity
+head=reports
+attr=old
+
+@w60 says
+_text=the admin says that do not save the shared files .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w61
+
+@w61 not
+scope=$w62
+
+@w62 command
+action=save
+patient=$w63
+
+@w63 entity
+head=files
+attr=shared
+
+@w64 says
+_text=the admin asks that never move the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w65
+
+@w65 not
+scope=$w66
+
+@w66 command
+action=move
+patient=$w67
+
+@w67 entity
+head=photos
+attr=shared
+
+@w68 command
+_text=copy the saved reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w69
+
+@w69 entity
+head=reports
+attr=saved
+
+@w70 not
+_text=do not copy the unsigned messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w71
+
+@w71 command
+action=copy
+patient=$w72
+
+@w72 entity
+head=messages
+attr=$w73
+
+@w73 not
+scope=signed
+
+@w74 command
+_text=delete the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w75
+
+@w75 entity
+head=photos
+attr=$w76
+
+@w76 not
+scope=signed
+
+@w77 not
+_text=do not save the unsaved files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w78
+
+@w78 command
+action=save
+patient=$w79
+
+@w79 entity
+head=files
+attr=$w80
+
+@w80 not
+scope=saved
+
+@w81 command
+_text=save the photos that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w82
+
+@w82 entity
+head=photos
+attr=$w83
+
+@w83 not
+scope=signed
+
+@w84 says
+_text=the user says that copy the saved messages to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w85
+
+@w85 command
+action=copy
+patient=$w86
+destination=cloud
+
+@w86 entity
+head=messages
+attr=saved
+
+@w87 says
+_text=the user asks that do not copy the sent logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w88
+
+@w88 not
+scope=$w89
+
+@w89 command
+action=copy
+patient=$w90
+
+@w90 entity
+head=logs
+attr=sent
+
+@w91 says
+_text=the user asks that never move the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w92
+
+@w92 not
+scope=$w93
+
+@w93 command
+action=move
+patient=$w94
+
+@w94 entity
+head=reports
+attr=saved
+
+@w95 says
+_text=the admin says that do not delete the unsent photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w96
+
+@w96 not
+scope=$w97
+
+@w97 command
+action=delete
+patient=$w98
+
+@w98 entity
+head=photos
+attr=$w99
+
+@w99 not
+scope=sent
+
+@w100 says
+_text=the admin asks that move the old reports .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w101
+
+@w101 command
+action=move
+patient=$w102
+
+@w102 entity
+head=reports
+attr=old
+
+@w103 not
+_text=never delete the shared drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w104
+
+@w104 command
+action=delete
+patient=$w105
+
+@w105 entity
+head=drafts
+attr=shared
+
+@w106 says
+_text=the admin says that save the signed drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w107
+
+@w107 command
+action=save
+patient=$w108
+
+@w108 entity
+head=drafts
+attr=signed
+
+@w109 command
+_text=delete the sent reports to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w110
+destination=folder
+
+@w110 entity
+head=reports
+attr=sent
+
+@w111 command
+_text=save the saved reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w112
+
+@w112 entity
+head=reports
+attr=saved
+
+@w113 not
+_text=do not send the new files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w114
+
+@w114 command
+action=send
+patient=$w115
+
+@w115 entity
+head=files
+attr=$w116
+
+@w116 not
+scope=old
+
+@w117 command
+_text=save the unshared logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w118
+
+@w118 entity
+head=logs
+attr=$w119
+
+@w119 not
+scope=shared
+
+@w120 not
+_text=do not delete the new reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w121
+
+@w121 command
+action=delete
+patient=$w122
+
+@w122 entity
+head=reports
+attr=$w123
+
+@w123 not
+scope=old
+
+@w124 not
+_text=do not move the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w125
+
+@w125 command
+action=move
+patient=$w126
+
+@w126 entity
+head=drafts
+attr=$w127
+
+@w127 not
+scope=sent
+
+@w128 command
+_text=delete the logs that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w129
+
+@w129 entity
+head=logs
+attr=$w130
+
+@w130 not
+scope=shared
+
+@w131 command
+_text=send the old files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w132
+
+@w132 entity
+head=files
+attr=old
+
+@w133 not
+_text=never save the shared files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w134
+
+@w134 command
+action=save
+patient=$w135
+
+@w135 entity
+head=files
+attr=shared
+
+@w136 command
+_text=send the new drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w137
+
+@w137 entity
+head=drafts
+attr=$w138
+
+@w138 not
+scope=old
+
+@w139 says
+_text=the user asks that send the signed drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w140
+
+@w140 command
+action=send
+patient=$w141
+
+@w141 entity
+head=drafts
+attr=signed
+
+@w142 command
+_text=delete the sent drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w143
+
+@w143 entity
+head=drafts
+attr=sent
+
+@w144 not
+_text=do not copy the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w145
+
+@w145 command
+action=copy
+patient=$w146
+
+@w146 entity
+head=logs
+attr=saved
+
+@w147 not
+_text=do not copy the unsent messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w148
+
+@w148 command
+action=copy
+patient=$w149
+
+@w149 entity
+head=messages
+attr=$w150
+
+@w150 not
+scope=sent
+
+@w151 not
+_text=do not send the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w152
+
+@w152 command
+action=send
+patient=$w153
+
+@w153 entity
+head=files
+attr=sent
+
+@w154 not
+_text=do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w155
+
+@w155 command
+action=save
+patient=$w156
+
+@w156 entity
+head=reports
+attr=sent
+
+@w157 says
+_text=the admin says that send the shared reports to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=admin
+scope=$w158
+
+@w158 command
+action=send
+patient=$w159
+destination=archive
+
+@w159 entity
+head=reports
+attr=shared
+
+@w160 says
+_text=the user says that copy the sent photos to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w161
+
+@w161 command
+action=copy
+patient=$w162
+destination=archive
+
+@w162 entity
+head=photos
+attr=sent
+
+@w163 says
+_text=the admin asks that send the saved photos .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w164
+
+@w164 command
+action=send
+patient=$w165
+
+@w165 entity
+head=photos
+attr=saved
+
+@w166 not
+_text=never send the old logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w167
+
+@w167 command
+action=send
+patient=$w168
+
+@w168 entity
+head=logs
+attr=old
+
+@w169 not
+_text=do not save the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w170
+
+@w170 command
+action=save
+patient=$w171
+
+@w171 entity
+head=messages
+attr=old
+
+@w172 command
+_text=send the signed messages to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=send
+patient=$w173
+destination=archive
+
+@w173 entity
+head=messages
+attr=signed
+
+@w174 command
+_text=move the sent files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w175
+
+@w175 entity
+head=files
+attr=sent
+
+@w176 says
+_text=the user says that move the shared files .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w177
+
+@w177 command
+action=move
+patient=$w178
+
+@w178 entity
+head=files
+attr=shared
+
+@w179 not
+_text=do not move the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w180
+
+@w180 command
+action=move
+patient=$w181
+
+@w181 entity
+head=photos
+attr=sent
+
+@w182 command
+_text=delete the drafts that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w183
+
+@w183 entity
+head=drafts
+attr=$w184
+
+@w184 not
+scope=sent
+
+@w185 command
+_text=delete the shared messages to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w186
+destination=archive
+
+@w186 entity
+head=messages
+attr=shared
+
+@w187 command
+_text=delete the shared files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w188
+
+@w188 entity
+head=files
+attr=shared
+
+@w189 says
+_text=the user says that save the unsaved files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w190
+
+@w190 command
+action=save
+patient=$w191
+
+@w191 entity
+head=files
+attr=$w192
+
+@w192 not
+scope=saved
+
+@w193 says
+_text=the user asks that do not send the unshared reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w194
+
+@w194 not
+scope=$w195
+
+@w195 command
+action=send
+patient=$w196
+
+@w196 entity
+head=reports
+attr=$w197
+
+@w197 not
+scope=shared
+
+@w198 not
+_text=do not save the unsent photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w199
+
+@w199 command
+action=save
+patient=$w200
+
+@w200 entity
+head=photos
+attr=$w201
+
+@w201 not
+scope=sent
+
+@w202 not
+_text=do not copy the unsaved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w203
+
+@w203 command
+action=copy
+patient=$w204
+
+@w204 entity
+head=drafts
+attr=$w205
+
+@w205 not
+scope=saved
+
+@w206 says
+_text=the user asks that move the shared reports .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w207
+
+@w207 command
+action=move
+patient=$w208
+
+@w208 entity
+head=reports
+attr=shared
+
+@w209 command
+_text=send the shared logs .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w210
+
+@w210 entity
+head=logs
+attr=shared
+
+@w211 says
+_text=the admin asks that send the old logs .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w212
+
+@w212 command
+action=send
+patient=$w213
+
+@w213 entity
+head=logs
+attr=old
+
+@w214 command
+_text=copy the old files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w215
+
+@w215 entity
+head=files
+attr=old
+
+@w216 says
+_text=the user asks that do not save the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w217
+
+@w217 not
+scope=$w218
+
+@w218 command
+action=save
+patient=$w219
+
+@w219 entity
+head=logs
+attr=$w220
+
+@w220 not
+scope=shared
+
+@w221 command
+_text=move the logs that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w222
+
+@w222 entity
+head=logs
+attr=$w223
+
+@w223 not
+scope=shared
+
+@w224 command
+_text=move the sent drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w225
+
+@w225 entity
+head=drafts
+attr=sent
+
+@w226 command
+_text=copy the sent photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w227
+
+@w227 entity
+head=photos
+attr=sent
+
+@w228 command
+_text=delete the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w229
+
+@w229 entity
+head=drafts
+attr=$w230
+
+@w230 not
+scope=sent
+
+@w231 command
+_text=send the drafts that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w232
+
+@w232 entity
+head=drafts
+attr=$w233
+
+@w233 not
+scope=shared
+
+@w234 command
+_text=move the saved reports to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w235
+destination=trash
+
+@w235 entity
+head=reports
+attr=saved
+
+@w236 not
+_text=do not copy the sent messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w237
+
+@w237 command
+action=copy
+patient=$w238
+
+@w238 entity
+head=messages
+attr=sent
+
+@w239 not
+_text=do not move the old logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w240
+
+@w240 command
+action=move
+patient=$w241
+
+@w241 entity
+head=logs
+attr=old
+
+@w242 not
+_text=never save the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w243
+
+@w243 command
+action=save
+patient=$w244
+
+@w244 entity
+head=messages
+attr=signed
+
+@w245 not
+_text=do not send the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w246
+
+@w246 command
+action=send
+patient=$w247
+
+@w247 entity
+head=photos
+attr=sent
+
+@w248 says
+_text=the admin says that do not delete the unsigned files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w249
+
+@w249 not
+scope=$w250
+
+@w250 command
+action=delete
+patient=$w251
+
+@w251 entity
+head=files
+attr=$w252
+
+@w252 not
+scope=signed
+
+@w253 command
+_text=copy the sent drafts to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w254
+destination=folder
+
+@w254 entity
+head=drafts
+attr=sent
+
+@w255 says
+_text=the user says that do not send the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w256
+
+@w256 not
+scope=$w257
+
+@w257 command
+action=send
+patient=$w258
+
+@w258 entity
+head=messages
+attr=shared
+
+@w259 not
+_text=never move the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w260
+
+@w260 command
+action=move
+patient=$w261
+
+@w261 entity
+head=drafts
+attr=sent
+
+@w262 not
+_text=never save the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w263
+
+@w263 command
+action=save
+patient=$w264
+
+@w264 entity
+head=messages
+attr=old
+
+@w265 command
+_text=send the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w266
+
+@w266 entity
+head=logs
+attr=$w267
+
+@w267 not
+scope=sent
+
+@w268 says
+_text=the admin asks that copy the logs that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w269
+
+@w269 command
+action=copy
+patient=$w270
+
+@w270 entity
+head=logs
+attr=$w271
+
+@w271 not
+scope=signed
+
+@w272 not
+_text=never save the signed files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w273
+
+@w273 command
+action=save
+patient=$w274
+
+@w274 entity
+head=files
+attr=signed
+
+@w275 not
+_text=do not move the sent logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w276
+
+@w276 command
+action=move
+patient=$w277
+
+@w277 entity
+head=logs
+attr=sent
+
+@w278 command
+_text=save the old messages to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w279
+destination=archive
+
+@w279 entity
+head=messages
+attr=old
+
+@w280 says
+_text=the user says that move the signed files to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w281
+
+@w281 command
+action=move
+patient=$w282
+destination=trash
+
+@w282 entity
+head=files
+attr=signed
+
+@w283 command
+_text=copy the logs that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w284
+
+@w284 entity
+head=logs
+attr=$w285
+
+@w285 not
+scope=sent
+
+@w286 not
+_text=do not send the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w287
+
+@w287 command
+action=send
+patient=$w288
+
+@w288 entity
+head=drafts
+attr=old
+
+@w289 says
+_text=the user says that delete the drafts that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w290
+
+@w290 command
+action=delete
+patient=$w291
+
+@w291 entity
+head=drafts
+attr=$w292
+
+@w292 not
+scope=shared
+
+@w293 says
+_text=the admin says that do not move the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w294
+
+@w294 not
+scope=$w295
+
+@w295 command
+action=move
+patient=$w296
+
+@w296 entity
+head=reports
+attr=saved
+
+@w297 command
+_text=move the shared drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w298
+
+@w298 entity
+head=drafts
+attr=shared
+
+@w299 says
+_text=the admin asks that save the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w300
+
+@w300 command
+action=save
+patient=$w301
+
+@w301 entity
+head=drafts
+attr=$w302
+
+@w302 not
+scope=sent
+
+@w303 command
+_text=move the messages that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w304
+
+@w304 entity
+head=messages
+attr=$w305
+
+@w305 not
+scope=sent
+
+@w306 command
+_text=save the signed files to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w307
+destination=folder
+
+@w307 entity
+head=files
+attr=signed
+
+@w308 says
+_text=the user asks that move the logs that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w309
+
+@w309 command
+action=move
+patient=$w310
+
+@w310 entity
+head=logs
+attr=$w311
+
+@w311 not
+scope=shared
+
+@w312 not
+_text=never save the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w313
+
+@w313 command
+action=save
+patient=$w314
+
+@w314 entity
+head=messages
+attr=shared
+
+@w315 says
+_text=the user asks that save the files that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w316
+
+@w316 command
+action=save
+patient=$w317
+
+@w317 entity
+head=files
+attr=$w318
+
+@w318 not
+scope=signed
+
+@w319 not
+_text=do not copy the unsaved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w320
+
+@w320 command
+action=copy
+patient=$w321
+
+@w321 entity
+head=reports
+attr=$w322
+
+@w322 not
+scope=saved
+
+@w323 says
+_text=the admin says that save the drafts that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w324
+
+@w324 command
+action=save
+patient=$w325
+
+@w325 entity
+head=drafts
+attr=$w326
+
+@w326 not
+scope=signed
+
+@w327 command
+_text=send the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w328
+
+@w328 entity
+head=logs
+attr=$w329
+
+@w329 not
+scope=sent
+
+@w330 command
+_text=send the unsigned reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w331
+
+@w331 entity
+head=reports
+attr=$w332
+
+@w332 not
+scope=signed
+
+@w333 not
+_text=never move the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w334
+
+@w334 command
+action=move
+patient=$w335
+
+@w335 entity
+head=photos
+attr=old
+
+@w336 not
+_text=do not send the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w337
+
+@w337 command
+action=send
+patient=$w338
+
+@w338 entity
+head=messages
+attr=$w339
+
+@w339 not
+scope=saved
+
+@w340 not
+_text=never save the shared files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w341
+
+@w341 command
+action=save
+patient=$w342
+
+@w342 entity
+head=files
+attr=shared
+
+@w343 says
+_text=the admin asks that do not send the signed photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w344
+
+@w344 not
+scope=$w345
+
+@w345 command
+action=send
+patient=$w346
+
+@w346 entity
+head=photos
+attr=signed
+
+@w347 says
+_text=the admin asks that send the messages that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w348
+
+@w348 command
+action=send
+patient=$w349
+
+@w349 entity
+head=messages
+attr=$w350
+
+@w350 not
+scope=saved
+
+@w351 says
+_text=the user asks that move the saved photos to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w352
+
+@w352 command
+action=move
+patient=$w353
+destination=archive
+
+@w353 entity
+head=photos
+attr=saved
+
+@w354 not
+_text=do not move the signed files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w355
+
+@w355 command
+action=move
+patient=$w356
+
+@w356 entity
+head=files
+attr=signed
+
+@w357 not
+_text=do not send the new drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w358
+
+@w358 command
+action=send
+patient=$w359
+
+@w359 entity
+head=drafts
+attr=$w360
+
+@w360 not
+scope=old
+
+@w361 not
+_text=never delete the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w362
+
+@w362 command
+action=delete
+patient=$w363
+
+@w363 entity
+head=logs
+attr=saved
+
+@w364 not
+_text=never save the saved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w365
+
+@w365 command
+action=save
+patient=$w366
+
+@w366 entity
+head=messages
+attr=saved
+
+@w367 says
+_text=the user says that do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w368
+
+@w368 not
+scope=$w369
+
+@w369 command
+action=save
+patient=$w370
+
+@w370 entity
+head=reports
+attr=sent
+
+@w371 command
+_text=copy the sent files to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w372
+destination=folder
+
+@w372 entity
+head=files
+attr=sent
+
+@w373 command
+_text=copy the reports that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w374
+
+@w374 entity
+head=reports
+attr=$w375
+
+@w375 not
+scope=sent
+
+@w376 says
+_text=the user asks that do not move the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w377
+
+@w377 not
+scope=$w378
+
+@w378 command
+action=move
+patient=$w379
+
+@w379 entity
+head=photos
+attr=shared
+
+@w380 command
+_text=copy the files that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w381
+
+@w381 entity
+head=files
+attr=$w382
+
+@w382 not
+scope=saved
+
+@w383 command
+_text=move the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w384
+
+@w384 entity
+head=photos
+attr=old
+
+@w385 says
+_text=the admin asks that move the photos that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w386
+
+@w386 command
+action=move
+patient=$w387
+
+@w387 entity
+head=photos
+attr=$w388
+
+@w388 not
+scope=saved
+
+@w389 not
+_text=do not move the old files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w390
+
+@w390 command
+action=move
+patient=$w391
+
+@w391 entity
+head=files
+attr=old
+
+@w392 says
+_text=the user asks that do not delete the old reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w393
+
+@w393 not
+scope=$w394
+
+@w394 command
+action=delete
+patient=$w395
+
+@w395 entity
+head=reports
+attr=old
+
+@w396 says
+_text=the user asks that do not save the unsigned files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w397
+
+@w397 not
+scope=$w398
+
+@w398 command
+action=save
+patient=$w399
+
+@w399 entity
+head=files
+attr=$w400
+
+@w400 not
+scope=signed
+
+@w401 says
+_text=the admin asks that save the saved photos to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=admin
+scope=$w402
+
+@w402 command
+action=save
+patient=$w403
+destination=archive
+
+@w403 entity
+head=photos
+attr=saved
+
+@w404 command
+_text=copy the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w405
+
+@w405 entity
+head=photos
+attr=$w406
+
+@w406 not
+scope=signed
+
+@w407 not
+_text=do not move the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w408
+
+@w408 command
+action=move
+patient=$w409
+
+@w409 entity
+head=photos
+attr=sent
+
+@w410 not
+_text=never delete the shared drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w411
+
+@w411 command
+action=delete
+patient=$w412
+
+@w412 entity
+head=drafts
+attr=shared
+
+@w413 command
+_text=delete the signed files to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w414
+destination=folder
+
+@w414 entity
+head=files
+attr=signed
+
+@w415 not
+_text=do not copy the unsaved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w416
+
+@w416 command
+action=copy
+patient=$w417
+
+@w417 entity
+head=logs
+attr=$w418
+
+@w418 not
+scope=saved
+
+@w419 not
+_text=do not copy the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w420
+
+@w420 command
+action=copy
+patient=$w421
+
+@w421 entity
+head=photos
+attr=old
+
+@w422 command
+_text=copy the files that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w423
+
+@w423 entity
+head=files
+attr=$w424
+
+@w424 not
+scope=signed
+
+@w425 not
+_text=do not move the unsent messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w426
+
+@w426 command
+action=move
+patient=$w427
+
+@w427 entity
+head=messages
+attr=$w428
+
+@w428 not
+scope=sent
+
+@w429 not
+_text=do not send the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w430
+
+@w430 command
+action=send
+patient=$w431
+
+@w431 entity
+head=logs
+attr=$w432
+
+@w432 not
+scope=signed
+
+@w433 not
+_text=never save the shared reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w434
+
+@w434 command
+action=save
+patient=$w435
+
+@w435 entity
+head=reports
+attr=shared
+
+@w436 not
+_text=do not move the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w437
+
+@w437 command
+action=move
+patient=$w438
+
+@w438 entity
+head=reports
+attr=signed
+
+@w439 says
+_text=the admin says that do not send the unsaved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w440
+
+@w440 not
+scope=$w441
+
+@w441 command
+action=send
+patient=$w442
+
+@w442 entity
+head=drafts
+attr=$w443
+
+@w443 not
+scope=saved
+
+@w444 not
+_text=do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w445
+
+@w445 command
+action=save
+patient=$w446
+
+@w446 entity
+head=reports
+attr=sent
+
+@w447 says
+_text=the user asks that delete the messages that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w448
+
+@w448 command
+action=delete
+patient=$w449
+
+@w449 entity
+head=messages
+attr=$w450
+
+@w450 not
+scope=shared
+
+@w451 says
+_text=the admin asks that delete the unsaved drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w452
+
+@w452 command
+action=delete
+patient=$w453
+
+@w453 entity
+head=drafts
+attr=$w454
+
+@w454 not
+scope=saved
+
+@w455 says
+_text=the user asks that do not delete the unshared files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w456
+
+@w456 not
+scope=$w457
+
+@w457 command
+action=delete
+patient=$w458
+
+@w458 entity
+head=files
+attr=$w459
+
+@w459 not
+scope=shared
+
+@w460 command
+_text=delete the signed logs .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w461
+
+@w461 entity
+head=logs
+attr=signed
+
+@w462 says
+_text=the user asks that move the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w463
+
+@w463 command
+action=move
+patient=$w464
+
+@w464 entity
+head=photos
+attr=old
+
+@w465 command
+_text=send the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w466
+
+@w466 entity
+head=photos
+attr=$w467
+
+@w467 not
+scope=signed
+
+@w468 says
+_text=the user asks that do not save the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w469
+
+@w469 not
+scope=$w470
+
+@w470 command
+action=save
+patient=$w471
+
+@w471 entity
+head=drafts
+attr=sent
+
+@w472 says
+_text=the admin says that do not save the unsent files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w473
+
+@w473 not
+scope=$w474
+
+@w474 command
+action=save
+patient=$w475
+
+@w475 entity
+head=files
+attr=$w476
+
+@w476 not
+scope=sent
+
+@w477 not
+_text=do not move the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w478
+
+@w478 command
+action=move
+patient=$w479
+
+@w479 entity
+head=drafts
+attr=$w480
+
+@w480 not
+scope=sent
+
+@w481 command
+_text=delete the saved reports to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w482
+destination=cloud
+
+@w482 entity
+head=reports
+attr=saved
+
+@w483 command
+_text=save the old reports to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w484
+destination=folder
+
+@w484 entity
+head=reports
+attr=old
+
+@w485 command
+_text=send the shared messages .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w486
+
+@w486 entity
+head=messages
+attr=shared
+
+@w487 says
+_text=the user says that save the sent reports to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w488
+
+@w488 command
+action=save
+patient=$w489
+destination=cloud
+
+@w489 entity
+head=reports
+attr=sent
+
+@w490 not
+_text=do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w491
+
+@w491 command
+action=save
+patient=$w492
+
+@w492 entity
+head=reports
+attr=sent
+
+@w493 says
+_text=the user says that do not save the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w494
+
+@w494 not
+scope=$w495
+
+@w495 command
+action=save
+patient=$w496
+
+@w496 entity
+head=photos
+attr=saved
+
+@w497 not
+_text=do not send the unsigned drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w498
+
+@w498 command
+action=send
+patient=$w499
+
+@w499 entity
+head=drafts
+attr=$w500
+
+@w500 not
+scope=signed
+
+@w501 says
+_text=the admin says that do not delete the unsaved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w502
+
+@w502 not
+scope=$w503
+
+@w503 command
+action=delete
+patient=$w504
+
+@w504 entity
+head=reports
+attr=$w505
+
+@w505 not
+scope=saved
+
+@w506 command
+_text=delete the new logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w507
+
+@w507 entity
+head=logs
+attr=$w508
+
+@w508 not
+scope=old
+
+@w509 not
+_text=do not send the old files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w510
+
+@w510 command
+action=send
+patient=$w511
+
+@w511 entity
+head=files
+attr=old
+
+@w512 not
+_text=do not delete the new files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w513
+
+@w513 command
+action=delete
+patient=$w514
+
+@w514 entity
+head=files
+attr=$w515
+
+@w515 not
+scope=old
+
+@w516 says
+_text=the user says that copy the old reports .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w517
+
+@w517 command
+action=copy
+patient=$w518
+
+@w518 entity
+head=reports
+attr=old
+
+@w519 not
+_text=do not delete the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w520
+
+@w520 command
+action=delete
+patient=$w521
+
+@w521 entity
+head=drafts
+attr=sent
+
+@w522 not
+_text=do not copy the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w523
+
+@w523 command
+action=copy
+patient=$w524
+
+@w524 entity
+head=logs
+attr=saved
+
+@w525 command
+_text=move the unshared files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w526
+
+@w526 entity
+head=files
+attr=$w527
+
+@w527 not
+scope=shared
+
+@w528 command
+_text=save the saved photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w529
+
+@w529 entity
+head=photos
+attr=saved
+
+@w530 not
+_text=never move the old logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w531
+
+@w531 command
+action=move
+patient=$w532
+
+@w532 entity
+head=logs
+attr=old
+
+@w533 not
+_text=do not move the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w534
+
+@w534 command
+action=move
+patient=$w535
+
+@w535 entity
+head=logs
+attr=$w536
+
+@w536 not
+scope=shared
+
+@w537 not
+_text=do not delete the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w538
+
+@w538 command
+action=delete
+patient=$w539
+
+@w539 entity
+head=photos
+attr=saved
+
+@w540 says
+_text=the user says that never delete the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w541
+
+@w541 not
+scope=$w542
+
+@w542 command
+action=delete
+patient=$w543
+
+@w543 entity
+head=messages
+attr=shared
+
+@w544 command
+_text=send the unshared messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w545
+
+@w545 entity
+head=messages
+attr=$w546
+
+@w546 not
+scope=shared
+
+@w547 command
+_text=delete the reports that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w548
+
+@w548 entity
+head=reports
+attr=$w549
+
+@w549 not
+scope=old
+
+@w550 command
+_text=copy the saved logs .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w551
+
+@w551 entity
+head=logs
+attr=saved
+
+@w552 says
+_text=the user says that do not delete the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w553
+
+@w553 not
+scope=$w554
+
+@w554 command
+action=delete
+patient=$w555
+
+@w555 entity
+head=drafts
+attr=saved
+
+@w556 command
+_text=copy the old logs to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w557
+destination=trash
+
+@w557 entity
+head=logs
+attr=old
+
+@w558 not
+_text=do not move the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w559
+
+@w559 command
+action=move
+patient=$w560
+
+@w560 entity
+head=photos
+attr=sent
+
+@w561 says
+_text=the user asks that do not send the unshared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w562
+
+@w562 not
+scope=$w563
+
+@w563 command
+action=send
+patient=$w564
+
+@w564 entity
+head=photos
+attr=$w565
+
+@w565 not
+scope=shared
+
+@w566 not
+_text=never send the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w567
+
+@w567 command
+action=send
+patient=$w568
+
+@w568 entity
+head=reports
+attr=saved
+
+@w569 command
+_text=save the drafts that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w570
+
+@w570 entity
+head=drafts
+attr=$w571
+
+@w571 not
+scope=sent
+
+@w572 not
+_text=never send the saved files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w573
+
+@w573 command
+action=send
+patient=$w574
+
+@w574 entity
+head=files
+attr=saved
+
+@w575 says
+_text=the admin says that delete the messages that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w576
+
+@w576 command
+action=delete
+patient=$w577
+
+@w577 entity
+head=messages
+attr=$w578
+
+@w578 not
+scope=signed
+
+@w579 command
+_text=move the old photos to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w580
+destination=trash
+
+@w580 entity
+head=photos
+attr=old
+
+@w581 not
+_text=do not move the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w582
+
+@w582 command
+action=move
+patient=$w583
+
+@w583 entity
+head=reports
+attr=sent
+
+@w584 command
+_text=copy the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w585
+
+@w585 entity
+head=photos
+attr=$w586
+
+@w586 not
+scope=signed
+
+@w587 command
+_text=send the shared reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w588
+
+@w588 entity
+head=reports
+attr=shared
+
+@w589 says
+_text=the user asks that do not save the signed logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w590
+
+@w590 not
+scope=$w591
+
+@w591 command
+action=save
+patient=$w592
+
+@w592 entity
+head=logs
+attr=signed
+
+@w593 not
+_text=do not save the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w594
+
+@w594 command
+action=save
+patient=$w595
+
+@w595 entity
+head=drafts
+attr=$w596
+
+@w596 not
+scope=sent
+
+@w597 not
+_text=do not copy the new files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w598
+
+@w598 command
+action=copy
+patient=$w599
+
+@w599 entity
+head=files
+attr=$w600
+
+@w600 not
+scope=old
+
+@w601 command
+_text=save the messages that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w602
+
+@w602 entity
+head=messages
+attr=$w603
+
+@w603 not
+scope=signed
+
+@w604 not
+_text=do not move the saved files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w605
+
+@w605 command
+action=move
+patient=$w606
+
+@w606 entity
+head=files
+attr=saved
+
+@w607 command
+_text=save the unshared logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w608
+
+@w608 entity
+head=logs
+attr=$w609
+
+@w609 not
+scope=shared
+
+@w610 says
+_text=the admin asks that send the old messages to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=admin
+scope=$w611
+
+@w611 command
+action=send
+patient=$w612
+destination=archive
+
+@w612 entity
+head=messages
+attr=old
+
+@w613 not
+_text=do not send the unsent logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w614
+
+@w614 command
+action=send
+patient=$w615
+
+@w615 entity
+head=logs
+attr=$w616
+
+@w616 not
+scope=sent
+
+@w617 command
+_text=move the messages that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w618
+
+@w618 entity
+head=messages
+attr=$w619
+
+@w619 not
+scope=saved
+
+@w620 command
+_text=copy the old messages to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w621
+destination=cloud
+
+@w621 entity
+head=messages
+attr=old
+
+@w622 not
+_text=do not save the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w623
+
+@w623 command
+action=save
+patient=$w624
+
+@w624 entity
+head=messages
+attr=$w625
+
+@w625 not
+scope=saved
+
+@w626 not
+_text=never copy the shared reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w627
+
+@w627 command
+action=copy
+patient=$w628
+
+@w628 entity
+head=reports
+attr=shared
+
+@w629 command
+_text=copy the shared messages to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w630
+destination=trash
+
+@w630 entity
+head=messages
+attr=shared
+
+@w631 not
+_text=do not delete the signed logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w632
+
+@w632 command
+action=delete
+patient=$w633
+
+@w633 entity
+head=logs
+attr=signed
+
+@w634 command
+_text=move the signed photos to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w635
+destination=archive
+
+@w635 entity
+head=photos
+attr=signed
+
+@w636 says
+_text=the admin says that save the old logs .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w637
+
+@w637 command
+action=save
+patient=$w638
+
+@w638 entity
+head=logs
+attr=old
+
+@w639 not
+_text=do not move the signed drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w640
+
+@w640 command
+action=move
+patient=$w641
+
+@w641 entity
+head=drafts
+attr=signed
+
+@w642 says
+_text=the admin says that send the messages that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w643
+
+@w643 command
+action=send
+patient=$w644
+
+@w644 entity
+head=messages
+attr=$w645
+
+@w645 not
+scope=sent
+
+@w646 not
+_text=do not delete the new drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w647
+
+@w647 command
+action=delete
+patient=$w648
+
+@w648 entity
+head=drafts
+attr=$w649
+
+@w649 not
+scope=old
+
+@w650 not
+_text=never send the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w651
+
+@w651 command
+action=send
+patient=$w652
+
+@w652 entity
+head=messages
+attr=signed
+
+@w653 command
+_text=move the signed photos to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w654
+destination=folder
+
+@w654 entity
+head=photos
+attr=signed
+
+@w655 says
+_text=the user asks that never save the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w656
+
+@w656 not
+scope=$w657
+
+@w657 command
+action=save
+patient=$w658
+
+@w658 entity
+head=photos
+attr=shared
+
+@w659 says
+_text=the user asks that do not send the new drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w660
+
+@w660 not
+scope=$w661
+
+@w661 command
+action=send
+patient=$w662
+
+@w662 entity
+head=drafts
+attr=$w663
+
+@w663 not
+scope=old
+
+@w664 not
+_text=do not move the new photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w665
+
+@w665 command
+action=move
+patient=$w666
+
+@w666 entity
+head=photos
+attr=$w667
+
+@w667 not
+scope=old
+
+@w668 command
+_text=send the saved drafts to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=send
+patient=$w669
+destination=trash
+
+@w669 entity
+head=drafts
+attr=saved
+
+@w670 not
+_text=never save the shared reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w671
+
+@w671 command
+action=save
+patient=$w672
+
+@w672 entity
+head=reports
+attr=shared
+
+@w673 not
+_text=do not save the new drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w674
+
+@w674 command
+action=save
+patient=$w675
+
+@w675 entity
+head=drafts
+attr=$w676
+
+@w676 not
+scope=old
+
+@w677 command
+_text=save the sent reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w678
+
+@w678 entity
+head=reports
+attr=sent
+
+@w679 says
+_text=the admin asks that send the new drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w680
+
+@w680 command
+action=send
+patient=$w681
+
+@w681 entity
+head=drafts
+attr=$w682
+
+@w682 not
+scope=old
+
+@w683 not
+_text=never save the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w684
+
+@w684 command
+action=save
+patient=$w685
+
+@w685 entity
+head=files
+attr=sent
+
+@w686 not
+_text=do not move the signed photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w687
+
+@w687 command
+action=move
+patient=$w688
+
+@w688 entity
+head=photos
+attr=signed
+
+@w689 says
+_text=the user asks that delete the new logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w690
+
+@w690 command
+action=delete
+patient=$w691
+
+@w691 entity
+head=logs
+attr=$w692
+
+@w692 not
+scope=old
+
+@w693 says
+_text=the user says that do not copy the unsigned reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w694
+
+@w694 not
+scope=$w695
+
+@w695 command
+action=copy
+patient=$w696
+
+@w696 entity
+head=reports
+attr=$w697
+
+@w697 not
+scope=signed
+
+@w698 not
+_text=never copy the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w699
+
+@w699 command
+action=copy
+patient=$w700
+
+@w700 entity
+head=logs
+attr=saved
+
+@w701 not
+_text=never delete the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w702
+
+@w702 command
+action=delete
+patient=$w703
+
+@w703 entity
+head=files
+attr=sent
+
+@w704 not
+_text=do not send the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w705
+
+@w705 command
+action=send
+patient=$w706
+
+@w706 entity
+head=files
+attr=sent
+
+@w707 command
+_text=move the logs that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w708
+
+@w708 entity
+head=logs
+attr=$w709
+
+@w709 not
+scope=saved
+
+@w710 not
+_text=do not move the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w711
+
+@w711 command
+action=move
+patient=$w712
+
+@w712 entity
+head=logs
+attr=$w713
+
+@w713 not
+scope=shared
+
+@w714 not
+_text=do not send the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w715
+
+@w715 command
+action=send
+patient=$w716
+
+@w716 entity
+head=messages
+attr=signed
+
+@w717 not
+_text=do not save the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w718
+
+@w718 command
+action=save
+patient=$w719
+
+@w719 entity
+head=messages
+attr=$w720
+
+@w720 not
+scope=saved
+
+@w721 command
+_text=move the old logs .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w722
+
+@w722 entity
+head=logs
+attr=old
+
+@w723 command
+_text=save the unsent files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w724
+
+@w724 entity
+head=files
+attr=$w725
+
+@w725 not
+scope=sent
+
+@w726 says
+_text=the admin says that do not send the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w727
+
+@w727 not
+scope=$w728
+
+@w728 command
+action=send
+patient=$w729
+
+@w729 entity
+head=photos
+attr=saved
+
+@w730 command
+_text=save the old drafts to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w731
+destination=archive
+
+@w731 entity
+head=drafts
+attr=old
+
+@w732 not
+_text=do not move the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w733
+
+@w733 command
+action=move
+patient=$w734
+
+@w734 entity
+head=photos
+attr=old
+
+@w735 command
+_text=send the shared photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w736
+
+@w736 entity
+head=photos
+attr=shared
+
+@w737 not
+_text=do not save the shared files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w738
+
+@w738 command
+action=save
+patient=$w739
+
+@w739 entity
+head=files
+attr=shared
+
+@w740 not
+_text=do not move the shared files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w741
+
+@w741 command
+action=move
+patient=$w742
+
+@w742 entity
+head=files
+attr=shared
+
+@w743 not
+_text=never save the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w744
+
+@w744 command
+action=save
+patient=$w745
+
+@w745 entity
+head=reports
+attr=saved
+
+@w746 says
+_text=the admin asks that never move the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w747
+
+@w747 not
+scope=$w748
+
+@w748 command
+action=move
+patient=$w749
+
+@w749 entity
+head=reports
+attr=signed
+
+@w750 says
+_text=the admin says that copy the shared files .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w751
+
+@w751 command
+action=copy
+patient=$w752
+
+@w752 entity
+head=files
+attr=shared
+
+@w753 not
+_text=do not save the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w754
+
+@w754 command
+action=save
+patient=$w755
+
+@w755 entity
+head=logs
+attr=$w756
+
+@w756 not
+scope=signed
+
+@w757 command
+_text=move the signed logs to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w758
+destination=cloud
+
+@w758 entity
+head=logs
+attr=signed
+
+@w759 not
+_text=never send the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w760
+
+@w760 command
+action=send
+patient=$w761
+
+@w761 entity
+head=drafts
+attr=saved
+
+@w762 not
+_text=never copy the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w763
+
+@w763 command
+action=copy
+patient=$w764
+
+@w764 entity
+head=messages
+attr=signed
+
+@w765 command
+_text=save the new messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w766
+
+@w766 entity
+head=messages
+attr=$w767
+
+@w767 not
+scope=old
+
+@w768 says
+_text=the user asks that do not delete the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w769
+
+@w769 not
+scope=$w770
+
+@w770 command
+action=delete
+patient=$w771
+
+@w771 entity
+head=photos
+attr=shared
+
+@w772 says
+_text=the user asks that do not copy the unsaved files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w773
+
+@w773 not
+scope=$w774
+
+@w774 command
+action=copy
+patient=$w775
+
+@w775 entity
+head=files
+attr=$w776
+
+@w776 not
+scope=saved
+
+@w777 says
+_text=the user says that move the signed logs .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w778
+
+@w778 command
+action=move
+patient=$w779
+
+@w779 entity
+head=logs
+attr=signed
+
+@w780 not
+_text=never delete the shared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w781
+
+@w781 command
+action=delete
+patient=$w782
+
+@w782 entity
+head=logs
+attr=shared
+
+@w783 says
+_text=the admin asks that delete the saved files to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=admin
+scope=$w784
+
+@w784 command
+action=delete
+patient=$w785
+destination=archive
+
+@w785 entity
+head=files
+attr=saved
+
+@w786 command
+_text=copy the unsaved logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w787
+
+@w787 entity
+head=logs
+attr=$w788
+
+@w788 not
+scope=saved
+
+@w789 command
+_text=move the sent files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w790
+
+@w790 entity
+head=files
+attr=sent
+
+@w791 says
+_text=the user asks that never save the signed photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w792
+
+@w792 not
+scope=$w793
+
+@w793 command
+action=save
+patient=$w794
+
+@w794 entity
+head=photos
+attr=signed
+
+@w795 command
+_text=save the files that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w796
+
+@w796 entity
+head=files
+attr=$w797
+
+@w797 not
+scope=sent
+
+@w798 says
+_text=the admin says that never delete the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w799
+
+@w799 not
+scope=$w800
+
+@w800 command
+action=delete
+patient=$w801
+
+@w801 entity
+head=photos
+attr=saved
+
+@w802 command
+_text=copy the reports that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w803
+
+@w803 entity
+head=reports
+attr=$w804
+
+@w804 not
+scope=old
+
+@w805 not
+_text=never move the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w806
+
+@w806 command
+action=move
+patient=$w807
+
+@w807 entity
+head=files
+attr=sent
+
+@w808 says
+_text=the user says that never delete the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w809
+
+@w809 not
+scope=$w810
+
+@w810 command
+action=delete
+patient=$w811
+
+@w811 entity
+head=messages
+attr=shared
+
+@w812 says
+_text=the user asks that save the saved files .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w813
+
+@w813 command
+action=save
+patient=$w814
+
+@w814 entity
+head=files
+attr=saved
+
+@w815 not
+_text=never send the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w816
+
+@w816 command
+action=send
+patient=$w817
+
+@w817 entity
+head=reports
+attr=sent
+
+@w818 command
+_text=copy the old files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w819
+
+@w819 entity
+head=files
+attr=old
+
+@w820 command
+_text=move the signed photos to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w821
+destination=folder
+
+@w821 entity
+head=photos
+attr=signed
+
+@w822 command
+_text=move the drafts that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w823
+
+@w823 entity
+head=drafts
+attr=$w824
+
+@w824 not
+scope=old
+
+@w825 says
+_text=the admin asks that send the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w826
+
+@w826 command
+action=send
+patient=$w827
+
+@w827 entity
+head=photos
+attr=old
+
+@w828 not
+_text=never copy the sent messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w829
+
+@w829 command
+action=copy
+patient=$w830
+
+@w830 entity
+head=messages
+attr=sent
+
+@w831 command
+_text=delete the saved photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w832
+
+@w832 entity
+head=photos
+attr=saved
+
+@w833 not
+_text=do not copy the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w834
+
+@w834 command
+action=copy
+patient=$w835
+
+@w835 entity
+head=drafts
+attr=sent
+
+@w836 says
+_text=the admin asks that delete the saved drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w837
+
+@w837 command
+action=delete
+patient=$w838
+
+@w838 entity
+head=drafts
+attr=saved
+
+@w839 command
+_text=send the messages that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w840
+
+@w840 entity
+head=messages
+attr=$w841
+
+@w841 not
+scope=saved
+
+@w842 command
+_text=copy the saved drafts to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w843
+destination=trash
+
+@w843 entity
+head=drafts
+attr=saved
+
+@w844 command
+_text=copy the new logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w845
+
+@w845 entity
+head=logs
+attr=$w846
+
+@w846 not
+scope=old
+
+@w847 command
+_text=copy the sent drafts to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w848
+destination=cloud
+
+@w848 entity
+head=drafts
+attr=sent
+
+@w849 not
+_text=do not send the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w850
+
+@w850 command
+action=send
+patient=$w851
+
+@w851 entity
+head=messages
+attr=$w852
+
+@w852 not
+scope=saved
+
+@w853 not
+_text=never move the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w854
+
+@w854 command
+action=move
+patient=$w855
+
+@w855 entity
+head=drafts
+attr=saved
+
+@w856 says
+_text=the admin asks that never send the old files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w857
+
+@w857 not
+scope=$w858
+
+@w858 command
+action=send
+patient=$w859
+
+@w859 entity
+head=files
+attr=old
+
+@w860 says
+_text=the admin asks that save the unshared logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w861
+
+@w861 command
+action=save
+patient=$w862
+
+@w862 entity
+head=logs
+attr=$w863
+
+@w863 not
+scope=shared
+
+@w864 command
+_text=copy the reports that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w865
+
+@w865 entity
+head=reports
+attr=$w866
+
+@w866 not
+scope=shared
+
+@w867 command
+_text=move the files that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w868
+
+@w868 entity
+head=files
+attr=$w869
+
+@w869 not
+scope=sent
+
+@w870 command
+_text=copy the files that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w871
+
+@w871 entity
+head=files
+attr=$w872
+
+@w872 not
+scope=signed
+
+@w873 says
+_text=the user asks that do not send the new messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w874
+
+@w874 not
+scope=$w875
+
+@w875 command
+action=send
+patient=$w876
+
+@w876 entity
+head=messages
+attr=$w877
+
+@w877 not
+scope=old
+
+@w878 command
+_text=send the reports that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w879
+
+@w879 entity
+head=reports
+attr=$w880
+
+@w880 not
+scope=shared
+
+@w881 not
+_text=do not move the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w882
+
+@w882 command
+action=move
+patient=$w883
+
+@w883 entity
+head=drafts
+attr=saved
+
+@w884 command
+_text=delete the new files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w885
+
+@w885 entity
+head=files
+attr=$w886
+
+@w886 not
+scope=old
+
+@w887 command
+_text=copy the unsent files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w888
+
+@w888 entity
+head=files
+attr=$w889
+
+@w889 not
+scope=sent
+
+@w890 command
+_text=send the unsigned messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w891
+
+@w891 entity
+head=messages
+attr=$w892
+
+@w892 not
+scope=signed
+
+@w893 says
+_text=the user says that never send the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w894
+
+@w894 not
+scope=$w895
+
+@w895 command
+action=send
+patient=$w896
+
+@w896 entity
+head=reports
+attr=signed
+
+@w897 command
+_text=copy the sent photos to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w898
+destination=cloud
+
+@w898 entity
+head=photos
+attr=sent
+
+@w899 says
+_text=the admin asks that never save the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w900
+
+@w900 not
+scope=$w901
+
+@w901 command
+action=save
+patient=$w902
+
+@w902 entity
+head=messages
+attr=old
+
+@w903 command
+_text=send the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w904
+
+@w904 entity
+head=messages
+attr=$w905
+
+@w905 not
+scope=sent
+
+@w906 says
+_text=the admin asks that never save the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w907
+
+@w907 not
+scope=$w908
+
+@w908 command
+action=save
+patient=$w909
+
+@w909 entity
+head=photos
+attr=old
+
+@w910 not
+_text=never move the signed logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w911
+
+@w911 command
+action=move
+patient=$w912
+
+@w912 entity
+head=logs
+attr=signed
+
+@w913 command
+_text=send the files that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w914
+
+@w914 entity
+head=files
+attr=$w915
+
+@w915 not
+scope=old
+
+@w916 says
+_text=the user says that copy the shared messages .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w917
+
+@w917 command
+action=copy
+patient=$w918
+
+@w918 entity
+head=messages
+attr=shared
+
+@w919 command
+_text=send the unsigned reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w920
+
+@w920 entity
+head=reports
+attr=$w921
+
+@w921 not
+scope=signed
+
+@w922 command
+_text=send the unshared photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w923
+
+@w923 entity
+head=photos
+attr=$w924
+
+@w924 not
+scope=shared
+
+@w925 says
+_text=the user asks that save the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w926
+
+@w926 command
+action=save
+patient=$w927
+
+@w927 entity
+head=logs
+attr=$w928
+
+@w928 not
+scope=sent
+
+@w929 not
+_text=never send the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w930
+
+@w930 command
+action=send
+patient=$w931
+
+@w931 entity
+head=reports
+attr=signed
+
+@w932 says
+_text=the admin says that move the drafts that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w933
+
+@w933 command
+action=move
+patient=$w934
+
+@w934 entity
+head=drafts
+attr=$w935
+
+@w935 not
+scope=sent
+
+@w936 command
+_text=save the drafts that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w937
+
+@w937 entity
+head=drafts
+attr=$w938
+
+@w938 not
+scope=sent
+
+@w939 not
+_text=do not move the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w940
+
+@w940 command
+action=move
+patient=$w941
+
+@w941 entity
+head=messages
+attr=old
+
+@w942 command
+_text=send the shared photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w943
+
+@w943 entity
+head=photos
+attr=shared
+
+@w944 not
+_text=do not move the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w945
+
+@w945 command
+action=move
+patient=$w946
+
+@w946 entity
+head=photos
+attr=saved
+
+@w947 not
+_text=do not move the unsaved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w948
+
+@w948 command
+action=move
+patient=$w949
+
+@w949 entity
+head=photos
+attr=$w950
+
+@w950 not
+scope=saved
+
+@w951 says
+_text=the admin asks that save the sent photos .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w952
+
+@w952 command
+action=save
+patient=$w953
+
+@w953 entity
+head=photos
+attr=sent
+
+@w954 command
+_text=move the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w955
+
+@w955 entity
+head=logs
+attr=$w956
+
+@w956 not
+scope=sent
+
+@w957 says
+_text=the user asks that never delete the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w958
+
+@w958 not
+scope=$w959
+
+@w959 command
+action=delete
+patient=$w960
+
+@w960 entity
+head=photos
+attr=saved
+
+@w961 not
+_text=do not copy the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w962
+
+@w962 command
+action=copy
+patient=$w963
+
+@w963 entity
+head=drafts
+attr=$w964
+
+@w964 not
+scope=sent
+
+@w965 not
+_text=do not delete the unshared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w966
+
+@w966 command
+action=delete
+patient=$w967
+
+@w967 entity
+head=photos
+attr=$w968
+
+@w968 not
+scope=shared
+
+@w969 command
+_text=send the saved files to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=send
+patient=$w970
+destination=cloud
+
+@w970 entity
+head=files
+attr=saved
+
+@w971 command
+_text=copy the drafts that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w972
+
+@w972 entity
+head=drafts
+attr=$w973
+
+@w973 not
+scope=saved
+
+@w974 not
+_text=never copy the old logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w975
+
+@w975 command
+action=copy
+patient=$w976
+
+@w976 entity
+head=logs
+attr=old
+
+@w977 says
+_text=the admin says that move the messages that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w978
+
+@w978 command
+action=move
+patient=$w979
+
+@w979 entity
+head=messages
+attr=$w980
+
+@w980 not
+scope=sent
+
+@w981 says
+_text=the user asks that send the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w982
+
+@w982 command
+action=send
+patient=$w983
+
+@w983 entity
+head=messages
+attr=$w984
+
+@w984 not
+scope=sent
+
+@w985 says
+_text=the user says that never delete the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w986
+
+@w986 not
+scope=$w987
+
+@w987 command
+action=delete
+patient=$w988
+
+@w988 entity
+head=messages
+attr=old
+
+@w989 command
+_text=copy the unsigned files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w990
+
+@w990 entity
+head=files
+attr=$w991
+
+@w991 not
+scope=signed
+
+@w992 says
+_text=the user asks that move the sent files .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w993
+
+@w993 command
+action=move
+patient=$w994
+
+@w994 entity
+head=files
+attr=sent
+
+@w995 not
+_text=do not delete the unsent reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w996
+
+@w996 command
+action=delete
+patient=$w997
+
+@w997 entity
+head=reports
+attr=$w998
+
+@w998 not
+scope=sent
+
+@w999 says
+_text=the user asks that save the photos that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w1000
+
+@w1000 command
+action=save
+patient=$w1001
+
+@w1001 entity
+head=photos
+attr=$w1002
+
+@w1002 not
+scope=signed
+
+@w1003 says
+_text=the admin asks that save the sent drafts .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w1004
+
+@w1004 command
+action=save
+patient=$w1005
+
+@w1005 entity
+head=drafts
+attr=sent
+
+@w1006 not
+_text=do not save the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1007
+
+@w1007 command
+action=save
+patient=$w1008
+
+@w1008 entity
+head=logs
+attr=$w1009
+
+@w1009 not
+scope=signed
+
+@w1010 command
+_text=copy the files that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w1011
+
+@w1011 entity
+head=files
+attr=$w1012
+
+@w1012 not
+scope=signed
+
+@w1013 command
+_text=copy the drafts that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w1014
+
+@w1014 entity
+head=drafts
+attr=$w1015
+
+@w1015 not
+scope=shared
+
+@w1016 not
+_text=do not move the signed photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1017
+
+@w1017 command
+action=move
+patient=$w1018
+
+@w1018 entity
+head=photos
+attr=signed
+
+@w1019 command
+_text=move the unsent files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w1020
+
+@w1020 entity
+head=files
+attr=$w1021
+
+@w1021 not
+scope=sent
+
+@w1022 not
+_text=do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1023
+
+@w1023 command
+action=save
+patient=$w1024
+
+@w1024 entity
+head=reports
+attr=sent
+
+@w1025 command
+_text=copy the files that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w1026
+
+@w1026 entity
+head=files
+attr=$w1027
+
+@w1027 not
+scope=signed
+
+@w1028 says
+_text=the admin asks that save the messages that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w1029
+
+@w1029 command
+action=save
+patient=$w1030
+
+@w1030 entity
+head=messages
+attr=$w1031
+
+@w1031 not
+scope=saved
+
+@w1032 command
+_text=move the old logs to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1033
+destination=archive
+
+@w1033 entity
+head=logs
+attr=old
+
+@w1034 says
+_text=the admin says that delete the messages that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w1035
+
+@w1035 command
+action=delete
+patient=$w1036
+
+@w1036 entity
+head=messages
+attr=$w1037
+
+@w1037 not
+scope=shared
+
+@w1038 command
+_text=save the reports that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w1039
+
+@w1039 entity
+head=reports
+attr=$w1040
+
+@w1040 not
+scope=saved
+
+@w1041 not
+_text=never send the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1042
+
+@w1042 command
+action=send
+patient=$w1043
+
+@w1043 entity
+head=photos
+attr=sent
+
+@w1044 says
+_text=the user asks that send the unsent logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w1045
+
+@w1045 command
+action=send
+patient=$w1046
+
+@w1046 entity
+head=logs
+attr=$w1047
+
+@w1047 not
+scope=sent
+
+@w1048 command
+_text=save the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w1049
+
+@w1049 entity
+head=photos
+attr=old
+
+@w1050 not
+_text=do not save the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1051
+
+@w1051 command
+action=save
+patient=$w1052
+
+@w1052 entity
+head=logs
+attr=$w1053
+
+@w1053 not
+scope=shared
+
+@w1054 says
+_text=the user says that copy the messages that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w1055
+
+@w1055 command
+action=copy
+patient=$w1056
+
+@w1056 entity
+head=messages
+attr=$w1057
+
+@w1057 not
+scope=sent
+
+@w1058 not
+_text=do not send the unsigned drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1059
+
+@w1059 command
+action=send
+patient=$w1060
+
+@w1060 entity
+head=drafts
+attr=$w1061
+
+@w1061 not
+scope=signed
+
+@w1062 not
+_text=never move the sent logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1063
+
+@w1063 command
+action=move
+patient=$w1064
+
+@w1064 entity
+head=logs
+attr=sent
+
+@w1065 command
+_text=move the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w1066
+
+@w1066 entity
+head=logs
+attr=$w1067
+
+@w1067 not
+scope=signed
+
+@w1068 command
+_text=delete the unsaved photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w1069
+
+@w1069 entity
+head=photos
+attr=$w1070
+
+@w1070 not
+scope=saved
+
+@w1071 not
+_text=do not move the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1072
+
+@w1072 command
+action=move
+patient=$w1073
+
+@w1073 entity
+head=photos
+attr=sent
+
+@w1074 says
+_text=the user asks that do not delete the signed logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1075
+
+@w1075 not
+scope=$w1076
+
+@w1076 command
+action=delete
+patient=$w1077
+
+@w1077 entity
+head=logs
+attr=signed
+
+@w1078 command
+_text=move the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w1079
+
+@w1079 entity
+head=messages
+attr=$w1080
+
+@w1080 not
+scope=sent
+
+@w1081 not
+_text=do not move the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1082
+
+@w1082 command
+action=move
+patient=$w1083
+
+@w1083 entity
+head=reports
+attr=sent
+
+@w1084 says
+_text=the user asks that send the shared logs .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w1085
+
+@w1085 command
+action=send
+patient=$w1086
+
+@w1086 entity
+head=logs
+attr=shared
+
+@w1087 says
+_text=the admin asks that never send the signed photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1088
+
+@w1088 not
+scope=$w1089
+
+@w1089 command
+action=send
+patient=$w1090
+
+@w1090 entity
+head=photos
+attr=signed
+
+@w1091 command
+_text=move the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w1092
+
+@w1092 entity
+head=photos
+attr=$w1093
+
+@w1093 not
+scope=signed
+
+@w1094 not
+_text=never save the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1095
+
+@w1095 command
+action=save
+patient=$w1096
+
+@w1096 entity
+head=messages
+attr=signed
+
+@w1097 command
+_text=send the saved messages .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w1098
+
+@w1098 entity
+head=messages
+attr=saved
+
+@w1099 command
+_text=send the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w1100
+
+@w1100 entity
+head=photos
+attr=old
+
+@w1101 not
+_text=never delete the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1102
+
+@w1102 command
+action=delete
+patient=$w1103
+
+@w1103 entity
+head=photos
+attr=old
+
+@w1104 command
+_text=save the signed files to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w1105
+destination=archive
+
+@w1105 entity
+head=files
+attr=signed
+
+@w1106 command
+_text=move the reports that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1107
+
+@w1107 entity
+head=reports
+attr=$w1108
+
+@w1108 not
+scope=saved
+
+@w1109 says
+_text=the user asks that move the drafts that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w1110
+
+@w1110 command
+action=move
+patient=$w1111
+
+@w1111 entity
+head=drafts
+attr=$w1112
+
+@w1112 not
+scope=signed
+
+@w1113 says
+_text=the user says that save the shared photos to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w1114
+
+@w1114 command
+action=save
+patient=$w1115
+destination=archive
+
+@w1115 entity
+head=photos
+attr=shared
+
+@w1116 says
+_text=the user asks that do not save the unsigned files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w1117
+
+@w1117 not
+scope=$w1118
+
+@w1118 command
+action=save
+patient=$w1119
+
+@w1119 entity
+head=files
+attr=$w1120
+
+@w1120 not
+scope=signed
+
+@w1121 command
+_text=move the signed files to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1122
+destination=archive
+
+@w1122 entity
+head=files
+attr=signed
+
+@w1123 command
+_text=delete the shared messages to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1124
+destination=folder
+
+@w1124 entity
+head=messages
+attr=shared
+
+@w1125 says
+_text=the user says that never copy the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w1126
+
+@w1126 not
+scope=$w1127
+
+@w1127 command
+action=copy
+patient=$w1128
+
+@w1128 entity
+head=reports
+attr=sent
+
+@w1129 not
+_text=do not send the unsent messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1130
+
+@w1130 command
+action=send
+patient=$w1131
+
+@w1131 entity
+head=messages
+attr=$w1132
+
+@w1132 not
+scope=sent
+
+@w1133 says
+_text=the admin asks that save the old reports .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w1134
+
+@w1134 command
+action=save
+patient=$w1135
+
+@w1135 entity
+head=reports
+attr=old
+
+@w1136 not
+_text=never copy the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1137
+
+@w1137 command
+action=copy
+patient=$w1138
+
+@w1138 entity
+head=files
+attr=sent
+
+@w1139 not
+_text=do not copy the signed files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1140
+
+@w1140 command
+action=copy
+patient=$w1141
+
+@w1141 entity
+head=files
+attr=signed
+
+@w1142 command
+_text=save the unsent reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1143
+
+@w1143 entity
+head=reports
+attr=$w1144
+
+@w1144 not
+scope=sent
+
+@w1145 command
+_text=delete the files that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w1146
+
+@w1146 entity
+head=files
+attr=$w1147
+
+@w1147 not
+scope=sent
+
+@w1148 command
+_text=move the shared reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1149
+
+@w1149 entity
+head=reports
+attr=shared
+
+@w1150 command
+_text=copy the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1151
+
+@w1151 entity
+head=drafts
+attr=$w1152
+
+@w1152 not
+scope=sent
+
+@w1153 command
+_text=delete the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=delete
+patient=$w1154
+
+@w1154 entity
+head=messages
+attr=$w1155
+
+@w1155 not
+scope=sent
+
+@w1156 command
+_text=move the saved messages .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1157
+
+@w1157 entity
+head=messages
+attr=saved
+
+@w1158 not
+_text=never send the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1159
+
+@w1159 command
+action=send
+patient=$w1160
+
+@w1160 entity
+head=photos
+attr=shared
+
+@w1161 not
+_text=do not copy the shared logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1162
+
+@w1162 command
+action=copy
+patient=$w1163
+
+@w1163 entity
+head=logs
+attr=shared
+
+@w1164 command
+_text=move the shared messages to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1165
+destination=folder
+
+@w1165 entity
+head=messages
+attr=shared
+
+@w1166 command
+_text=save the photos that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w1167
+
+@w1167 entity
+head=photos
+attr=$w1168
+
+@w1168 not
+scope=old
+
+@w1169 command
+_text=save the unsaved messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1170
+
+@w1170 entity
+head=messages
+attr=$w1171
+
+@w1171 not
+scope=saved
+
+@w1172 says
+_text=the user says that delete the sent reports to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+speaker=user
+scope=$w1173
+
+@w1173 command
+action=delete
+patient=$w1174
+destination=cloud
+
+@w1174 entity
+head=reports
+attr=sent
+
+@w1175 says
+_text=the admin says that do not move the new logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w1176
+
+@w1176 not
+scope=$w1177
+
+@w1177 command
+action=move
+patient=$w1178
+
+@w1178 entity
+head=logs
+attr=$w1179
+
+@w1179 not
+scope=old
+
+@w1180 command
+_text=copy the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1181
+
+@w1181 entity
+head=messages
+attr=$w1182
+
+@w1182 not
+scope=sent
+
+@w1183 command
+_text=send the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w1184
+
+@w1184 entity
+head=photos
+attr=old
+
+@w1185 not
+_text=never move the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1186
+
+@w1186 command
+action=move
+patient=$w1187
+
+@w1187 entity
+head=messages
+attr=shared
+
+@w1188 not
+_text=do not save the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1189
+
+@w1189 command
+action=save
+patient=$w1190
+
+@w1190 entity
+head=photos
+attr=old
+
+@w1191 says
+_text=the admin asks that never move the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1192
+
+@w1192 not
+scope=$w1193
+
+@w1193 command
+action=move
+patient=$w1194
+
+@w1194 entity
+head=drafts
+attr=sent
+
+@w1195 command
+_text=move the sent reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1196
+
+@w1196 entity
+head=reports
+attr=sent
+
+@w1197 says
+_text=the admin asks that do not delete the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w1198
+
+@w1198 not
+scope=$w1199
+
+@w1199 command
+action=delete
+patient=$w1200
+
+@w1200 entity
+head=drafts
+attr=$w1201
+
+@w1201 not
+scope=sent
+
+@w1202 says
+_text=the admin asks that delete the old photos .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w1203
+
+@w1203 command
+action=delete
+patient=$w1204
+
+@w1204 entity
+head=photos
+attr=old
+
+@w1205 command
+_text=move the sent files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1206
+
+@w1206 entity
+head=files
+attr=sent
+
+@w1207 not
+_text=do not copy the unsent logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1208
+
+@w1208 command
+action=copy
+patient=$w1209
+
+@w1209 entity
+head=logs
+attr=$w1210
+
+@w1210 not
+scope=sent
+
+@w1211 says
+_text=the admin asks that do not send the unsaved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w1212
+
+@w1212 not
+scope=$w1213
+
+@w1213 command
+action=send
+patient=$w1214
+
+@w1214 entity
+head=photos
+attr=$w1215
+
+@w1215 not
+scope=saved
+
+@w1216 says
+_text=the user says that move the unsent messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w1217
+
+@w1217 command
+action=move
+patient=$w1218
+
+@w1218 entity
+head=messages
+attr=$w1219
+
+@w1219 not
+scope=sent
+
+@w1220 not
+_text=never move the shared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1221
+
+@w1221 command
+action=move
+patient=$w1222
+
+@w1222 entity
+head=messages
+attr=shared
+
+@w1223 command
+_text=save the shared reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w1224
+
+@w1224 entity
+head=reports
+attr=shared
+
+@w1225 not
+_text=do not save the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1226
+
+@w1226 command
+action=save
+patient=$w1227
+
+@w1227 entity
+head=drafts
+attr=$w1228
+
+@w1228 not
+scope=sent
+
+@w1229 command
+_text=move the shared photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1230
+
+@w1230 entity
+head=photos
+attr=shared
+
+@w1231 not
+_text=do not send the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1232
+
+@w1232 command
+action=send
+patient=$w1233
+
+@w1233 entity
+head=photos
+attr=sent
+
+@w1234 command
+_text=copy the shared files to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w1235
+destination=cloud
+
+@w1235 entity
+head=files
+attr=shared
+
+@w1236 command
+_text=send the files that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w1237
+
+@w1237 entity
+head=files
+attr=$w1238
+
+@w1238 not
+scope=old
+
+@w1239 not
+_text=do not delete the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1240
+
+@w1240 command
+action=delete
+patient=$w1241
+
+@w1241 entity
+head=logs
+attr=saved
+
+@w1242 command
+_text=send the unshared messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w1243
+
+@w1243 entity
+head=messages
+attr=$w1244
+
+@w1244 not
+scope=shared
+
+@w1245 not
+_text=never send the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1246
+
+@w1246 command
+action=send
+patient=$w1247
+
+@w1247 entity
+head=files
+attr=sent
+
+@w1248 command
+_text=delete the shared reports to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1249
+destination=folder
+
+@w1249 entity
+head=reports
+attr=shared
+
+@w1250 not
+_text=do not move the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1251
+
+@w1251 command
+action=move
+patient=$w1252
+
+@w1252 entity
+head=drafts
+attr=saved
+
+@w1253 not
+_text=do not move the old files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1254
+
+@w1254 command
+action=move
+patient=$w1255
+
+@w1255 entity
+head=files
+attr=old
+
+@w1256 command
+_text=delete the saved files to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1257
+destination=folder
+
+@w1257 entity
+head=files
+attr=saved
+
+@w1258 not
+_text=do not copy the sent logs .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1259
+
+@w1259 command
+action=copy
+patient=$w1260
+
+@w1260 entity
+head=logs
+attr=sent
+
+@w1261 not
+_text=do not move the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1262
+
+@w1262 command
+action=move
+patient=$w1263
+
+@w1263 entity
+head=drafts
+attr=old
+
+@w1264 not
+_text=do not save the unsent logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1265
+
+@w1265 command
+action=save
+patient=$w1266
+
+@w1266 entity
+head=logs
+attr=$w1267
+
+@w1267 not
+scope=sent
+
+@w1268 says
+_text=the user says that do not delete the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w1269
+
+@w1269 not
+scope=$w1270
+
+@w1270 command
+action=delete
+patient=$w1271
+
+@w1271 entity
+head=photos
+attr=$w1272
+
+@w1272 not
+scope=signed
+
+@w1273 says
+_text=the admin says that save the new messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w1274
+
+@w1274 command
+action=save
+patient=$w1275
+
+@w1275 entity
+head=messages
+attr=$w1276
+
+@w1276 not
+scope=old
+
+@w1277 command
+_text=copy the unshared messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1278
+
+@w1278 entity
+head=messages
+attr=$w1279
+
+@w1279 not
+scope=shared
+
+@w1280 command
+_text=send the unshared reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=send
+patient=$w1281
+
+@w1281 entity
+head=reports
+attr=$w1282
+
+@w1282 not
+scope=shared
+
+@w1283 command
+_text=copy the drafts that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=copy
+patient=$w1284
+
+@w1284 entity
+head=drafts
+attr=$w1285
+
+@w1285 not
+scope=saved
+
+@w1286 command
+_text=copy the signed reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=copy
+patient=$w1287
+
+@w1287 entity
+head=reports
+attr=signed
+
+@w1288 says
+_text=the user says that never move the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=user
+scope=$w1289
+
+@w1289 not
+scope=$w1290
+
+@w1290 command
+action=move
+patient=$w1291
+
+@w1291 entity
+head=reports
+attr=saved
+
+@w1292 command
+_text=send the shared reports .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w1293
+
+@w1293 entity
+head=reports
+attr=shared
+
+@w1294 command
+_text=copy the unsent reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1295
+
+@w1295 entity
+head=reports
+attr=$w1296
+
+@w1296 not
+scope=sent
+
+@w1297 not
+_text=never move the old files .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1298
+
+@w1298 command
+action=move
+patient=$w1299
+
+@w1299 entity
+head=files
+attr=old
+
+@w1300 says
+_text=the user says that do not delete the sent messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1301
+
+@w1301 not
+scope=$w1302
+
+@w1302 command
+action=delete
+patient=$w1303
+
+@w1303 entity
+head=messages
+attr=sent
+
+@w1304 command
+_text=move the shared photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1305
+
+@w1305 entity
+head=photos
+attr=shared
+
+@w1306 says
+_text=the user says that do not move the shared reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1307
+
+@w1307 not
+scope=$w1308
+
+@w1308 command
+action=move
+patient=$w1309
+
+@w1309 entity
+head=reports
+attr=shared
+
+@w1310 command
+_text=delete the sent reports to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1311
+destination=trash
+
+@w1311 entity
+head=reports
+attr=sent
+
+@w1312 says
+_text=the admin says that do not move the old photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w1313
+
+@w1313 not
+scope=$w1314
+
+@w1314 command
+action=move
+patient=$w1315
+
+@w1315 entity
+head=photos
+attr=old
+
+@w1316 command
+_text=move the old reports to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1317
+destination=trash
+
+@w1317 entity
+head=reports
+attr=old
+
+@w1318 command
+_text=move the reports that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1319
+
+@w1319 entity
+head=reports
+attr=$w1320
+
+@w1320 not
+scope=saved
+
+@w1321 command
+_text=delete the photos that are not shared .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w1322
+
+@w1322 entity
+head=photos
+attr=$w1323
+
+@w1323 not
+scope=shared
+
+@w1324 not
+_text=do not delete the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1325
+
+@w1325 command
+action=delete
+patient=$w1326
+
+@w1326 entity
+head=logs
+attr=$w1327
+
+@w1327 not
+scope=signed
+
+@w1328 command
+_text=save the unsigned files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1329
+
+@w1329 entity
+head=files
+attr=$w1330
+
+@w1330 not
+scope=signed
+
+@w1331 not
+_text=do not save the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1332
+
+@w1332 command
+action=save
+patient=$w1333
+
+@w1333 entity
+head=drafts
+attr=sent
+
+@w1334 not
+_text=do not send the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1335
+
+@w1335 command
+action=send
+patient=$w1336
+
+@w1336 entity
+head=logs
+attr=$w1337
+
+@w1337 not
+scope=shared
+
+@w1338 says
+_text=the user asks that do not copy the unsaved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w1339
+
+@w1339 not
+scope=$w1340
+
+@w1340 command
+action=copy
+patient=$w1341
+
+@w1341 entity
+head=logs
+attr=$w1342
+
+@w1342 not
+scope=saved
+
+@w1343 says
+_text=the admin asks that never save the old messages .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1344
+
+@w1344 not
+scope=$w1345
+
+@w1345 command
+action=save
+patient=$w1346
+
+@w1346 entity
+head=messages
+attr=old
+
+@w1347 command
+_text=delete the signed photos to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1348
+destination=cloud
+
+@w1348 entity
+head=photos
+attr=signed
+
+@w1349 says
+_text=the admin asks that never delete the sent drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1350
+
+@w1350 not
+scope=$w1351
+
+@w1351 command
+action=delete
+patient=$w1352
+
+@w1352 entity
+head=drafts
+attr=sent
+
+@w1353 says
+_text=the user says that save the files that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=user
+scope=$w1354
+
+@w1354 command
+action=save
+patient=$w1355
+
+@w1355 entity
+head=files
+attr=$w1356
+
+@w1356 not
+scope=saved
+
+@w1357 says
+_text=the user asks that delete the unsigned photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w1358
+
+@w1358 command
+action=delete
+patient=$w1359
+
+@w1359 entity
+head=photos
+attr=$w1360
+
+@w1360 not
+scope=signed
+
+@w1361 not
+_text=never save the shared drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1362
+
+@w1362 command
+action=save
+patient=$w1363
+
+@w1363 entity
+head=drafts
+attr=shared
+
+@w1364 command
+_text=send the signed photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=send
+patient=$w1365
+
+@w1365 entity
+head=photos
+attr=signed
+
+@w1366 command
+_text=delete the sent logs to the trash .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1367
+destination=trash
+
+@w1367 entity
+head=logs
+attr=sent
+
+@w1368 not
+_text=do not save the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1369
+
+@w1369 command
+action=save
+patient=$w1370
+
+@w1370 entity
+head=drafts
+attr=old
+
+@w1371 not
+_text=do not save the unsent messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1372
+
+@w1372 command
+action=save
+patient=$w1373
+
+@w1373 entity
+head=messages
+attr=$w1374
+
+@w1374 not
+scope=sent
+
+@w1375 says
+_text=the user says that save the unsaved reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w1376
+
+@w1376 command
+action=save
+patient=$w1377
+
+@w1377 entity
+head=reports
+attr=$w1378
+
+@w1378 not
+scope=saved
+
+@w1379 command
+_text=copy the unsigned messages .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1380
+
+@w1380 entity
+head=messages
+attr=$w1381
+
+@w1381 not
+scope=signed
+
+@w1382 command
+_text=save the sent photos to the folder .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=save
+patient=$w1383
+destination=folder
+
+@w1383 entity
+head=photos
+attr=sent
+
+@w1384 command
+_text=save the unshared reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1385
+
+@w1385 entity
+head=reports
+attr=$w1386
+
+@w1386 not
+scope=shared
+
+@w1387 says
+_text=the user asks that do not copy the saved files .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1388
+
+@w1388 not
+scope=$w1389
+
+@w1389 command
+action=copy
+patient=$w1390
+
+@w1390 entity
+head=files
+attr=saved
+
+@w1391 command
+_text=copy the unsaved reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1392
+
+@w1392 entity
+head=reports
+attr=$w1393
+
+@w1393 not
+scope=saved
+
+@w1394 not
+_text=never send the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1395
+
+@w1395 command
+action=send
+patient=$w1396
+
+@w1396 entity
+head=photos
+attr=saved
+
+@w1397 says
+_text=the user says that copy the new reports .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=user
+scope=$w1398
+
+@w1398 command
+action=copy
+patient=$w1399
+
+@w1399 entity
+head=reports
+attr=$w1400
+
+@w1400 not
+scope=old
+
+@w1401 not
+_text=never copy the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1402
+
+@w1402 command
+action=copy
+patient=$w1403
+
+@w1403 entity
+head=drafts
+attr=old
+
+@w1404 command
+_text=send the old messages to the cloud .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=send
+patient=$w1405
+destination=cloud
+
+@w1405 entity
+head=messages
+attr=old
+
+@w1406 says
+_text=the user asks that move the saved logs .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w1407
+
+@w1407 command
+action=move
+patient=$w1408
+
+@w1408 entity
+head=logs
+attr=saved
+
+@w1409 command
+_text=move the old drafts to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1410
+destination=archive
+
+@w1410 entity
+head=drafts
+attr=old
+
+@w1411 command
+_text=move the signed messages .
+_world=commands_measure
+_source=generator
+_template=aff
+action=move
+patient=$w1412
+
+@w1412 entity
+head=messages
+attr=signed
+
+@w1413 command
+_text=move the unsent photos .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=move
+patient=$w1414
+
+@w1414 entity
+head=photos
+attr=$w1415
+
+@w1415 not
+scope=sent
+
+@w1416 not
+_text=never move the saved logs .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1417
+
+@w1417 command
+action=move
+patient=$w1418
+
+@w1418 entity
+head=logs
+attr=saved
+
+@w1419 says
+_text=the admin asks that send the unshared drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w1420
+
+@w1420 command
+action=send
+patient=$w1421
+
+@w1421 entity
+head=drafts
+attr=$w1422
+
+@w1422 not
+scope=shared
+
+@w1423 not
+_text=do not delete the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1424
+
+@w1424 command
+action=delete
+patient=$w1425
+
+@w1425 entity
+head=drafts
+attr=old
+
+@w1426 command
+_text=move the photos that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1427
+
+@w1427 entity
+head=photos
+attr=$w1428
+
+@w1428 not
+scope=sent
+
+@w1429 not
+_text=do not send the unshared reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1430
+
+@w1430 command
+action=send
+patient=$w1431
+
+@w1431 entity
+head=reports
+attr=$w1432
+
+@w1432 not
+scope=shared
+
+@w1433 says
+_text=the admin asks that do not delete the shared drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w1434
+
+@w1434 not
+scope=$w1435
+
+@w1435 command
+action=delete
+patient=$w1436
+
+@w1436 entity
+head=drafts
+attr=shared
+
+@w1437 command
+_text=move the files that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1438
+
+@w1438 entity
+head=files
+attr=$w1439
+
+@w1439 not
+scope=old
+
+@w1440 says
+_text=the admin asks that do not move the new logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=admin
+scope=$w1441
+
+@w1441 not
+scope=$w1442
+
+@w1442 command
+action=move
+patient=$w1443
+
+@w1443 entity
+head=logs
+attr=$w1444
+
+@w1444 not
+scope=old
+
+@w1445 command
+_text=delete the old files to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=delete
+patient=$w1446
+destination=archive
+
+@w1446 entity
+head=files
+attr=old
+
+@w1447 not
+_text=do not delete the sent messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1448
+
+@w1448 command
+action=delete
+patient=$w1449
+
+@w1449 entity
+head=messages
+attr=sent
+
+@w1450 command
+_text=send the photos that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w1451
+
+@w1451 entity
+head=photos
+attr=$w1452
+
+@w1452 not
+scope=sent
+
+@w1453 says
+_text=the admin asks that send the unsigned logs .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w1454
+
+@w1454 command
+action=send
+patient=$w1455
+
+@w1455 entity
+head=logs
+attr=$w1456
+
+@w1456 not
+scope=signed
+
+@w1457 not
+_text=do not delete the unsaved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1458
+
+@w1458 command
+action=delete
+patient=$w1459
+
+@w1459 entity
+head=reports
+attr=$w1460
+
+@w1460 not
+scope=saved
+
+@w1461 command
+_text=move the messages that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1462
+
+@w1462 entity
+head=messages
+attr=$w1463
+
+@w1463 not
+scope=saved
+
+@w1464 not
+_text=do not send the sent files .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1465
+
+@w1465 command
+action=send
+patient=$w1466
+
+@w1466 entity
+head=files
+attr=sent
+
+@w1467 not
+_text=do not move the new messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1468
+
+@w1468 command
+action=move
+patient=$w1469
+
+@w1469 entity
+head=messages
+attr=$w1470
+
+@w1470 not
+scope=old
+
+@w1471 not
+_text=do not copy the signed messages .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1472
+
+@w1472 command
+action=copy
+patient=$w1473
+
+@w1473 entity
+head=messages
+attr=signed
+
+@w1474 command
+_text=copy the signed drafts to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=copy
+patient=$w1475
+destination=archive
+
+@w1475 entity
+head=drafts
+attr=signed
+
+@w1476 says
+_text=the admin asks that copy the unsent files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w1477
+
+@w1477 command
+action=copy
+patient=$w1478
+
+@w1478 entity
+head=files
+attr=$w1479
+
+@w1479 not
+scope=sent
+
+@w1480 command
+_text=delete the sent photos .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w1481
+
+@w1481 entity
+head=photos
+attr=sent
+
+@w1482 command
+_text=save the photos that are not saved .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w1483
+
+@w1483 entity
+head=photos
+attr=$w1484
+
+@w1484 not
+scope=saved
+
+@w1485 command
+_text=save the old files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w1486
+
+@w1486 entity
+head=files
+attr=old
+
+@w1487 says
+_text=the admin says that send the new files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+speaker=admin
+scope=$w1488
+
+@w1488 command
+action=send
+patient=$w1489
+
+@w1489 entity
+head=files
+attr=$w1490
+
+@w1490 not
+scope=old
+
+@w1491 says
+_text=the user asks that do not move the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1492
+
+@w1492 not
+scope=$w1493
+
+@w1493 command
+action=move
+patient=$w1494
+
+@w1494 entity
+head=photos
+attr=saved
+
+@w1495 command
+_text=copy the unsent drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=copy
+patient=$w1496
+
+@w1496 entity
+head=drafts
+attr=$w1497
+
+@w1497 not
+scope=sent
+
+@w1498 command
+_text=delete the shared files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=delete
+patient=$w1499
+
+@w1499 entity
+head=files
+attr=shared
+
+@w1500 says
+_text=the admin says that never move the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1501
+
+@w1501 not
+scope=$w1502
+
+@w1502 command
+action=move
+patient=$w1503
+
+@w1503 entity
+head=reports
+attr=signed
+
+@w1504 not
+_text=never copy the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1505
+
+@w1505 command
+action=copy
+patient=$w1506
+
+@w1506 entity
+head=reports
+attr=signed
+
+@w1507 command
+_text=delete the reports that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=delete
+patient=$w1508
+
+@w1508 entity
+head=reports
+attr=$w1509
+
+@w1509 not
+scope=sent
+
+@w1510 command
+_text=send the drafts that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w1511
+
+@w1511 entity
+head=drafts
+attr=$w1512
+
+@w1512 not
+scope=signed
+
+@w1513 not
+_text=do not delete the new photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1514
+
+@w1514 command
+action=delete
+patient=$w1515
+
+@w1515 entity
+head=photos
+attr=$w1516
+
+@w1516 not
+scope=old
+
+@w1517 says
+_text=the user says that do not send the signed reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=user
+scope=$w1518
+
+@w1518 not
+scope=$w1519
+
+@w1519 command
+action=send
+patient=$w1520
+
+@w1520 entity
+head=reports
+attr=signed
+
+@w1521 says
+_text=the admin says that do not save the shared drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+speaker=admin
+scope=$w1522
+
+@w1522 not
+scope=$w1523
+
+@w1523 command
+action=save
+patient=$w1524
+
+@w1524 entity
+head=drafts
+attr=shared
+
+@w1525 not
+_text=do not send the unsent photos .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1526
+
+@w1526 command
+action=send
+patient=$w1527
+
+@w1527 entity
+head=photos
+attr=$w1528
+
+@w1528 not
+scope=sent
+
+@w1529 not
+_text=do not delete the new files .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1530
+
+@w1530 command
+action=delete
+patient=$w1531
+
+@w1531 entity
+head=files
+attr=$w1532
+
+@w1532 not
+scope=old
+
+@w1533 not
+_text=never move the saved photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1534
+
+@w1534 command
+action=move
+patient=$w1535
+
+@w1535 entity
+head=photos
+attr=saved
+
+@w1536 says
+_text=the admin asks that never send the shared photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1537
+
+@w1537 not
+scope=$w1538
+
+@w1538 command
+action=send
+patient=$w1539
+
+@w1539 entity
+head=photos
+attr=shared
+
+@w1540 command
+_text=move the saved reports to the archive .
+_world=commands_measure
+_source=generator
+_template=aff_dest
+action=move
+patient=$w1541
+destination=archive
+
+@w1541 entity
+head=reports
+attr=saved
+
+@w1542 not
+_text=do not delete the unshared logs .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1543
+
+@w1543 command
+action=delete
+patient=$w1544
+
+@w1544 entity
+head=logs
+attr=$w1545
+
+@w1545 not
+scope=shared
+
+@w1546 command
+_text=save the unsigned files .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1547
+
+@w1547 entity
+head=files
+attr=$w1548
+
+@w1548 not
+scope=signed
+
+@w1549 not
+_text=do not save the old drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1550
+
+@w1550 command
+action=save
+patient=$w1551
+
+@w1551 entity
+head=drafts
+attr=old
+
+@w1552 not
+_text=do not delete the unshared messages .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+scope=$w1553
+
+@w1553 command
+action=delete
+patient=$w1554
+
+@w1554 entity
+head=messages
+attr=$w1555
+
+@w1555 not
+scope=shared
+
+@w1556 says
+_text=the admin asks that move the files that are not sent .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+speaker=admin
+scope=$w1557
+
+@w1557 command
+action=move
+patient=$w1558
+
+@w1558 entity
+head=files
+attr=$w1559
+
+@w1559 not
+scope=sent
+
+@w1560 not
+_text=never send the sent photos .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+scope=$w1561
+
+@w1561 command
+action=send
+patient=$w1562
+
+@w1562 entity
+head=photos
+attr=sent
+
+@w1563 command
+_text=save the old files .
+_world=commands_measure
+_source=generator
+_template=aff
+action=save
+patient=$w1564
+
+@w1564 entity
+head=files
+attr=old
+
+@w1565 command
+_text=move the photos that are not old .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=move
+patient=$w1566
+
+@w1566 entity
+head=photos
+attr=$w1567
+
+@w1567 not
+scope=old
+
+@w1568 says
+_text=the admin asks that copy the shared files .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=admin
+scope=$w1569
+
+@w1569 command
+action=copy
+patient=$w1570
+
+@w1570 entity
+head=files
+attr=shared
+
+@w1571 command
+_text=save the unsigned drafts .
+_world=commands_measure
+_source=generator
+_template=attr_affix
+action=save
+patient=$w1572
+
+@w1572 entity
+head=drafts
+attr=$w1573
+
+@w1573 not
+scope=signed
+
+@w1574 says
+_text=the user asks that do not save the unsigned reports .
+_world=commands_measure
+_source=generator
+_template=prohib_attr
+speaker=user
+scope=$w1575
+
+@w1575 not
+scope=$w1576
+
+@w1576 command
+action=save
+patient=$w1577
+
+@w1577 entity
+head=reports
+attr=$w1578
+
+@w1578 not
+scope=signed
+
+@w1579 command
+_text=send the reports that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=send
+patient=$w1580
+
+@w1580 entity
+head=reports
+attr=$w1581
+
+@w1581 not
+scope=signed
+
+@w1582 says
+_text=the admin says that never send the saved reports .
+_world=commands_measure
+_source=generator
+_template=prohib_never
+speaker=admin
+scope=$w1583
+
+@w1583 not
+scope=$w1584
+
+@w1584 command
+action=send
+patient=$w1585
+
+@w1585 entity
+head=reports
+attr=saved
+
+@w1586 not
+_text=do not save the sent reports .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1587
+
+@w1587 command
+action=save
+patient=$w1588
+
+@w1588 entity
+head=reports
+attr=sent
+
+@w1589 not
+_text=do not copy the saved drafts .
+_world=commands_measure
+_source=generator
+_template=prohib
+scope=$w1590
+
+@w1590 command
+action=copy
+patient=$w1591
+
+@w1591 entity
+head=drafts
+attr=saved
+
+@w1592 command
+_text=save the photos that are not signed .
+_world=commands_measure
+_source=generator
+_template=attr_rel
+action=save
+patient=$w1593
+
+@w1593 entity
+head=photos
+attr=$w1594
+
+@w1594 not
+scope=signed
+
+@w1595 says
+_text=the user asks that save the saved messages .
+_world=commands_measure
+_source=generator
+_template=aff
+speaker=user
+scope=$w1596
+
+@w1596 command
+action=save
+patient=$w1597
+
+@w1597 entity
+head=messages
+attr=saved

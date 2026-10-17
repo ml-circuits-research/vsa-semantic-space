@@ -1,0 +1,52 @@
+{
+ "version": 1,
+ "roles": [
+  {
+   "id": "action",
+   "question": "what to do?"
+  },
+  {
+   "id": "patient",
+   "question": "to what?"
+  },
+  {
+   "id": "destination",
+   "question": "where to?"
+  }
+ ],
+ "events": [
+  {
+   "id": "command",
+   "verbs": [
+    "delete",
+    "save",
+    "send",
+    "move",
+    "copy"
+   ]
+  }
+ ],
+ "operators": [
+  "not",
+  "says"
+ ],
+ "moods": [
+  "command"
+ ],
+ "kinds": {
+  "source": "lexicon",
+  "lexicon": "kinds.tsv"
+ },
+ "values": [],
+ "reader": {
+  "predicate_role": false,
+  "occupancy_marker": false,
+  "definite_dets": [
+   "the"
+  ],
+  "level_openers": [
+   "says",
+   "asks"
+  ]
+ }
+}
