@@ -41,10 +41,10 @@ def main():
             fk = acc["FULL"] if prim == "kinds" else acc.get("FULL [kind-count estimate]")
             fg = acc["FULL"] if prim == "gates" else acc.get("FULL [gate-count estimate]")
             f = lambda x: "—" if x is None else f"{x:.3f}"
-            out.append(f"| {name} | {m['seeds'][i]} | {gate:.2f} | {f(acc.get('depth estimate: opener-kind count'))} | {f(acc.get('depth estimate: level gates (primary)'))} | "
+            out.append(f"| {name} | {m['seeds'][i]} | {gate:.2f} | {f(acc.get('depth estimate: opener-kind count'))} | {f(acc.get('depth estimate: open-gate count', acc.get('depth estimate: level gates (primary)')))} | "
                        f"{f(fk)} | {f(fg)} | {f(acc.get('FULL [depth given]'))} |")
         prim_k = "FULL"
-        out.append(f"| {name} | mean | | {ms(m, 'heldout_depth2', 'depth estimate: opener-kind count')} | {ms(m, 'heldout_depth2', 'depth estimate: level gates (primary)')} | "
+        out.append(f"| {name} | mean | | {ms(m, 'heldout_depth2', 'depth estimate: opener-kind count')} | {ms(m, 'heldout_depth2', 'depth estimate: open-gate count') if 'depth estimate: open-gate count' in str(m.get('mean_over_seeds', {}).get('heldout_depth2', {})) else ms(m, 'heldout_depth2', 'depth estimate: level gates (primary)')} | "
                    f"{ms(m, 'heldout_depth2', prim_k if prim == 'kinds' else 'FULL [kind-count estimate]')} | {ms(m, 'heldout_depth2', prim_k if prim == 'gates' else 'FULL [gate-count estimate]')} | "
                    f"{ms(m, 'heldout_depth2', 'FULL [depth given]')} |")
     out.append("RESULTS 10d: depth 2 FULL 0.854±0.031 (depth given).")

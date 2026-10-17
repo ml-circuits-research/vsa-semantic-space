@@ -61,8 +61,8 @@ r = json.load(open(os.path.join(os.path.dirname(q), "reference", "legend.json"))
 ok(r["version"] == 2 and r["reader"]["gates_given"]["open"] == ["to", "by", "from"] and os.path.exists(os.path.join(os.path.dirname(q), "reference", "versions", "v1", "legend.json")),
    "reference: legend v2 with gates_given to / by / from open and level openers; v1 under versions/v1/")
 rm = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "metrics.json")))["per_seed"][0]["heldout_depth3"]["catalog candidates"]["acc"]
-ok("depth estimate: level gates (primary)" in rm and "FULL [fit estimate]" in rm,
-   f"reference depth 3: depth from the level gates {rm['depth estimate: level gates (primary)']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
+ok("depth estimate: open-gate count" in rm and "depth estimate: primary (gates)" in rm and "FULL [fit estimate]" in rm,
+   f"reference depth 3: depth from the level gates {rm['depth estimate: open-gate count']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
    f"FULL gates / fit / given {rm['FULL']:.3f} / {rm['FULL [fit estimate]']:.3f} / {rm['FULL [depth given]']:.3f}")
 rt = open(form.replace("quantifiers", "reference")).read()
 ok("_depth.gates=" in rt and "_depth.kinds=" in rt and "_depth.fit=" in rt, "formalize writes _depth.gates, _depth.kinds and _depth.fit on the top-level wire")

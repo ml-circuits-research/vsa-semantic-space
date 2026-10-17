@@ -274,7 +274,10 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if mode != "estimated": continue
             status[info["status"]] += 1; resid.append(info["residual"]); per_form[signature(row, legend)].append(same(drop))
             acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
-            if f.get("depth_gates") is not None: acc["depth estimate: level gates (primary)"].append(f["depth_gates"] == len(g["speakers"]))
+            if f.get("depth_gates") is not None: acc["depth estimate: open-gate count"].append(f["depth_gates"] == len(g["speakers"]))
+            prim = reader.cfg.get("depth_estimator", "gates")
+            pv = {"gates": f.get("depth_gates"), "kinds": f.get("depth_kinds"), "fit": f.get("depth_fit")}[prim]
+            if pv is not None and legend.reader.get("level_openers"): acc[f"depth estimate: primary ({prim})"].append(pv == len(g["speakers"]))
             if f.get("depth_fit") is not None: acc["depth estimate: fit (check)"].append(f["depth_fit"] == len(g["speakers"]))
             if f.get("depth_kinds") is not None: acc["depth estimate: opener-kind count"].append(f["depth_kinds"] == len(g["speakers"]))
             mg = f.get("margins", {})
