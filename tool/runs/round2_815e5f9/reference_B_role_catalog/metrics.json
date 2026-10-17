@@ -1,0 +1,582 @@
+{
+ "source": "re-scoring of reference_A_gates_given (no retraining): its 'experiment candidates' column, every seed",
+ "mean_over_seeds": {
+  "heldout_depth3": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.7416666666666666,
+     "std": 0.03979112128771108
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 0.9033333333333333,
+     "std": 0.011303883305208741
+    },
+    "head agent": {
+     "mean": 0.9033333333333333,
+     "std": 0.011303883305208741
+    },
+    "lexical order head agent": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.23333333333333334,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 0.8099999999999999,
+     "std": 0.03993049516903644
+    },
+    "head recipient": {
+     "mean": 0.8099999999999999,
+     "std": 0.03993049516903644
+    },
+    "lexical order head recipient": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.2,
+     "std": 0.0
+    },
+    "speakers": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.7416666666666666,
+     "std": 0.03979112128771108
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.075,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.7416666666666666,
+     "std": 0.03979112128771108
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.7416666666666666,
+     "std": 0.03979112128771108
+    }
+   }
+  },
+  "heldout_formulations_role_cues_seen": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head agent": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head agent": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.5,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head recipient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head recipient": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.4666666666666667,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.31666666666666665,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth and negation given]": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   }
+  },
+  "heldout_formulations_seen_transitions": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.6599999999999999,
+     "std": 0.05333333333333331
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 0.8200000000000001,
+     "std": 0.028674417556808766
+    },
+    "head agent": {
+     "mean": 0.8200000000000001,
+     "std": 0.028674417556808766
+    },
+    "lexical order head agent": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.5333333333333333,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 0.76,
+     "std": 0.07788880963698615
+    },
+    "head recipient": {
+     "mean": 0.76,
+     "std": 0.07788880963698615
+    },
+    "lexical order head recipient": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.5666666666666667,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.6599999999999999,
+     "std": 0.05333333333333331
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.4,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.6599999999999999,
+     "std": 0.05333333333333331
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.6599999999999999,
+     "std": 0.05333333333333331
+    }
+   }
+  },
+  "heldout_formulations_unseen_transitions": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.5655555555555555,
+     "std": 0.0805383123307561
+    },
+    "structure (depth, negation)": {
+     "mean": 0.9,
+     "std": 0.08164965809277258
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 0.9433333333333334,
+     "std": 0.0455961878415182
+    },
+    "head agent": {
+     "mean": 0.9433333333333334,
+     "std": 0.0455961878415182
+    },
+    "lexical order head agent": {
+     "mean": 0.3333333333333333,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.45,
+     "std": 0.0
+    },
+    "occupancy: known filler": {
+     "mean": 0.9270370370370371,
+     "std": 0.016752863522812803
+    },
+    "role object": {
+     "mean": 0.9800000000000001,
+     "std": 0.02666666666666666
+    },
+    "head object": {
+     "mean": 0.9800000000000001,
+     "std": 0.02666666666666666
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 0.72,
+     "std": 0.04166296279833927
+    },
+    "head recipient": {
+     "mean": 0.72,
+     "std": 0.04166296279833927
+    },
+    "lexical order head recipient": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.32222222222222224,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.6466666666666666,
+     "std": 0.01594744454934146
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.2111111111111111,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.571111111111111,
+     "std": 0.0761253028131584
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.571111111111111,
+     "std": 0.0761253028131584
+    }
+   }
+  },
+  "heldout_sentences": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 0.9853333333333334,
+     "std": 0.01132352516764201
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 0.998,
+     "std": 0.0026666666666666783
+    },
+    "head agent": {
+     "mean": 0.998,
+     "std": 0.0026666666666666783
+    },
+    "lexical order head agent": {
+     "mean": 0.34833333333333333,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.42000000000000004,
+     "std": 5.551115123125783e-17
+    },
+    "occupancy: known filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 0.9873333333333333,
+     "std": 0.010033277962194944
+    },
+    "head recipient": {
+     "mean": 0.9873333333333333,
+     "std": 0.010033277962194944
+    },
+    "lexical order head recipient": {
+     "mean": 0.39166666666666666,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.51,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 0.9853333333333334,
+     "std": 0.01132352516764201
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.25666666666666665,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.2833333333333333,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 0.9853333333333334,
+     "std": 0.01132352516764201
+    },
+    "FULL [depth and negation given]": {
+     "mean": 0.9853333333333334,
+     "std": 0.01132352516764201
+    },
+    "speakers": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "occupancy: not given": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   }
+  },
+  "new_identities": {
+   "experiment candidates": {
+    "FULL": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "structure (depth, negation)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "predicate (surface lemma)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "event type (synonym table)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role agent": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head agent": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head agent": {
+     "mean": 0.375,
+     "std": 0.0
+    },
+    "lexical bag head agent": {
+     "mean": 0.525,
+     "std": 0.0
+    },
+    "occupancy: unknown filler": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical bag head object": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "role recipient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "head recipient": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "lexical order head recipient": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "lexical bag head recipient": {
+     "mean": 0.475,
+     "std": 0.0
+    },
+    "heads FULL (model)": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical order baseline)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "heads FULL (lexical bag baseline, trained on the same training rows)": {
+     "mean": 0.0,
+     "std": 0.0
+    },
+    "FULL [depth given]": {
+     "mean": 1.0,
+     "std": 0.0
+    },
+    "FULL [depth and negation given]": {
+     "mean": 1.0,
+     "std": 0.0
+    }
+   }
+  }
+ },
+ "chance": {
+  "agent": 0.05555555555555555,
+  "object": 0.05555555555555555,
+  "recipient": 0.05555555555555555,
+  "predicate": 0.08333333333333333
+ },
+ "seeds": [
+  0,
+  1,
+  2,
+  3,
+  4
+ ]
+}

@@ -1,0 +1,2 @@
+sop train /tmp/sop_round2_pKqb/reference --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round2_815e5f9/reference_A_gates_given
+commit 815e5f9
