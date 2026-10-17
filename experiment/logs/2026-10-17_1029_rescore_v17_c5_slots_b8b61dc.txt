@@ -1,0 +1,35 @@
+# 2026-10-17T10:29:29+02:00  commit=b8b61dc  cmd: python3 rescore_v17_c5_slots.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v17_c5_slots: frames logs/.ckpt_v17_reader_frames_occ.pt; single threshold of 10c-sexies 0.194; PER-SLOT thresholds (calibration half; midpoint of present / absent): slot 1: 0.452 (0.421 / 0.484, n present 4180); slot 2: 0.166 (0.282 / 0.050, n present 1290); slot 3+: 0.053 (0.106 / 0.001, n present 291)
+
+== occupancy on the report half by SLOT INDEX: scheme | slot | present read as present (n) | absent read as absent (n)
+   single   | slot 1  | 0.995 (4177) | 0.000 (33)
+   single   | slot 2  | 0.726 (1312) | 0.981 (2898)
+   single   | slot 3+ | 0.129 (295) | 1.000 (8125)
+   single   | slots 2+ present read as present: 0.616 (n 1607)
+   per-slot | slot 1  | 0.330 (4177) | 0.182 (33)
+   per-slot | slot 2  | 0.758 (1312) | 0.964 (2898)
+   per-slot | slot 3+ | 0.773 (295) | 0.930 (8125)
+   per-slot | slots 2+ present read as present: 0.760 (n 1607)
+
+== present slots read as present by the NUMBER OF CONDITIONS in the question (diagnostic: slot index vs capacity): scheme | n conditions | rate (n slots)
+   single   | 1  | 0.995 (2865)
+   single   | 2  | 0.835 (2094)
+   single   | 3+ | 0.664 (825)
+   per-slot | 1  | 0.355 (2865)
+   per-slot | 2  | 0.492 (2094)
+   per-slot | 3+ | 0.670 (825)
+
+== verdicts (column-margin statistic, as 10c-sexies): error type | n | single threshold: detected / unverifiable / missed | per-slot thresholds: detected / unverifiable / missed
+  drop_cond      |  4177 | 0.150 / 0.825 / 0.025 | 0.149 / 0.508 / 0.343
+  swap_sel_cond  |  4177 | 0.707 / 0.287 / 0.005 | 0.707 / 0.291 / 0.002
+  change_sel     |  4195 | 0.732 / 0.262 / 0.005 | 0.732 / 0.264 / 0.004
+  flip_agg       |  4210 | 0.781 / 0.206 / 0.013 | 0.781 / 0.213 / 0.006
+  add_cond       |  4195 | 0.153 / 0.846 / 0.000 | 0.153 / 0.844 / 0.003
+  change_value   |  4177 | 0.149 / 0.495 / 0.356 | 0.150 / 0.756 / 0.095
+  no_error (gold) |  4210 | FALSE-ALARM 0.152 / 0.495 / 0.353 | FALSE-ALARM 0.153 / 0.753 / 0.094
+
+== C5 criterion (per-slot thresholds): present read as present on slots 2+ = 0.760 (>= 0.9 needed), false alarm on gold = 0.153 (<= 0.152 needed) -> NOT met: closed as bounded by the presence reading of the later slots
+
+checklist: [x] re-scoring only, saved frames [x] per-slot thresholds set on the calibration half, reported on the odd half (25) [x] criterion written before the run [x] diagnostic by slot index and by number of conditions [x] same injected errors as v17 [x] false alarm on gold

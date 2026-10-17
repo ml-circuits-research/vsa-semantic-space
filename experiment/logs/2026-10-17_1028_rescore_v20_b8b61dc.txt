@@ -1,0 +1,56 @@
+# 2026-10-17T10:28:29+02:00  commit=b8b61dc  cmd: python3 rescore_v20.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v20: per-seed readout of the saved B5.1 models (tag b51e1b), forms ['aff', 'must', 'may', 'neg', 'must_neg', 'neg_must', 'may_neg'], depths 0 / 1 / 2 (UNSEEN for the operator forms, rule 29 (B)); roles under the GOLD structure, FULL under the decoded one
+  seed 0 read
+  seed 1 read
+  seed 2 read
+  seed 3 read
+  seed 4 read
+
+== per-seed values (seeds 0-4), then mean ± sd; depth | form | column
+   0          | aff       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | aff       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | must      | A    | 1.000, 1.000, 0.975, 1.000, 1.000 | 0.995±0.010
+   0          | must      | FULL | 1.000, 1.000, 0.975, 1.000, 1.000 | 0.995±0.010
+   0          | may       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | may       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | neg       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | neg       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | must_neg  | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | must_neg  | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | neg_must  | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | neg_must  | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   0          | may_neg   | A    | 0.925, 1.000, 1.000, 1.000, 1.000 | 0.985±0.030
+   0          | may_neg   | FULL | 0.925, 1.000, 1.000, 1.000, 1.000 | 0.985±0.030
+   1          | aff       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | aff       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | must      | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | must      | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | may       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | may       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | neg       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | neg       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | must_neg  | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | must_neg  | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | neg_must  | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | neg_must  | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000
+   1          | may_neg   | A    | 1.000, 1.000, 1.000, 0.900, 1.000 | 0.980±0.040
+   1          | may_neg   | FULL | 1.000, 1.000, 1.000, 0.900, 1.000 | 0.980±0.040
+   2 (UNSEEN) | aff       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | aff       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | must      | A    | 0.925, 1.000, 0.925, 1.000, 0.975 | 0.965±0.034   (5/5 seeds above 0.9)
+   2 (UNSEEN) | must      | FULL | 0.925, 1.000, 0.925, 1.000, 0.975 | 0.965±0.034   (5/5 seeds above 0.9)
+   2 (UNSEEN) | may       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | may       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | neg       | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | neg       | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | must_neg  | A    | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | must_neg  | FULL | 1.000, 1.000, 1.000, 1.000, 1.000 | 1.000±0.000   (5/5 seeds above 0.9)
+   2 (UNSEEN) | neg_must  | A    | 1.000, 0.975, 1.000, 1.000, 0.975 | 0.990±0.012   (5/5 seeds above 0.9)
+   2 (UNSEEN) | neg_must  | FULL | 1.000, 0.975, 1.000, 1.000, 0.975 | 0.990±0.012   (5/5 seeds above 0.9)
+   2 (UNSEEN) | may_neg   | A    | 0.850, 0.800, 0.950, 0.675, 1.000 | 0.855±0.114   <- BELOW the criterion 0.9 on the mean   (2/5 seeds above 0.9)
+   2 (UNSEEN) | may_neg   | FULL | 0.850, 0.800, 0.950, 0.675, 1.000 | 0.855±0.114   <- BELOW the criterion 0.9 on the mean   (2/5 seeds above 0.9)
+== 12-quater log (means): d2 A — aff 1.000, must 0.965, may 1.000, neg 1.000, must_neg 1.000, neg_must 0.990, may_neg 0.855; compare the means above: identical digits = deterministic readout
+
+checklist: [x] saved params, no retraining [x] same worlds, seeds and evaluation rngs as the run [x] per-seed list for every cell (27) [x] the cell below the criterion named [x] rule 29 label stated (B)
