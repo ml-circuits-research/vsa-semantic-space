@@ -1,0 +1,1 @@
+splits.json of the stopped first attempt was byte-identical to tool/runs/wikisql_1528450/wikisql/splits.json (sha256 dd6d0dfd345859a540e51c4dc27315b8ac7d6850292f3bbe7f694471f15f26c0); removed here, the log and command of the stopped attempt kept (judgment 753287f item 5).

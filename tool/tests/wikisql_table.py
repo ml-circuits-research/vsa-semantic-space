@@ -44,7 +44,8 @@ def main():
            f"| condition columns: the decoded set EXACT | {ms(m, 'set condition: exact')} | — (8c: indexed slots) | — |",
            f"| FULL query (select + aggregate + the condition column set; operators and values not read) | {ms(m, 'FULL')} | 0.376±0.003 (all condition columns, indexed) | 0.368 |",
            f"| FULL, pooled-midpoint thresholds (the comparison) | {ms(m, 'FULL [pooled midpoint (comparison)]')} | | |",
-           f"| condition presence: present read present / absent read absent | {ms(m, 'presence condition: present read present')} / {ms(m, 'presence condition: absent read absent')} | | |"]
+           (f"| condition presence: present read present / absent read absent | {ms(m, 'presence condition: present read present')} / {ms(m, 'presence condition: absent read absent')} | | |"
+            if ms(m, 'presence condition: present read present') != "—" else "| condition presence | no threshold: 2 absent of 400 calibration rows; read by the training rate | | |")]
     if m: out.append(f"\nseeds {m['seeds']}; chance {m.get('chance')}")
     if a.world:
         import export_wikisql as ex

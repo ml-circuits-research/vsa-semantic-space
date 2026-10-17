@@ -163,3 +163,5 @@ FULL is defined over the legend's questions: ['attr'] excluded (reported as its 
 
 ## Checklist
 [x] addresses from the world [x] shared identities (one star function) [x] chance printed [x] seen / unseen axes separated [x] margin [x] >=3 seeds [x] trivial controls (lexical bag and lexical order baselines) [x] calibration (rule 18) [x] memory logged (rule 21) [x] thresholds on calibration rows (rule 25) [x] given vs learned stated (rule 20)
+
+ERRATUM (judgment 753287f item 3; the run is not regenerated): the '## Thresholds' header text above was stale — the thresholds of this run are the FITTED ones (the calibration rule since round 6): config.json set_member:condition 0.341; the pooled midpoint of the same rows, 0.433, was the comparison, not the threshold used.

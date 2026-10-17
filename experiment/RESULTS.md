@@ -497,12 +497,13 @@ have fixed random identities and, if unseen in train, an untrained skip-gram vec
 | dev | BoW + LR | 0.497 | **0.870** | — (no condition model) | 0.437 (sel + agg only) | — | — | — | — |
 | dev | full model, 3 seeds | **0.810±0.004** | 0.814±0.003 | **0.632±0.004** | **0.376±0.003** | 0.629 | 0.758 / 0.471 | 0.547 | 0.287±0.001 |
 | test (15,878) | full model, 3 seeds | **0.811±0.004** | 0.815±0.002 | 0.629±0.001 | **0.380±0.002** | 0.626 | 0.746 / 0.471 | 0.547 | 0.275±0.002 |
+Definition (judgment 753287f): FULL = selected column + aggregator + every condition column; the NUMBER of conditions GIVEN (the decoder reads one condition column per gold condition, v11 line 192 / v12 line 128, for every model); operators and values not scored.
 Per seed (dev / test): sel 0.815/0.817, 0.811/0.807, 0.805/0.810; FULL 0.380/0.383, 0.375/0.378, 0.372/0.379. 180-234 s per seed (3 epochs).
 Learned gates, stable across seeds: has, and, than, the (0.99-1.00), is (0.8-0.9), of (0.75), was, which, what, a (0.2-0.7); content clusters
 <= 0.65 (most < 0.3). Same partition as the synthetic world (relation markers open, content closed), now on 56k real questions, 3 seeds.
 Reading: dev and test agree to the third decimal; the selected column WITHOUT the table is 0.81 vs 0.50 for the mandatory baseline on both
 splits; the aggregator stays below the bag of words (lexical decision, not structural — reported as is, no dedicated head); the FULL query
-(the number text-to-SQL papers compare) is 0.38, far below the state of the art (~0.9 with large pretrained models and the table as input)
+(as defined above: the number of conditions given) is 0.38, far below the state of the art (~0.9 with large pretrained models and the table as input)
 and above the baseline's sel+agg-only 0.44 is not comparable (no conditions there). The equivalence separation is 0.28-0.29 (criterion 0.3
 not met); whether it is lexical or role-based is what round 8d (v12: hard pairs with the lexical bag on the same row) measures.
 
@@ -515,7 +516,7 @@ then fixed; AdamW + cosine. No extra tuning for ours. Epochs scaled for comparab
 skip-gram categories are trained on the WHOLE train pool (~54k questions + headers) at every size, for both models: the curve measures data
 efficiency "with distributional categories from the whole training corpus, without labels", not from 1k sentences alone.
 Curve (dev; test at 56k in brackets; means of 3 seeds, std <= 0.005 everywhere):
-| n train | model | sel column | aggregator | cond-1 column | FULL query |
+| n train | model | sel column | aggregator | cond-1 column | FULL query (FULL = selected column + aggregator + every condition column; the NUMBER of conditions GIVEN (the decoder reads one condition column per gold condition, v11 line 192 / v12 line 128, for every model); operators and values not scored) |
 |---|---|---|---|---|---|
 | 1k | BoW + LR | 0.475 | 0.762 | — | 0.371 (sel+agg only) |
 | 1k | **ours** | **0.632** | 0.766 | **0.387** | **0.164** |
@@ -1748,4 +1749,6 @@ set readout reaches FULL 0.423, above 8c. This is the C5 legend question answere
 as well as or better than indexed slots, and the open problem moves to reading the set's SIZE (a member margin or a count role — one further single
 change, not built). Stated differences from v11: the set role instead of COND_k; float64 V8 instead of complex64; length buckets; the skip-gram
 retrained here. The P1 path (export -> legend -> train -> formalize -> check -> diff) is exercised end to end on real sentences; the annotator step
-still needs a key.
+still needs a key. Abstention of the package on dev at tau 0.05 (REPORT.md): 4,391 of 8,421 questions abstain (0.52), 4,030 answered; the condition
+role's confident-wrong 0.285 at coverage 0.53 (seed 0). 8c's FULL and the package's FULL differ in the count protocol: 8c's is given the
+number of conditions (definition above), the package decides it.

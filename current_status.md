@@ -1,47 +1,29 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-17 — judgments 752853c and 8d335f8 applied: N6 recorded with the corrected claim, round 6 adopted, four wording corrections from the external review; tool E1 done, E2 running)
+# Current status — the state at the FREEZE (judgment 753287f, 2026-10-17): experiments stopped for the article; tag paper-2026-10
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_752853c.md (saved verbatim), experiment/RESULTS.md 15, 14-bis,
-11-sexies; STATUS.md; experiment/JOURNAL.md; tool/README.md.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_8d335f8.md and _753287f.md (saved verbatim; of 753287f only
+the instruction part reached this session — its sections C and F were not in the message; C's criterion is restated in its item 7 and used as
+such), experiment/RESULTS.md 11-octies, 15, 15-bis; STATUS.md; experiment/JOURNAL.md; tool/README.md.
 
-## A. Done since 752853c, in the instructed order
-| step | result | criterion / decision rule (written before) | outcome |
-|---|---|---|---|
-| decisions recorded (§1, §2) | STATUS B7 row: three codes stay the reference, the position code a declared per-world option (reason: a surface-position prior); 00_READ_FIRST §7 says so; P0 row notes the calibration rule decision pending round 6 | — | done |
-| Tool §2 re-scoring + round 6 (agent; RESULTS 11-septies; tool/runs/round5_1ed4306/round5_margins.md, tool/runs/round6_051dd33/) | §2: 0.617 of round 5's presence errors inside the band (presence part only); round 6 with the fitted rule: recipient presence on unseen formulations 0.639 -> **0.772**, absent 1.000 -> 0.991; errors inside the abstention band (presence or identity margin) **0.699** pooled (per seed 0.609, 0.550, 0.886, 0.476, 0.750); product heads FULL 0.444 (midpoint 0.418; v16 protocol 0.556; 10b-quinquies 0.627) | §2's expectation: most errors inside the band | rule ADOPTED (judgment 752853c §2); "most" met pooled, not in every seed (0.476 in seed 3); the asymmetry option reported, not built; `sop train` exposes the code list, default off |
-| N6 per-term decomposition (rescore_v21_terms, log 2026-10-17_1420; RESULTS 15-bis) | shares along the residual: with the recipient — hidden token 0.30, content fit 0.26, function words 0.44; without — content fit **0.73**, function words 0.27; content-share gap +0.08 | judgment 934fbae B: function words the majority -> two `_residual` numbers and the gap re-scored; not -> hypothesis dropped | **NOT the majority -> the RESULTS 15 hypothesis DROPPED**; the share inverted because the recipient-less forms (the rarer templates) fit worse, not because function words dominate; `_residual` stays one number; direction stays the detector |
-| **N6** missing question in the legend (v21_missing_role, log 2026-10-17_1343; RESULTS 15) | remaining roles 1.000; relative residual 0.337 WITH the hidden role vs 0.462 WITHOUT (gap **−0.267**); recovery of the hidden filler from the residual: true R_C **0.110** (chance 0.083), random 0.093, the reader's own calibrated address **0.963** (5/5 seeds > 0.92); residuals cluster by filler (cos 0.19 same / 0.05 different), 1-NN with no vector 0.57 | addendum: gap > 0.3; oracle recovery > 0.8; random at chance | **NOT met as written** (third branch of the rule): the residual SHARE does not expose the missing question, and a reader trained without the role does not put it at the legend's vector; **detectable by residual DIRECTION** — the filler sits at the reader's own address, consistently across sentences (the tool's `_unplaced`-by-direction loop is that detector; test 5b) |
+## A. Done since 8d335f8
+| step | result | outcome |
+|---|---|---|
+| judgment 8d335f8 (one commit) | N6 row reworded to the supported claim (the omitted role's identity remains in the residual at a consistent address, recoverable at 0.963 once named; separable by filler with the neighbours' labels; share not a signal; "detectable" NOT claimed); N6-bis PLANNED; external-review wording (WikiSQL question-only encoder with the schema as the decoder's candidate set; confident-wrong defined with the conditional risk and the rule-of-three bound; 7b as the mean over roles; quantifier cells as scope markers read through the legend rule); round 6 adopted | done, no number moved |
+| tool E1 (agent) | the legend-gap report prints the N6 statistics per proposed cluster (residual cosine same / different filler; leave-one-out 1-NN with its chance; "uses the fillers' labels: separability, not recovery"; n_items_for_statistics, cap 400) | done |
+| tool E2 (agent; RESULTS 11-octies; tool/runs/wikisql_1528450/) | WikiSQL through the tool: selected column 0.816 (8c 0.810±0.004) and aggregator 0.827 (0.814) reproduced; SOP round trip exact on 64,776 questions; FULL 0.217 vs 0.376 NOT reproduced — the gap is the SET-SIZE decision (how many conditions), which 8c's protocol is given (FULL defined as such from now on); with the count given, FULL 0.423 (seed 0); abstention on dev at tau 0.05: 4,391 of 8,421 (0.52); condition role confident-wrong 0.285 at coverage 0.53 | the C5 legend question answered on data: a set-valued condition role reads the columns; its size is the open item (PLANNED row) |
+| judgment 753287f (this commit) | FULL labelled with its count protocol in RESULTS 8c / 8d and the STATUS WikiSQL row; 11-octies carries the abstention and the condition confident-wrong; the tool's REPORT prints the threshold rule actually applied (fitted since round 6), with an erratum line on the committed WikiSQL REPORT; the condition-presence row prints its reason; the duplicate splits.json of the stopped attempt replaced by its sha note; the set-size PLANNED row | done, no number moved; experiments frozen |
 
-## B. HYPOTHESIS
-- Presence calibration across formulations: ~10% class overlap (reader); the midpoint rule added a further third of missed recipients (rule) —
-  the fitted rule is adopted (round 6 confirms).
-- B5d multi-hop left re-seating: only if a legend requires the subject's term as a structure witness.
-- Verifier condition axis (C5 closed): legend choice at P1 (indexed slots vs one condition role with a SET value).
-- N5 "resolve before drawing": diagnostic in the next kinds run.
+## B. PLANNED (the order from here, after the freeze)
+1. Set-size reading of a set-valued role on the WikiSQL world — criterion (judgment 753287f item 7): WikiSQL dev, 3 seeds, decided set exact
+   >= 0.55 with the count-given reading re-measured beside it; FULL decided >= 0.38; false-size rate on 0-condition questions printed; (a) a
+   relative member rule on the stored scores (re-scoring; permitted after today), then (b) a count role (one retraining).
+2. P1 when the team's data arrives; the annotation path once with a key, wherever the team runs it.
+3. N6-bis (the stronger missing-question test, low priority); N8 (verb-final world, low priority); N7 after N1; B8-B9; capacity at 64-1,000
+   identities and D = 4,096-16,384.
 
-## C. PLANNED, in the instructed order
-Tool round 6 (running next); N8 (verb-final world, low priority); P1 when the team's data arrives (the annotation path once with a key, wherever
-the team runs it); N7 after N1; B8-B9; capacity at 64-1,000 identities and D = 4,096-16,384 (00_READ_FIRST §7).
+## C. HYPOTHESIS (unchanged)
+Presence calibration across formulations (~10% class overlap, the reader's); B5d multi-hop left re-seating (only if a legend needs the subject's
+term as a structure witness); the verifier's condition axis (legend choice settled on data by E2: a set-valued role; size open); N5 "resolve
+before drawing" (diagnostic in the next kinds run).
 
-## D. Done since 8d335f8
-- N6 row reworded to the claim the measurement supports (identity remains at a consistent address; recoverable once named; separable by filler
-  with neighbours' labels; share not a signal; "detectable" NOT claimed); N6-bis PLANNED with its criterion.
-- Wording from the external review: WikiSQL row (question-only encoder, schema as the decoder's candidate set; what is scored); confident-wrong
-  defined once in rule 18 with the conditional risk among accepted answers and the rule-of-three bound on zeros; 7b numbers labelled as the mean
-  over roles; the regularity row's quantifier cell reads "scope markers read through the declared legend rule".
-- Round 6 adopted as written; the asymmetry field stays a per-legend option.
-- Tool E1 / E2 done (RESULTS 11-octies): the legend-gap report prints the N6 statistics; WikiSQL through the tool reproduces the selected column
-  (0.816 vs 0.810) and the aggregator (0.827 vs 0.814) and round-trips every frame through SOP Lang; FULL 0.217 vs 0.376 NOT reproduced — the
-  gap is the SET-SIZE decision (how many conditions), which v11 is given; with the count given FULL 0.423. The C5 legend question is answered
-  on data (a set-valued condition role works; its size is the open item). The agent waits for the P1 data.
-
-## E. Questions for the reviewing session
-0. E2: reading the SIZE of a set-valued role is the one gap between the tool's FULL (0.217) and v11's (0.376, given the count). Build the single
-   change now (a member margin on the set role, or a count role in the legend) on the WikiSQL world, or leave it for P1's legend?
-1. N6's recording: "NOT met as written; detectable by residual direction (0.963 at the reader's address; 1-NN 0.57), not by residual share" —
-   agreed? The addendum's oracle test presumes the reader places the missing filler at the legend's vector, which a reader trained without the
-   role cannot do; the measurement that succeeds uses the reader's own address, calibrated on 120 gold sentences (a supervised step) or no
-   vector at all (1-NN 0.57, unsupervised). Which of the two is the number for the positioning document's "a missing question is detectable"?
-2. (answered by 15-bis) the function-word hypothesis is dropped; the share inverted because the recipient-less forms fit worse. Nothing to decide.
-3. (answered by judgment 934fbae E) the agent does E1 (legend-gap statistics) and E2 (WikiSQL through the tool), then waits for the data.
-4. Round 6: 0.699 of the product's presence errors abstain pooled, but only 0.476 in seed 3 (its errors are missed "present" with ratios far
-   below the threshold). Is "most, pooled" enough for the adoption as written, or does the per-seed spread call for the asymmetry field now?
+## D. Open questions
+None. Experiments stopped for the article at tag paper-2026-10; the state cited by the paper is this commit.

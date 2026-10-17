@@ -643,10 +643,12 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
              "Word -> kind table: model/catalog.json.\n")
     P(f"## Training\nD={a.D}, seeds {a.seeds_list}, batch {a.batch}, lr {a.lr}, epochs {a.epochs}, device {a.device}, codes path+chainL+bigram, "
       f"gates learned (closed start). Code commit {a.commit}. Memory curve: runs/{os.path.basename(a.run_dir)}/train.log (trainer.train_loop, rule 21).\n")
-    P("## Thresholds (rule 25)\nAbstention tau = %.2f: stated, not fitted. Presence / attribute / determiner thresholds: midpoint of the mean "
-      "present / absent ratio on CALIBRATION rows = a sample of the TRAINING split (never the scored rows):" % a.tau)
+    P("## Thresholds (rule 25)\nAbstention tau = %.2f: stated, not fitted. Presence / attribute / determiner / set-member thresholds: the rule actually applied is "
+      "printed per entry below (FITTED = argmax of the balanced present / absent accuracy on the calibration rows, judgment 752853c §2, the pooled midpoint "
+      "printed beside it as the comparison; 'midpoint' only when that rule is the one used); calibration rows = a sample of the TRAINING split plus the "
+      "calibration half of the held-out formulations when enabled (never the scored rows):" % a.tau)
     for k, v in extra[0]["calibration"].items():
-        P(f"- {k}: " + (f"threshold {v['threshold']:.3f} (present {v['mean_present']:.3f}, n {v['n_present']} / absent {v['mean_absent']:.3f}, n {v['n_absent']})"
+        P(f"- {k}: " + (f"threshold {v['threshold']:.3f} [rule: {v.get('rule', 'fitted')}" + (f"; pooled midpoint {v['pooled_midpoint']:.3f} (comparison)" if v.get('pooled_midpoint') is not None else "") + f"] (present {v['mean_present']:.3f}, n {v['n_present']} / absent {v['mean_absent']:.3f}, n {v['n_absent']})"
                        if v.get("threshold") is not None else f"no threshold ({v['rule']}; n present {v['n_present']}, absent {v['n_absent']})"))
     P(f"\n## Results (seed {a.seeds_list[0]} model in model/; mean ± std over seeds when more than one)\n")
     P("Chance per role (1 / catalog candidates of the role's kinds): " + ", ".join(f"{k} {v:.3f}" for k, v in chance_.items() if v) + "\n")

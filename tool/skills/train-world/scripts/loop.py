@@ -473,7 +473,7 @@ def evolve(wd, fb):
             f.write(f"- `_unplaced` cluster {c['fillers']} (kinds {c['kinds']}): {e['sentences']} sentences ({e['share_of_corpus']:.1%} of those read), "
                     f"{e['routes']} route(s), mean share of the residual {e['residual_share_mean']:.3f}; the N6 statistics: residual cosine same filler "
                     f"{fmt6(e.get('residual_cos_same_filler'))} / different fillers {fmt6(e.get('residual_cos_different_filler'))}, leave-one-out 1-NN filler "
-                    f"accuracy over the residuals {fmt6(e.get('loo_1nn_filler_accuracy'))} (chance {fmt6(e.get('loo_1nn_chance'))}); e.g. \"{e['examples'][0]}\"\n")
+                    f"accuracy over the residuals {fmt6(e.get('loo_1nn_filler_accuracy'))} (chance {fmt6(e.get('loo_1nn_chance'))}; uses the fillers' labels: separability, not recovery; n_items_for_statistics {e.get('n_items_for_statistics')}, cap 400); e.g. \"{e['examples'][0]}\"\n")
         f.write("\n## Change set\n" + "".join(f"- ADD role `{c['role']}` — {c['question']} [{c['naming']}]\n" for c in changes))
         f.write("\nRemovals: none (add freely; remove only what is empty across the corpus" + (f"; empty now: {fb['roles_empty_across_corpus']}" if fb['roles_empty_across_corpus'] else "") + ").\n")
         f.write("\n## Migration\nmigration.json: " + "; ".join(f"add `{r['add_role']}` from fillers {r['fillers']}" for r in migration["rules"]) + "\n")

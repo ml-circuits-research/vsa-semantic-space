@@ -8,7 +8,7 @@ WikiSQL through the tool (question only; dev 8,421), mean ± std over the seeds 
 | condition columns: the decoded set EXACT | 0.307±0.013 | — (8c: indexed slots) | — |
 | FULL query (select + aggregate + the condition column set; operators and values not read) | 0.217±0.006 | 0.376±0.003 (all condition columns, indexed) | 0.368 |
 | FULL, pooled-midpoint thresholds (the comparison) | 0.233±0.003 | | |
-| condition presence: present read present / absent read absent | — / — | | |
+| condition presence | no threshold: 2 absent of 400 calibration rows; read by the training rate | | |
 
 seeds [0, 1, 2]; chance {'select': 3.1849162367029746e-05, 'aggregate': 0.00025940337224383917, 'condition': 3.1849162367029746e-05}
 

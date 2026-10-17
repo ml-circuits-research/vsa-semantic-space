@@ -346,3 +346,10 @@ accepted and wrong) with the conditional risk and the rule-of-three bound; 7b as
 through the legend rule. No number moved. Push = the snapshot for the paper's supplementary material is taken after it.
 Tool E1 / E2 (agent; RESULTS 11-octies): WikiSQL through the tool — selected column and aggregator reproduce 8c, the SOP round trip is exact;
 FULL 0.217 vs 0.376 because the product must decide the number of conditions (given in v11's protocol; with the count given 0.423). Push.
+
+## 2026-10-17 (DGX, evening) — judgment 753287f applied; experiments stopped for the article; tag paper-2026-10
+One wording commit, no number moved: FULL on WikiSQL labelled with its count protocol (the number of conditions given, for every model) in 8c /
+8d / STATUS; 11-octies carries the package's abstention (0.52) and the condition role's confident-wrong (0.285 at coverage 0.53); the tool's REPORT
+prints the threshold rule actually applied, with an erratum on the committed WikiSQL REPORT; the condition-presence table row prints its reason;
+the stopped attempt's duplicate splits.json replaced by its sha note; E1's 1-NN labelled "separability, not recovery"; the set-size PLANNED row.
+Tag paper-2026-10 = the state cited by the paper; experiments frozen until submission.
