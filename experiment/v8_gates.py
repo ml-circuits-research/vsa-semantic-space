@@ -66,7 +66,9 @@ class V8(v6.V6):
         if "bigram" in self.codes:
             ph = th[self.ibg[cats[:, :-1], cats[:, 1:]]]; ph = torch.cat([th[self.ibg0[cats[:, :1]]], ph], 1); terms = terms + E(ph)
         if "pos" in self.codes:                                                       # B7: position code (round 1), see __init__
-            posidx = torch.arange(T, device=self.device).clamp(max=39); terms = terms + E(th[self.ipos[posidx]].unsqueeze(0) + th[self.ipc[cats]])
+            posidx = torch.arange(T, device=self.device).clamp(max=39); pterm = E(th[self.ipos[posidx]].unsqueeze(0) + th[self.ipc[cats]])
+            if getattr(self, "pos_max", None) is not None: pterm = pterm * (posidx < self.pos_max).to(pterm.dtype).unsqueeze(0).unsqueeze(-1)   # B7 (b): the position term is OMITTED beyond the trained range, not drawn at random
+            terms = terms + pterm
         if "chainL" in self.codes or "chain" in self.codes:
             g = torch.sigmoid(self.logits)[cats] * mask                                   # B x T
             u = torch.log1p(-g + 1e-9); Sx = torch.cat([torch.zeros(B, 1, dtype=self.dtype, device=self.device), torch.cumsum(u, 1)], 1)   # Sx[i] = sum_{j<i} u_j

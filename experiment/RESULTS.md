@@ -1518,7 +1518,9 @@ Present slots read as present by the NUMBER of conditions in the question (singl
 Reading: NOT met — closed as "bounded by the presence reading of the later slots". The per-slot thresholds lift slots 2+ from 0.616 to 0.760
 (still under 0.9) and wreck slot 1 (0.995 -> 0.330): the absent class of slot 1 is tiny (33 odd-half questions without conditions) and its
 marker cosine is HIGHER than the present class's (0.484 vs 0.421 on the calibration half), so the midpoint falls above most present scores — a
-calibration that cannot be set on so few examples, not a tuning choice. Diagnostic (judgment 45ccd1d C): the drop follows the SLOT INDEX more than
+calibration that cannot be set on so few examples, not a tuning choice; for slot 1 the MARKER does not carry the presence signal at all (its
+cosine is higher on the absent class), the filler cleanup does — so the 0.330 is not a calibration accident but the absence of a marker signal on
+that slot (judgment d8f8a98 Q1). Diagnostic (judgment 45ccd1d C): the drop follows the SLOT INDEX more than
 the number of conditions — slot 3+ reads 0.129 while 3-condition questions average 0.664 over their three slots (slot 1 stays near 1.0 inside them,
 inferred from the two tables) — so the parameter is the slot's own role R_COND[k] with few training examples (slot 3+ is 295 of 16,840 report
 slots), not superposition of the conditions; a capacity effect would lower all slots of a 3-condition question together. The condition axis of
@@ -1568,8 +1570,10 @@ Gates learned: that 1.00 (to, by, from given 1.00), '.' 0.48, who 0.31; particip
 Reading, by the decision rule: **KEPT** — the fourth code does not reduce the new-construction axis; it raises it by 0.05 (five seeds at 0.675-0.692,
 against 0.627±0.024) and takes the unseen depth 3 to 0.998 (one seed at 0.992). The positions beyond the training lengths (depth-3 sentences reach
 positions never seen) carry untrained displacements, so the position term is noise there and the other three codes decide — the gain at depth 3
-comes from the shorter forms. Recording (rule 16): from here the reference reader's bundle is path + chainL + bigram + position; 10b-quinquies
-stays the record of the three-code bundle; the tool's `sop train` should expose the code list so the reference world's model carries it
+comes from the shorter forms — a HYPOTHESIS written as a reading, marked as such until the trace of RESULTS 14-bis (judgment d8f8a98 B1).
+Recording (rule 16; corrected by judgment d8f8a98 Q3): B7 is KEPT as a measured VARIANT available by flag; the change of the REFERENCE bundle is
+a separate decision, pending the trace (14-bis), the out-of-range rule and the terms-per-sentence table; 10b-quinquies stays the reference
+meanwhile; the tool's `sop train` should expose the code list so the reference world's model carries it
 (engineering, for the agent; not done in this run).
 
 ### 11-quinquies. Tool round 4 — presence thresholds calibrated with held-out FORMULATIONS (one change; tool/tests/gpu_round4.sh at commit 39063ed; tool/runs/round4_39063ed/ with round4_table.md; 5 seeds; reference world, to / by / from given open; judgment 45ccd1d D)
