@@ -353,3 +353,5 @@ One wording commit, no number moved: FULL on WikiSQL labelled with its count pro
 prints the threshold rule actually applied, with an erratum on the committed WikiSQL REPORT; the condition-presence table row prints its reason;
 the stopped attempt's duplicate splits.json replaced by its sha note; E1's 1-NN labelled "separability, not recovery"; the set-size PLANNED row.
 Tag paper-2026-10 = the state cited by the paper; experiments frozen until submission.
+The full text of judgment 753287f (sections A-G) arrived after the tag: saved verbatim; STATUS section 3 and current_status aligned to its
+section F; the consolidation directions (E) and the demonstration bounds (G) recorded for after submission. No run, no number moved.

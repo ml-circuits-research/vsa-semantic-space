@@ -79,7 +79,10 @@ operator case tried, with no named exception, on the reference world with the pr
   majority-kind baseline loses 0.01. Open: resolve the kind before drawing (first open emitter's preference) — for judgment.
 - Flat world (depth-indexed speaker roles) retired in round 6; the compositional world is the reference.
 
-## 3. Next experiments, in order (after the freeze; judgment 753287f — experiments stopped for the article at tag paper-2026-10)
-1. Set-size reading of a set-valued role on the WikiSQL world: (a) relative member rule on the stored scores (re-scoring), then (b) a count role (one retraining); criterion in the row above.
-2. P1 when the team's data arrives (the annotation path once with a key, wherever the team runs it).
-3. N8 (verb-final world, low priority); N7 after N1; B8-B9; capacity at 64-1,000 identities and D = 4,096-16,384.
+## 3. PLANNED after submission, in order (judgment 753287f section F; experiments frozen at tag paper-2026-10 = commit 153092d)
+1. Set-size reading of a set-valued role (C): (a) relative member rule, re-scoring; then (b) count role, one retraining — criterion in the row above.
+2. P1 when the team's data arrives: the legend written first; the annotator path once with a key (B4; the 500-sentence annotator measurement); a 300-sentence audited gold set before any number is reported; B2 calibration on the real dev.
+3. N6-bis (the stronger omitted-role test: the same fillers in several roles, new fillers, a proposal step), low priority unless P1's legend loop needs it.
+4. Capacity: D = 4,096-16,384, 64-1,000 identities (00_READ_FIRST §7), with the storage measurement of B6 repeated at the larger D.
+5. N7 (which world is this sentence from) after N1; N8 (verb-final world) low; B8-B9 stay HYPOTHESIS.
+Before F: the repository consolidation of judgment 753287f section E (front-page README, the script index, judgments folder, run and log indexes, the regression gate), after submission, nothing of provenance deleted.
