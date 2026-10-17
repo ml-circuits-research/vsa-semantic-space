@@ -136,6 +136,9 @@ ROUND 3 (v4.py, EVALUATION_PRINCIPLES.md)
 ## 7. Outlook and unimplemented ideas
   - Contractive bind (IFS, algebraic fractal): addresses with scale, readable depth, non-accumulating noise; cost: fragile inversion.
   - Non-commutative address space (permutations) for native order; commutative only inside a frame.
+  - The round-1 position code (one displacement per absolute position) was re-measured in the bundle (RESULTS 14, 14-bis): kept as a per-world
+    OPTION, not in the reference — its gain is a prior over absolute positions that wins and loses by template; the reference bundle stays
+    path + chainL + bigram (judgment 752853c §1).
   - Expectations with a specific identity (not just category) = top-down lexical prediction; would reduce the overlap of the first word.
   - Multiresolution through clocks (fast level on words, slow on sentences) instead of anchors.
   - Link to TBT/grid cells: motivation and interpretation, NOT a result; stays in the discussion, not in the title.
