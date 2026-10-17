@@ -45,6 +45,25 @@ def write_world(out, name, desc, legend, lexicon, files, hints, language="en"):
     return wd
 
 
+def record_versions(wd, previous, current_changes):
+    """the legend history (spec 1.1, 'versions are explicit'): earlier legends under versions/v<N>/ (legend.json + CHANGES.md), and the current
+    version's CHANGES.md; previous = [(version, legend dict, CHANGES text)]"""
+    from sop.legend import sha256_file
+    for v, lg, text in previous:
+        vd = os.path.join(wd, "versions", f"v{v}"); os.makedirs(vd, exist_ok=True); lp = os.path.join(vd, "legend.json")
+        json.dump(lg, open(lp, "w"), indent=1)
+        with open(os.path.join(vd, "CHANGES.md"), "w") as f: f.write(text.replace("{sha}", sha256_file(lp)))
+    cur = json.load(open(os.path.join(wd, "legend.json"))); vd = os.path.join(wd, "versions", f"v{cur['version']}"); os.makedirs(vd, exist_ok=True)
+    shutil.copy(os.path.join(wd, "legend.json"), os.path.join(vd, "legend.json"))
+    with open(os.path.join(vd, "CHANGES.md"), "w") as f: f.write(current_changes.replace("{sha}", sha256_file(os.path.join(wd, "legend.json"))))
+
+
+GATES_NOTE = ("rule 20: gates GIVEN for a stated set of kinds (V8.fix_gates), not learned — as experiment/v16_reference --rel_gates open "
+              "(RESULTS 10b-quinquies, E1b)")
+OPENERS_NOTE = ("the level-opener kinds (the reporting verbs): the primary depth estimate counts the open level gates passed on the token "
+                "sequence (judgment e9274a9 Q6); the fit-based estimate stays as a check")
+
+
 def sentence_builder(text, template, frame_fn):
     """frame_fn(doc, ids) -> top wire; returns a builder appending the wires to doc"""
     def build(doc, n):
@@ -87,6 +106,8 @@ def export_reference(out, n, n_eval, seed):
     legend = {"version": 1, "roles": roles, "events": [{"id": e, "verbs": vs} for e, vs in events.items()], "operators": ["says"], "moods": ["statement"],
               "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
               "reader": {"predicate_role": True, "occupancy_marker": True, "definite_dets": []}}
+    legend_v1 = json.loads(json.dumps(legend))
+    legend["version"] = 2; legend["reader"].update({"gates_given": {"open": ["to", "by", "from"], "closed": []}, "level_openers": ["says", "claims"]})
     sent_words = {x for ts in w.frames.values() for t in ts for x in t.split() if not x.startswith("{")} | {x for o in v5.OUTER for x in o.split() if not x.startswith("{") and x != "<P>"} \
         | {x for ts in w.omit.values() for t in ts for x in t.split() if not x.startswith("{")} | set(w.persons) | set(w.objects)
     lexicon = {x: (w.cat[x], v16.LEMMA.get(x)) for x in sent_words}
@@ -113,7 +134,15 @@ def export_reference(out, n, n_eval, seed):
                              "examples/eval_seen_transitions.sop": "heldout_formulations_seen_transitions", "examples/eval_depth3_unseen.sop": "heldout_depth3"},
              "protocol": f"v16_reference: training formulations T{v5.TRAIN_T} + recipient-less forms (share 0.2) at depths 0-2, persons/objects 0-11; "
                          f"new identities 12-17; held-out formulations: seen transitions {held_seen}, unseen {held_new}, role cues seen {cues_ok}; depth 3 unseen"}
-    return write_world(out, "reference", "v16 reference world: transfer events, predicate role, occupancy marker, prefixed reporting", legend, lexicon, files, hints)
+    wd = write_world(out, "reference", "v16 reference world: transfer events, predicate role, occupancy marker, prefixed reporting; v2: "
+                     "relation-marker gates given open, level openers named", legend, lexicon, files, hints)
+    json.dump(sorted(w.vocab), open(os.path.join(wd, "identity_vocab_v16.json"), "w"))      # the v16 vocabulary, for the identity-draw isolation run C
+    record_versions(wd, [(1, legend_v1, "# v1 — the v16 reference world as exported for P0 (gates all learned)\nlegend {sha}. P0 runs: "
+                                        "tool/runs/p0_cpu_1seed_60f284d/reference, tool/runs/p0_gpu_5seed_c843f53/reference.\n")],
+                    "# v2 — relation-marker gates given open; level openers (judgment e9274a9 Q6)\nlegend {sha}.\n\n## Change set\n"
+                    f"- reader.gates_given.open = to, by, from — {GATES_NOTE}\n- reader.level_openers = says, claims — {OPENERS_NOTE}\n\n"
+                    "## Decision\nA reader-block change decided by the judgment (not a loop evolution step); v1 stays under versions/v1/.\n")
+    return wd
 
 
 # ---------------------------------------------------------------- commands (v18)
@@ -125,6 +154,9 @@ def export_commands(out, n, n_eval, seed, name="commands", drop_role=None, raw=F
     legend = {"version": 1, "roles": roles, "events": [{"id": "command", "verbs": list(v18.ACTIONS)}], "operators": ["not", "says"], "moods": ["command"],
               "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [],
               "reader": {"predicate_role": False, "occupancy_marker": False, "definite_dets": ["the"]}}
+    legend_v1 = json.loads(json.dumps(legend)); legend["reader"]["level_openers"] = ["says", "asks"]
+    history = name == "commands" and not drop_role
+    if history: legend["version"] = 2
     neg_of = {v: k for k, v in v18.ATTRS.items()}
     lexicon = {x: (w.cat[x], neg_of.get(x)) for x in w.vocab}
     def row(ev, toks):
@@ -156,6 +188,12 @@ def export_commands(out, n, n_eval, seed, name="commands", drop_role=None, raw=F
                      + (f"; DELIBERATELY INCOMPLETE legend: role '{drop_role}' removed (evolution test)" if drop_role else ""), legend, lexicon, files, hints)
     if raw:
         with open(os.path.join(wd, "raw", "sentences.txt"), "w") as f: f.write("\n".join(texts) + "\n")
+    if history:
+        record_versions(wd, [(1, legend_v1, "# v1 — the v18 command world as exported for P0\nlegend {sha}. P0 runs: tool/runs/p0_cpu_1seed_60f284d/"
+                                            "commands, tool/runs/p0_gpu_5seed_c843f53/commands.\n")],
+                        "# v2 — level openers (judgment e9274a9 Q6)\nlegend {sha}.\n\n## Change set\n"
+                        f"- reader.level_openers = says, asks — {OPENERS_NOTE}\n\n## Decision\nA reader-block change decided by the judgment; "
+                        "v1 stays under versions/v1/.\n")
     return wd
 
 
@@ -181,6 +219,7 @@ def export_quantifiers_version(out, n, n_eval, seed, version):
         if version >= 2:
             reader.update({"scope_terms": {"wide": ["each", "a certain"], "q": ["every", "some"]}, "scope_rule": SCOPE_RULE,
                            "rel_emitters": {"emitters": ["every", "each", "some", "certain"], "takers": ["NP", "NO"]}, "full_excludes": ["det"]})
+        if version >= 3: reader["level_openers"] = ["says", "claims"]
         legend = {"version": version, "roles": roles, "events": [{"id": e, "verbs": vs} for e, vs in events.items()], "operators": ["says"],
                   "moods": ["statement"], "kinds": {"source": "lexicon", "lexicon": "kinds.tsv"}, "values": [], "reader": reader}
         sent_words = {x for ps in w.qframes.values() for t in ps for x in t.split() if not x.startswith("{")} | set(v14.NOUNS_P) | set(v14.NOUNS_O) \
@@ -235,16 +274,19 @@ def export_quantifiers_version(out, n, n_eval, seed, version):
 
 
 def export_quantifiers(out, n, n_eval, seed):
-    """the current quantifier world is VERSION 2 (author Q5, 78d36e8); version 1 (no scope) is kept under versions/v1/ with its examples"""
+    """the current quantifier world is VERSION 3 = v2 (C2c, author Q5) + level openers (judgment e9274a9 Q6); version 1 (no scope) is kept
+    under versions/v1/ with its examples, version 2 under versions/v2/"""
     import tempfile
     tmp = tempfile.mkdtemp(prefix="sop_qv1_"); export_quantifiers_version(tmp, n, n_eval, seed, 1)
-    wd = export_quantifiers_version(out, n, n_eval, seed, 2)
+    tmp2 = tempfile.mkdtemp(prefix="sop_qv2_"); export_quantifiers_version(tmp2, n, n_eval, seed, 2)
+    v2_legend = json.load(open(os.path.join(tmp2, "quantifiers", "legend.json"))); shutil.rmtree(tmp2)
+    wd = export_quantifiers_version(out, n, n_eval, seed, 3)
     v1 = os.path.join(wd, "versions", "v1"); v2 = os.path.join(wd, "versions", "v2")
     if os.path.exists(v1): shutil.rmtree(v1)
     os.makedirs(v2, exist_ok=True); src = os.path.join(tmp, "quantifiers")
     shutil.copytree(os.path.join(src, "examples"), os.path.join(v1, "examples"))
     for f in ("legend.json", "kinds.tsv", "split_hints.json"): shutil.copy(os.path.join(src, f), os.path.join(v1, f))
-    shutil.copy(os.path.join(wd, "legend.json"), os.path.join(v2, "legend.json")); shutil.rmtree(tmp)
+    json.dump(v2_legend, open(os.path.join(v2, "legend.json"), "w"), indent=1); shutil.rmtree(tmp)
     from sop.legend import sha256_file
     with open(os.path.join(v1, "CHANGES.md"), "w") as f:
         f.write(f"# v1 — the quantifier world without scope (spec v1)\nlegend {sha256_file(os.path.join(v1, 'legend.json'))}. Determiners in `det=`, "
@@ -257,7 +299,11 @@ def export_quantifiers(out, n, n_eval, seed):
                 f"- readout rule in the legend: {SCOPE_RULE}\n- `_scope=<role>|both` on the event wire (spec 3.3)\n"
                 "- FULL is defined over the legend's questions (nouns, presence, scope-or-both); the determiner identity is its own axis (legend "
                 "reader.full_excludes = ['det']); the previous FULL is printed next to it once (rule 16)\n\n## Decision\nA world-definition change decided "
-                "by the author (not a loop evolution step): no acceptance criterion of spec 1.1 step 5 applies; v1 stays under versions/v1/.\n")
+                "by the author (not a loop evolution step): no acceptance criterion of spec 1.1 step 5 applies; v1 stays under versions/v1/. "
+                "P0 run: tool/runs/p0_gpu_5seed_c843f53/quantifiers.\n")
+    record_versions(wd, [], "# v3 — level openers (judgment e9274a9 Q6)\nlegend {sha}.\n\n## Change set\n"
+                    f"- reader.level_openers = says, claims — {OPENERS_NOTE}\n\n## Decision\nA reader-block change decided by the judgment; v2 stays "
+                    "under versions/v2/, v1 under versions/v1/.\n")
     return wd
 
 

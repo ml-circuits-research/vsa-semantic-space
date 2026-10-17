@@ -44,9 +44,11 @@ import json, os, sys
 q, form, sents = sys.argv[1], sys.argv[2], sys.argv[3]; fails = 0
 def ok(c, m):
     global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
-v2 = json.load(open(os.path.join(q, "legend.json"))); v1 = json.load(open(os.path.join(q, "versions", "v1", "legend.json")))
-ok(v2["version"] == 2 and v1["version"] == 1 and "scope_terms" in v2["reader"] and "scope_terms" not in v1.get("reader", {}),
-   "quantifiers: legend v2 (C2c, readout rule in the legend) current, v1 (no scope) under versions/v1/")
+v3 = json.load(open(os.path.join(q, "legend.json"))); v1 = json.load(open(os.path.join(q, "versions", "v1", "legend.json")))
+v2 = json.load(open(os.path.join(q, "versions", "v2", "legend.json")))
+ok(v3["version"] == 3 and v2["version"] == 2 and v1["version"] == 1 and "scope_terms" in v3["reader"] and "scope_terms" in v2["reader"]
+   and "scope_terms" not in v1.get("reader", {}) and v3["reader"].get("level_openers") and not v2["reader"].get("level_openers"),
+   "quantifiers: legend v3 (v2 = C2c + level openers) current; v2 and v1 (no scope) under versions/")
 text = open(form).read(); n_scope = text.count("\n_scope=")
 amb = [l.strip() for l in open(os.path.join(q, "examples", "eval_ambiguous_d0.sop")) if l.startswith("_text=")]
 ok(n_scope > 0, f"quantifiers: sop formalize emits _scope ({n_scope} wires; {text.count('_scope=both')} 'both')")
@@ -55,6 +57,14 @@ for s in ("ambiguous_d0 (two unmarked quantifiers, never trained: _scope=both)",
     a = m[s]["catalog candidates"]["acc"]
     ok("FULL [depth given]" in a and "_scope (wide role / both / absent)" in a and "FULL incl. det (previous definition)" in a,
        f"quantifiers {s[:12]}: FULL est. {a['FULL']:.3f} / depth given {a['FULL [depth given]']:.3f}; _scope {a['_scope (wide role / both / absent)']:.3f}; FULL incl. det {a['FULL incl. det (previous definition)']:.3f}")
+r = json.load(open(os.path.join(os.path.dirname(q), "reference", "legend.json")))
+ok(r["version"] == 2 and r["reader"]["gates_given"]["open"] == ["to", "by", "from"] and os.path.exists(os.path.join(os.path.dirname(q), "reference", "versions", "v1", "legend.json")),
+   "reference: legend v2 with gates_given to / by / from open and level openers; v1 under versions/v1/")
+rm = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "metrics.json")))["per_seed"][0]["heldout_depth3"]["catalog candidates"]["acc"]
+ok("depth estimate: level gates (primary)" in rm and "FULL [fit estimate]" in rm,
+   f"reference depth 3: depth from the level gates {rm['depth estimate: level gates (primary)']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
+   f"FULL gates / fit / given {rm['FULL']:.3f} / {rm['FULL [fit estimate]']:.3f} / {rm['FULL [depth given]']:.3f}")
+ok("_depth.gates=" in open(form.replace("quantifiers", "reference")).read(), "formalize writes _depth.gates and _depth.fit on the top-level wire")
 sys.exit(fails)
 EOF2
 FAILS=$((FAILS+$?))

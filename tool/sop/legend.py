@@ -15,7 +15,7 @@ ENTITY_KEYS = {"head", "attr", "quantity", "unit", "det"}
 VERDICT_KEYS = {"left", "right"}
 KNOWN_OPERATORS = set(OPERATOR_KEYS)
 READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_dets": ["the"], "scope_terms": None, "scope_rule": None,
-                   "rel_emitters": None, "full_excludes": []}
+                   "rel_emitters": None, "full_excludes": [], "gates_given": None, "level_openers": None}
 PUNCT = re.compile(r"([.,;:!?](?=\s|$))")
 
 
@@ -46,6 +46,18 @@ class Legend:
             else: self.warnings.append(f"lexicon {lp} not found (kinds unknown; sop check does not need them, training does)")
         else:
             self.errors.append("kinds.source 'tagger' is not implemented in v1 (use a lexicon)")   # limit of v1 (spec 6.3 allows a tagger; none is installed)
+        kinds_known = set(self.lexicon.values())
+        if kinds_known:      # kinds named by the reader block must exist (sop check: a legend error)
+            gg = self.reader.get("gates_given") or {}
+            for side in ("open", "closed"):
+                for k in gg.get(side, []):
+                    if k not in kinds_known: self.errors.append(f"reader.gates_given.{side}: kind {k!r} is not a kind of the lexicon")
+            for k in set(gg.get("open", [])) & set(gg.get("closed", [])): self.errors.append(f"reader.gates_given: kind {k!r} both open and closed")
+            for k in self.reader.get("level_openers") or []:
+                if k not in kinds_known: self.errors.append(f"reader.level_openers: kind {k!r} is not a kind of the lexicon")
+            re_ = self.reader.get("rel_emitters") or {}
+            for k in list(re_.get("emitters", [])) + list(re_.get("takers", [])):
+                if k not in kinds_known: self.errors.append(f"reader.rel_emitters: kind {k!r} is not a kind of the lexicon")
 
     def _validate(self):
         e = []

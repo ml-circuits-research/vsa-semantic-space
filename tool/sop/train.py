@@ -234,12 +234,14 @@ def bag_baseline(train_rows, legend, schema):
     return predict
 
 
-STRUCT_MODES = (("estimated", {}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}))
+STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}))
 
 
 def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
-    """one split. FULL is reported three ways side by side (author C3): structure (reporting depth, event negation) ESTIMATED from the state
-    (what `sop formalize` does), depth GIVEN (as the repository scripts), depth and negation GIVEN. All other axes use the estimated mode."""
+    """one split. FULL is reported four ways side by side (author C3, judgment e9274a9 Q6): `FULL` = the depth ESTIMATED by the primary
+    estimator (the open level gates passed, when the legend names level openers; else the fit), what `sop formalize` does; `FULL [fit
+    estimate]` = the depth estimated by the fit (the check); depth GIVEN (as the repository scripts); depth and negation GIVEN. The negation
+    is chosen by the fit unless given. All other axes use the primary mode."""
     rs = rows if len(rows) <= n_max else [rows[i] for i in sorted(np.random.default_rng(rng_seed).choice(len(rows), n_max, replace=False))]
     cal = Calib(); acc = collections.defaultdict(list); status = collections.Counter(); resid = []; ids = (f"e{i}" for i in range(10 ** 9))
     pred, drop = legend.reader["predicate_role"], tuple(legend.reader.get("full_excludes") or ())
@@ -251,6 +253,8 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if kw.get("force_depth"): kk["force_depth"] = len(g["speakers"])
             if kw.get("force"): kk["force"] = (len(g["speakers"]), g["neg"])
             if kk and g["shape"] != "ok": kk = {}
+            if kw.get("estimator"): kk["estimator"] = kw["estimator"]
+            if mode == "fit estimate" and not legend.reader.get("level_openers"): continue      # the primary IS the fit here
             wires, f, info = reader.formalize(row["text"], 0, ids, filt, **kk)
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
@@ -259,6 +263,8 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if mode != "estimated": continue
             status[info["status"]] += 1; resid.append(info["residual"]); per_form[signature(row, legend)].append(same(drop))
             acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
+            if f.get("depth_gates") is not None: acc["depth estimate: level gates (primary)"].append(f["depth_gates"] == len(g["speakers"]))
+            if f.get("depth_fit") is not None: acc["depth estimate: fit (check)"].append(f["depth_fit"] == len(g["speakers"]))
             mg = f.get("margins", {})
             if pred:
                 ok = f_ok and f.get("lemma") == g.get("lemma"); acc["predicate (surface lemma)"].append(ok); cal.add("predicate", ok, mg.get("event", 0))
@@ -325,7 +331,12 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     import trainer, v8_gates as v8
     from .infer import Reader
     torch.manual_seed(seed)
-    st = world.Stars(seed, a.D, a.star_seed); comp = world.Compiler(legend, st)
+    idt = None
+    if a.identities.startswith("table:"):     # run C of the isolation (judgment e9274a9 C2): v16's per-seed draw over the world vocabulary
+        vp = a.identities.split(":", 1)[1]; vp = vp if os.path.isabs(vp) else os.path.join(os.path.dirname(legend.path), vp)
+        idt = {"vocab": json.load(open(vp)), "rng_seed": 300 + seed, "marker_word": "<m>",
+               "source": f"np.random.default_rng(300 + seed).uniform(-pi, pi, (len(vocab), D)) over {os.path.basename(vp)} (experiment/v16_reference)"}
+    st = world.Stars(seed, a.D, a.star_seed, idt); comp = world.Compiler(legend, st)
     wk = dict(legend.lexicon); n_tok = n_unk = 0
     for r in rows:
         for t in r["tokens"]:
@@ -346,6 +357,9 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     F = np.array([st.id(w) for w in shim.vocab])
     m = v8.V8(shim, a.D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F)
     params = [m.theta, m.logits]
+    gg = legend.reader.get("gates_given") or {}
+    if gg.get("open"): print(f"[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): {m.fix_gates(gg['open'], True)}")
+    if gg.get("closed"): print(f"[train] gates GIVEN closed (legend reader.gates_given, rule 20, not learned): {m.fix_gates(gg['closed'], False)}")
     rel = legend.reader.get("rel_emitters")
     if rel:      # C2b beacon-relative emitters (GIVEN set of kinds, learned displacement): part of the world's reader block (quantifier v2)
         print(f"[train] beacon-relative emitters (given): {m.set_rel_emitters(rel['emitters'], rel['takers'])} -> takers {rel['takers']}"); params.append(m.rel)
@@ -368,7 +382,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     catalog = {"seed": seed, "star_seed": a.star_seed, "star": "identity of a word = sha256(star_seed + ':id:' + word)[:8] little-endian -> numpy default_rng -> "
                "D uniform phases in [-pi, pi); role vectors the same with the world seed and 'role:<id>' / 'op:<name>'",
                "words": {w: ({"kind": k, "lemma": legend.lemma[w]} if w in legend.lemma else {"kind": k}) for w, k in sorted(wk.items())},
-               "schema": schema, "kinds_report": kinds_report}
+               "schema": schema, "kinds_report": kinds_report, "identity_table": idt}
     with open(os.path.join(model_dir, "catalog.json"), "w") as f: json.dump(catalog, f, indent=1, sort_keys=True)
     cfg = {"world": a.world_name, "D": a.D, "seed": seed, "language": a.language, "legend_sha256": legend.sha, "legend_version": legend.version,
            "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": ["path", "chainL", "bigram"],
@@ -533,6 +547,8 @@ def main(argv=None):
     ap.add_argument("--run_dir", help="write this run's folder here instead of <world>/runs/<timestamp>")
     ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")
     ap.add_argument("--star_seed", default=world.GLOBAL_STAR_SEED, help="seed of the word-star catalog; default the GLOBAL one shared by all worlds (spec v2 s.0)")
+    ap.add_argument("--identities", default="stars", help="'stars' (the tool's star function) or 'table:<vocab.json>': the per-seed draw of "
+                    "experiment/v16_reference, np.random.default_rng(300 + seed) over that vocabulary (isolation run C)")
     ap.add_argument("--vary_stars", action="store_true", help="rule 6 / research reproduction: identities drawn per seed (star seed 'seed<k>'), as the repository scripts")
     a = ap.parse_args(argv)
     wd = os.path.abspath(a.world); a.world_name = os.path.basename(wd.rstrip("/"))

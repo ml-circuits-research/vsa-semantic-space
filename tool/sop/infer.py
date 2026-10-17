@@ -89,7 +89,8 @@ class Reader:
             if other.sha != self.legend.sha and not force:
                 raise ModelError(f"legend mismatch: {legend_path} is {other.sha}, the model was trained with {self.legend.sha} (--force to inspect)")
         self.rb = Routebook(os.path.join(model_dir, "routebook.npz")); self.D = self.rb.D
-        self.st = world.Stars(self.cfg["seed"], self.D, self.cat.get("star_seed", world.GLOBAL_STAR_SEED)); self.comp = world.Compiler(self.legend, self.st)
+        self.st = world.Stars(self.cfg["seed"], self.D, self.cat.get("star_seed", world.GLOBAL_STAR_SEED), self.cat.get("identity_table"))
+        self.comp = world.Compiler(self.legend, self.st)
         self.words = self.cat["words"]                      # word -> {"kind", "lemma"?}
         self.schema = self.cat["schema"]; self.th = self.cfg.get("thresholds", {})
         self.tau = self.cfg["thresholds"].get("tau", 0.05) if "thresholds" in self.cfg else 0.05
@@ -191,19 +192,40 @@ class Reader:
             out["filler"] = ["negword" if neg else "word", w1[0]]; out["margins"][r] = w1[1]
         return out
 
-    def read(self, S, tokens, filt=None, force=None, force_depth=None):
+    def depth_from_gates(self, tokens):
+        """the PRIMARY depth estimate (judgment e9274a9 Q6): the reader's own count of open level gates passed on the token sequence,
+        deterministic from the learned gate values. A level is opened by a token of a level-opener kind (legend reader.level_openers, e.g.
+        the reporting verbs 'says' / 'claims'); the gate that opens it is the opener's own or, when that one is closed, the gate of the token
+        right after it (the complementizer 'that', open in every P0 run). Returns None when the legend names no level openers."""
+        ops = set(self.legend.reader.get("level_openers") or [])
+        if not ops: return None
+        g = sigmoid(self.rb.logits); ks = [self.kind(t) for t in tokens]
+        gate = lambda k: float(g[self.rb.cat_id[k]]) if k in self.rb.cat_id else 0.0
+        return sum(1 for i, k in enumerate(ks) if k in ops and (gate(k) >= 0.5 or (i + 1 < len(ks) and gate(ks[i + 1]) >= 0.5)))
+
+    def read(self, S, tokens, filt=None, force=None, force_depth=None, estimator="gates"):
         """S -> decoded frame (same layout as world.frame_of) with margins and presence scores.
-        force = (depth, negation) GIVEN; force_depth = depth GIVEN, negation estimated; neither = both ESTIMATED from S (the tool's default;
-        the repository scripts are given the depth — metrics report the three side by side)."""
+        force = (depth, negation) GIVEN; force_depth = depth GIVEN, negation estimated; otherwise the depth is ESTIMATED — by the open level
+        gates passed (estimator 'gates', the primary one, when the legend names level openers) or by the fit (estimator 'fit': the depth whose
+        role readout is best, frame.py style; kept as a check). The negation is always chosen by the fit at the chosen depth. Both depth
+        estimates are kept on the frame (depth_gates, depth_fit) and written on the top-level wire."""
         nS = np.linalg.norm(S)
         f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None, "margins": {}, "presence": {}}
         if nS < 1e-9: f["shape"] = "unknown"; return f
         Sn = S / nS; sch = self.schema; rep = np.conj(self.st.op("says.scope")); nott = np.conj(self.st.op("not"))
-        hyps = [(d, n) for d in range(sch["max_depth"] + 2) for n in ([False, True] if sch["neg_event"] else [False])]
+        negs = [False, True] if sch["neg_event"] else [False]
+        hyps = [(d, n) for d in range(sch["max_depth"] + 2) for n in negs]
         scores = {h: self.structure_score(Sn, rep ** h[0] * (nott if h[1] else 1), filt) for h in hyps}
         order = sorted(hyps, key=lambda h: -scores[h])
-        h = force if force is not None else (max([x for x in hyps if x[0] == force_depth] or [(force_depth, False)], key=lambda x: scores.get(x, -9))
-                                             if force_depth is not None else order[0])
+        f["depth_fit"] = order[0][0]; f["depth_gates"] = dg = self.depth_from_gates(tokens) if tokens is not None else None
+        if force is not None: h = force
+        else:
+            fd = force_depth if force_depth is not None else (dg if estimator == "gates" else None)
+            if fd is not None:
+                for n in negs:
+                    if (fd, n) not in scores: scores[(fd, n)] = self.structure_score(Sn, rep ** fd * (nott if n else 1), filt)
+                h = max([(fd, n) for n in negs], key=lambda x: scores[x])
+            else: h = order[0]
         if h not in scores: scores[h] = self.structure_score(Sn, rep ** h[0] * (nott if h[1] else 1), filt)
         f["margins"]["structure"] = float(scores[order[0]] - scores[order[1]]) if len(order) > 1 else 1.0
         d, neg = h; K = rep ** d * (nott if neg else 1); core = scores[h]; f["neg"] = neg; f["depth"] = d; f["core"] = core
@@ -359,10 +381,10 @@ class Reader:
         for fl in f["roles"].values(): ws |= set(world.filler_words(fl))
         return ws
 
-    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None):
+    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator="gates"):
         """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both)"""
         tokens = tokenize(text); S, kept, unknown, addr = self.chart(tokens)
-        f = self.read(S, tokens, filt, force, force_depth) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
+        f = self.read(S, tokens, filt, force, force_depth, estimator) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
         unplaced = [i for i in unknown]
         for i in kept:
@@ -388,6 +410,8 @@ class Reader:
         res = self.residual(S, wires, tokens) if f["shape"] == "ok" else 1.0
         top.set("_residual", fmt(res))
         if unplaced: top.set("_unplaced", ",".join(tokens[i] for i in unplaced))
+        if f.get("depth_gates") is not None: top.set("_depth.gates", str(f["depth_gates"]))
+        if f.get("depth_fit") is not None: top.set("_depth.fit", str(f["depth_fit"]))
         self.wire_lines(wires, status)
         info = {"tokens": tokens, "S": S, "kept": kept, "unplaced": unplaced, "addr": addr, "residual": res, "status": status}
         return wires, f, info

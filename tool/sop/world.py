@@ -33,15 +33,26 @@ GLOBAL_STAR_SEED = "sop-stars-v1"      # spec v2 section 0: a word's star is the
 class Stars:
     """cache of stars: word identities from the GLOBAL star seed (shared across worlds), role / operator vectors and the occupancy marker
     from the world's training seed (the world's named stars; not shared)"""
-    def __init__(self, seed, D, star_seed=GLOBAL_STAR_SEED): self.seed, self.D, self.star_seed, self.cache = seed, D, star_seed, {}
+    def __init__(self, seed, D, star_seed=GLOBAL_STAR_SEED, identity_table=None):
+        self.seed, self.D, self.star_seed, self.cache = seed, D, star_seed, {}
+        self.table = None
+        if identity_table:      # a per-seed identity DRAW over a world vocabulary, as experiment/v16_reference (judgment e9274a9 C2, run C)
+            voc = identity_table["vocab"]; rng = np.random.default_rng(identity_table["rng_seed"])
+            F = np.exp(1j * rng.uniform(-np.pi, np.pi, (len(voc), D))); self.table = {w: F[i] for i, w in enumerate(voc)}
+            self.marker_word = identity_table.get("marker_word")
     def get(self, name, seed=None):
         seed = self.seed if seed is None else seed; v = self.cache.get((seed, name))
         if v is None: v = self.cache[(seed, name)] = star(seed, name, self.D)
         return v
-    def id(self, word): return self.get("id:" + value_token(word), self.star_seed)
+    def id(self, word):
+        t = value_token(word)
+        if self.table is not None and t in self.table: return self.table[t]
+        return self.get("id:" + t, self.star_seed)
     def role(self, r): return self.get("role:" + r)
     def op(self, name): return self.get("op:" + name)
-    def marker(self): return self.get("op:marker")
+    def marker(self):
+        if self.table is not None and getattr(self, "marker_word", None) in self.table: return self.table[self.marker_word]
+        return self.get("op:marker")
 
 
 def value_token(word):

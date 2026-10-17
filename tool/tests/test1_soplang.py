@@ -6,7 +6,7 @@ Test 1 (build order step 1): SOP Lang parser/writer and `sop check`.
     '&' and '|' mixed, _asked without _mood=question, legend hash mismatch (plus: unknown wire type, two _text lines, bad quoting).
 Run: python3 tool/tests/test1_soplang.py   (exit 0 = pass)
 """
-import json, os, subprocess, sys, tempfile
+import json, os, shutil, subprocess, sys, tempfile
 TOOL = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert(0, TOOL)
 from sop import soplang
 from sop.legend import Legend
@@ -102,6 +102,13 @@ for v in ("agent", "both"):
 bad_leg = dict(LEGEND, events=[{"id": "transfer", "verbs": []}]); nv = tempfile.mkdtemp(prefix="sop_t1nv_"); os.makedirs(os.path.join(nv, "noverbs"), exist_ok=True)
 json.dump(bad_leg, open(os.path.join(nv, "noverbs", "legend.json"), "w")); ok(any("has no verbs" in e for e in Legend(os.path.join(nv, "noverbs", "legend.json")).errors),
                                                                               "legend inconsistency: an event without verbs is an error (spec 6.1)")
+
+# reader.gates_given / level_openers name kinds of the lexicon (judgment e9274a9 Q6; sop check rejects a legend that names unknown kinds)
+for k, want in ((["P"], None), (["nope"], "is not a kind of the lexicon")):
+    lgd = dict(LEGEND, reader={"gates_given": {"open": k, "closed": []}, "level_openers": ["gives"]}); gdir = tempfile.mkdtemp(prefix="sop_t1g_")
+    json.dump(lgd, open(os.path.join(gdir, "legend.json"), "w")); shutil.copy(os.path.join(tmp, "kinds.tsv"), os.path.join(gdir, "kinds.tsv"))
+    errs = Legend(os.path.join(gdir, "legend.json")).errors
+    ok((not errs) if want is None else any(want in e for e in errs), f"reader.gates_given.open={k}: " + (errs[0] if errs else "accepted"))
 
 # several worlds in one file (amendment): each top-level wire is checked against the legend of ITS _world
 os.makedirs(os.path.join(tmp, "commands"), exist_ok=True); os.makedirs(os.path.join(tmp, "shop"), exist_ok=True)
