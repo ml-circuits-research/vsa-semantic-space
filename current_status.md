@@ -1,56 +1,42 @@
-# Current status (rewritten whole at every judgment point; last: 2026-10-16 night — hand-over 78d36e8 applied; C5, mismatch-aware abstention, B5.0 done; B5c next, trace first)
+# Current status (rewritten whole at every judgment point; last: 2026-10-17 morning — judgment e9274a9 applied: C, B5.1 (two runs), C5 re-scoring, tool round 2; round 3 prepared)
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/INSTRUCTIONS_2026-10-16_78d36e8.md, experiment/JUDGMENT_2026-10-16_013c490.md,
-experiment/INSTRUCTIONS_2026-10-16_B5_after_stop.md (all saved verbatim), experiment/RESULTS.md 9c-septies, 10c-sexies, 10c-septies, 11, 12;
-STATUS.md; experiment/JOURNAL.md; tool/README.md.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-16_e9274a9.md (saved verbatim), experiment/RESULTS.md 10c-octies,
+11-ter, 12-ter, 12-quater; logs/trace_b51.txt; STATUS.md; experiment/JOURNAL.md; tool/README.md; tool/runs/round2_815e5f9/isolation_table.md.
 
-## A. Done since 78d36e8, in the instructed order (all BUILT unless stated)
+## A. Done since e9274a9, in the instructed order (all BUILT unless stated)
 | step | result | criterion / decision rule (written before the run) | outcome |
 |---|---|---|---|
-| C1 | calibration row updated: depth 3 MET with the given relation-marker gates (coverage 0.93 / 0.88, confident-wrong 0.000); unseen transitions NOT met (C coverage 0.74) | — | done |
-| C2 | P0 CPU runs committed (tool/runs/p0_cpu_1seed_60f284d/: logs, metrics, splits, commands, model sizes; code f759d93, quantifier v1) | — | done |
-| Q1 | the missing judgment saved verbatim; the complete spec (sections 0-10) in tool/ and docs/specs/ | — | done |
-| **Q2** FULL redefined over the legend's questions (9c-septies, log 2026-10-16_2125, saved C2c models) | FULL-new d0 0.995, d1 0.996, **d2 UNSEEN 0.967** (0.978, 0.922, 0.978, 0.967, 0.989), strict 0.864, new nouns 0.998, ambiguous (nouns + presence + both) 0.990; FULL-old 0.887 / 0.834 / 0.603 / 0.536 / 0.856; determiner identity own axis 0.890 per sentence | both FULLs once, side by side (rule 16) | done; the old gap was the determiner identity |
-| Q3 | N5 row: (a) majority kind is the practical rule, two kind hypotheses at readout when the margin is low; "resolve before drawing" HYPOTHESIS, its diagnostic in the next kinds run | — | done |
-| **C5** occupancy marker on the condition slots (10c-sexies, log _2126, one retraining) | present read as present **0.890** (n 5,784), absent 0.992 (n 11,056); marker separation 0.374 vs 0.015 (column cosine was 0.158 vs 0.043); drop_cond / add_cond detection 0.150 / 0.153 (10c-bis 0.159 / 0.162); confident-wrong on drop_cond 0.151 -> 0.025; other role errors within 0.03 | present and absent > 0.9; detection before / after | **NOT met** on the present side (0.890); detection unchanged because the verdict abstains on the column-identity margin (unverifiable 0.83), not on the marker's — re-scoring proposed (E, 2) |
-| **Q4** mismatch-aware abstention (10c-septies, log _2235, re-scoring) | margin-only: tau 0.15 (calibration half) -> coverage 0.445, covered accuracy 0.980, confident-wrong 0.009; rule M (chosen name in question): tau 0.10 -> 0.561 / 0.961 / 0.022; at equal tau 0.15 M gives 0.424 / 0.009; NOT-in-question rows: confident-wrong 0.169 -> 0.143 with coverage 0.466 -> 0.143 | confident-wrong < 2% at the resulting coverage | margin-only MET (coverage 0.445); rule M NOT met; the feature adds nothing: the confident wrong choice on mismatched questions is mostly a column whose name IS in the question |
-| **B5.0** collision measured as it is (RESULTS 12, log _2236) | 0 rendered sentence pairs differing only in operator order in E1 / E3 / B3; algebra: colliding must/neg and must/may (identical state, no witness), witnessed rep/neg, rep/may, rep/if-then, if-then/may (speaker or a clause under one operator; cos 0.53-0.80); reader charts (seed 0 retrained, stated): rendered order read 1.000 on all three; reversed never-trained order 0.980 (E3, 'perhaps' is a known emitter) / 0.000 (E1, B3: 'never' before 'says' does not move the speaker's star); bags 1.00 / 0.89 / 0.86 | enumeration + traces, no criterion | on record; the measured extent of the chapter-8 limit |
-| rule 27 | criterion on the mean, per-seed list, "5/5 seeds" | — | added; AGENTS.md rules 1-27 |
-| P0 follow-up (agent, merged) | section 6 implemented (LLM steps report "API unavailable"); quantifier world v2 = C2c with `_scope` in exporter / check / formalize (v1 kept under versions/); FULL with depth estimated vs given vs given+negation; model sizes (per-category-pair keys 96-98%: 11.9 / 15.0 / 3.0 MB); p0_full_gpu.sh prepared with the lock | 6 tests PASS on main | 5-seed GPU round trip DONE (RESULTS 11-bis, tool/runs/p0_gpu_5seed_c843f53/): commands depth 2 0.857 with the depth given (10d 0.854) vs 0.590 estimated — C3 answered: the depth estimator, not the packaging; quantifier v2 reproduces C2c on scope (0.917 vs 0.966 at the unseen depth, both 0.993); reference depth 3 0.742 vs 0.813 (three stated differences, not isolated) |
+| C (one commit) | rule 28 (address check before a new target; one change per run); STATUS row 26 scope sentence; the two limits as a BUILT row; verifier operating points (tau 0.05: coverage 0.757 / confident-wrong 0.053; tau 0.15: 0.445 / 0.009, covered accuracy 0.980); B5c WITHDRAWN | — | done |
+| **B5.1, first run** (log 2026-10-17_0742; RESULTS 12-ter) | depths 0-1: subject 1.000 under one and two stacked operators, structure 1.000; depth 2: subject 0.07-0.18 for EVERY form incl. the affirmative, B / C / pred / structure read | measurement; decision rule on the subject | seen depths: the subject does NOT fail; depth 2: a REGIME ERROR of mine — no depth-2 sentence in training, so depth 2 was also an unseen TRANSITION ('that' -> 'that'; rule 4); kept as the record, re-run with the E1b protocol |
+| trace after the run (logs/trace_b51.txt) | learned gates: modal 0.71-0.83 partly open -> the subject's address is a mixture; for "does not" / "does not have to" the two subject addresses are IDENTICAL (cos 1.000) and the subject is still read at 1.000 under both gold keys (cos with the gold key 0.26-0.35, margin 0.18-0.29, no stacked-operator cost); per code at depth 2: the chain carries the subject at depth 1 (0.865) and nothing at 2 (0.009); the path code carries B, C, never the subject | "report how" | the limit (ii) is on the ADDRESS; role accuracy does not see it because the identity cleanup tolerates a blended address and the structure is carried by the words after the operators |
+| **B5.1, E1b protocol** (--p_aff2 0.3; log _0840; RESULTS 12-quater) | depth 2 UNSEEN for the operator forms: structure 1.000, B / C / pred 1.000, subject 1.000 (0 ops) / 0.988 (1 op) / **0.948** (2 ops); may_neg 0.855±0.114 the one soft cell; colliding pair frames differ 0.000 / 0.000 / 0.007 | the judgment's decision rule | **the subject does not fail -> B5d DROPPED**; subject + modal + negation joins the composition regularity (seen at depths 0-1, tested at 2) with one soft spot named |
+| C5 re-scoring (log _0757; RESULTS 10c-octies) | marker's margin as the condition verdict statistic: drop / add detection 0.15 -> 0.75 / 0.76, unverifiable 0.83 -> 0.23, FALSE ALARM on gold 0.15 -> 0.43, precision 0.943 -> 0.899 | report, no tuning | a one-for-one trade of abstention for false alarms; C5 stays NOT met (present 0.890); the limit is the presence reading of the later slots |
+| Tool round 2 (agent; RESULTS 11-ter; tool/runs/round2_815e5f9/) | `gates_given` in legend.json; depth from the gate count; one change per run: A gates given -> depth 3 **0.987**, seen 1.000, unseen transitions **0.428** (v16 0.627); B candidates -> new ids only; C identities -> nothing; commands gate-count depth right on 4/5 seeds, seed 3's 'that' gate 0.24 breaks it | one change per run (C2) | both reference gaps closed by the given gates; one NEW gap (unseen transitions) not isolated; the gate-count estimator depends on a learned gate |
+| Tool round 3 (agent; prepared, GPU next) | run D = A with presence NOT decided (every role read, as v16); run E = commands with the depth counted from the level-opener KIND (no gate) | one change per run | PLANNED, runs next |
 
-## B. B5c — the rule-11 trace ran; the result is a STOP (RESULTS 12-bis, logs/trace_b5c.txt)
-Method independent of key values and training: with the real reader, random parameters (3 draws) and hard gates, the address of every token is
-compared across sentence pairs; two cases with different B5c targets must have different addresses. Result: (a) the operator stars and (b) the
-words after the operators get distinct addresses wherever their targets differ — reachable. The SUBJECT that precedes two stacked operators
-("p0 must give" vs "p0 must not give", also inside a report) has the IDENTICAL address in both sentences in every draw (cos 1.000) while the
-targets differ (cos −0.08): a closed word's address depends on the words before it and on the first open emitter after it only, so it carries
-exactly one operator level. With soft gates the two would differ only through the leak past a partially closed operator gate — not a level.
-Per the instruction: B5c as specified is not implementable without a model change -> STOP, nothing built. Operator-initial forms satisfy the
-condition throughout (which is why every operator so far composed: they all precede what they scope over).
+## B. HYPOTHESIS
+- Verifier conditions: the presence reading of the second and later condition slots (0.890) bounds the condition axis; neither the column cosine nor
+  the marker's margin as the verdict statistic changes that (10c-sexies, 10c-octies).
+- N5 "resolve before drawing": HYPOTHESIS, diagnostic to print in the next kinds run.
+- Tool unseen-transitions gap (0.428 vs 0.627): the presence decision — tested by round 3 run D.
 
-## C. HYPOTHESIS
-- Order of two stacked wrapping operators: not representable by commutative binding (B5.0: exact collision); B5c is the candidate (PLANNED).
-- N5 "resolve before drawing" (first open emitter's preference): HYPOTHESIS, diagnostic to print in the next kinds run.
-- Verifier conditions: the marker's own margin as the verdict's abstention statistic (re-scoring, no retraining) — proposed, not done.
+## C. PLANNED, in the instructed order
+B6 sparse block codes; B7 fourth address code remeasured; tool round 3 (D, E) then the remaining tool gaps; N6; P1 when the team's data arrives
+(the annotation path tested once with a key, wherever the team runs it); N7 after N1; B8-B9 (HYPOTHESIS).
 
-## D. PLANNED, in the instructed order
-B5c trace -> B5c run + level-indexed control (or STOP) -> B6 sparse block codes -> B7 fourth address code -> N6 -> P1 when the team's data
-arrives; the annotator measurement when the API is available; the 5-seed GPU round trip (running next, agent); N7 after N1; B8-B9 (HYPOTHESIS).
-
-## E. Questions for the reviewing session
-1. B5.0's list: the two colliding pairs are not rendered by any grammar. Is a world that renders "A must not give" / "A does not have to give"
-   (modal + negation in one clause) to be built for B5c, or should B5c be judged on the witnessed pairs plus the constructed colliding pair?
-   The trace can run on the constructed pair either way.
-2. C5: present 0.890 misses the criterion by 0.01, on the second and later condition slots; the verdict still abstains on the column margin.
-   Re-score the saved marker frames with the marker's margin as the condition verdict's statistic (no retraining), before deciding C5?
-3. Q4: the margin alone meets the 2% criterion at coverage 0.445; is that operating point to be written as the verifier's stated one, or is the
-   verifier kept at tau 0.05 with its confident-wrong 0.053 and coverage 0.757 (the row as it stands)?
-4. Section 6's LLM steps exist but have never run (no API); the tool's annotation path is therefore untested end to end. Does the team
-   want a key on this machine, or will annotation happen elsewhere?
-6. Tool after the round trip: fix the depth estimator at unseen depths (commands 0.590 -> 0.857 when given) and add the given relation-marker
-   gates (to / by / from, 10b-quinquies) as a legend field so the reference world reaches its 0.968 through the package — both engineering,
-   no new measurement; proceed without a decision?
-5. B5c stopped at the trace (B above). Confirm the recording: "operators that follow their subject" under the declared limit (chapter 8), with
-   B5.0's list as its measured extent; B5c not run. If a model change is to be considered at all, the trace names exactly what it would have to
-   do: let a closed word be re-seated through ALL open emitters of its clause (a product of hops), not the first one only — that is a change
-   of principle in the reader and is NOT proposed here, only named.
+## D. Questions for the reviewing session
+1. B5.1: the decision rule's second branch applied (the subject does not fail; B5d dropped). The limit (ii) stands on the ADDRESS (12-bis;
+   identical addresses for "does not" / "does not have to" even with the learned gates) and is invisible in role accuracy because the identity
+   cleanup reads a blended address and the structure is carried by the other roles. Is that the final recording — "a limit of the address, not of
+   the frame readout on these forms" — or should a construction where the subject ALONE carries an operator be built to expose it (none exists in
+   the repository's worlds)?
+2. The first B5.1 run's depth-2 failure came from my regime error (no depth-2 sentence; the 'that' -> 'that' transition unseen). It is kept as
+   12-ter with the cause stated. Should rule 4 get the sentence "an unseen depth must not also be an unseen transition: the test depth minus one
+   is in training for the affirmatives" explicitly (the E1b protocol as a rule)?
+3. may_neg at the unseen depth 0.855±0.114 is the one soft cell of B5.1; per-seed values are not in the log (the script prints mean ± sd per
+   form). Add the per-seed list to v20's printout for the record, without re-running?
+4. C5: with both verdict statistics tried, the condition axis is bounded by the per-slot presence reading (0.890 on the present side). Close C5
+   as "not met, bounded by presence", or try the marker with per-slot thresholds (second and later slots have fewer examples) — a re-scoring?
+5. Tool: round 2 closed the reference gaps with the given gates (0.987 at depth 3) and opened one (unseen transitions 0.428); round 3 tests the
+   presence decision as the single change. If D closes it, the tool's reference world reproduces 10b-quinquies on every axis; proceed to the
+   remaining tool items (annotation path with a key) without a decision?

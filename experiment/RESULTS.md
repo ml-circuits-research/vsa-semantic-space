@@ -1435,3 +1435,43 @@ Reading, by the decision rule stated before the run.
   result (6c, 9b-bis, 9d-bis, 10d, 9c-sexies, 10b-quinquies) had affirmatives at the test depth minus one AND the deeper transition seen (the E1b
   protocol: affirmatives at depths 0-2, operators at 0-1). This run departed from that protocol by my mistake; it is re-run with it
   (--p_aff2 0.3, affirmatives at depths 0-2; operator forms at 0-1; 12-quater), both logs kept.
+
+### 12-quater. B5.1 re-run with the E1b protocol (v20_operators.py --p_aff2 0.3; logs/2026-10-17_0840_v20_operators_ec0aa03.txt; 5 seeds; affirmatives at depths 0-2 (share 0.3), the operator forms at depths 0-1; depth 2 is now an unseen DEPTH for the operator forms, not an unseen transition)
+| depth | form | A | B | C | pred | structure | FULL |
+|---|---|---|---|---|---|---|---|
+| 0 / 1 (seen) | every form | 0.980-1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.980-1.000 |
+| 2 (UNSEEN for the operator forms) | aff / may / neg / must_neg | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| 2 (UNSEEN) | must / neg_must | 0.965±0.034 / 0.990±0.012 | 1.000 | 1.000 | 1.000 | 1.000 | 0.965 / 0.990 |
+| 2 (UNSEEN) | may_neg ("may not", "might not") | **0.855**±0.114 | 1.000 | 1.000 | 1.000 | 1.000 | 0.855 |
+Subject A by the number of operators after it: depth 0 — 1.000 / 0.998 / 0.995 (0 / 1 / 2 ops); depth 1 — 1.000 / 1.000 / 0.993; depth 2 UNSEEN — 1.000 /
+0.988 / **0.948**. Colliding pair must_neg / neg_must: frames DIFFER 0.000 / 0.000 / 0.007 (identical target, as constructed). Gates learned:
+that, to, has, not, never, might 1.00; need 0.95, does 0.87, have 0.85, may 0.85, must 0.83 — every operator word opens.
+Reading, by the decision rule stated before the run (judgment e9274a9 Q1): the subject does NOT fail. With the regime right (12-ter's depth-2
+failure was the unseen 'that' -> 'that' transition of a run that trained no depth-2 sentence), modal + negation after the subject compose to the
+unseen depth like every operator before them: structure 1.000 everywhere, B, C and the predicate 1.000, the subject 0.95-1.00 under two stacked
+operators at the unseen depth, with ONE soft spot — may_neg at depth 2 (0.855±0.114, seeds vary) — the only place where the stacked post-subject
+operators cost anything. The "how" stands as 12-ter / trace_b51 said: the operator gates learn OPEN (0.83-1.00), the subject's re-seating is a
+mixture through and past the first operator, and the identity cleanup reads the filler from a blended address whose cosine with the gold key
+stays positive; the operator STRUCTURE is carried by the words after the operators. Consequences: limit (ii) is recorded as a property of the
+subject's ADDRESS (12-bis: identical under hard gates; identical with the learned gates for "does not" / "does not have to"), with NO measured
+cost on role accuracy on these forms except may_neg at the unseen depth; **B5d is dropped** (the decision rule's second branch); the composition
+regularity now also covers subject + modal + negation (the prohibition form of regulations), seen at depths 0-1, tested at depth 2. The first
+run (12-ter) is kept as the record of the regime error: an unseen depth must not also be an unseen transition (rule 4).
+
+### 11-ter. Tool round 2 — one change per run on the reference and commands worlds (tool/tests/gpu_round2.sh at commit 815e5f9; tool/runs/round2_815e5f9/ with isolation_table.md; 5 seeds each; built and run by the tool agent; judgment e9274a9 Q6 / C2)
+| reference, one change per row | candidates | seen formulations | new ids | unseen transitions | depth 3 UNSEEN |
+|---|---|---|---|---|---|
+| P0 (c843f53) baseline | catalog 18 per role | 0.985±0.012 | 0.994±0.007 | 0.643±0.017 | 0.742±0.040 |
+| P0 re-scored with v16's candidate sets | 12 seen / 6 held out | 0.985±0.011 | 1.000 | 0.647±0.016 | 0.742 |
+| **A: to / by / from GIVEN open (legend `gates_given`)** | catalog 18 | **1.000** | 1.000 | **0.428**±0.047 | **0.987**±0.007 |
+| B: A re-scored with v16's candidate sets | 12 / 6 | 1.000 | 1.000 | 0.434±0.049 | 0.987 |
+| C: B + v16's identity draw | 12 / 6 | 1.000 | 1.000 | 0.436±0.035 | 0.973±0.017 |
+| RESULTS 10b-quinquies (v16, gates given) | 12 / 6 | 1.000 | 1.000 | 0.627±0.024 | 0.968±0.020 |
+Commands, depth 2 UNSEEN: FULL with the depth from the gate count 0.682±0.342 (seeds 0, 1, 2, 4: depth right 1.000 and FULL = the depth-given
+value 0.82-0.89; seed 3: the 'that' gate learned 0.24, the count reads depth 0 everywhere, FULL 0.000), with the fit 0.590±0.059, with the depth
+given 0.857±0.025 (10d 0.854).
+Reading: the given gates close both reference gaps (depth 3 0.742 -> 0.987, seen formulations 0.985 -> 1.000); the candidate set accounts for the
+new identities only; the identity draw changes nothing beyond seed noise. One NEW gap, not isolated: unseen transitions 0.643 -> 0.428 with the
+gates given (v16: 0.627). The per-role numbers point at the tool's PRESENCE decision (a filled role read as filled 0.927 -> 0.874; recipient 0.619;
+v16 never decides presence on that split) — round 3 run D tests it as the single change. The gate-count depth estimator holds only when the
+complementizer's gate opens — round 3 run E counts the level-opener KIND itself (deterministic from the legend), no gate involved.

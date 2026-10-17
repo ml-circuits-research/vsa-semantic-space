@@ -296,3 +296,13 @@ nothing built (RESULTS 12-bis).
 P0 5-seed GPU round trip (agent; tool/runs/p0_gpu_5seed_c843f53/, RESULTS 11-bis): commands depth 2 0.857 with the depth given (10d 0.854)
 vs 0.590 estimated — the gap was the tool's depth estimator; quantifier v2 reproduces C2c on scope (0.917 at the unseen depth, both 0.993);
 reference depth 3 0.742 vs 0.813, not isolated. Push = judgment point.
+
+## 2026-10-17 (DGX, morning) — judgment e9274a9 applied: C, B5.1 (two runs), C5 re-scoring, tool round 2
+Judgment saved verbatim; rule 28 (address check before a new target; one change per run); the two limits of the reader recorded as a row; verifier
+operating points. B5.1 first run (log _0742): the subject is read at 1.000 under one and two stacked operators at the seen depths; at depth 2 it
+fails for every form because the run trained no depth-2 sentence — an unseen transition ('that' -> 'that'), my regime error, kept as 12-ter.
+trace_b51: the limit (ii) is on the subject's ADDRESS (identical for "does not" / "does not have to" even with the learned gates) and invisible in
+role accuracy — the identity cleanup reads a blended address and the structure is carried by the other roles. B5.1 with the E1b protocol (log
+_0840, 12-quater): everything composes to the unseen depth (subject 0.948 under two operators; may_neg 0.855 the one soft cell) -> B5d dropped.
+C5 re-scoring (log _0757): the marker's margin trades unverifiable for false alarms one for one. Tool round 2 (agent): given gates close the
+reference gaps (depth 3 0.987) and open one (unseen transitions 0.428, presence decision suspected); round 3 prepared. Push = judgment point.
