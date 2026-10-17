@@ -1,0 +1,17 @@
+# 2026-10-17T07:57:26+02:00  commit=a34973a  cmd: python3 rescore_v17_c5.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+rescore_v17_c5: frames logs/.ckpt_v17_reader_frames_occ.pt; presence threshold (calibration half) 0.194; tau 0.05; odd half of dev (4210 questions)
+
+error type | n | COLUMN-margin statistic (10c-sexies): detected / unverifiable / missed | MARKER-margin statistic: detected / unverifiable / missed
+  drop_cond      |  4177 | 0.150 / 0.825 / 0.025 | 0.745 / 0.230 / 0.025
+  swap_sel_cond  |  4177 | 0.707 / 0.287 / 0.005 | 0.767 / 0.228 / 0.005
+  change_sel     |  4195 | 0.732 / 0.262 / 0.005 | 0.740 / 0.255 / 0.005
+  flip_agg       |  4210 | 0.781 / 0.206 / 0.013 | 0.793 / 0.194 / 0.013
+  add_cond       |  4195 | 0.153 / 0.846 / 0.000 | 0.763 / 0.236 / 0.000
+  change_value   |  4177 | 0.149 / 0.495 / 0.356 | 0.423 / 0.221 / 0.356
+  no_error (gold) |  4210 | FALSE-ALARM 0.152 / unverifiable 0.495 / ok 0.353 | FALSE-ALARM 0.426 / unverifiable 0.221 / ok 0.353
+  column margin: recall on role errors 0.505, precision vs gold 0.943, false alarm 0.152
+  marker margin: recall on role errors 0.762, precision vs gold 0.899, false alarm 0.426
+
+checklist: [x] re-scoring only, saved frames of the C5 reader [x] same injected errors (rng, loop) as v17 [x] threshold = the saved calibration-half midpoint, untuned [x] both statistics on the same rows [x] false alarm on gold under both [x] tau stated (18)

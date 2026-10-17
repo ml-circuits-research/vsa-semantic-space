@@ -1,0 +1,33 @@
+trace_b51 on the trained seed-0 reader. Learned gates of the operator words: must 0.71, may 0.72, might 0.82, has 1.00, have 1.00, need 0.81, does 0.83, not 1.00, never 1.00, to 0.43, that 1.00, P 0.00, O 1.00
+
+(1) the subject's address under two stacked operators vs one, learned soft gates then hardened gates
+  -- gates learned
+     'p0 must give o0 to p1' vs 'p0 must not give o0 to p1': cos(addresses) +0.946 | sentence 1: cos with its target +0.451, with the other +0.806 | sentence 2: with its target +0.924, with the other +0.201
+     'p0 does not give o0 to p1' vs 'p0 does not have to give o0 to p1': cos(addresses) +1.000 | sentence 1: cos with its target +0.685, with the other +0.635 | sentence 2: with its target +0.635, with the other +0.685
+     'p0 may give o0 to p1' vs 'p0 may not give o0 to p1': cos(addresses) +0.937 | sentence 1: cos with its target +0.909, with the other +0.239 | sentence 2: with its target +0.514, with the other +0.762
+  -- gates hardened (every learned gate > 0.5 set to 1, the rest to 0)
+     'p0 must give o0 to p1' vs 'p0 must not give o0 to p1': cos(addresses) +1.000 | sentence 1: cos with its target +0.272, with the other +0.901 | sentence 2: with its target +0.901, with the other +0.272
+     'p0 does not give o0 to p1' vs 'p0 does not have to give o0 to p1': cos(addresses) +1.000 | sentence 1: cos with its target +0.621, with the other +0.669 | sentence 2: with its target +0.669, with the other +0.621
+     'p0 may give o0 to p1' vs 'p0 may not give o0 to p1': cos(addresses) +1.000 | sentence 1: cos with its target +0.882, with the other +0.305 | sentence 2: with its target +0.305, with the other +0.881
+  reading: with the learned gates the subject's two addresses differ (the modal's gate is partly open, so a share of the subject re-seats PAST it to the negation when there is one, and to the next emitter when there is not); hardened, the addresses coincide and the reading cannot separate the targets — the 12-bis prediction.
+
+(2) unseen depth 2: which code carries the subject, per code alone (cos of the word's term with its target), affirmative form
+   depth 1 | codes path+chainL+bigram | A +0.881 | B +0.912 | C +0.898   (p0 says that p8 shows o7 to p9 .)
+   depth 1 | codes path               | A +0.061 | B +0.722 | C +0.732   (p0 says that p8 shows o7 to p9 .)
+   depth 1 | codes bigram             | A +0.078 | B +0.150 | C +0.099   (p0 says that p8 shows o7 to p9 .)
+   depth 1 | codes chainL             | A +0.865 | B +0.596 | C +0.608   (p0 says that p8 shows o7 to p9 .)
+   depth 2 | codes path+chainL+bigram | A +0.039 | B +0.334 | C +0.335   (p0 says that p2 says that p6 offers o0 to p4 .)
+   depth 2 | codes path               | A +0.040 | B +0.595 | C +0.595   (p0 says that p2 says that p6 offers o0 to p4 .)
+   depth 2 | codes bigram             | A +0.013 | B -0.068 | C -0.070   (p0 says that p2 says that p6 offers o0 to p4 .)
+   depth 2 | codes chainL             | A +0.009 | B +0.018 | C +0.017   (p0 says that p2 says that p6 offers o0 to p4 .)
+  reading: the code whose cosine for A falls between depth 1 and depth 2 is the one that does not compose for the subject at the unseen depth; B and C are compared on the same rows.
+
+(3) the subject under the GOLD key, per form, depth 0, 40 events: mean cos of the subject's term with its target term, mean cleanup margin (best - second candidate), accuracy
+   aff       (0 operator(s) after the subject) | cos 0.345 | margin 0.287 | accuracy 1.000
+   must      (1 operator(s) after the subject) | cos 0.258 | margin 0.184 | accuracy 1.000
+   may       (1 operator(s) after the subject) | cos 0.342 | margin 0.284 | accuracy 1.000
+   neg       (1 operator(s) after the subject) | cos 0.317 | margin 0.250 | accuracy 1.000
+   must_neg  (2 operator(s) after the subject) | cos 0.323 | margin 0.263 | accuracy 1.000
+   neg_must  (2 operator(s) after the subject) | cos 0.288 | margin 0.217 | accuracy 1.000
+   may_neg   (2 operator(s) after the subject) | cos 0.264 | margin 0.199 | accuracy 1.000
+  reading: the identity cleanup picks the right filler as long as the blended address keeps a positive cosine with the gold key and the other 11 candidates stay near zero; the cosine and the margin, not the accuracy, show how much of the subject's address the stacked operators cost.
