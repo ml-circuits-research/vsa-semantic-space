@@ -1571,3 +1571,23 @@ positions never seen) carry untrained displacements, so the position term is noi
 comes from the shorter forms. Recording (rule 16): from here the reference reader's bundle is path + chainL + bigram + position; 10b-quinquies
 stays the record of the three-code bundle; the tool's `sop train` should expose the code list so the reference world's model carries it
 (engineering, for the agent; not done in this run).
+
+### 11-quinquies. Tool round 4 — presence thresholds calibrated with held-out FORMULATIONS (one change; tool/tests/gpu_round4.sh at commit 39063ed; tool/runs/round4_39063ed/ with round4_table.md; 5 seeds; reference world, to / by / from given open; judgment 45ccd1d D)
+Expectation written before the run (round4.log line 2): the recipient's presence on unseen formulations recovers toward the every-role-read value
+without reading every role. Each held-out-formulation split cut in two halves by hash before training; the calibration half joins the training
+sample for the midpoint thresholds; the other half (87 rows) is reported, with the round-3 (training-rows-only) thresholds scored on the same rows.
+| rows | readout (protocol) | thresholds set on | heads FULL | agent | object | recipient |
+|---|---|---|---|---|---|---|
+| round 3 D, 180 | product: presence decided | training rows | 0.428±0.047 | 0.833 | 0.811 | 0.619±0.047 |
+| round 3 D, 180 | v16 protocol: every role read (not available to the product) | — | 0.596±0.048 | 0.833 | 0.811 | 0.839±0.004 |
+| **round 4 F, 87** | **product: presence decided** | **training rows + the calibration half of the held-out formulations** | 0.418±0.061 | 0.839 | 0.779 | **0.630**±0.037 |
+| round 4 F, same 87 | presence decided | training rows only (round-3 product) | 0.418±0.061 | 0.839 | 0.779 | 0.625±0.042 |
+| round 4 F, same 87 | v16 protocol: every role read | — | 0.556±0.061 | 0.839 | 0.779 | 0.809±0.006 |
+Reading: NOT met — on identical rows the held-out calibration moves the recipient by +0.005. The midpoint rule barely moves (seed 0: 0.636 -> 0.622;
+new thresholds 0.61-0.70) because the 156 calibration-half sentences sit among about 480 present training rows whose present mean (1.11-1.20) and
+absent mean (0.11-0.20) are far apart; about one recipient in five on unseen formulations has a presence ratio below a threshold that is already
+far below the training present mean. No cost elsewhere (held-out sentences 1.000, depth 3 0.987, new identities 1.000). Per the judgment's rule:
+**presence calibration across formulations is a recorded limit of the READER, not of the tool** — the product reads the reference world's unseen
+formulations at 0.418-0.428 with presence decided and 0.556-0.596 under v16's every-role-read protocol. Reservation stated by the agent and left
+open: this run tested the pooled-midpoint rule only, not a threshold fitted on the held-out formulations alone, and the per-sentence presence
+ratios of the reported rows were not stored (the run keeps no models), so whether those ratios overlap the absent class is unknown.
