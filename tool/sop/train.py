@@ -88,6 +88,15 @@ def content_kinds_of(rows, legend):
 
 
 # ------------------------------------------------------------------ splits
+def fit_threshold(present, absent):
+    """the calibration RULE (judgment 752853c §2): the threshold that maximises the balanced present / absent accuracy on the calibration rows;
+    candidates = the midpoints between consecutive distinct calibration values; ties: the lowest"""
+    present, absent = np.asarray(present, float), np.asarray(absent, float)
+    v = np.unique(np.concatenate([present, absent]))
+    cands = (v[:-1] + v[1:]) / 2 if len(v) > 1 else v
+    return float(max(cands, key=lambda t: ((present >= t).mean() + (absent < t).mean()) / 2 - 1e-12 * t))
+
+
 def make_splits(rows, legend, hints, seed, cal_forms=False):
     share = hints.get("heldout_sentence_share", 0.1)
     t2split = {t: name for name, ts in hints.get("template_splits", {}).items() for t in ts}
@@ -241,7 +250,7 @@ def bag_baseline(train_rows, legend, schema):
 
 STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("gate-count estimate", {"estimator": "gates"}),
                 ("kind-count estimate", {"estimator": "kinds"}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}),
-                ("presence not decided", {"presence": "all"}), ("thresholds from training rows only", {"alt_th": True}))
+                ("presence not decided", {"presence": "all"}), ("pooled midpoint (comparison)", {"alt_th": True}))
 
 
 def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
@@ -266,7 +275,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
                 kk["presence"] = kw["presence"]
             saved_th = None
             if kw.get("alt_th"):
-                if not getattr(reader, "_eval_alt_th", None): continue                       # only when round 4's calibration was used
+                if not getattr(reader, "_eval_alt_th", None): continue                       # the pooled midpoint of the same calibration rows
                 saved_th = reader.th; reader.th = dict(reader.th, **reader._eval_alt_th)
             if mode in ("fit estimate", "gate-count estimate", "kind-count estimate") and not legend.reader.get("level_openers"): continue
             if {"gates": "gate-count estimate", "kinds": "kind-count estimate", "fit": "fit estimate"}[reader.cfg.get("depth_estimator", "gates")] == mode: continue  # = the primary
@@ -275,12 +284,22 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
             acc["FULL" + label].append(same(drop))
-            if mode in ("presence not decided", "thresholds from training rows only"):
+            if mode in ("presence not decided", "pooled midpoint (comparison)"):
                 for r in schema["role_order"]:
                     acc[f"role {r} [{mode}]"].append(json.dumps(g["roles"].get(r)) == json.dumps(f["roles"].get(r) if f_ok else None))
                 acc[f"heads FULL (model) [{mode}]"].append(all(head_word(g["roles"].get(r)) == head_word(f["roles"].get(r) if f_ok else None)
                                                                              for r in schema["role_order"]))
             if drop: acc["FULL incl. " + "+".join(drop) + " (previous definition)" + label].append(same(()))
+            if mode in ("estimated", "pooled midpoint (comparison)") and f_ok:
+                # presence per role (roles with a presence threshold): present read present / absent read absent; with the product
+                # readout also the share of "present" readings that ABSTAIN (the role's margin = min(identity, presence) < tau)
+                for r in schema["role_order"]:
+                    if reader.th.get("presence", {}).get(r) is None: continue
+                    gp, pp = g["roles"].get(r) is not None, f["roles"].get(r) is not None
+                    acc[f"presence {r}: present read present{label}" if gp else f"presence {r}: absent read absent{label}"].append(pp if gp else not pp)
+                    if pp and mode == "estimated":
+                        ab = f["margins"].get(r, 1.0) < tau; acc[f"presence {r}: share of 'present' readings that abstain"].append(ab)
+                        acc[f"presence {r}: share of FALSE 'present' readings that abstain" if not gp else f"presence {r}: share of true 'present' readings that abstain"].append(ab)
             if mode != "estimated": continue
             status[info["status"]] += 1; resid.append(info["residual"]); per_form[signature(row, legend)].append(same(drop))
             acc["structure (depth, negation)"].append(f_ok and len(f["speakers"]) == len(g["speakers"]) and f["neg"] == g["neg"])
@@ -331,6 +350,7 @@ def chance(reader, schema):
 
 # ------------------------------------------------------------------ export
 def export_routebook(m, path):
+    """the learned route book; with the position code also pos (40 x D), pc (K x D) and pos_max (B7)"""
     import torch
     th = (m.theta * m.root_mask).detach().cpu().numpy()
     wrap = lambda x: np.angle(np.exp(1j * x)).astype(np.float32)
@@ -339,6 +359,8 @@ def export_routebook(m, path):
          "logits": m.logits.detach().cpu().numpy().astype(np.float64), "gates": torch.sigmoid(m.logits).detach().cpu().numpy()}
     if getattr(m, "rel", None) is not None:
         z.update(rel=wrap(m.rel.detach().cpu().numpy()), rel_mask=m.rel_mask.cpu().numpy(), taker_mask=m.taker_mask.cpu().numpy())
+    if "pos" in m.codes:
+        z.update(pos=wrap(th[m.ipos.cpu().numpy()]), pc=wrap(th[m.ipc.cpu().numpy()]), pos_max=np.array(getattr(m, "pos_max", None) or 40))
     np.savez_compressed(path, **z)
 
 
@@ -380,7 +402,10 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     print(f"[train] seed {seed}: {len(train)} training rows x {a.epochs} epoch(s) -> {len(sents)} steps' sentences; D={a.D}; kinds {len(set(wk.values()))}; "
           f"vocab {len(shim.vocab)}; predicate lemma not found in {comp.missing_lemma} targets", flush=True)
     F = np.array([st.id(w) for w in shim.vocab])
-    m = v8.V8(shim, a.D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F)
+    m = v8.V8(shim, a.D, np.random.default_rng(200 + seed), list(a.code_list), a.device, gate_init="closed"); m.set_F(F)
+    if "pos" in a.code_list:
+        m.pos_max = max(len(s_) for s_ in sents)        # the position term is OMITTED beyond the trained length (B7 (b), the stated behaviour)
+        print(f"[train] position code (declared by the legend / --codes): positions 0-{m.pos_max - 1} trained, omitted beyond")
     params = [m.theta, m.logits]
     gg = legend.reader.get("gates_given") or {}
     if gg.get("open"): print(f"[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): {m.fix_gates(gg['open'], True)}")
@@ -410,7 +435,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
                "schema": schema, "kinds_report": kinds_report, "identity_table": idt}
     with open(os.path.join(model_dir, "catalog.json"), "w") as f: json.dump(catalog, f, indent=1, sort_keys=True)
     cfg = {"world": a.world_name, "D": a.D, "seed": seed, "language": a.language, "legend_sha256": legend.sha, "legend_version": legend.version,
-           "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": ["path", "chainL", "bigram"],
+           "training_code_commit": a.commit, "trained": datetime.datetime.now().isoformat(timespec="seconds"), "codes": list(a.code_list),
            "gate_init": "closed", "depth_estimator": a.depth_estimator, "presence_readout": "decided", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
            "thresholds": {"tau": a.tau, "tau_source": "stated (the repository's v16 value), not fitted on any rows", "no_sense_share": 0.5,
                           "no_sense_source": "stated", "no_fit_residual": 0.9, "no_fit_source": "stated (dispatcher only, spec section 9)",
@@ -447,28 +472,41 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
                     for part, idx in (("attr", 2), ("det", 3)):
                         if r + "." + part in f["presence"]: stats[(part + "_presence", r)]["present" if gf[idx] is not None else "absent"].append(f["presence"][r + "." + part])
         th = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}; calrep = {}
+        mid = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}      # the pooled midpoint: the comparison, one more round
         for (kind, r), v in stats.items():
-            if kind == "scope_term":       # one threshold for every slot (ratio to the structure score), midpoint of true terms vs the others
-                th["scope_term"] = 0.5 * (float(np.mean(v["present"])) + float(np.mean(v["absent"]))) if v["present"] and v["absent"] else None
+            if kind == "scope_term":       # one threshold for every slot (ratio to the structure score)
+                ok_ = bool(v["present"] and v["absent"])
+                mid["scope_term"] = 0.5 * (float(np.mean(v["present"])) + float(np.mean(v["absent"]))) if ok_ else None
+                th["scope_term"] = (fit_threshold(v["present"], v["absent"]) if rule == "fit" else mid["scope_term"]) if ok_ else None
                 calrep["scope_term"] = {"mean_present": float(np.mean(v["present"])) if v["present"] else None, "mean_absent": float(np.mean(v["absent"])) if v["absent"] else None,
-                                        "threshold": th["scope_term"], "n_present": len(v["present"]), "n_absent": len(v["absent"]), "rule": "no true term in the calibration rows"}
+                                        "threshold": th["scope_term"], "pooled_midpoint": mid["scope_term"], "n_present": len(v["present"]), "n_absent": len(v["absent"]), "rule": rule}
                 continue
             if len(v["present"]) >= 5 and len(v["absent"]) >= 5:
-                mp, ma = float(np.mean(v["present"])), float(np.mean(v["absent"])); th[kind][r] = 0.5 * (mp + ma)
-                calrep[f"{kind}:{r}"] = {"mean_present": mp, "mean_absent": ma, "threshold": th[kind][r], "n_present": len(v["present"]), "n_absent": len(v["absent"])}
+                mp, ma = float(np.mean(v["present"])), float(np.mean(v["absent"])); mid[kind][r] = 0.5 * (mp + ma)
+                th[kind][r] = fit_threshold(v["present"], v["absent"]) if rule == "fit" else mid[kind][r]
+                calrep[f"{kind}:{r}"] = {"mean_present": mp, "mean_absent": ma, "threshold": th[kind][r], "pooled_midpoint": mid[kind][r], "rule": rule,
+                                         "n_present": len(v["present"]), "n_absent": len(v["absent"])}
             else:
                 th[kind][r] = None; calrep[f"{kind}:{r}"] = {"threshold": None, "n_present": len(v["present"]), "n_absent": len(v["absent"]),
                                                              "rule": "one class missing in the calibration rows: read by the training rate (always / never)"}
+        th["_pooled_midpoint"] = mid
         return th, calrep, stats
+    rule = a.threshold_rule
     th_train, calrep, stats = calibrate(cal_rows); th = cfg["thresholds"]; th.update(th_train)
     th["calibration_split"] = f"train (a sample of {len(cal_rows)} training sentences, rng 1234+seed); never the scored rows (rule 25)"
     cal_forms = [r for r in rows if r.get("split", "").startswith("calibration_")]
     if cal_forms:      # round 4 (judgment 45ccd1d D): the thresholds are set on training rows + the CALIBRATION half of the held-out formulations
         th_cf, calrep, stats = calibrate(cal_rows + cal_forms)
-        cfg["thresholds_training_rows_only"] = dict(th_train, calibration_split=th["calibration_split"])
+        cfg["thresholds_training_rows_only"] = dict({k: v for k, v in th_train.items() if k != "_pooled_midpoint"}, calibration_split=th["calibration_split"])
         th.update(th_cf)
         th["calibration_split"] = (f"train (a sample of {len(cal_rows)} training sentences, rng 1234+seed) + the CALIBRATION half of the held-out "
                                    f"formulations ({len(cal_forms)} sentences, splits calibration_*), disjoint from the reported half (rule 25)")
+    cfg["thresholds_pooled_midpoint"] = th.pop("_pooled_midpoint")
+    th["rule"] = ("FITTED: per role, the threshold that maximises the balanced present / absent accuracy on the calibration rows (judgment 752853c §2); "
+                  "the pooled midpoint of the same rows is kept as thresholds_pooled_midpoint, the comparison" if rule == "fit" else
+                  "pooled midpoint of the mean present / absent ratios on the calibration rows (rounds 1-5)")
+    th["presence_margin"] = ("|presence ratio - threshold| (ratio units), on the wire as _presence_margin.<role> (SOP Lang keys carry one dot); the role's _margin = min(identity "
+                             "margin, presence margin): a near-threshold reading abstains")
     with open(os.path.join(model_dir, "config.json"), "w") as f: json.dump(cfg, f, indent=1)
     rd = Reader(model_dir); resid = []
     if getattr(a, "store_presence_ratios", False): store_presence_ratios(rd, rows, cal_rows, schema, seed, run_dir)
@@ -492,22 +530,32 @@ def store_presence_ratios(rd, rows, cal_rows, schema, seed, run_dir):
       absent  / report       = the held-out SENTENCES where the role is not given (disjoint from the calibration rows);
       present / training     = the training-sample calibration rows with the role filled (the pooled midpoint's other input)."""
     roles = [r for r in schema["role_order"] if rd.th.get("presence", {}).get(r) is not None]
-    def ratio(row, r):
-        g = row["frame"]; S, _, _, _ = rd.chart(row["tokens"]); f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
-        return float(f["presence"].get(r, 0.0))
-    out = {"seed": seed, "definition": store_presence_ratios.__doc__, "thresholds": {"product (pooled midpoint)": {r: rd.th["presence"][r] for r in roles},
-           "training rows only": {r: (rd.cfg.get("thresholds_training_rows_only") or {}).get("presence", {}).get(r) for r in roles}}, "roles": {}}
+    def read3(row, r):
+        """(presence ratio, the role's IDENTITY margin, the structure score); read with every role read so that the identity margin exists
+        for absent rows too (the ratio does not depend on the readout)"""
+        g = row["frame"]; S, _, _, _ = rd.chart(row["tokens"]); f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]), presence="all")
+        return float(f["presence"].get(r, 0.0)), float(f["margins"].get(r, 0.0)), float(f.get("core", 0.0))
+    pm = rd.cfg.get("thresholds_pooled_midpoint", {}).get("presence", {})
+    out = {"seed": seed, "definition": store_presence_ratios.__doc__ + " Round 6: also <class>_identity_margin and <class>_core, aligned.",
+           "thresholds": {"product (pooled midpoint)" if not pm else "product": {r: rd.th["presence"][r] for r in roles},
+                          "pooled midpoint": {r: (pm or rd.th["presence"]).get(r) for r in roles},
+                          "training rows only": {r: (rd.cfg.get("thresholds_training_rows_only") or {}).get("presence", {}).get(r) for r in roles},
+                          "rule": rd.th.get("rule", "pooled midpoint")}, "roles": {}}
     ok = lambda row: row["frame"]["shape"] == "ok"
     for r in roles:
         filled = lambda row: row["frame"]["roles"].get(r) is not None
-        d = {"present_calibration": [ratio(x, r) for x in rows if x.get("split", "").startswith("calibration_heldout_formulations") and ok(x) and filled(x)],
-             "present_training": [ratio(x, r) for x in cal_rows if ok(x) and filled(x)],
-             "absent_calibration": [ratio(x, r) for x in cal_rows if ok(x) and not filled(x)],
-             "absent_report": [ratio(x, r) for x in rows if x.get("split") == "heldout_sentences" and ok(x) and not filled(x)],
-             "present_report": {}}
+        groups = {"present_calibration": [x for x in rows if x.get("split", "").startswith("calibration_heldout_formulations") and ok(x) and filled(x)],
+                  "present_training": [x for x in cal_rows if ok(x) and filled(x)],
+                  "absent_calibration": [x for x in cal_rows if ok(x) and not filled(x)],
+                  "absent_report": [x for x in rows if x.get("split") == "heldout_sentences" and ok(x) and not filled(x)]}
+        d = {"present_report": {}, "present_report_identity_margin": {}, "present_report_core": {}}
+        for k, xs in groups.items():
+            v = [read3(x, r) for x in xs]; d[k] = [t[0] for t in v]; d[k + "_identity_margin"] = [t[1] for t in v]; d[k + "_core"] = [t[2] for t in v]
         for x in rows:
-            s = x.get("split", "")
-            if s.startswith("heldout_formulations") and ok(x) and filled(x): d["present_report"].setdefault(s, []).append(ratio(x, r))
+            s_ = x.get("split", "")
+            if s_.startswith("heldout_formulations") and ok(x) and filled(x):
+                t = read3(x, r)
+                for key, val in (("present_report", t[0]), ("present_report_identity_margin", t[1]), ("present_report_core", t[2])): d[key].setdefault(s_, []).append(val)
         out["roles"][r] = d
     with open(os.path.join(run_dir, f"presence_ratios_seed{seed}.json"), "w") as f: json.dump(out, f)
     print(f"[presence ratios] seed {seed}: " + "; ".join(f"{r}: present cal {len(d['present_calibration'])}, report "
@@ -523,7 +571,7 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
         if s == "train" or s.startswith("calibration_"): continue
         # both readouts (presence decided, the default; every role read) are ALWAYS scored on the unseen-formulation splits (round 3)
         rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)) or s.startswith("heldout_formulations")
-        rd._eval_alt_th = rd.cfg.get("thresholds_training_rows_only") if s.startswith("heldout_formulations") else None
+        rd._eval_alt_th = rd.cfg.get("thresholds_pooled_midpoint")      # the comparison, one more round (judgment 752853c §2), every split
         filt = None
         if s == "new_identities":
             new_kinds = {legend.kind(w) for w in new_ids}
@@ -610,11 +658,28 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
         for s in forms:
             acc = lambda k: ms([mm[s]["catalog candidates"]["acc"].get(k, float("nan")) for mm in metrics])
             P(f"| {s} | product readout: presence decided | {acc('heads FULL (model)')} | {acc('FULL')} | " + " | ".join(acc(f"role {r}") for r in schema["role_order"]) + " |")
-            if "heads FULL (model) [thresholds from training rows only]" in metrics[0][s]["catalog candidates"]["acc"]:
-                P(f"| {s} | presence decided, thresholds from training rows only (the round-3 product) | {acc('heads FULL (model) [thresholds from training rows only]')} | "
-                  f"{acc('FULL [thresholds from training rows only]')} | " + " | ".join(acc(f"role {r} [thresholds from training rows only]") for r in schema["role_order"]) + " |")
+            if "heads FULL (model) [pooled midpoint (comparison)]" in metrics[0][s]["catalog candidates"]["acc"]:
+                P(f"| {s} | presence decided, pooled-midpoint thresholds (the comparison, rounds 1-5) | {acc('heads FULL (model) [pooled midpoint (comparison)]')} | "
+                  f"{acc('FULL [pooled midpoint (comparison)]')} | " + " | ".join(acc(f"role {r} [pooled midpoint (comparison)]") for r in schema["role_order"]) + " |")
             P(f"| {s} | v16 protocol: every role read, not available to the product | {acc('heads FULL (model) [presence not decided]')} | {acc('FULL [presence not decided]')} | "
               + " | ".join(acc(f"role {r} [presence not decided]") for r in schema["role_order"]) + " |")
+        P("")
+    pres_roles = [r for r in schema["role_order"] if any(k.startswith(f"presence {r}: present read present") for s_ in metrics[0] for k in metrics[0][s_]["catalog candidates"]["acc"])]
+    if pres_roles:
+        P("## Presence per role (judgment 752853c §2)\nProduct readout first: presence decided with the FITTED thresholds (argmax balanced accuracy on the "
+          "calibration rows); the pooled midpoint of the same rows beside it as the comparison (one more round). Abstain = the role's margin "
+          "min(identity, presence) under tau: a near-threshold reading is uncertain, not a claim.\n")
+        P("| split | role | readout | present read present | absent read absent | balanced | 'present' readings that abstain (false / true) |\n|---|---|---|---|---|---|---|")
+        for s_ in metrics[0]:
+            A_ = lambda k: [mm[s_]["catalog candidates"]["acc"].get(k) for mm in metrics if mm[s_]["catalog candidates"]["acc"].get(k) is not None]
+            for r in pres_roles:
+                for lab, suf in (("product: fitted", ""), ("comparison: pooled midpoint", " [pooled midpoint (comparison)]")):
+                    p_, a_ = A_(f"presence {r}: present read present{suf}"), A_(f"presence {r}: absent read absent{suf}")
+                    if not p_ and not a_: continue
+                    bal = [(x + y) / 2 for x, y in zip(p_, a_)] if p_ and a_ else []
+                    ab = (ms(A_(f"presence {r}: share of 'present' readings that abstain")) + " (" + (ms(A_(f"presence {r}: share of FALSE 'present' readings that abstain")) if A_(f"presence {r}: share of FALSE 'present' readings that abstain") else "—")
+                          + " / " + (ms(A_(f"presence {r}: share of true 'present' readings that abstain")) if A_(f"presence {r}: share of true 'present' readings that abstain") else "—") + ")") if not suf and A_(f"presence {r}: share of 'present' readings that abstain") else ""
+                    P(f"| {s_} | {r} | {lab} | {ms(p_) if p_ else '—'} | {ms(a_) if a_ else '—'} | {ms(bal) if bal else '—'} | {ab} |")
         P("")
     P("## Structure given vs estimated (author C3)\n`FULL` = the reporting depth ESTIMATED by the primary estimator of model/config.json "
       f"(`{a.depth_estimator if not a.eval_only else 'see config.json'}`: the count of level-opener kinds by default; the open-gate count and the "
@@ -642,9 +707,15 @@ def main(argv=None):
     ap.add_argument("--depth_estimator", default="kinds", choices=["gates", "kinds", "fit"], help="the primary depth estimator written into "
                     "model/config.json: level-opener kinds counted (default since round 3, gate-independent), open level gates passed, or the fit; "
                     "the other two stay as checks on the wire and in metrics")
-    ap.add_argument("--calibrate_on_heldout_formulations", action="store_true", help="round 4: set the presence thresholds on the training "
-                    "sample + one half of every held-out formulation split (calibration_*), report the other half; the training-rows-only "
-                    "thresholds are kept in config.json and scored next to them")
+    ap.add_argument("--calibrate_on_heldout_formulations", action="store_true", default=True, help="(the default since round 6) set the presence "
+                    "thresholds on the training sample + one half of every held-out formulation split (calibration_*), report the other half")
+    ap.add_argument("--no_heldout_calibration", dest="calibrate_on_heldout_formulations", action="store_false",
+                    help="calibrate on the training sample only (rounds 1-3)")
+    ap.add_argument("--threshold_rule", default="fit", choices=["fit", "midpoint"], help="the calibration RULE: 'fit' (default since round 6: "
+                    "argmax balanced accuracy on the calibration rows) or 'midpoint' (the pooled midpoint of rounds 1-5)")
+    ap.add_argument("--codes", default=None, help="the code list of the bundle, comma-separated (default: the legend's reader.codes, else "
+                    "path,chainL,bigram — the reference bundle). 'pos' (the position code, omitted beyond the trained length) only where a "
+                    "legend declares rigid order (judgment 752853c §1); the reference model does not carry it")
     ap.add_argument("--store_presence_ratios", action="store_true", help="round 5: store the per-sentence presence ratios of the calibration and "
                     "report rows (present and absent classes) per seed in the run folder (presence_ratios_seed<k>.json)")
     ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
@@ -660,6 +731,9 @@ def main(argv=None):
     wd = os.path.abspath(a.world); a.world_name = os.path.basename(wd.rstrip("/"))
     legend = Legend(os.path.join(wd, "legend.json"))
     if legend.errors: print("legend errors:\n  " + "\n  ".join(legend.errors)); return 1
+    a.code_list = [c.strip() for c in (a.codes.split(",") if a.codes else (legend.reader.get("codes") or ["path", "chainL", "bigram"])) if c.strip()]
+    bad = [c for c in a.code_list if c not in ("path", "chainL", "bigram", "pos")]
+    if bad or not a.code_list: print(f"unknown codes {bad} (allowed: path, chainL, bigram, pos)"); return 1
     wj = os.path.join(wd, "world.json"); a.language = json.load(open(wj)).get("language", "en") if os.path.exists(wj) else "en"
     ts = datetime.datetime.now().strftime("%Y%m%d-%H%M%S"); a.run_dir = os.path.abspath(a.run_dir) if a.run_dir else os.path.join(wd, "runs", ts)
     os.makedirs(a.run_dir, exist_ok=True)

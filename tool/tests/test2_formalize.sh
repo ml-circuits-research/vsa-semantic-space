@@ -79,7 +79,8 @@ sop = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(form))), "bin
 md = os.path.join(os.path.dirname(q), "reference", "model"); txt = "p3 gives o1 .\n"
 d1 = subprocess.run([sop, "formalize", "--model", md, "-"], input=txt, capture_output=True, text=True).stdout
 d2 = subprocess.run([sop, "formalize", "--model", md, "--presence", "all", "-"], input=txt, capture_output=True, text=True).stdout
-ok("recipient=" not in d1.split("@w")[1] and "recipient=" in d2, "--presence all reads every role (a recipient-less sentence gets a recipient line); the default decides presence")
+ok("_presence_margin.recipient=" in d1 and "recipient=" in d2.replace("_presence_margin.recipient=", "") and "_presence_margin.recipient=" not in d2,
+   "--presence all (the v16 protocol) reads every role (a recipient-less sentence gets a recipient line, no presence decision); the default decides presence (its margin on the wire)")
 sys.exit(fails)
 EOF2
 FAILS=$((FAILS+$?))
@@ -100,11 +101,21 @@ ok(cal and rep and all(not (set(sp["texts"][c]) & set(sp["texts"][c[len("calibra
    f"splits.json (written before training) holds the calibration halves {cal}, disjoint from the reported halves")
 cfg = json.load(open(os.path.join(md, "config.json")))
 ok("thresholds_training_rows_only" in cfg and "calibration half" in cfg["thresholds"]["calibration_split"].lower(), "config.json: the product thresholds (training + held-out-formulation calibration rows) and the training-rows-only ones")
-r = open(os.path.join(md, "REPORT.md")).read(); i, j, k = r.find("product readout: presence decided"), r.find("thresholds from training rows only (the round-3"), r.find("v16 protocol: every role read, not available to the product")
-ok(0 < i < j < k, "REPORT.md: the product number first, then the round-3 thresholds, then the v16 protocol, each labelled")
+r = open(os.path.join(md, "REPORT.md")).read(); i, j, k = r.find("product readout: presence decided"), r.find("pooled-midpoint thresholds (the comparison"), r.find("v16 protocol: every role read, not available to the product")
+ok(0 < i < j < k, "REPORT.md: the product number first, then the pooled-midpoint comparison, then the v16 protocol, each labelled")
+ok(cfg["thresholds"].get("rule", "").startswith("FITTED") and "thresholds_pooled_midpoint" in cfg and "## Presence per role" in r,
+   "the calibration RULE is the fit (config.json thresholds.rule), the pooled midpoint kept beside it; REPORT.md has the presence-per-role table")
 sys.exit(fails)
 EOF3
 FAILS=$((FAILS+$?))
+# the presence margin on the wire (judgment 752853c §2) and the code list option (§1: the position code a declared per-world option, default off)
+out_pm=$(printf 'p3 gives o1 to p2 .\np3 gives o1 .\n' | "$SOP" formalize --model "$OUT/ref_cal_model" -)
+echo "$out_pm" | grep -q "^_presence_margin.recipient=" && echo "PASS formalize writes _presence_margin.recipient (the presence margin) on the event wire" || { echo "FAIL presence margin on the wire"; FAILS=$((FAILS+1)); }
+"$SOP" train "$W/commands" --D 128 --epochs 1 --n_eval 20 --log_every 5000 --no_ckpt --codes path,chainL,bigram,pos --out "$OUT/pos_model" > "$OUT/train_pos.log" 2>&1 \
+  && grep -q "position code" "$OUT/train_pos.log" && grep -q "numpy reader vs torch" "$OUT/train_pos.log" \
+  && "$PY" -c "import numpy as np, sys; z=np.load(sys.argv[1]); y=np.load(sys.argv[2]); assert 'pos' in list(z['codes']) and 'pos' in z.files and 'pos' not in list(y['codes'])" "$OUT/pos_model/routebook.npz" "$W/reference/model/routebook.npz" \
+  && echo "PASS --codes path,chainL,bigram,pos trains the position code (numpy = torch, omitted beyond the trained length); the reference model carries the three codes only" \
+  || { echo "FAIL the position-code option"; FAILS=$((FAILS+1)); }
 set -e
 echo; [ $FAILS -eq 0 ] && echo "test2 (formalize): PASS" || echo "test2: $FAILS FAILED"
 exit $FAILS

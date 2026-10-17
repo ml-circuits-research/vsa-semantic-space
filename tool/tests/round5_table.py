@@ -51,7 +51,7 @@ def main():
         P_cal, A_cal = np.array(r["present_calibration"]), np.array(r["absent_calibration"])
         P_rep, A_rep = np.array(r["present_report"].get(UNSEEN, [])), np.array(r["absent_report"])
         P_all = np.concatenate([np.array(v) for v in r["present_report"].values()]) if r["present_report"] else np.array([])
-        tp = d["thresholds"]["product (pooled midpoint)"][a.role]; tf = fit(P_cal, A_cal)
+        tp = (d["thresholds"].get("product (pooled midpoint)") or d["thresholds"]["pooled midpoint"])[a.role]; tf = fit(P_cal, A_cal)
         sp, sf = scores(tp, P_rep, A_rep), scores(tf, P_rep, A_rep); sep, best = separable(P_rep, A_rep)
         ov = float((P_rep < np.percentile(A_rep, 90)).mean())
         for k, v in (("thr_pool", tp), ("thr_fit", tf), ("pool_p", sp[0]), ("pool_a", sp[1]), ("pool_b", sp[2]), ("fit_p", sf[0]), ("fit_a", sf[1]),

@@ -37,6 +37,8 @@ class Routebook:
         self.path, self.bg0, self.bg = z["path"].astype(float), z["bg0"].astype(float), z["bg"].astype(float)
         self.A, self.L, self.logits = z["A"].astype(float), z["L"].astype(float), z["logits"].astype(float)
         self.rel = z["rel"].astype(float) if "rel" in z.files else None
+        self.pos = z["pos"].astype(float) if "pos" in z.files else None; self.pc = z["pc"].astype(float) if "pc" in z.files else None
+        self.pos_max = int(z["pos_max"]) if "pos_max" in z.files else None
         self.rel_mask = z["rel_mask"].astype(float) if "rel_mask" in z.files else None
         self.taker_mask = z["taker_mask"].astype(float) if "taker_mask" in z.files else None
         self.D = self.path.shape[1]
@@ -46,6 +48,10 @@ class Routebook:
         c = np.asarray(c, dtype=int); T, D = len(c), self.D; terms = np.zeros((T, D), dtype=complex)
         if "path" in self.codes: terms += E(np.cumsum(self.path[c], 0))
         if "bigram" in self.codes: terms += E(np.concatenate([self.bg0[c[:1]], self.bg[c[:-1], c[1:]]], 0))
+        if "pos" in self.codes and self.pos is not None:     # B7: the position code, omitted beyond the trained length (pos_max)
+            posidx = np.minimum(np.arange(T), 39); pt = E(self.pos[posidx] + self.pc[c])
+            if self.pos_max is not None: pt = pt * (posidx < self.pos_max)[:, None]
+            terms += pt
         if "chainL" in self.codes or "chain" in self.codes:
             g = sigmoid(self.logits)[c]; u = np.log1p(-g + 1e-9); Sx = np.concatenate([[0.0], np.cumsum(u)])
             EA = E(self.A[c[:, None], c[None, :]])                                # EA[q, k] = A[c_q, c_k]
@@ -165,6 +171,7 @@ class Reader:
         present = (ratio >= thr) if thr is not None else rs["rate"] >= 0.5
         if presence == "all": present = True
         out["present"] = present
+        if thr is not None and presence != "all": out["presence_margin"] = abs(ratio - thr)    # the PRESENCE margin (judgment 752853c §2)
         if not present: return out
         if rs["main"] == "entity":
             h, mg, top = self.best(Sn * key, self.cands(rs["head_kinds"], filt)); out["margins"][r] = mg
@@ -251,8 +258,12 @@ class Reader:
             o = self.read_role(Sn, K, r, core, filt, presence); f["presence"][r] = o["presence"]
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
+            if "presence_margin" in o: f["margins"][r + ".presence"] = o["presence_margin"]
             if o.get("present") and o.get("filler") is not None:
                 f["roles"][r] = o["filler"]; f["margins"].update(o["margins"])
+                if "presence_margin" in o:
+                    f.setdefault("identity_margins", {})[r] = o["margins"].get(r)
+                    f["margins"][r] = min(o["margins"].get(r, 1.0), o["presence_margin"])   # the role's margin = min(identity, presence)
                 if "det_best" in o: f.setdefault("det_best", {})[r] = o["det_best"]
         st = self.legend.reader.get("scope_terms")
         if st: self.read_scope(Sn, K, core, f)
@@ -332,9 +343,10 @@ class Reader:
         ev.set("_mood", self.mood(text))
         for r in self.legend.roles:
             if r in mg: ev.set(f"_margin.{r}", fmt(mg[r]))
+            if r + ".presence" in mg: ev.set(f"_presence_margin.{r}", fmt(mg[r + ".presence"]))
         if "event" in mg: ev.set("_margin.event", fmt(mg["event"]))
         if "scope" in mg: ev.set("_margin.scope", fmt(mg["scope"]))
-        evm = [mg[k] for k in mg if k in self.legend.roles or k == "event"]
+        evm = [mg[k] for k in mg if k in self.legend.roles or k == "event" or (k.endswith(".presence") and k[:-9] in self.legend.roles)]
         if evm: ev.set("_margin", fmt(min(evm)))
         wires += later
         # top-level lines first: _text, _sentence

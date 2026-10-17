@@ -121,6 +121,15 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   `_status=abstain` with the top candidate.
 - **Decoder reads** says* -> [not] -> event, with fillers word | negated word | entity(head, attr [negated], det) and `_scope`. `if`, `must`,
   `may`, `and`, `~` are accepted in examples and compiled into training targets, but not decoded (their sentences score FULL-wrong).
+- **Calibration rule** (judgment 752853c §2, from round 6): every presence-type threshold (role presence, attribute, determiner, scope term)
+  is FITTED — the threshold that maximises the balanced present / absent accuracy on the calibration rows (the training sample + the calibration
+  half of the held-out formulations, the default) — stated in `model/config.json thresholds.rule`; the pooled midpoint of the same rows is
+  kept as `thresholds_pooled_midpoint` and scored beside it for one more round, then dropped. The distance of a sentence's presence ratio
+  from the threshold is a PRESENCE MARGIN, on the event wire as `_presence_margin.<role>`; the role's `_margin` is min(identity margin,
+  presence margin), so a near-threshold reading is `_status=abstain`, not a confident claim. Round 5 re-scored (tool/runs/round5_1ed4306/
+  round5_margins.md): 0.617 of the fitted threshold's errors on the reference world's unseen formulations lie within |ratio - threshold| <=
+  tau — the presence part only (the identity margins were not stored in round 5); false "present" mostly inside (173 / 265), missed "present"
+  mostly outside (25 / 56).
 - **Thresholds** (rule 25): tau 0.05, no-sense share 0.5 and the dispatcher's no-fit residual 0.9 are STATED, not fitted; presence /
   attribute / determiner / scope-term thresholds are midpoints on CALIBRATION rows = a sample of the TRAINING split. All in `model/config.json`.
 - **Splits** (spec 6.4), written to `runs/<ts>/splits.json` before training: seen formulations (`train`) and their held-out SENTENCES
@@ -182,6 +191,10 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | 45ccd1d D: product number first, protocol named on each row; every-role-read never a default | done (NEW) | `write_report`, README; test 2 |
 | 45ccd1d D: presence thresholds on calibration rows including held-out formulations, one run | code done; run PLANNED (GPU) | `train --calibrate_on_heldout_formulations`; `tests/gpu_round4.sh`, `tests/round4_table.py`; test 2 |
 | 45ccd1d D: the opener-kind depth estimator stated as a GIVEN (rule 20) | done | README, depth bullet |
+| 752853c §1: the reference bundle stays three codes; the position code a declared per-world option (`sop train --codes`, the legend's `reader.codes`), default off, omitted beyond the trained length | done (NEW) | `train.py`, `infer.Routebook`; test 2 (numpy = torch with `pos`; the reference model has three codes) |
+| 752853c §2: the FITTED threshold is the calibration RULE for every role and world (argmax balanced accuracy on calibration rows that include held-out formulations, stated in config.json); the pooled midpoint beside it for one more round | done (NEW); run PLANNED (round 6) | `train.fit_threshold`, `--threshold_rule fit` (default), `--calibrate_on_heldout_formulations` (default); config.json `thresholds.rule`, `thresholds_pooled_midpoint`; test 2 |
+| 752853c §2: the PRESENCE margin on the wire; the role's `_margin` = min(identity, presence) | done (NEW) | `_presence_margin.<role>` (SOP Lang keys carry one dot); `Reader.read_role`; test 2 |
+| 752853c §2: re-scoring of round 5 — errors inside the abstention band | done: 0.617 (presence part only; identity margins not stored in round 5; round 6 stores them) | `tests/round5_margins.py`, `tool/runs/round5_1ed4306/round5_margins.md` |
 | d8f8a98 Q5: round 5 — the per-sentence presence ratios stored (present / absent, calibration / report), pooled midpoint vs a FITTED threshold, the overlap; decision rule in the run header | code done; run PLANNED (GPU) | `train --store_presence_ratios`; `tests/gpu_round5.sh`, `tests/round5_table.py`; test 2 |
 | e9274a9 Q6: `gates_given` in legend.json, applied with V8.fix_gates, kinds validated | done (NEW) | `legend.py`, `train.py`; tests 1, 2 |
 | e9274a9 C2 / rule 28: the reference gap isolated one change per run | done | tool/runs/round2_815e5f9 (A, B, C), tool/runs/round3_1d660ee (D, E) |
