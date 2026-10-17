@@ -394,6 +394,7 @@ class Reader:
     def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None):
         """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both)"""
         tokens = tokenize(text); S, kept, unknown, addr = self.chart(tokens)
+        # a model without the key predates round 3: its primary estimator was the open-gate count
         estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
         f = self.read(S, tokens, filt, force, force_depth, estimator, presence) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()

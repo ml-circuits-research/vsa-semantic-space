@@ -460,12 +460,13 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
 
 
 def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None):
-    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False))
     by = collections.defaultdict(list)
     for r in rows: by[r["split"]].append(r)
     out = {}
     for s in sorted(by):
         if s == "train": continue
+        # both readouts (presence decided, the default; every role read) are ALWAYS scored on the unseen-formulation splits (round 3)
+        rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)) or s.startswith("heldout_formulations")
         filt = None
         if s == "new_identities":
             new_kinds = {legend.kind(w) for w in new_ids}
@@ -473,7 +474,7 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
         else: filt = set(seen_words)
         out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words),
                   "experiment candidates": evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words)}
-    trs = by.get("train", [])
+    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); trs = by.get("train", [])
     out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words)}
     return out
 
@@ -538,8 +539,21 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
     P("\n".join(f"- {s}: `{fm}` FULL {v:.3f} (n {n})" for v, n, s, fm in worst) if worst else "- none under 0.9")
     P("")
     if len(a.seeds_list) < 3: P("- fewer than 3 seeds (rule 6): the numbers above carry no seed variance; run with --seeds 3 or more for a result.\n")
-    P("## Structure given vs estimated (author C3)\n`FULL` = the reporting depth and the event negation ESTIMATED from the state (what `sop "
-      "formalize` does); `FULL [depth given]` = the depth GIVEN (as the repository scripts), negation estimated; `FULL [depth and negation given]`.\n")
+    forms = [s for s in metrics[0] if s.startswith("heldout_formulations")]
+    if forms:
+        P("## Unseen formulations: the two readouts (round 3)\nThe default readout DECIDES presence (calibrated thresholds; `_empty` depends "
+          "on it); the other reads every role of the schema, as the repository's v16 readout (which always reads C). Catalog candidates.\n")
+        P("| split | readout | heads FULL | FULL | " + " | ".join(f"role {r}" for r in schema["role_order"]) + " |\n|---|---|---|---|" + "---|" * len(schema["role_order"]))
+        for s in forms:
+            acc = lambda k: ms([mm[s]["catalog candidates"]["acc"].get(k, float("nan")) for mm in metrics])
+            P(f"| {s} | presence decided | {acc('heads FULL (model)')} | {acc('FULL')} | " + " | ".join(acc(f"role {r}") for r in schema["role_order"]) + " |")
+            P(f"| {s} | every role read | {acc('heads FULL (model) [presence not decided]')} | {acc('FULL [presence not decided]')} | "
+              + " | ".join(acc(f"role {r} [presence not decided]") for r in schema["role_order"]) + " |")
+        P("")
+    P("## Structure given vs estimated (author C3)\n`FULL` = the reporting depth ESTIMATED by the primary estimator of model/config.json "
+      f"(`{a.depth_estimator if not a.eval_only else 'see config.json'}`: the count of level-opener kinds by default; the open-gate count and the "
+      "fit are the checks, `FULL [gate-count estimate]` / `FULL [fit estimate]`) and the event negation by the fit (what `sop formalize` does); "
+      "`FULL [depth given]` = the depth GIVEN (as the repository scripts), negation estimated; `FULL [depth and negation given]`.\n")
     if legend.reader.get("full_excludes"):
         P(f"FULL is defined over the legend's questions: {legend.reader['full_excludes']} excluded (reported as its own axis); the previous "
           "definition (everything included) is printed once next to it (rule 16).\n")
@@ -559,8 +573,9 @@ def main(argv=None):
     ap.add_argument("--splits", help="reuse the split assignment of an earlier run (held-out set fixed before a legend change)")
     ap.add_argument("--resume", action="store_true"); ap.add_argument("--force", action="store_true", help="accept examples whose !legend hash differs (inspection only)")
     ap.add_argument("--out", help="model folder (default <world>/model)")
-    ap.add_argument("--depth_estimator", default="gates", choices=["gates", "kinds", "fit"], help="the primary depth estimator written into "
-                    "model/config.json: open level gates passed (default), level-opener kinds counted (gate-independent), or the fit")
+    ap.add_argument("--depth_estimator", default="kinds", choices=["gates", "kinds", "fit"], help="the primary depth estimator written into "
+                    "model/config.json: level-opener kinds counted (default since round 3, gate-independent), open level gates passed, or the fit; "
+                    "the other two stay as checks on the wire and in metrics")
     ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
                     "v16), next to the decided readout (round 3, run D); the model's default readout stays 'decided'")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")

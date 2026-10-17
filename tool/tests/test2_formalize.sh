@@ -61,13 +61,19 @@ r = json.load(open(os.path.join(os.path.dirname(q), "reference", "legend.json"))
 ok(r["version"] == 2 and r["reader"]["gates_given"]["open"] == ["to", "by", "from"] and os.path.exists(os.path.join(os.path.dirname(q), "reference", "versions", "v1", "legend.json")),
    "reference: legend v2 with gates_given to / by / from open and level openers; v1 under versions/v1/")
 rm = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "metrics.json")))["per_seed"][0]["heldout_depth3"]["catalog candidates"]["acc"]
-ok("depth estimate: open-gate count" in rm and "depth estimate: primary (gates)" in rm and "FULL [fit estimate]" in rm,
+cfg = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "config.json")))
+ok(cfg.get("depth_estimator") == "kinds" and "depth estimate: primary (kinds)" in rm and "FULL [gate-count estimate]" in rm,
+   "the default primary depth estimator is the level-opener kind count (config.json depth_estimator=kinds); the gate count and the fit are checks")
+rep_ = open(os.path.join(os.path.dirname(q), "reference", "model", "REPORT.md")).read()
+ok("## Unseen formulations: the two readouts" in rep_ and "every role read" in rep_ and cfg.get("presence_readout") == "decided",
+   "REPORT.md prints both readouts on the unseen-formulation splits; the default readout decides presence")
+ok("depth estimate: open-gate count" in rm and "FULL [fit estimate]" in rm,
    f"reference depth 3: depth from the level gates {rm['depth estimate: open-gate count']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
    f"FULL gates / fit / given {rm['FULL']:.3f} / {rm['FULL [fit estimate]']:.3f} / {rm['FULL [depth given]']:.3f}")
 rt = open(form.replace("quantifiers", "reference")).read()
 ok("_depth.gates=" in rt and "_depth.kinds=" in rt and "_depth.fit=" in rt, "formalize writes _depth.gates, _depth.kinds and _depth.fit on the top-level wire")
-ok("depth estimate: opener-kind count" in rm and "FULL [kind-count estimate]" in rm,
-   f"reference depth 3: the opener-kind count right on {rm.get('depth estimate: opener-kind count', float('nan')):.3f}; FULL [kind-count] {rm.get('FULL [kind-count estimate]', float('nan')):.3f}")
+ok("depth estimate: opener-kind count" in rm and "FULL [gate-count estimate]" in rm and "FULL [kind-count estimate]" not in rm,
+   f"reference depth 3: the opener-kind count (primary, so it is FULL) right on {rm.get('depth estimate: opener-kind count', float('nan')):.3f}; FULL {rm['FULL']:.3f}, FULL [gate-count] {rm.get('FULL [gate-count estimate]', float('nan')):.3f}")
 import subprocess
 sop = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(form))), "bin", "sop")
 md = os.path.join(os.path.dirname(q), "reference", "model"); txt = "p3 gives o1 .\n"
