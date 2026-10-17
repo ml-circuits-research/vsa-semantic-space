@@ -1,0 +1,115 @@
+GPU lock: /home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/logs/.run.lock
+# round 2, commit 1d660ee, 2026-10-17T09:00:54+02:00; worlds in /tmp/sop_round3_Xtmp; runs in /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round3_1d660ee
+export_worlds: n=30000 training-distribution sentences per world, n_eval=30 per eval template/form, seed 0
+  reference: /tmp/sop_round3_Xtmp/reference — files train.sop (30000), eval_new_identities.sop (240), eval_role_cues_seen.sop (60), eval_unseen_transitions.sop (180), eval_seen_transitions.sop (60), eval_depth3_unseen.sop (120); legend sha256:e221118d4315…
+export_worlds: n=40000 training-distribution sentences per world, n_eval=30 per eval template/form, seed 0
+  commands: /tmp/sop_round3_Xtmp/commands — files train.sop (40000), eval_new_identities.sop (210), eval_depth2_unseen.sop (105); legend sha256:4e0f52081284…
+## reference_D_presence_not_decided: sop train /tmp/sop_round3_Xtmp/reference --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --also_presence_all
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 0] end: RSS 2.64 GB | torch alloc 0.59 GB reserved 0.65 GB | MemAvailable 112.6 GB (126s)
+[export] numpy reader vs torch states: max relative difference 1.16e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.628
+[eval] seed 0 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.550
+[eval] seed 0 heldout_formulations_seen_transitions: FULL catalog candidates 0.500 | experiment candidates 0.500 | residual 0.696
+[eval] seed 0 heldout_formulations_unseen_transitions: FULL catalog candidates 0.356 | experiment candidates 0.356 | residual 0.786
+[eval] seed 0 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.347
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.334
+[eval] seed 0 train (sample): FULL catalog candidates 1.000 | residual 0.338
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 1] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.18e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.622
+[eval] seed 1 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.550
+[eval] seed 1 heldout_formulations_seen_transitions: FULL catalog candidates 0.500 | experiment candidates 0.500 | residual 0.698
+[eval] seed 1 heldout_formulations_unseen_transitions: FULL catalog candidates 0.444 | experiment candidates 0.456 | residual 0.787
+[eval] seed 1 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.349
+[eval] seed 1 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.344
+[eval] seed 1 train (sample): FULL catalog candidates 1.000 | residual 0.342
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 2] end: RSS 3.05 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.16e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth3: FULL catalog candidates 0.992 | experiment candidates 0.992 | residual 0.630
+[eval] seed 2 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.551
+[eval] seed 2 heldout_formulations_seen_transitions: FULL catalog candidates 0.517 | experiment candidates 0.517 | residual 0.696
+[eval] seed 2 heldout_formulations_unseen_transitions: FULL catalog candidates 0.444 | experiment candidates 0.461 | residual 0.787
+[eval] seed 2 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.348
+[eval] seed 2 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.336
+[eval] seed 2 train (sample): FULL catalog candidates 1.000 | residual 0.339
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 3] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (124s)
+[export] numpy reader vs torch states: max relative difference 1.20e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth3: FULL catalog candidates 0.983 | experiment candidates 0.983 | residual 0.625
+[eval] seed 3 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.553
+[eval] seed 3 heldout_formulations_seen_transitions: FULL catalog candidates 0.500 | experiment candidates 0.500 | residual 0.692
+[eval] seed 3 heldout_formulations_unseen_transitions: FULL catalog candidates 0.494 | experiment candidates 0.494 | residual 0.784
+[eval] seed 3 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.348
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.343
+[eval] seed 3 train (sample): FULL catalog candidates 1.000 | residual 0.340
+[train] gates GIVEN open (legend reader.gates_given, rule 20, not learned): ['to', 'by', 'from']
+[train seed 4] end: RSS 3.03 GB | torch alloc 0.59 GB reserved 0.61 GB | MemAvailable 112.3 GB (125s)
+[export] numpy reader vs torch states: max relative difference 1.24e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth3: FULL catalog candidates 0.975 | experiment candidates 0.975 | residual 0.641
+[eval] seed 4 heldout_formulations_role_cues_seen: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.546
+[eval] seed 4 heldout_formulations_seen_transitions: FULL catalog candidates 0.500 | experiment candidates 0.500 | residual 0.698
+[eval] seed 4 heldout_formulations_unseen_transitions: FULL catalog candidates 0.400 | experiment candidates 0.406 | residual 0.781
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.349
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.342
+[eval] seed 4 train (sample): FULL catalog candidates 1.000 | residual 0.340
+[done] model written to /tmp/sop_round3_Xtmp/reference/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round3_1d660ee/reference_D_presence_not_decided/train.log
+## commands_E_depth_opener_kinds: sop train /tmp/sop_round3_Xtmp/commands --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --depth_estimator kinds
+[train seed 0] end: RSS 2.80 GB | torch alloc 0.64 GB reserved 0.71 GB | MemAvailable 112.4 GB (89s)
+[export] numpy reader vs torch states: max relative difference 1.09e-07 (float32 phases in the route book)
+[eval] seed 0 heldout_depth2: FULL catalog candidates 0.838 | experiment candidates 0.838 | residual 0.905
+[eval] seed 0 heldout_sentences: FULL catalog candidates 0.998 | experiment candidates 0.998 | residual 0.242
+[eval] seed 0 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.238
+[eval] seed 0 train (sample): FULL catalog candidates 0.997 | residual 0.247
+[train seed 1] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (87s)
+[export] numpy reader vs torch states: max relative difference 1.12e-07 (float32 phases in the route book)
+[eval] seed 1 heldout_depth2: FULL catalog candidates 0.819 | experiment candidates 0.819 | residual 0.903
+[eval] seed 1 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.236
+[eval] seed 1 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.234
+[eval] seed 1 train (sample): FULL catalog candidates 1.000 | residual 0.241
+[train seed 2] end: RSS 3.33 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 111.9 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.11e-07 (float32 phases in the route book)
+[eval] seed 2 heldout_depth2: FULL catalog candidates 0.867 | experiment candidates 0.867 | residual 0.894
+[eval] seed 2 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.242
+[eval] seed 2 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.235
+[eval] seed 2 train (sample): FULL catalog candidates 1.000 | residual 0.247
+[train seed 3] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.17e-07 (float32 phases in the route book)
+[eval] seed 3 heldout_depth2: FULL catalog candidates 0.876 | experiment candidates 0.876 | residual 0.905
+[eval] seed 3 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.240
+[eval] seed 3 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.237
+[eval] seed 3 train (sample): FULL catalog candidates 1.000 | residual 0.245
+[train seed 4] end: RSS 3.26 GB | torch alloc 0.64 GB reserved 0.69 GB | MemAvailable 112.0 GB (88s)
+[export] numpy reader vs torch states: max relative difference 1.08e-07 (float32 phases in the route book)
+[eval] seed 4 heldout_depth2: FULL catalog candidates 0.886 | experiment candidates 0.886 | residual 0.900
+[eval] seed 4 heldout_sentences: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.244
+[eval] seed 4 new_identities: FULL catalog candidates 1.000 | experiment candidates 1.000 | residual 0.237
+[eval] seed 4 train (sample): FULL catalog candidates 0.997 | residual 0.249
+[done] model written to /tmp/sop_round3_Xtmp/commands/model; REPORT.md and metrics.json there; run log /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round3_1d660ee/commands_E_depth_opener_kinds/train.log
+Reference, unseen transitions (5 seeds; candidates = the role's catalog, 18 per person / object role)
+| run | readout | heads FULL (roles) | FULL | agent | object | recipient | occupancy: known filler |
+|---|---|---|---|---|---|---|---|
+| round2 A (gates given) | presence decided | 0.428±0.047 | 0.428±0.047 | 0.833±0.000 | 0.811±0.063 | 0.619±0.047 | 0.874±0.016 |
+| D (= A retrained) | presence decided | 0.428±0.047 | 0.428±0.047 | 0.833±0.000 | 0.811±0.063 | 0.619±0.047 | 0.874±0.016 |
+| D | presence NOT decided (every role read, as v16) | 0.596±0.048 | 0.596±0.048 | 0.833±0.000 | 0.811±0.063 | 0.839±0.004 | — |
+| RESULTS 10b-quinquies (v16, to/by/from given open) | C always read | 0.627±0.024 | | | | | |
+
+Commands, depth 2 UNSEEN, per seed (gates learned, nothing given open)
+| run | seed | gate 'that' | depth right: opener kinds | depth right: open gates | FULL [kind count] | FULL [gate count] | FULL [depth given] |
+|---|---|---|---|---|---|---|---|
+| round2 commands_depth_from_gates | 0 | 1.00 | — | 1.000 | — | 0.838 | 0.838 |
+| round2 commands_depth_from_gates | 1 | 0.70 | — | 1.000 | — | 0.819 | 0.819 |
+| round2 commands_depth_from_gates | 2 | 1.00 | — | 1.000 | — | 0.867 | 0.867 |
+| round2 commands_depth_from_gates | 3 | 0.24 | — | 0.000 | — | 0.000 | 0.876 |
+| round2 commands_depth_from_gates | 4 | 1.00 | — | 1.000 | — | 0.886 | 0.886 |
+| round2 commands_depth_from_gates | mean | | — | 0.800±0.400 | — | 0.682±0.342 | 0.857±0.025 |
+| E (primary = opener kinds) | 0 | 1.00 | 1.000 | 1.000 | 0.838 | 0.838 | 0.838 |
+| E (primary = opener kinds) | 1 | 0.70 | 1.000 | 1.000 | 0.819 | 0.819 | 0.819 |
+| E (primary = opener kinds) | 2 | 1.00 | 1.000 | 1.000 | 0.867 | 0.867 | 0.867 |
+| E (primary = opener kinds) | 3 | 0.24 | 1.000 | 0.000 | 0.876 | 0.000 | 0.876 |
+| E (primary = opener kinds) | 4 | 1.00 | 1.000 | 1.000 | 0.886 | 0.886 | 0.886 |
+| E (primary = opener kinds) | mean | | 1.000±0.000 | 0.800±0.400 | 0.857±0.025 | 0.682±0.342 | 0.857±0.025 |
+RESULTS 10d: depth 2 FULL 0.854±0.031 (depth given).
+done: commit /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round3_1d660ee (git add tool/runs/round3_1d660ee)

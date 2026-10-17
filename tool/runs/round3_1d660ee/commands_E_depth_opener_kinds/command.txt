@@ -1,0 +1,2 @@
+sop train /tmp/sop_round3_Xtmp/commands --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --depth_estimator kinds --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round3_1d660ee/commands_E_depth_opener_kinds
+commit 1d660ee
