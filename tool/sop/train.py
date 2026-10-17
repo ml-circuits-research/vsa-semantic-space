@@ -88,7 +88,7 @@ def content_kinds_of(rows, legend):
 
 
 # ------------------------------------------------------------------ splits
-def make_splits(rows, legend, hints, seed):
+def make_splits(rows, legend, hints, seed, cal_forms=False):
     share = hints.get("heldout_sentence_share", 0.1)
     t2split = {t: name for name, ts in hints.get("template_splits", {}).items() for t in ts}
     new_ids = set(hints.get("new_identities", [])); defs = {"seed": seed, "heldout_sentence_share": share,
@@ -126,7 +126,12 @@ def make_splits(rows, legend, hints, seed):
         elif dmin is not None and r["depth"] >= dmin: s = "heldout_depth"
         elif h01(seed, "sent", r["text"]) < share: s = "heldout_sentences"
         else: s = "train"
+        if cal_forms and s.startswith("heldout_formulations") and h01(seed, "calform", r["text"]) < 0.5:
+            s = "calibration_" + s           # round 4: the calibration half of a held-out formulation split (never reported, never trained)
         r["split"] = s; out[s].append(r["id"])
+    if cal_forms:
+        defs["calibration_of_heldout_formulations"] = ("each heldout_formulations* split is cut in two halves by hash (seed, 'calform', text): "
+            "calibration_<split> sets the presence thresholds together with the training sample; <split> is reported; disjoint (rule 25)")
     return defs, out
 
 
@@ -236,7 +241,7 @@ def bag_baseline(train_rows, legend, schema):
 
 STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("gate-count estimate", {"estimator": "gates"}),
                 ("kind-count estimate", {"estimator": "kinds"}), ("depth given", {"force_depth": True}), ("depth and negation given", {"force": True}),
-                ("presence not decided", {"presence": "all"}))
+                ("presence not decided", {"presence": "all"}), ("thresholds from training rows only", {"alt_th": True}))
 
 
 def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
@@ -259,16 +264,21 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if kw.get("presence"):
                 if not getattr(reader, "_eval_presence_all", False): continue                 # only with --also_presence_all (round 3, run D)
                 kk["presence"] = kw["presence"]
+            saved_th = None
+            if kw.get("alt_th"):
+                if not getattr(reader, "_eval_alt_th", None): continue                       # only when round 4's calibration was used
+                saved_th = reader.th; reader.th = dict(reader.th, **reader._eval_alt_th)
             if mode in ("fit estimate", "gate-count estimate", "kind-count estimate") and not legend.reader.get("level_openers"): continue
             if {"gates": "gate-count estimate", "kinds": "kind-count estimate", "fit": "fit estimate"}[reader.cfg.get("depth_estimator", "gates")] == mode: continue  # = the primary
             wires, f, info = reader.formalize(row["text"], 0, ids, filt, **kk)
+            if saved_th is not None: reader.th = saved_th
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
             acc["FULL" + label].append(same(drop))
-            if mode == "presence not decided":
+            if mode in ("presence not decided", "thresholds from training rows only"):
                 for r in schema["role_order"]:
-                    acc[f"role {r} [presence not decided]"].append(json.dumps(g["roles"].get(r)) == json.dumps(f["roles"].get(r) if f_ok else None))
-                acc["heads FULL (model) [presence not decided]"].append(all(head_word(g["roles"].get(r)) == head_word(f["roles"].get(r) if f_ok else None)
+                    acc[f"role {r} [{mode}]"].append(json.dumps(g["roles"].get(r)) == json.dumps(f["roles"].get(r) if f_ok else None))
+                acc[f"heads FULL (model) [{mode}]"].append(all(head_word(g["roles"].get(r)) == head_word(f["roles"].get(r) if f_ok else None)
                                                                              for r in schema["role_order"]))
             if drop: acc["FULL incl. " + "+".join(drop) + " (previous definition)" + label].append(same(()))
             if mode != "estimated": continue
@@ -416,40 +426,51 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     assert worst < 1e-3, "numpy inference does not reproduce the trained model"
     # calibration rows (rule 25): a sample of the TRAINING split, never the scored rows
     cal_rows = [train[i] for i in sorted(np.random.default_rng(1234 + seed).choice(len(train), min(a.n_cal, len(train)), replace=False))]
-    stats = collections.defaultdict(lambda: {"present": [], "absent": []}); resid = []
-    for row in cal_rows:
-        g = row["frame"]
-        if g["shape"] != "ok": continue
-        S, kept, _, _ = rd.chart(row["tokens"])
-        f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
-        st_ = legend.reader.get("scope_terms") or {}
-        for r in schema["role_order"]:
-            gf = g["roles"].get(r)
-            if st_ and gf is not None and gf[0] == "entity" and r + ".wide" in f["presence"]:
-                d = gf[3]; w_, q_ = f["presence"][r + ".wide"], f["presence"][r + ".q"]
-                if d in st_.get("wide", []): stats[("scope_term", "_")]["present"].append(w_); stats[("scope_term", "_")]["absent"].append(q_)
-                elif d in st_.get("q", []): stats[("scope_term", "_")]["present"].append(q_); stats[("scope_term", "_")]["absent"].append(w_)
-                else: stats[("scope_term", "_")]["absent"] += [w_, q_]
-            stats[("presence", r)]["present" if gf is not None else "absent"].append(f["presence"].get(r, 0))
-            if gf is not None and gf[0] == "entity":
-                for part, idx in (("attr", 2), ("det", 3)):
-                    if r + "." + part in f["presence"]: stats[(part + "_presence", r)]["present" if gf[idx] is not None else "absent"].append(f["presence"][r + "." + part])
-    th = cfg["thresholds"]; calrep = {}
-    for (kind, r), v in stats.items():
-        if kind == "scope_term":       # one threshold for every slot (ratio to the structure score), midpoint of true terms vs the others
-            th["scope_term"] = 0.5 * (float(np.mean(v["present"])) + float(np.mean(v["absent"]))) if v["present"] and v["absent"] else None
-            calrep["scope_term"] = {"mean_present": float(np.mean(v["present"])) if v["present"] else None, "mean_absent": float(np.mean(v["absent"])) if v["absent"] else None,
-                                    "threshold": th["scope_term"], "n_present": len(v["present"]), "n_absent": len(v["absent"]), "rule": "no true term in the calibration rows"}
-            continue
-        if len(v["present"]) >= 5 and len(v["absent"]) >= 5:
-            mp, ma = float(np.mean(v["present"])), float(np.mean(v["absent"])); th[kind][r] = 0.5 * (mp + ma)
-            calrep[f"{kind}:{r}"] = {"mean_present": mp, "mean_absent": ma, "threshold": th[kind][r], "n_present": len(v["present"]), "n_absent": len(v["absent"])}
-        else:
-            th[kind][r] = None; calrep[f"{kind}:{r}"] = {"threshold": None, "n_present": len(v["present"]), "n_absent": len(v["absent"]),
-                                                         "rule": "one class missing in the calibration rows: read by the training rate (always / never)"}
+    def calibrate(crow):
+        """thresholds = midpoints of the mean present / absent ratios on the given calibration rows (read with the gold structure)"""
+        stats = collections.defaultdict(lambda: {"present": [], "absent": []})
+        for row in crow:
+            g = row["frame"]
+            if g["shape"] != "ok": continue
+            S, kept, _, _ = rd.chart(row["tokens"])
+            f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
+            st_ = legend.reader.get("scope_terms") or {}
+            for r in schema["role_order"]:
+                gf = g["roles"].get(r)
+                if st_ and gf is not None and gf[0] == "entity" and r + ".wide" in f["presence"]:
+                    d = gf[3]; w_, q_ = f["presence"][r + ".wide"], f["presence"][r + ".q"]
+                    if d in st_.get("wide", []): stats[("scope_term", "_")]["present"].append(w_); stats[("scope_term", "_")]["absent"].append(q_)
+                    elif d in st_.get("q", []): stats[("scope_term", "_")]["present"].append(q_); stats[("scope_term", "_")]["absent"].append(w_)
+                    else: stats[("scope_term", "_")]["absent"] += [w_, q_]
+                stats[("presence", r)]["present" if gf is not None else "absent"].append(f["presence"].get(r, 0))
+                if gf is not None and gf[0] == "entity":
+                    for part, idx in (("attr", 2), ("det", 3)):
+                        if r + "." + part in f["presence"]: stats[(part + "_presence", r)]["present" if gf[idx] is not None else "absent"].append(f["presence"][r + "." + part])
+        th = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}; calrep = {}
+        for (kind, r), v in stats.items():
+            if kind == "scope_term":       # one threshold for every slot (ratio to the structure score), midpoint of true terms vs the others
+                th["scope_term"] = 0.5 * (float(np.mean(v["present"])) + float(np.mean(v["absent"]))) if v["present"] and v["absent"] else None
+                calrep["scope_term"] = {"mean_present": float(np.mean(v["present"])) if v["present"] else None, "mean_absent": float(np.mean(v["absent"])) if v["absent"] else None,
+                                        "threshold": th["scope_term"], "n_present": len(v["present"]), "n_absent": len(v["absent"]), "rule": "no true term in the calibration rows"}
+                continue
+            if len(v["present"]) >= 5 and len(v["absent"]) >= 5:
+                mp, ma = float(np.mean(v["present"])), float(np.mean(v["absent"])); th[kind][r] = 0.5 * (mp + ma)
+                calrep[f"{kind}:{r}"] = {"mean_present": mp, "mean_absent": ma, "threshold": th[kind][r], "n_present": len(v["present"]), "n_absent": len(v["absent"])}
+            else:
+                th[kind][r] = None; calrep[f"{kind}:{r}"] = {"threshold": None, "n_present": len(v["present"]), "n_absent": len(v["absent"]),
+                                                             "rule": "one class missing in the calibration rows: read by the training rate (always / never)"}
+        return th, calrep, stats
+    th_train, calrep, stats = calibrate(cal_rows); th = cfg["thresholds"]; th.update(th_train)
     th["calibration_split"] = f"train (a sample of {len(cal_rows)} training sentences, rng 1234+seed); never the scored rows (rule 25)"
+    cal_forms = [r for r in rows if r.get("split", "").startswith("calibration_")]
+    if cal_forms:      # round 4 (judgment 45ccd1d D): the thresholds are set on training rows + the CALIBRATION half of the held-out formulations
+        th_cf, calrep, stats = calibrate(cal_rows + cal_forms)
+        cfg["thresholds_training_rows_only"] = dict(th_train, calibration_split=th["calibration_split"])
+        th.update(th_cf)
+        th["calibration_split"] = (f"train (a sample of {len(cal_rows)} training sentences, rng 1234+seed) + the CALIBRATION half of the held-out "
+                                   f"formulations ({len(cal_forms)} sentences, splits calibration_*), disjoint from the reported half (rule 25)")
     with open(os.path.join(model_dir, "config.json"), "w") as f: json.dump(cfg, f, indent=1)
-    rd = Reader(model_dir)
+    rd = Reader(model_dir); resid = []
     ids = (f"c{i}" for i in range(10 ** 9))
     for row in cal_rows: resid.append(rd.formalize(row["text"], 0, ids)[2]["residual"])
     pres = {k: np.array(v["present"] + v["absent"]) for (kk, r), v in stats.items() for k in [f"{kk}:{r}"]}
@@ -464,9 +485,10 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
     for r in rows: by[r["split"]].append(r)
     out = {}
     for s in sorted(by):
-        if s == "train": continue
+        if s == "train" or s.startswith("calibration_"): continue
         # both readouts (presence decided, the default; every role read) are ALWAYS scored on the unseen-formulation splits (round 3)
         rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)) or s.startswith("heldout_formulations")
+        rd._eval_alt_th = rd.cfg.get("thresholds_training_rows_only") if s.startswith("heldout_formulations") else None
         filt = None
         if s == "new_identities":
             new_kinds = {legend.kind(w) for w in new_ids}
@@ -474,9 +496,13 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
         else: filt = set(seen_words)
         out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words),
                   "experiment candidates": evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words)}
-    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); trs = by.get("train", [])
+    rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); rd._eval_alt_th = None; trs = by.get("train", [])
     out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words)}
     return out
+
+
+def rd_cal_note(splits):
+    return "set on training rows" if not any(s.startswith("calibration_") for s in splits) else "set on training rows + the calibration half of the held-out formulations"
 
 
 def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, chance_, n_files):
@@ -541,13 +567,18 @@ def write_report(path, a, legend, rows, splits, defs, schema, metrics, extra, ch
     if len(a.seeds_list) < 3: P("- fewer than 3 seeds (rule 6): the numbers above carry no seed variance; run with --seeds 3 or more for a result.\n")
     forms = [s for s in metrics[0] if s.startswith("heldout_formulations")]
     if forms:
-        P("## Unseen formulations: the two readouts (round 3)\nThe default readout DECIDES presence (calibrated thresholds; `_empty` depends "
-          "on it); the other reads every role of the schema, as the repository's v16 readout (which always reads C). Catalog candidates.\n")
+        P("## Unseen formulations: the readouts (rounds 3-4; judgment 45ccd1d D)\nThe PRODUCT number comes first: the product readout decides "
+          "presence (a role missing from the text reads \"not given\"; `_empty` is the product), with the thresholds of model/config.json "
+          f"({rd_cal_note(splits)}). The v16-protocol row reads every role of the schema (v16 always reads C): a comparison, not available to "
+          "the product, never a default. Catalog candidates.\n")
         P("| split | readout | heads FULL | FULL | " + " | ".join(f"role {r}" for r in schema["role_order"]) + " |\n|---|---|---|---|" + "---|" * len(schema["role_order"]))
         for s in forms:
             acc = lambda k: ms([mm[s]["catalog candidates"]["acc"].get(k, float("nan")) for mm in metrics])
-            P(f"| {s} | presence decided | {acc('heads FULL (model)')} | {acc('FULL')} | " + " | ".join(acc(f"role {r}") for r in schema["role_order"]) + " |")
-            P(f"| {s} | every role read | {acc('heads FULL (model) [presence not decided]')} | {acc('FULL [presence not decided]')} | "
+            P(f"| {s} | product readout: presence decided | {acc('heads FULL (model)')} | {acc('FULL')} | " + " | ".join(acc(f"role {r}") for r in schema["role_order"]) + " |")
+            if "heads FULL (model) [thresholds from training rows only]" in metrics[0][s]["catalog candidates"]["acc"]:
+                P(f"| {s} | presence decided, thresholds from training rows only (the round-3 product) | {acc('heads FULL (model) [thresholds from training rows only]')} | "
+                  f"{acc('FULL [thresholds from training rows only]')} | " + " | ".join(acc(f"role {r} [thresholds from training rows only]") for r in schema["role_order"]) + " |")
+            P(f"| {s} | v16 protocol: every role read, not available to the product | {acc('heads FULL (model) [presence not decided]')} | {acc('FULL [presence not decided]')} | "
               + " | ".join(acc(f"role {r} [presence not decided]") for r in schema["role_order"]) + " |")
         P("")
     P("## Structure given vs estimated (author C3)\n`FULL` = the reporting depth ESTIMATED by the primary estimator of model/config.json "
@@ -576,6 +607,9 @@ def main(argv=None):
     ap.add_argument("--depth_estimator", default="kinds", choices=["gates", "kinds", "fit"], help="the primary depth estimator written into "
                     "model/config.json: level-opener kinds counted (default since round 3, gate-independent), open level gates passed, or the fit; "
                     "the other two stay as checks on the wire and in metrics")
+    ap.add_argument("--calibrate_on_heldout_formulations", action="store_true", help="round 4: set the presence thresholds on the training "
+                    "sample + one half of every held-out formulation split (calibration_*), report the other half; the training-rows-only "
+                    "thresholds are kept in config.json and scored next to them")
     ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
                     "v16), next to the decided readout (round 3, run D); the model's default readout stays 'decided'")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")
@@ -606,7 +640,7 @@ def main(argv=None):
     exhash = hashlib.sha256("".join(open(p, "rb").read().hex() for p in files).encode()).hexdigest()
     status("TRAINING", examples_sha256=exhash)
     hp = os.path.join(wd, "split_hints.json"); hints = json.load(open(hp)) if os.path.exists(hp) else {}
-    defs, splits = make_splits(rows, legend, hints, a.seed)
+    defs, splits = make_splits(rows, legend, hints, a.seed, cal_forms=a.calibrate_on_heldout_formulations)
     if a.splits:
         prev = json.load(open(a.splits)); text2 = {}
         for s, ids in prev["rows"].items():

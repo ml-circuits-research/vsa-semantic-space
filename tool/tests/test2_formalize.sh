@@ -65,7 +65,7 @@ cfg = json.load(open(os.path.join(os.path.dirname(q), "reference", "model", "con
 ok(cfg.get("depth_estimator") == "kinds" and "depth estimate: primary (kinds)" in rm and "FULL [gate-count estimate]" in rm,
    "the default primary depth estimator is the level-opener kind count (config.json depth_estimator=kinds); the gate count and the fit are checks")
 rep_ = open(os.path.join(os.path.dirname(q), "reference", "model", "REPORT.md")).read()
-ok("## Unseen formulations: the two readouts" in rep_ and "every role read" in rep_ and cfg.get("presence_readout") == "decided",
+ok("## Unseen formulations: the readouts" in rep_ and "v16 protocol: every role read, not available to the product" in rep_ and cfg.get("presence_readout") == "decided",
    "REPORT.md prints both readouts on the unseen-formulation splits; the default readout decides presence")
 ok("depth estimate: open-gate count" in rm and "FULL [fit estimate]" in rm,
    f"reference depth 3: depth from the level gates {rm['depth estimate: open-gate count']:.3f} vs the fit {rm['depth estimate: fit (check)']:.3f}; "
@@ -82,6 +82,24 @@ d2 = subprocess.run([sop, "formalize", "--model", md, "--presence", "all", "-"],
 ok("recipient=" not in d1.split("@w")[1] and "recipient=" in d2, "--presence all reads every role (a recipient-less sentence gets a recipient line); the default decides presence")
 sys.exit(fails)
 EOF2
+FAILS=$((FAILS+$?))
+# round 4 (judgment 45ccd1d D): presence thresholds set on the training sample + the calibration half of the held-out formulations
+"$SOP" train "$W/reference" --D 256 --epochs 1 --n_eval 60 --log_every 5000 --no_ckpt --calibrate_on_heldout_formulations --out "$OUT/ref_cal_model" > "$OUT/train_ref_cal.log" 2>&1
+"$PY" - "$W/reference" "$OUT/ref_cal_model" <<'EOF3'
+import glob, json, os, sys
+wd, md = sys.argv[1], sys.argv[2]; fails = 0
+def ok(c, m):
+    global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
+sp = json.load(open(sorted(glob.glob(os.path.join(wd, "runs", "*", "splits.json")), key=os.path.getmtime)[-1]))
+cal = [k for k in sp["rows"] if k.startswith("calibration_")]; rep = [k for k in sp["rows"] if k.startswith("heldout_formulations")]
+ok(cal and rep and all(not (set(sp["texts"][c]) & set(sp["texts"][c[len("calibration_"):]])) for c in cal) and "calibration_of_heldout_formulations" in sp["definitions"],
+   f"splits.json (written before training) holds the calibration halves {cal}, disjoint from the reported halves")
+cfg = json.load(open(os.path.join(md, "config.json")))
+ok("thresholds_training_rows_only" in cfg and "calibration half" in cfg["thresholds"]["calibration_split"].lower(), "config.json: the product thresholds (training + held-out-formulation calibration rows) and the training-rows-only ones")
+r = open(os.path.join(md, "REPORT.md")).read(); i, j, k = r.find("product readout: presence decided"), r.find("thresholds from training rows only (the round-3"), r.find("v16 protocol: every role read, not available to the product")
+ok(0 < i < j < k, "REPORT.md: the product number first, then the round-3 thresholds, then the v16 protocol, each labelled")
+sys.exit(fails)
+EOF3
 FAILS=$((FAILS+$?))
 set -e
 echo; [ $FAILS -eq 0 ] && echo "test2 (formalize): PASS" || echo "test2: $FAILS FAILED"

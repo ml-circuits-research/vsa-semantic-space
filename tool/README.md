@@ -79,6 +79,8 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   term's cosine to the structure score >= a threshold set on CALIBRATION rows (midpoint of true terms vs the others; `thresholds.scope_term`).
   The presence of a quantifier on a slot is read from its term (as v14's C2c decoder); the determiner word from the determiner channel.
   Written only with two or more quantified slots (`both` when two plain quantifiers and no marker).
+- **The opener-kind depth estimator is a GIVEN** (the legend's `level_openers`, rule 20); the gate count and the fit are printed as
+  checks (judgment 45ccd1d D).
 - **Depth: three estimators** (judgment e9274a9 Q6; rounds 2-3). PRIMARY (the default since round 3, `model/config.json
   depth_estimator=kinds`): the count of tokens of a level-opener KIND named in the legend (`reader.level_openers`: the reporting verbs says /
   claims / asks in the three worlds), deterministic from the kinds on the token sequence, independent of the learned gates. CHECKS: the
@@ -94,11 +96,18 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   `FULL [gate-count estimate]` / `FULL [kind-count estimate]` (whichever is not primary), `FULL [fit estimate]`, `FULL [depth given]` (as the
   repository scripts), `FULL [depth and negation given]`. In the runs before e9274a9 (p0_cpu_1seed_60f284d, p0_gpu_5seed_c843f53) `FULL` was
   the fit estimate; in round 2 the open-gate count.
-- **Presence readout**: the DEFAULT decides presence (calibrated thresholds; spec `_empty` depends on it). `sop formalize --presence all` reads
-  every role of the schema, as v16 (which always reads C). REPORT.md always prints both readouts on the unseen-formulation splits: on the
-  reference world with to / by / from given open (round3_1d660ee, D) unseen transitions are 0.428±0.047 decided and 0.596±0.048 with every
-  role read (10b-quinquies 0.627±0.024); the recipient goes 0.619 -> 0.839. Whether the reference world should read every role is a question
-  for the reviewing session; the default is unchanged.
+- **Presence readout** (judgment 45ccd1d D). The PRODUCT readout decides presence, always: a role missing from the text reads "not given"
+  (`_empty` is the product). Every-role-read is never a default, for no legend. Numbers on the reference world's unseen formulations
+  (to / by / from given open; tool/runs/round3_1d660ee, run D), product first:
+  - product readout: presence decided — heads FULL 0.428±0.047 (recipient 0.619±0.047);
+  - v16 protocol: every role read, not available to the product — 0.596±0.048 (recipient 0.839±0.004; RESULTS 10b-quinquies 0.627±0.024).
+
+  The finding: a presence threshold set on training rows does not transfer to unseen formulations. The next single change (round 4,
+  `tests/gpu_round4.sh`, PLANNED) sets the presence thresholds on calibration rows that include held-out FORMULATIONS (`sop train
+  --calibrate_on_heldout_formulations`: each heldout_formulations* split cut in two halves by hash, written to splits.json before training;
+  the calibration half sets the thresholds with the training sample, the other half is reported — rule 25). REPORT.md prints, in this order:
+  the product readout, the round-3 product thresholds (training rows only) on the same rows when round 4's calibration was used, and the v16
+  protocol, each labelled. `sop formalize --presence all` exists for that comparison only.
 - **Gates given** (rule 20; judgment e9274a9 Q6): `reader.gates_given = {"open": [kinds], "closed": [kinds]}` in legend.json; `sop train`
   applies it with experiment/v8_gates.V8.fix_gates (logit +-8, gradient masked) — as v16's `--rel_gates open`; `sop check` (the legend
   loader) rejects a kind that is not a kind of the lexicon, a kind both open and closed, and unknown kinds in `level_openers` / `rel_emitters`.
@@ -167,6 +176,9 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | C4 size breakdown | done (NEW) | below |
 | e9274a9 Q6 / round 3: the primary depth estimate = the count of level-opener KINDS (default since round 3); the open-gate count and the fit as checks; all reported | done (CHANGED in round 3: was the open-gate count) | `Reader.depth_from_kinds`, `depth_from_gates`, `read(estimator=)`; `_depth.kinds`, `_depth.gates`, `_depth.fit`; test 2 asserts the default; tool/runs/round3_1d660ee (E) |
 | round 3: presence readout — decided by default; both readouts in REPORT.md on the unseen-formulation splits | done (NEW) | `train.run_eval`, `write_report`; `sop formalize --presence`; test 2; tool/runs/round3_1d660ee (D) |
+| 45ccd1d D: product number first, protocol named on each row; every-role-read never a default | done (NEW) | `write_report`, README; test 2 |
+| 45ccd1d D: presence thresholds on calibration rows including held-out formulations, one run | code done; run PLANNED (GPU) | `train --calibrate_on_heldout_formulations`; `tests/gpu_round4.sh`, `tests/round4_table.py`; test 2 |
+| 45ccd1d D: the opener-kind depth estimator stated as a GIVEN (rule 20) | done | README, depth bullet |
 | e9274a9 Q6: `gates_given` in legend.json, applied with V8.fix_gates, kinds validated | done (NEW) | `legend.py`, `train.py`; tests 1, 2 |
 | e9274a9 C2 / rule 28: the reference gap isolated one change per run | done | tool/runs/round2_815e5f9 (A, B, C), tool/runs/round3_1d660ee (D, E) |
 | e9274a9 Q4: the annotator measurement runs anywhere with a key | done | `measure_annotators.py` + `skills/train-world/data/commands_500/` |
