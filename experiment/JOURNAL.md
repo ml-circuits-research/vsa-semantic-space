@@ -334,3 +334,5 @@ confirm). N6 (log _1343, RESULTS 15): the training legend lacks the recipient �
 without; gap −0.267) and the true-R_C oracle is at chance (0.110): NOT met as written; the missing filler is recoverable from the residual at
 the reader's own calibrated address (0.963, 5/5 seeds) and the residuals cluster by filler without any vector (1-NN 0.57): detectable by
 direction, not by share — the detector the tool's `_unplaced` loop already implements. Push = judgment point.
+N6 per-term decomposition (log _1420, RESULTS 15-bis): function words carry 0.44 / 0.27 of the residual — not the majority, the RESULTS 15
+hypothesis dropped; the share inverted because the recipient-less forms' content fit error carries 0.73 of their residual. Rule 30 added.
