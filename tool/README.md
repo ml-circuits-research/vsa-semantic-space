@@ -79,8 +79,22 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
   term's cosine to the structure score >= a threshold set on CALIBRATION rows (midpoint of true terms vs the others; `thresholds.scope_term`).
   The presence of a quantifier on a slot is read from its term (as v14's C2c decoder); the determiner word from the determiner channel.
   Written only with two or more quantified slots (`both` when two plain quantifiers and no marker).
-- **Structure given vs estimated** (author C3): the tool estimates the reporting depth and the event negation from the state; metrics.json and
-  REPORT.md give FULL three ways: estimated, depth given, depth and negation given.
+- **Depth: two estimators** (judgment e9274a9 Q6). PRIMARY: the reader's own count of open level gates passed on the token sequence,
+  deterministic from the learned gate values — a level is opened by a token of a level-opener kind named in the legend (`reader.level_openers`:
+  the reporting verbs says / claims / asks in the three worlds); the gate that opens it is the opener's own or, when that one is closed, the
+  gate of the token right after it (the complementizer 'that', open in every P0 run; 'says' is closed, ~0.01). CHECK: the fit (the depth
+  whose role readout is best, frame.py style). Both are on the top-level wire (`_depth.gates=`, `_depth.fit=`) and in metrics.json
+  (`depth estimate: level gates (primary)`, `depth estimate: fit (check)`). The negation is chosen by the fit at the chosen depth. Without
+  level openers in the legend, the fit is the primary estimator.
+- **Structure given vs estimated** (author C3): metrics.json and REPORT.md give FULL four ways: `FULL` (depth from the primary estimator),
+  `FULL [fit estimate]`, `FULL [depth given]` (as the repository scripts), `FULL [depth and negation given]`. In the runs before e9274a9
+  (p0_cpu_1seed_60f284d, p0_gpu_5seed_c843f53) `FULL` was the fit estimate.
+- **Gates given** (rule 20; judgment e9274a9 Q6): `reader.gates_given = {"open": [kinds], "closed": [kinds]}` in legend.json; `sop train`
+  applies it with experiment/v8_gates.V8.fix_gates (logit +-8, gradient masked) — as v16's `--rel_gates open`; `sop check` (the legend
+  loader) rejects a kind that is not a kind of the lexicon, a kind both open and closed, and unknown kinds in `level_openers` / `rel_emitters`.
+- **Legend versions now**: reference v2 (gates_given to / by / from open + level openers; v1 under versions/v1/), commands v2 (level openers;
+  v1 under versions/v1/), quantifiers v3 (v2 = C2c + level openers; v2 and v1 under versions/). Every earlier hash is reproduced by the
+  exporter (reference v1 a90d0a42…, commands v1 0782b57a…, quantifiers v1 c4e983c3…, v2 c52ccef3…).
 - **`|` alternatives** are compiled into targets (superposition / sqrt(n)) but the reader never emits them: a margin under tau gives
   `_status=abstain` with the top candidate.
 - **Decoder reads** says* -> [not] -> event, with fillers word | negated word | entity(head, attr [negated], det) and `_scope`. `if`, `must`,
@@ -141,6 +155,10 @@ Exit codes (spec 5): 0 ok; 1 input / validation error; 2 model missing or legend
 | C2 P0 runs committed | done by the coordinator | `tool/runs/p0_cpu_1seed_60f284d/` |
 | C3 FULL with depth given and estimated, side by side | done (NEW) | `train.evaluate`, `tests/p0_compare.py` |
 | C4 size breakdown | done (NEW) | below |
+| e9274a9 Q6: the primary depth estimate = the open level gates passed; the fit as a check; both reported | done (NEW) | `Reader.depth_from_gates`, `read(estimator=)`; `_depth.gates`, `_depth.fit`; test 2 |
+| e9274a9 Q6: `gates_given` in legend.json, applied with V8.fix_gates, kinds validated | done (NEW) | `legend.py`, `train.py`; tests 1, 2 |
+| e9274a9 C2 / rule 28: the reference gap isolated one change per run | PLANNED (GPU) | `tests/gpu_round2.sh`, `tests/isolation_table.py` |
+| e9274a9 Q4: the annotator measurement runs anywhere with a key | done | `measure_annotators.py` + `skills/train-world/data/commands_500/` |
 
 ## Model size (author C4)
 `tests/model_sizes.py` on the P0 CPU models, output committed as `tool/runs/p0_cpu_1seed_60f284d/model_sizes.json` (D = 1024, float32 phases):
@@ -221,7 +239,29 @@ Reading (rule 10: evaluation first):
   stated set of categories (here to / by / from)"; the participle-gate run, 10b-quater, did not meet its criterion, 0.850). Not reproduced within seed variance on those three rows; the differences of
   this run from the script: identities per seed from the tool's star function, the depth estimated, the candidates = the whole catalog.
 
+### Round 2 (judgment e9274a9 Q6, C2): prepared, not run
+`tool/tests/gpu_round2.sh` (the lock and guards of p0_full_gpu.sh; 5 seeds, the regime of p0_gpu_5seed_c843f53), ONE change per run:
+- `commands_depth_from_gates`: commands legend v2 — FULL with the depth from the open level gates, against the fit and against the depth
+  given (0.857±0.025 in c843f53; 10d 0.854±0.031);
+- `reference_A_gates_given`: reference legend v2 — to / by / from GIVEN open (10b-quinquies: 0.968 at depth 3);
+- `reference_B_role_catalog`: A re-scored with v16's candidate sets (no training: the `experiment candidates` column of A, every seed);
+- `reference_C_v16_identities`: B + v16's per-seed identity draw (`sop train --identities table:identity_vocab_v16.json`:
+  np.random.default_rng(300 + seed) over the v16 vocabulary, the marker = the `<m>` row).
+Output: `tool/runs/round2_<commit>/<run>/` and `isolation_table.md` (`tests/isolation_table.py`).
+
+**What the committed c843f53 run already says about the candidates** (re-scoring is free: both columns are in its metrics.json). The tool
+never cleaned up over the WHOLE catalog: its `catalog` candidates are the catalog words of the role's kinds (18 persons for agent and recipient,
+18 objects: the 12 seen + the 6 held out); v16's sets are the 12 seen words (seen splits) and the 6 held-out words (new identities). With v16's
+sets on the same c843f53 models: seen formulations 0.985±0.011 (vs 0.985±0.012 with the 18), new identities 1.000±0.000 (vs 0.994±0.007),
+unseen transitions 0.647±0.016 (vs 0.643±0.017), depth 3 0.742±0.040 (unchanged). So the candidate set explains the new-identities gap, not the
+0.985 on seen formulations — the judgment's likely cause is excluded on that row; runs A and C test the two remaining differences one at a time.
+
 ## Test results (BUILT; `tests/run_all.sh` on CPU; smoke readers D = 256; outputs in `tool/tests/out/`, not committed; all six PASS)
+- after e9274a9 (depth from the level gates, gates_given): test 1 adds the gates_given kind check (an unknown kind is a legend error); test 2
+  adds the reference legend v2 (to / by / from given open, versions/v1 kept), `_depth.gates` / `_depth.fit` on formalize's top-level wires,
+  and on the smoke reference reader at the unseen depth 3: the depth from the level gates right on 1.000 of the sentences, the fit 0.912
+  (FULL there 0.200 / 0.188 / 0.200 with gates / fit / given depth: a 2000-sentence smoke reader); quantifiers v3 current with v2 and v1
+  under versions/. All six PASS.
 - test 1 (SOP Lang + check): the 3.5 example parses and round-trips byte for byte; every 3.6 negative case rejected with line and reason;
   `_scope` accepted on an event wire (`agent`, `both`), rejected on an entity wire and with a non-role value; an event without verbs is a
   legend error; a file mixing two worlds passes with two legends and fails with one.
@@ -254,7 +294,10 @@ one script each).
 
 **The one measurement** (`skills/train-world/scripts/measure_annotators.py --n 500`): annotate 500 generated commands sentences with the small
 and with the large model, FULL-frame agreement with the gold for each; the small default stands if it is within 0.02 of the large. Status:
-PLANNED — "API unavailable" (exit 3); the small default is a stated default, not a measured one.
+PLANNED — "API unavailable" (exit 3); the small default is a stated default, not a measured one. **It runs on any machine** with Python 3.10+,
+numpy, the `anthropic` package and a key (judgment e9274a9 Q4): the 500 gold sentences ship with the skill
+(`skills/train-world/data/commands_500/`: legend.json, kinds.tsv, gold.sop, generated once from experiment/v18_commands by the exporter);
+it needs neither experiment/ nor torch nor a GPU (checked with `python3 -I`, which keeps experiment/ off the path).
 
 ## Limits of v1
 - No LLM calls were made (no API): annotation (with its re-ask), the second look's choice between readings, role naming, the LLM
