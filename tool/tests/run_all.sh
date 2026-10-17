@@ -12,7 +12,8 @@ declare -A R
 "$PY" "$T/test3_diff.py"; R[3]=$?
 "$T/test4_server.sh"; R[4]=$?
 "$T/test5_skill.sh"; R[5]=$?
+"$PY" "$T/test7_wikisql.py"; R[7]=$?
 echo; echo "== summary"
-for k in 1 2 3 4 5; do echo "test $k: $([ "${R[$k]}" -eq 0 ] && echo PASS || echo "FAIL (${R[$k]})")"; done
+for k in 1 2 3 4 5 7; do echo "test $k: $([ "${R[$k]}" -eq 0 ] && echo PASS || echo "FAIL (${R[$k]})")"; done
 echo "test 6 (page): inside test 4"
-for k in 1 2 3 4 5; do [ "${R[$k]}" -eq 0 ] || exit 1; done
+for k in 1 2 3 4 5 7; do [ "${R[$k]}" -eq 0 ] || exit 1; done

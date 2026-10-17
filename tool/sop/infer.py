@@ -104,6 +104,8 @@ class Reader:
         bg = os.path.join(model_dir, "background.npz")
         self.background = dict(np.load(bg)) if os.path.exists(bg) else None
         self.content_kinds = set(self.schema.get("content_kinds", []))
+        rr = self.legend.reader; self.closed = rr.get("closed_values") or {}; self.table_roles = set(rr.get("table_roles") or []); self.set_roles = set(rr.get("set_roles") or [])
+        self._table = None
 
     # ---------------- words
     def kind(self, tok):
@@ -120,6 +122,26 @@ class Reader:
             M = np.array([self.st.id(w) for w in ws]) / np.sqrt(self.D) if ws else np.zeros((0, self.D), complex)
             self._cands[key] = (ws, M)
         return self._cands[key]
+    def role_cands(self, r, filt=None):
+        """the candidates of a role: a legend closed value set (symbols), the sentence's TABLE (its columns, for table roles: given with the
+        sentence, `_table` in examples, after a TAB in formalize's input), else the catalog words of the role's kinds"""
+        if r in self.closed:
+            key = ("__closed", r)
+            if key not in self._cands:
+                ws = list(self.closed[r]); M = np.array([self.st.val(w, r, self.legend.reader) for w in ws]); M = M / np.linalg.norm(M, axis=1, keepdims=True)
+                self._cands[key] = (ws, M)
+            return self._cands[key]
+        if r in self.table_roles:
+            cols = tuple(self._table or ()); key = ("__table", cols)
+            if key not in self._cands:
+                if len(self._cands) > 20000: self._cands = {k: v for k, v in self._cands.items() if k[0] != "__table"}
+                ws = list(cols); vs = [self.st.val(c, "head", self.legend.reader) for c in ws]
+                M = np.array([v / max(1e-12, np.linalg.norm(v)) for v in vs]) if ws else np.zeros((0, self.D), complex)
+                self._cands[key] = (ws, M)
+            return self._cands[key]
+        rs = self.schema["roles"][r]
+        return self.cands(rs["head_kinds"] if rs["main"] == "entity" else rs["kinds"], filt)
+
     def verb_cands(self):
         if "__verbs" not in self._cands:
             ws = self.legend.all_verbs(); self._cands["__verbs"] = (ws, np.array([self.st.id(w) for w in ws]) / np.sqrt(self.D))
@@ -152,6 +174,7 @@ class Reader:
         j = np.argsort(-sc)[:2]; return ws[j[0]], float(sc[j[0]] - sc[j[1]]), float(sc[j[0]])
 
     def _filler_top(self, Sn, key, r, filt):
+        if r in self.closed or r in self.table_roles: return self.best(Sn * key, self.role_cands(r, filt))
         rs = self.schema["roles"][r]
         if rs["main"] == "entity": return self.best(Sn * key, self.cands(rs["head_kinds"], filt))
         return self.best(Sn * key, self.cands(rs["kinds"], filt))
@@ -161,8 +184,34 @@ class Reader:
         if self.legend.reader["predicate_role"]: tops.append(self.best(Sn * K * np.conj(self.st.op("pred")), self.verb_cands())[2])
         return float(np.mean(tops)) if tops else 0.0
 
+    def read_set_role(self, Sn, key, r, core, presence):
+        """a SET role (legend reader.set_roles, e.g. WikiSQL's conditions): every candidate of the sentence's table is a member when its ratio
+        (cosine after unbinding the role / the structure score) reaches the member threshold set on calibration rows (thresholds.set_member,
+        by the calibration rule); the margin = the gap between the weakest member and the strongest non-member (cosine); the presence margin =
+        the smallest |ratio - threshold| over the candidates"""
+        ws, M = self.role_cands(r); out = {"margins": {}}
+        if not ws: out.update(presence=0.0, present=False); return out
+        sc = np.real(M.conj() @ (Sn * key)); ratio = sc / core if core > 1e-9 else sc * 0
+        thr = self.th.get("set_member", {}).get(r)
+        mem = [i for i in range(len(ws)) if (ratio[i] >= thr if thr is not None else i == int(np.argmax(sc)))]
+        if presence == "all" and not mem: mem = [int(np.argmax(sc))]
+        out["presence"] = float(ratio.max()); out["member_ratios"] = {w: float(x) for w, x in zip(ws, ratio)}; out["present"] = bool(mem)
+        if thr is not None and presence != "all": out["presence_margin"] = float(np.min(np.abs(ratio - thr)))
+        if not mem: return out
+        non = [i for i in range(len(ws)) if i not in mem]
+        out["margins"][r] = float(sc[mem].min() - (sc[non].max() if non else 0.0))
+        ents = sorted((["entity", ws[i], None, None] for i in mem), key=json.dumps)
+        out["filler"] = ents[0] if len(ents) == 1 else ["set"] + ents
+        return out
+
     def read_role(self, Sn, K, r, core, filt=None, presence="decided"):
-        rs = self.schema["roles"][r]; key = K * np.conj(self.st.role(r)); out = {"margins": {}}
+        key = K * np.conj(self.st.role(r))
+        if r in self.set_roles: return self.read_set_role(Sn, key, r, core, presence)
+        if r in self.closed or r in self.table_roles:
+            w, mg, top = self.best(Sn * key, self.role_cands(r, filt)); out = {"margins": {}, "presence": top / core if core > 1e-9 else 0.0, "present": w is not None}
+            if w is not None: out["filler"] = ["word", w]; out["margins"][r] = mg
+            return out
+        rs = self.schema["roles"][r]; out = {"margins": {}}
         if self.legend.reader["occupancy_marker"]:
             mk = self.st.marker() / np.sqrt(self.D); pres = float(np.real(np.sum(Sn * key * np.conj(mk))))
         else: pres = self._filler_top(Sn, key, r, filt)[2]
@@ -217,7 +266,7 @@ class Reader:
         ops = set(self.legend.reader.get("level_openers") or [])
         return sum(1 for t in tokens if self.kind(t) in ops) if ops else None
 
-    def read(self, S, tokens, filt=None, force=None, force_depth=None, estimator="gates", presence="decided"):
+    def read(self, S, tokens, filt=None, force=None, force_depth=None, estimator="gates", presence="decided", table=None):
         """S -> decoded frame (same layout as world.frame_of) with margins and presence scores.
         force = (depth, negation) GIVEN; force_depth = depth GIVEN, negation estimated; otherwise the depth is ESTIMATED — by the open level
         gates passed (estimator 'gates', the primary one, when the legend names level openers) or by the fit (estimator 'fit': the depth whose
@@ -226,11 +275,13 @@ class Reader:
         depth_fit) and written on the top-level wire. presence='all' reads every role of the schema without the presence decision (as the
         repository's v16 readout, which always reads C); the default 'decided' applies the calibrated presence thresholds."""
         nS = np.linalg.norm(S)
+        if table is not None: self._table = list(table)
         f = {"speakers": [], "neg": False, "event": None, "roles": {}, "shape": "ok", "lemma": None, "margins": {}, "presence": {}}
         if nS < 1e-9: f["shape"] = "unknown"; return f
         Sn = S / nS; sch = self.schema; rep = np.conj(self.st.op("says.scope")); nott = np.conj(self.st.op("not"))
         negs = [False, True] if sch["neg_event"] else [False]
-        hyps = [(d, n) for d in range(sch["max_depth"] + 2) for n in negs]
+        dmax = sch["max_depth"] + 1 if "says" in self.legend.operators else 0      # no reporting operator in the legend: depth 0 only
+        hyps = [(d, n) for d in range(dmax + 1) for n in negs]
         scores = {h: self.structure_score(Sn, rep ** h[0] * (nott if h[1] else 1), filt) for h in hyps}
         order = sorted(hyps, key=lambda h: -scores[h])
         f["depth_fit"] = order[0][0]; f["depth_gates"] = dg = self.depth_from_gates(tokens) if tokens is not None else None
@@ -258,6 +309,7 @@ class Reader:
             o = self.read_role(Sn, K, r, core, filt, presence); f["presence"][r] = o["presence"]
             for part in ("attr", "det"):
                 if part + "_ratio" in o: f["presence"][r + "." + part] = o[part + "_ratio"]
+            if "member_ratios" in o: f["presence"][r + ".members"] = o["member_ratios"]
             if "presence_margin" in o: f["margins"][r + ".presence"] = o["presence_margin"]
             if o.get("present") and o.get("filler") is not None:
                 f["roles"][r] = o["filler"]; f["margins"].update(o["margins"])
@@ -327,6 +379,11 @@ class Reader:
             elif fl[0] == "negword":
                 nw = soplang.Wire(next(ids), "not"); nw.set("scope", fl[1]); later.append(nw); ev.set(r, ("ref", nw.id))
                 if r in mg: nw.set("_margin.scope", fmt(mg[r]))
+            elif fl[0] == "set":            # a SET value: one entity wire per member, the role line their & (spec 3.2)
+                refs = []
+                for it in fl[1:]:
+                    en = soplang.Wire(next(ids), "entity"); en.set("head", it[1]); later.append(en); refs.append(("ref", en.id))
+                ev.set(r, ("&", refs))
             elif fl[0] == "entity":
                 en = soplang.Wire(next(ids), "entity"); later.append(en); ev.set(r, ("ref", en.id)); en.set("head", fl[1])
                 if fl[2] is not None:
@@ -401,14 +458,15 @@ class Reader:
     def placed_words(self, f):
         ws = set(f["speakers"]) | ({f["lemma"]} if f.get("lemma") else set())
         for fl in f["roles"].values(): ws |= set(world.filler_words(fl))
+        if self.legend.reader.get("value_identity") == "bundle_alnum": ws |= {t for w in list(ws) for t in world.alnum(w)}
         return ws
 
-    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None):
+    def formalize(self, text, sentence, ids, filt=None, force=None, force_depth=None, estimator=None, presence=None, table=None):
         """one sentence -> (wires, frame, info). force / force_depth: see read() (evaluation only; the CLI estimates both)"""
         tokens = tokenize(text); S, kept, unknown, addr = self.chart(tokens)
         # a model without the key predates round 3: its primary estimator was the open-gate count
         estimator = estimator or self.cfg.get("depth_estimator", "gates"); presence = presence or self.cfg.get("presence_readout", "decided")
-        f = self.read(S, tokens, filt, force, force_depth, estimator, presence) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
+        f = self.read(S, tokens, filt, force, force_depth, estimator, presence, table) if kept else {"shape": "unknown", "roles": {}, "speakers": [], "margins": {}, "neg": False, "lemma": None}
         placed = self.placed_words(f) if f["shape"] == "ok" else set()
         unplaced = [i for i in unknown]
         for i in kept:
@@ -417,7 +475,8 @@ class Reader:
         unplaced = sorted(set(unplaced))
         status = "ok"
         has_verb = any(self.legend.event_of_lemma(self.lemma(t)) for t in tokens) or not self.legend.reader["predicate_role"]
-        if tokens and len(unplaced) > self.cfg.get("thresholds", {}).get("no_sense_share", 0.5) * len(tokens): status = "no-sense"
+        nss = self.legend.reader.get("no_sense_share") or self.cfg.get("thresholds", {}).get("no_sense_share", 0.5)
+        if tokens and len(unplaced) > nss * len(tokens): status = "no-sense"
         elif f["shape"] != "ok" or not has_verb: status = "unknown-event"
         if status != "ok": f = dict(f, shape="unknown")
         wires = self.frame_wires(f, ids, text, sentence)
@@ -460,9 +519,10 @@ def formalize_text(reader, lines, filt=None):
     doc.directives.append(("generated", "sop 0.1, " + ", ".join(f"model {r.cfg.get('world', '?')}/model ({r.cfg.get('trained', '?')[:10]})" for r in readers), None))
     k = 1; frames = []
     for n, text in enumerate(lines):
-        cands = []
+        cands = []; table = None
+        if "\t" in text: text, tcols = text.split("\t", 1); table = [c.strip() for c in tcols.split("|") if c.strip()]
         for r in readers:
-            wires, f, info = r.formalize(text, n, idgen(start=k), filt)
+            wires, f, info = r.formalize(text, n, idgen(start=k), filt, table=table)
             rel = info["residual"] / max(1e-9, r.no_fit_residual())          # relative residual: >= 1.0 = this reader explains almost nothing
             mm = [v for v in f.get("margins", {}).values()]; mean_margin = float(np.mean(mm)) if mm else 0.0
             cands.append(((info["status"] in ("no-sense", "unknown-event"), rel, -mean_margin), r, wires, f, info))
