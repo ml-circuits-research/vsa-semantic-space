@@ -1,0 +1,114 @@
+# 2026-10-17T07:42:26+02:00  commit=a34973a  cmd: python3 v20_operators.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+v20_operators (B5.1): device=cuda, D=1024, N=40000, seeds=5; operators as roles around their scope (current definition); forms ['aff', 'must', 'may', 'neg', 'must_neg', 'neg_must', 'may_neg']; training depth 0 and 1 (share of depth 1 0.4), test depths 0, 1, 2 (UNSEEN)
+chance: fillers 1/12, predicate 1/6, structure 1/6; the pair must_neg / neg_must has the IDENTICAL target by construction (commutative binding)
+
+rule 28 address check (hard gates; cos between a token's addresses in the two sentences; the targets of A, B, C, pred differ between the two sentences of every pair):
+   draw 0 | 'p0 must give o0 to p1' vs 'p0 must not give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.367 | p1 +0.382 | give -0.030
+   draw 0 | 'p0 does not give o0 to p1' vs 'p0 does not have to give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.368 | p1 +0.363 | give -0.030
+   draw 0 | 'p0 may give o0 to p1' vs 'p0 may not give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.298 | p1 +0.382 | give -0.059
+   draw 0 | 'p0 gives o0 to p1' vs 'p0 must give o0 to p1': p0 +0.643 | o0 +0.079 | p1 +0.377
+   draw 1 | 'p0 must give o0 to p1' vs 'p0 must not give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.371 | p1 +0.347 | give -0.031
+   draw 1 | 'p0 does not give o0 to p1' vs 'p0 does not have to give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.321 | p1 +0.365 | give +0.048
+   draw 1 | 'p0 may give o0 to p1' vs 'p0 may not give o0 to p1': p0 +1.000 IDENTICAL | o0 +0.326 | p1 +0.357 | give -0.017
+   draw 1 | 'p0 gives o0 to p1' vs 'p0 must give o0 to p1': p0 +0.696 | o0 -0.010 | p1 +0.301
+   -> the subject p0 is IDENTICAL in 'must give' / 'must not give' and in 'does not give' / 'does not have to give': the named pair the reader cannot reach; this run is the declared measurement of that limit (rule 28 exception).
+
+[train seed 0] start: RSS 1.62 GB | torch alloc 0.68 GB reserved 0.74 GB | MemAvailable 112.9 GB
+[train seed 0] step 500 sent 4000/40000 loss -0.716 (17s) | RSS 2.75 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 111.9 GB
+[train seed 0] step 1000 sent 8000/40000 loss -0.830 (34s) | RSS 2.75 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.1 GB
+[train seed 0] step 1500 sent 12000/40000 loss -0.867 (51s) | RSS 2.75 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.1 GB
+[train seed 0] step 2000 sent 16000/40000 loss -0.887 (68s) | RSS 2.75 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.1 GB
+[train seed 0] step 2500 sent 20000/40000 loss -0.873 (86s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.0 GB
+[train seed 0] step 3000 sent 24000/40000 loss -0.898 (103s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.0 GB
+[train seed 0] step 3500 sent 28000/40000 loss -0.912 (120s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 112.0 GB
+[train seed 0] step 4000 sent 32000/40000 loss -0.907 (137s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 111.5 GB
+[train seed 0] step 4500 sent 36000/40000 loss -0.892 (155s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 111.5 GB
+[train seed 0] step 5000 sent 40000/40000 loss -0.917 (173s) | RSS 2.80 GB | torch alloc 0.90 GB reserved 1.07 GB | MemAvailable 111.5 GB
+[train seed 0] end: RSS 2.80 GB | torch alloc 0.90 GB reserved 0.96 GB | MemAvailable 111.6 GB (174s)
+/home/salboaie/work/ml-circuits-research/vsa-semantic-space/experiment/v8_gates.py:129: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at /__w/pytorch/pytorch/torch/csrc/autograd/generated/python_variable_methods.cpp:820.)
+  def gates(self): return {c: float(torch.sigmoid(self.logits[i])) for i, c in enumerate(self.cats)}
+  seed 0 (175s) gates OPEN: ['O', 'does', 'gives', 'has', 'have', 'lends', 'may', 'might', 'must', 'need', 'never', 'not', 'offers', 'sells', 'sends', 'shows', 'that']
+[train seed 1] start: RSS 2.72 GB | torch alloc 0.74 GB reserved 1.47 GB | MemAvailable 111.1 GB
+[train seed 1] step 500 sent 4000/40000 loss -0.768 (17s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.7 GB
+[train seed 1] step 1000 sent 8000/40000 loss -0.822 (34s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 1] step 1500 sent 12000/40000 loss -0.880 (51s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 1] step 2000 sent 16000/40000 loss -0.898 (68s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 1] step 2500 sent 20000/40000 loss -0.905 (86s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] step 3000 sent 24000/40000 loss -0.906 (102s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] step 3500 sent 28000/40000 loss -0.897 (118s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] step 4000 sent 32000/40000 loss -0.908 (134s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] step 4500 sent 36000/40000 loss -0.931 (151s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] step 5000 sent 40000/40000 loss -0.894 (167s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.6 GB
+[train seed 1] end: RSS 2.77 GB | torch alloc 0.90 GB reserved 0.98 GB | MemAvailable 112.1 GB (168s)
+  seed 1 (169s) gates OPEN: ['does', 'has', 'may', 'might', 'must', 'need', 'never', 'not', 'that', 'to']
+[train seed 2] start: RSS 2.72 GB | torch alloc 0.74 GB reserved 1.59 GB | MemAvailable 111.5 GB
+[train seed 2] step 500 sent 4000/40000 loss -0.713 (17s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.6 GB
+[train seed 2] step 1000 sent 8000/40000 loss -0.838 (34s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.0 GB
+[train seed 2] step 1500 sent 12000/40000 loss -0.886 (51s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.1 GB
+[train seed 2] step 2000 sent 16000/40000 loss -0.889 (69s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.0 GB
+[train seed 2] step 2500 sent 20000/40000 loss -0.910 (87s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.1 GB
+[train seed 2] step 3000 sent 24000/40000 loss -0.883 (104s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.0 GB
+[train seed 2] step 3500 sent 28000/40000 loss -0.893 (121s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.1 GB
+[train seed 2] step 4000 sent 32000/40000 loss -0.914 (138s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.1 GB
+[train seed 2] step 4500 sent 36000/40000 loss -0.912 (156s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 110.9 GB
+[train seed 2] step 5000 sent 40000/40000 loss -0.902 (173s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.60 GB | MemAvailable 111.0 GB
+[train seed 2] end: RSS 2.77 GB | torch alloc 0.90 GB reserved 0.96 GB | MemAvailable 111.6 GB (174s)
+  seed 2 (174s) gates OPEN: ['does', 'has', 'have', 'may', 'might', 'must', 'need', 'never', 'not', 'that', 'to']
+[train seed 3] start: RSS 2.72 GB | torch alloc 0.74 GB reserved 1.47 GB | MemAvailable 111.0 GB
+[train seed 3] step 500 sent 4000/40000 loss -0.717 (17s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.1 GB
+[train seed 3] step 1000 sent 8000/40000 loss -0.827 (35s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.1 GB
+[train seed 3] step 1500 sent 12000/40000 loss -0.886 (52s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.1 GB
+[train seed 3] step 2000 sent 16000/40000 loss -0.883 (69s) | RSS 2.72 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.3 GB
+[train seed 3] step 2500 sent 20000/40000 loss -0.880 (87s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 3] step 3000 sent 24000/40000 loss -0.887 (104s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 3] step 3500 sent 28000/40000 loss -0.918 (121s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 3] step 4000 sent 32000/40000 loss -0.907 (138s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.1 GB
+[train seed 3] step 4500 sent 36000/40000 loss -0.921 (156s) | RSS 2.77 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.2 GB
+[train seed 3] step 5000 sent 40000/40000 loss -0.914 (173s) | RSS 2.69 GB | torch alloc 0.90 GB reserved 1.48 GB | MemAvailable 111.3 GB
+[train seed 3] end: RSS 2.74 GB | torch alloc 0.90 GB reserved 0.94 GB | MemAvailable 111.7 GB (173s)
+  seed 3 (174s) gates OPEN: ['does', 'has', 'have', 'may', 'might', 'must', 'need', 'never', 'not', 'that', 'to']
+[train seed 4] start: RSS 2.69 GB | torch alloc 0.74 GB reserved 1.51 GB | MemAvailable 111.2 GB
+[train seed 4] step 500 sent 4000/40000 loss -0.709 (17s) | RSS 2.69 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.2 GB
+[train seed 4] step 1000 sent 8000/40000 loss -0.852 (34s) | RSS 2.69 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.2 GB
+[train seed 4] step 1500 sent 12000/40000 loss -0.886 (51s) | RSS 2.69 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.2 GB
+[train seed 4] step 2000 sent 16000/40000 loss -0.921 (68s) | RSS 2.69 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.7 GB
+[train seed 4] step 2500 sent 20000/40000 loss -0.910 (85s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.6 GB
+[train seed 4] step 3000 sent 24000/40000 loss -0.908 (102s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.5 GB
+[train seed 4] step 3500 sent 28000/40000 loss -0.938 (119s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.6 GB
+[train seed 4] step 4000 sent 32000/40000 loss -0.905 (135s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.6 GB
+[train seed 4] step 4500 sent 36000/40000 loss -0.916 (152s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.6 GB
+[train seed 4] step 5000 sent 40000/40000 loss -0.910 (169s) | RSS 2.74 GB | torch alloc 0.90 GB reserved 1.52 GB | MemAvailable 111.6 GB
+[train seed 4] end: RSS 2.74 GB | torch alloc 0.90 GB reserved 0.98 GB | MemAvailable 112.2 GB (169s)
+  seed 4 (170s) gates OPEN: ['does', 'gives', 'has', 'have', 'lends', 'may', 'might', 'must', 'need', 'never', 'not', 'offers', 'sells', 'sends', 'shows', 'that']
+
+== MEANS over 5 seeds, per depth and form (roles read under the GOLD structure; structure = decoded hypothesis; FULL = structure + roles under it)
+   depth | form | A | B | C | pred | structure | FULL
+   0          | aff       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   0          | must      | 0.990±0.020 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.990±0.020
+   0          | may       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   0          | neg       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   0          | must_neg  | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   0          | neg_must  | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   0          | may_neg   | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | aff       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | must      | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | may       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | neg       | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | must_neg  | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | neg_must  | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   1          | may_neg   | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000
+   2 (UNSEEN) | aff       | 0.130±0.076 | 0.995±0.010 | 0.990±0.012 | 0.590±0.224 | 1.000±0.000 | 0.100±0.089
+   2 (UNSEEN) | must      | 0.145±0.076 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.145±0.076
+   2 (UNSEEN) | may       | 0.070±0.075 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.070±0.075
+   2 (UNSEEN) | neg       | 0.115±0.049 | 0.990±0.012 | 1.000±0.000 | 0.785±0.112 | 1.000±0.000 | 0.100±0.045
+   2 (UNSEEN) | must_neg  | 0.175±0.065 | 0.990±0.012 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.175±0.065
+   2 (UNSEEN) | neg_must  | 0.150±0.079 | 0.985±0.030 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.150±0.079
+   2 (UNSEEN) | may_neg   | 0.095±0.068 | 0.995±0.010 | 1.000±0.000 | 1.000±0.000 | 1.000±0.000 | 0.095±0.068
+== the colliding pair must_neg / neg_must (same event): share of pairs whose decoded frames DIFFER, per depth: d0 0.000; d1 0.000; d2 0.610
+== subject A by number of operators after it (mean over forms and seeds): d0: 0 ops 1.000, 1 op 0.997, 2 ops 1.000; d1: 0 ops 1.000, 1 op 1.000, 2 ops 1.000; d2: 0 ops 0.130, 1 op 0.110, 2 ops 0.140
+== learned gates (mean sigmoid; OPEN > 0.5): that=1.00 never=1.00 not=1.00 has=1.00 might=0.92 need=0.84 does=0.84 have=0.81 may=0.80 must=0.77 to=0.69 offers=0.34 lends=0.34 sends=0.34 sells=0.34 shows=0.33
+
+checklist: [x] world addresses [x] shared F [x] chance printed [x] rule 28 address check printed before training, the unreachable pair named (declared measurement) [x] roles under the gold structure and FULL under the decoded one (17) [x] per form and per depth, unseen depth separate [x] colliding pair as a frame-difference axis [x] gates learned, stated (20) [x] params saved [x] memory logged (21) [x] >= 3 seeds

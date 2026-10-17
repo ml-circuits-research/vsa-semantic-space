@@ -98,9 +98,9 @@ def address_check(w, D, seeds=2):
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(); ap.add_argument("--seeds", type=int, default=5); ap.add_argument("--N", type=int, default=40000); ap.add_argument("--D", type=int, default=1024); ap.add_argument("--batch", type=int, default=8); ap.add_argument("--lr", type=float, default=0.02)
-    ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--p_depth1", type=float, default=0.4); ap.add_argument("--tag", default="b51")
+    ap.add_argument("--device", default="cuda"); ap.add_argument("--n_id", type=int, default=18); ap.add_argument("--log_every", type=int, default=500); ap.add_argument("--p_depth1", type=float, default=0.4); ap.add_argument("--tag", default="b51"); ap.add_argument("--p_aff2", type=float, default=0.0, help="E1b protocol (rule 4, after the first B5.1 run): share of AFFIRMATIVE sentences drawn at depths 0-2, so that the depth-2 transitions (that -> that) are SEEN and depth 2 is an unseen depth for the OPERATOR forms only, not an unseen transition")
     a = ap.parse_args(); D, N = a.D, a.N; v5.set_lang("en"); v5.OUTER = [o for o in v5.OUTER if o.index("<P>") > 0]
-    print(f"v20_operators (B5.1): device={a.device}, D={D}, N={N}, seeds={a.seeds}; operators as roles around their scope (current definition); forms {list(FORMS)}; training depth 0 and 1 (share of depth 1 {a.p_depth1}), test depths 0, 1, 2 (UNSEEN)")
+    print(f"v20_operators (B5.1): device={a.device}, D={D}, N={N}, seeds={a.seeds}; operators as roles around their scope (current definition); forms {list(FORMS)}; training depth 0 and 1 (share of depth 1 {a.p_depth1}), test depths 0, 1, 2 (UNSEEN)" + (f"; E1b protocol: affirmatives at depths 0-2 with share {a.p_aff2} (depth 2 is then an unseen depth for the operator forms, not an unseen transition)" if a.p_aff2 > 0 else "; NOTE: no sentence at depth 2 in training — depth 2 is also an UNSEEN TRANSITION (that -> that), rule 4"))
     print(f"chance: fillers 1/12, predicate 1/6, structure 1/6; the pair must_neg / neg_must has the IDENTICAL target by construction (commutative binding)\n")
     w0 = OpWorld(a.n_id, np.random.default_rng(0)); address_check(w0, 256)
     cols = ["A", "B", "C", "pred", "structure", "FULL"]; res = {}; gates_all = []; differ_all = []
@@ -110,7 +110,9 @@ if __name__ == "__main__":
         m = v8.V8(w, D, np.random.default_rng(200 + seed), ["path", "chainL", "bigram"], a.device, gate_init="closed"); m.set_F(F); assert m.F_np is world.F
         trng = np.random.default_rng(200 + seed); sents, targets = [], []; forms = list(FORMS)
         for n in range(N):
-            form = forms[int(trng.integers(len(forms)))]; d = 1 if trng.random() < a.p_depth1 else 0; ev = w.oevent(trng, trP, trO, form, depth=d)
+            if trng.random() < a.p_aff2: form = "aff"; d = int(trng.integers(3))                                   # E1b protocol: affirmatives at depths 0-2
+            else: form = forms[int(trng.integers(len(forms)))]; d = 1 if trng.random() < a.p_depth1 else 0
+            ev = w.oevent(trng, trP, trO, form, depth=d)
             sents.append(w.orender(ev, trng, t=int(trng.integers(2)))); targets.append(world.state(ev))
         t0 = time.time(); cats, ids, mask = m.encode(sents); tgt = torch.tensor(np.array(targets), dtype=m.F.dtype, device=m.device)
         trainer.train_loop(m, [m.theta, m.logits], cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=f"logs/.ckpt_v20_{a.tag}_{seed}.pt", tag=f" seed {seed}")

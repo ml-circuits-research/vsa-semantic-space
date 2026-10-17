@@ -1382,3 +1382,56 @@ relative rule). Reference: role cues and unseen transitions reproduced; seen for
 within seed variance — the run differs from v16 in three stated ways (per-seed identities from the tool's star function, depth estimated,
 candidates from the whole catalog), not isolated. Open for the tool: the depth estimator at unseen depths; the given relation-marker gates
 (to / by / from open, 10b-quinquies) as a legend field.
+
+### 10c-octies. C5 re-scoring — the condition verdict with the MARKER'S margin as the abstention statistic (rescore_v17_c5.py; logs/2026-10-17_0757_rescore_v17_c5_a34973a.txt; saved frames of the C5 reader, no retraining; threshold = the saved calibration-half midpoint 0.194, untuned; tau 0.05; same injected errors as 10c-sexies)
+| error type (odd half) | column-margin statistic (10c-sexies): detected / unverifiable / missed | **marker-margin statistic**: detected / unverifiable / missed |
+|---|---|---|
+| drop_cond | 0.150 / 0.825 / 0.025 | **0.745** / 0.230 / 0.025 |
+| add_cond | 0.153 / 0.846 / 0.000 | **0.763** / 0.236 / 0.000 |
+| swap_sel_cond / change_sel / flip_agg | 0.707 / 0.732 / 0.781 | 0.767 / 0.740 / 0.793 |
+| change_value (invisible) | 0.149 / 0.495 / 0.356 | 0.423 / 0.221 / 0.356 |
+| gold: FALSE ALARM / unverifiable / confirmed | 0.152 / 0.495 / 0.353 | **0.426** / 0.221 / 0.353 |
+| role-error recall / precision vs gold | 0.505 / 0.943 | 0.762 / 0.899 |
+Reading: the marker's margin turns the condition errors from "unverifiable" into "detected" (drop 0.15 -> 0.75, add 0.15 -> 0.76) — and turns the
+gold frames into false alarms at the same rate (0.15 -> 0.43): the reader's condition SET disagrees with the gold set, confidently by the marker, on
+0.43 of the gold frames (per slot the present side is read at 0.890, 10c-sexies; a frame with two or three conditions compounds it). The marker
+statistic therefore trades abstention for false alarms one for one; precision falls 0.943 -> 0.899. C5's row stays NOT met (present 0.890); the
+condition axis of the verifier is limited by the presence reading of the second and later slots, not by the verdict statistic. Reported, no
+threshold tuning.
+
+## 12-ter. B5.1 — modal and/or negation AFTER the subject, current operator definition (v20_operators.py; logs/2026-10-17_0742_v20_operators_a34973a.txt; 5 seeds, D = 1024, 40k, all forms at depth 0 and inside one report (share 0.4); trace after the run: trace_b51.py, logs/trace_b51.txt)
+World: S = R_pred f_lemma + R_A f_A + R_B f_B + R_C f_C; op(S) = R_op (x) S; forms aff / must ("must", "has to") / may / neg ("does not", "never") /
+must_neg ("must not", "must never") / neg_must ("does not have to", "need not"; the SAME target as must_neg by construction) / may_neg ("may not",
+"might not"); reporting prefixed. Rule 28 address check before training (printed): the subject has the IDENTICAL address in "must give" /
+"must not give" and in "does not give" / "does not have to give" under hard gates — the run was the declared measurement of that limit.
+Readout: structure = argmax over 6 hypotheses of the mean best cosine of the four roles; roles under the GOLD structure; FULL under the decoded one.
+| depth | form | A | B | C | pred | structure | FULL |
+|---|---|---|---|---|---|---|---|
+| 0 | every form (7) | 0.990-1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 0.990-1.000 |
+| 1 (seen) | every form | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 | 1.000 |
+| 2 (UNSEEN) | aff | **0.130** | 0.995 | 0.990 | 0.590 | 1.000 | 0.100 |
+| 2 (UNSEEN) | must / may / neg | 0.145 / 0.070 / 0.115 | 1.000 / 1.000 / 0.990 | 1.000 | 1.000 / 1.000 / 0.785 | 1.000 | 0.07-0.15 |
+| 2 (UNSEEN) | must_neg / neg_must / may_neg | 0.175 / 0.150 / 0.095 | 0.99 | 1.000 | 1.000 | 1.000 | 0.10-0.18 |
+Colliding pair must_neg / neg_must, same event: decoded frames DIFFER 0.000 at depths 0 and 1 (identical target, as constructed), 0.610 at depth 2
+(both wrong). Subject A by the number of operators after it: depth 0 — 0 ops 1.000, 1 op 0.997, 2 ops 1.000; depth 1 — 1.000 everywhere.
+Gates learned: that, not, never, has, have 1.00; might 0.92, need 0.84, does 0.84, may 0.80, must 0.77, to 0.69; verbs 0.33.
+Reading, by the decision rule stated before the run.
+- At the seen depths the subject does NOT fail: 1.000 under one and under two stacked operators. The trace on the trained seed-0 reader says how
+  (logs/trace_b51.txt): (i) the modal gates are PARTLY open (must 0.71, may 0.72, does 0.83), so the subject's left re-seating is a MIXTURE
+  (a share through the modal, a share past it to the negation when there is one), and the two addresses differ (cos 0.95 / 0.94 for must and may)
+  — hardened to 0/1 they coincide, as 12-bis said; (ii) for "does not" / "does not have to" the two subject addresses are IDENTICAL even with the
+  learned gates (cos 1.000: 'does' 0.83 and 'not' 1.00 sit before the difference), yet the subject is read at 1.000 under both gold keys — the
+  identity CLEANUP tolerates a blended address: the subject's term keeps a cosine of 0.26-0.35 with the gold key in every form (margin 0.18-0.29,
+  no stacked-operator cost visible), the other 11 candidates stay near zero, and the operator STRUCTURE is carried by B, C and the predicate. So
+  the limit (ii) is real on the ADDRESS and invisible in role accuracy on these sentences: the frame is right because the other roles carry the
+  operators and the subject's identity survives at an address shared by two targets. Where it would bite: a construction in which the subject
+  alone carries the operator (none in this world), or a calibration that needs the subject's margin. B5d is NOT needed for the frame readout on
+  these forms; the judgment's "report how" is the two mechanisms above.
+- At the UNSEEN depth 2 the subject fails for EVERY form, the affirmative included (0.07-0.18), while B, C (0.99) and the predicate (1.00 with an
+  operator; 0.59 / 0.79 aff / neg) and the structure (1.000) are read. The trace (part 2): per code, the chain carries the subject at depth 1
+  (0.865) and NOTHING at depth 2 (0.009), the path code carries B and C at both depths (0.72 -> 0.60) and never the subject (0.06). Cause stated:
+  this run trained NO sentence at depth 2, so depth 2 is not only an unseen depth but an UNSEEN TRANSITION (the hop 'that' -> 'that' never
+  occurred; rule 4) — the chain cannot compose a hop it never learned, and the subject is the word the chain carries. Every earlier unseen-depth
+  result (6c, 9b-bis, 9d-bis, 10d, 9c-sexies, 10b-quinquies) had affirmatives at the test depth minus one AND the deeper transition seen (the E1b
+  protocol: affirmatives at depths 0-2, operators at 0-1). This run departed from that protocol by my mistake; it is re-run with it
+  (--p_aff2 0.3, affirmatives at depths 0-2; operator forms at 0-1; 12-quater), both logs kept.
