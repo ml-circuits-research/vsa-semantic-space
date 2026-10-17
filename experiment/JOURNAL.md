@@ -318,3 +318,5 @@ held-out formulations) handed to the agent with the GPU. Push = judgment point.
 B6 (RESULTS 13, log _1037, saved models): 4-bit route book and stars lose nothing (8x smaller routebook); the chart must keep its magnitudes;
 block-sparse chart at 25% free. B7 (RESULTS 14, log _1040): the round-1 position code added to the bundle is KEPT — unseen transitions 0.627 ->
 0.678, depth 3 0.968 -> 0.998; the reference bundle becomes four codes (confirmation asked). Push = judgment point.
+Tool round 4 (agent; RESULTS 11-quinquies): presence thresholds calibrated with held-out formulations move the recipient by +0.005 -> presence
+calibration across formulations recorded as a limit of the reader (the agent's reservation on the midpoint rule left for judgment). Push.
