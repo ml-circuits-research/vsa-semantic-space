@@ -76,3 +76,7 @@ Added 2026-10-16 (external review of the positioning document; round 10):
     states which of two things is unseen: (A) the depth itself — no training sentence at that depth, the hop seen (reference world depth 3, 6c);
     (B) the operator form at a depth seen with plain forms (the E1b protocol; 12-quater). An unseen hop is a different measurement — a chaining
     never performed is missing, not blurred (6c-bis; 12-ter) — and is labelled as such, never as an unseen depth.
+30. **Attainability by construction (judgment 934fbae C).** Before a run, the criterion is checked for attainability by construction: if meeting
+    it requires information the reader never receives (a vector, a label, a gate it was not given), the criterion is rewritten before the run
+    and the reason recorded. (The N6 oracle criterion asked the reader to place a filler at a role vector it had never seen in a target; the
+    axis is kept as a record, not as a failure of the reader.)
