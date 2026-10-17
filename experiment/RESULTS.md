@@ -1695,3 +1695,27 @@ are reconstructed less exactly — while on sentences with the recipient the hid
 share went the wrong way because the comparison class fits worse, not because the hidden information is small; even restricted to content
 words the share gap is +0.08, far from 0.3. The tool's `_residual` stays ONE number; the legend loop's detector stays the direction of the
 unexplained stars across sentences (RESULTS 15: 1-NN 0.57 with no vector and no label).
+
+### 11-septies. Tool round 6 — the FITTED threshold as the calibration rule + the presence margin on the wire (tool/tests/gpu_round6.sh at commit 051dd33; tool/runs/round6_051dd33/ with round6_table.md and presence ratios + identity margins per seed; 5 seeds; judgment 752853c §2) and the §2 re-scoring of round 5 (tool/runs/round5_1ed4306/round5_margins.md)
+§2 re-scoring (round 5's stored ratios, presence part only — no identity margins were stored): 198 of 321 presence errors (0.617; per-seed mean 0.593)
+lie within |ratio − threshold| ≤ tau = 0.05 (false "present" 173 / 265, missed "present" 25 / 56); a band covering half of the errors is 0.046 wide,
+80% needs 0.083. Expectation ("most"): met on the presence part, a lower bound.
+Round 6 (the rule: threshold per role = argmax balanced accuracy on all calibration rows — training sample + calibration half of the held-out
+formulations, both classes; the pooled midpoint printed beside it for this round; the role's `_margin` = min(identity margin, presence margin)):
+| split, role recipient | readout | present read present | absent read absent | share of "present" readings that abstain |
+|---|---|---|---|---|
+| unseen transitions (reported half) | **product: fitted rule** | **0.772**±0.035 | — | 0.198±0.045 |
+| unseen transitions | comparison: pooled midpoint | 0.639±0.040 | — | — |
+| held-out sentences | product: fitted | 1.000 | 0.991±0.014 | 0.002 |
+| held-out sentences | comparison: pooled midpoint | 1.000 | 1.000 | — |
+| depth 3 unseen | product: fitted / comparison | 1.000 / 1.000 | — | 0.100 / — |
+Heads FULL on unseen transitions: product (fitted) 0.444±0.073; comparison (midpoint) 0.418±0.061; v16 protocol (every role read, not available
+to the product) 0.556±0.061; RESULTS 10b-quinquies 0.627±0.024. Product errors inside the abstention band (|ratio − threshold| ≤ tau OR identity
+margin < tau): 95 of 136 = **0.699** (per seed 0.609, 0.550, 0.886, 0.476, 0.750); the errors are mostly missed "present" (16-25 of 87 per seed);
+seed 2's 28 false "present" (of 603) all abstain. Round 6's fitted thresholds (0.36-0.49) differ from round 5's re-scored fit (0.28-0.41): round 6
+fits on both classes of all calibration rows, round 5's re-scoring used the calibration half's present class only (stated).
+Reading: the fitted rule is adopted as the tool's calibration rule (judgment 752853c §2): recipient presence on unseen formulations 0.639 ->
+0.772 at a cost of 0.009 on absent sentences; most of the remaining errors are abstentions (0.70 pooled, "most" as expected, but not in every seed:
+0.476 in seed 3) — the asymmetry option (a legend preferring misses to false alarms for an optional role) is reported, not built. The product
+number for the reference world's unseen formulations is 0.444 heads FULL (presence decided, fitted); the v16 protocol's 0.556 and 10b-quinquies'
+0.627 are the comparisons. The reader's limit stays recorded (the overlap of the classes).

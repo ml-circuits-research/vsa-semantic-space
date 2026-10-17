@@ -336,3 +336,5 @@ the reader's own calibrated address (0.963, 5/5 seeds) and the residuals cluster
 direction, not by share — the detector the tool's `_unplaced` loop already implements. Push = judgment point.
 N6 per-term decomposition (log _1420, RESULTS 15-bis): function words carry 0.44 / 0.27 of the residual — not the majority, the RESULTS 15
 hypothesis dropped; the share inverted because the recipient-less forms' content fit error carries 0.73 of their residual. Rule 30 added.
+Tool round 6 (agent; RESULTS 11-septies): the fitted calibration rule adopted — recipient presence on unseen formulations 0.639 -> 0.772 at a
+0.009 cost on absent sentences; 0.70 of the remaining errors abstain (0.48-0.89 per seed). Push = judgment point.
