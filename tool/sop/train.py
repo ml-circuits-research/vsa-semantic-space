@@ -372,6 +372,16 @@ def export_routebook(m, path):
     np.savez_compressed(path, **z)
 
 
+class Trimmed:
+    """the model as trainer.train_loop sees it, with each batch cut to its own longest sentence (exact: padded positions contribute nothing);
+    used with --length_buckets, where the batches are of similar length"""
+    def __init__(self, m): self.m = m
+    @property
+    def theta(self): return self.m.theta
+    def states(self, cats, ids, mask):
+        T = int(mask.sum(1).max().item()); return self.m.states(cats[:, :T], ids[:, :T], mask[:, :T])
+
+
 class Shim:
     """the minimal world object experiment/v8_gates.V8 needs: vocab, idx, cat (word -> kind)"""
     def __init__(self, words_kinds):
@@ -403,7 +413,13 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     train = [r for r in rows if r.get("split") == "train" and r["frame"]["shape"] != "unknown"]
     order = []
     rng = np.random.default_rng(seed)
-    for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
+    if a.length_buckets:     # v11's batching (experiment/v11_wikisql): batches of similar length, the bucket order shuffled per epoch
+        lens = np.array([len(r["tokens"]) for r in train]); srt = np.argsort(lens, kind="stable")
+        for e in range(a.epochs):
+            bk = [list(srt[i:i + a.batch]) for i in range(0, len(srt), a.batch)]; np.random.default_rng(seed * 100 + e).shuffle(bk)
+            for b_ in bk: order += b_
+    else:
+        for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
     if a.max_train: order = order[:a.max_train]
     sents = [list(train[i]["tokens"]) for i in order]
     targets = np.array([comp.wire(train[i]["wire"], train[i]["by"], train[i]["tokens"]) for i in order])
@@ -429,7 +445,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
         print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
     cats, ids, mask = m.encode(sents); tgt = torch.tensor(targets, dtype=m.F.dtype, device=m.device)
     t0 = time.time()
-    trainer.train_loop(m, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
+    tm = Trimmed(m) if a.length_buckets else m
+    trainer.train_loop(tm, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
                        resume=a.resume, tag=f" seed {seed}")
     t_train = time.time() - t0
     os.makedirs(model_dir, exist_ok=True)
@@ -735,6 +752,8 @@ def main(argv=None):
     ap.add_argument("--eval_modes", default="all", choices=["all", "primary"], help="'primary' = only the product readout and the pooled-midpoint "
                     "comparison (no structure variants: worlds without reporting depth, e.g. WikiSQL)")
     ap.add_argument("--candidate_sets", default="both", choices=["both", "catalog"], help="'catalog' = skip the experiment-candidate pass")
+    ap.add_argument("--length_buckets", action="store_true", help="batches of similar length in shuffled bucket order, each trimmed to its "
+                    "longest sentence (as experiment/v11_wikisql; real text with long sentences); off by default (the constructed worlds' regime)")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")
     ap.add_argument("--run_dir", help="write this run's folder here instead of <world>/runs/<timestamp>")
     ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")

@@ -44,5 +44,18 @@ q = " ".join(ex.tok(rows[0]["question"])) + "\t" + " | ".join(tabs[rows[0]["tabl
 r = subprocess.run([sop, "formalize", "--model", os.path.join(wd, "model"), "-"], input=q + "\n", capture_output=True, text=True)
 ok(r.returncode == 0 and "select=" in r.stdout and "aggregate=" in r.stdout, "sop formalize reads a question with its table after a TAB (select / aggregate lines written)")
 fp = os.path.join(out, "f.sop"); open(fp, "w").write(r.stdout); rep, _ = check_file(fp, {"wikisql": lg}); ok(rep.ok, "the formalize output passes sop check" + ("" if rep.ok else f" {rep.errors[:3]}"))
+# --length_buckets trims each batch to its longest sentence: the trimmed batch gives the same states as the padded one (exact)
+os.environ["CUDA_VISIBLE_DEVICES"] = ""; sys.path.insert(0, os.path.join(os.path.dirname(TOOL), "experiment"))
+import numpy as np, torch, v8_gates as v8
+from sop.train import Shim, Trimmed
+wk = dict(lg.lexicon); shim = Shim(wk); m = v8.V8(shim, 32, np.random.default_rng(0), ["path", "chainL", "bigram"], "cpu", gate_init="closed")
+m.set_F(np.exp(1j * np.random.default_rng(1).uniform(-np.pi, np.pi, (len(shim.vocab), 32))))
+with torch.no_grad(): m.logits.uniform_(-3, 3)
+short, long_ = ex.tok(rows[0]["question"])[:5], ex.tok(rows[1]["question"])[:12]
+short = [t for t in short if t in wk]; long_ = [t for t in long_ if t in wk]
+c2, i2, k2 = m.encode([short, long_]); c1, i1, k1 = m.encode([short])
+with torch.no_grad(): padded = m.states(c2[:1], i2[:1], k2[:1])[0]; trimmed = Trimmed(m).states(c2[:1], i2[:1], k2[:1])[0]; alone = m.states(c1, i1, k1)[0]
+d1 = float((padded - trimmed).abs().max() / padded.abs().max()); d2 = float((alone - trimmed).abs().max() / alone.abs().max())
+ok(d1 < 1e-6 and d2 < 1e-12, f"--length_buckets: the trimmed batch gives the padded batch's states (rel. difference {d1:.1e}; trimmed vs unpadded {d2:.1e})")
 shutil.rmtree(out, ignore_errors=True)
 print(f"\ntest7 (WikiSQL through the tool): {'PASS' if not fails else f'{fails} FAILED'}"); sys.exit(1 if fails else 0)
