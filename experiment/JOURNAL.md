@@ -315,3 +315,6 @@ Judgment saved verbatim; the regularity row now carries ONE named exception (may
 HYPOTHESIS; N8 PLANNED; rule 29. C5 per-slot thresholds (log _1029): slots 2+ 0.760, slot 1 wrecked (33 absent examples) -> C5 CLOSED, bounded
 by the presence reading of the later slots; the drop follows the slot index, not the number of conditions. Tool round 4 (presence thresholds on
 held-out formulations) handed to the agent with the GPU. Push = judgment point.
+B6 (RESULTS 13, log _1037, saved models): 4-bit route book and stars lose nothing (8x smaller routebook); the chart must keep its magnitudes;
+block-sparse chart at 25% free. B7 (RESULTS 14, log _1040): the round-1 position code added to the bundle is KEPT — unseen transitions 0.627 ->
+0.678, depth 3 0.968 -> 0.998; the reference bundle becomes four codes (confirmation asked). Push = judgment point.

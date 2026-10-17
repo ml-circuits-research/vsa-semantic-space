@@ -1523,3 +1523,51 @@ the number of conditions — slot 3+ reads 0.129 while 3-condition questions ave
 inferred from the two tables) — so the parameter is the slot's own role R_COND[k] with few training examples (slot 3+ is 295 of 16,840 report
 slots), not superposition of the conditions; a capacity effect would lower all slots of a 3-condition question together. The condition axis of
 the verifier goes to the HYPOTHESIS list with this diagnostic.
+
+## 13. B6 — sparse block codes and phase quantization: how many bits does a vector need? (rescore_v16_b6.py; logs/2026-10-17_1037_rescore_v16_b6_3d395ff.txt; the saved 10b-quinquies models, 5 seeds, D = 1024; no training; one format changed per variant)
+Criterion written before the run: a format is RECOMMENDED when every reference axis stays within 0.02 of the dense value on the 5-seed mean; the
+recommendation is the smallest L / the sparsest k meeting it. The dense variant is within seed noise of 10b-quinquies (unseen transitions 0.630 vs
+0.627, depth 3 0.977 vs 0.968) but not digit-identical: the world's own rng was consumed differently (the calibration loop stops early), so the
+evaluation events differ — same distribution, stated.
+| format (bits per coordinate) | seen | new ids | unseen transitions | depth 2 | depth 3 UNSEEN | occupancy known / unknown / absent | within 0.02 of dense? |
+|---|---|---|---|---|---|---|---|
+| dense (64: complex64) | 1.000 | 1.000 | 0.630±0.037 | 1.000 | 0.977±0.018 | 1.000 / 1.000 / 1.000 | — |
+| **routebook phases at 4 bits (L = 16)** | 1.000 | 1.000 | 0.615±0.025 | 1.000 | 0.962±0.025 | 1.000 ×3 | **YES** |
+| routebook at 6 / 8 bits | 1.000 | 1.000 | 0.622 / 0.615 | 1.000 | 0.983 / 0.972 | 1.000 | YES / YES |
+| **identities + roles (catalog, legend) at 4 bits** | 1.000 | 1.000 | 0.622±0.026 | 1.000 | 0.985±0.010 | 1.000 | **YES** |
+| identities + roles at 6 / 8 bits | 1.000 | 1.000 | 0.628 / 0.628 | 1.000 | 0.968 / 0.968 | 1.000 | YES / YES |
+| state as unit PHASORS at 4 / 6 / 8 bits (magnitudes dropped) | 1.000 | 1.000 | 0.575 / 0.568 / 0.580 | 1.000 | 0.948 / 0.953 / 0.950 | 1.000 | **no** (unseen transitions −0.05, depth 3 −0.03) |
+| state block-sparse, top-16 / 32 (50%) | 1.000 | 1.000 | 0.637±0.034 | 1.000 | 0.978±0.011 | 1.000 | YES |
+| **state block-sparse, top-8 / 32 (25%)** | 1.000 | 1.000 | 0.633±0.022 | 1.000 | 0.980±0.019 | 1.000 | **YES** |
+| state block-sparse, top-4 / 32 (12.5%) | 0.999 | 1.000 | 0.622±0.026 | 0.998 | 0.958±0.042 | 1.000 | YES (depth 3 −0.019, at the edge) |
+Capacity curve (synthetic, D = 1024, 1,000 candidate fillers, 200 trials; cleanup accuracy per filler vs the number of bundled role-filler
+terms): n = 4 / 8 / 16 / 32 — 1.000 for every format (top-8/32 at n = 32: 0.997); n = 64 — dense 0.989, phasor L = 16 / 64 0.950 / 0.953, block
+top-16 0.969, top-8 0.850.
+Reading, by the criterion: (i) the LEARNED PHASES (the route book) and the GIVEN STARS (catalog, legend) survive 4-bit quantization with no axis
+moving more than 0.02 — the tool's routebook.npz (11.9 MB at float32 phases for the reference world, 11-bis / C4) can be stored at 4 bits per
+phase, an 8-fold reduction, with the catalog regenerated from seeds as before; (ii) the CHART must keep its magnitudes: the unit-phasor projection
+loses 0.05 on unseen transitions and 0.03 at depth 3 at every L, because a bundle's magnitudes carry the vote counts of its terms; (iii) block
+sparsity of the chart to 25% (top-8 of 32) costs nothing on the reference axes and 12.5% is at the edge (depth 3 −0.019) — a sparse block code
+for the chart at a quarter of its coordinates is the recommendation; (iv) capacity is the standard HDC curve: 32 terms clean at D = 1024 in every
+format, 64 terms start to fail (dense 0.989) and sparsity accelerates the failure (top-8: 0.850). Nothing in the reader changes; this is a storage
+and transmission result (RESULTS 11-bis sizes; the tool's model and the wire). B6 is BUILT with its recommendation; the capacity at 64-1000
+identities and D = 4096-16384 (00_READ_FIRST §7 item 6) stays PLANNED.
+
+## 14. B7 — the fourth address code remeasured: the round-1 POSITION code added to the bundle (v16_reference.py --rel_gates open --codes path,chainL,bigram,pos; logs/2026-10-17_1040_v16_reference_60fd964.txt; 5 seeds, same seeds, regime and axes as 10b-quinquies)
+Code (round 1, RESULTS 1 / 8d history; brought into V8 as an optional code): term_i = exp(i (pos[i] + pc[c_i])) (x) f_i — one learned displacement
+per ABSOLUTE position (positions 0-39) plus one per category, added to the path + chainL + bigram bundle; nothing given beyond the relation-marker
+gates of 10b-quinquies. Decision rule written before the run (judgment consolidated Part IV): keep only if the new-construction axis (unseen
+transitions FULL) does not drop by more than 0.02 against 10b-quinquies and no other axis loses.
+| axis (5 seeds) | 10b-quinquies (3 codes) | **+ position code (4 codes)** | change |
+|---|---|---|---|
+| seen FULL / predicate / new ids / role cues / depth 2 | 1.000 | 1.000 | — |
+| unseen transitions FULL (new construction) | 0.627±0.024 | **0.678**±0.007 (0.675, 0.675, 0.675, 0.675, 0.692) | +0.051 |
+| depth 3 UNSEEN FULL | 0.968±0.020 | **0.998**±0.003 (1.000, 0.992, 1.000, 1.000, 1.000) | +0.030 |
+| occupancy known / unknown / absent | 1.000 / 1.000 / 1.000 | 1.000 / 1.000 / 1.000 | — |
+Gates learned: that 1.00 (to, by, from given 1.00), '.' 0.48, who 0.31; participles and verbs closed (0.00-0.04).
+Reading, by the decision rule: **KEPT** — the fourth code does not reduce the new-construction axis; it raises it by 0.05 (five seeds at 0.675-0.692,
+against 0.627±0.024) and takes the unseen depth 3 to 0.998 (one seed at 0.992). The positions beyond the training lengths (depth-3 sentences reach
+positions never seen) carry untrained displacements, so the position term is noise there and the other three codes decide — the gain at depth 3
+comes from the shorter forms. Recording (rule 16): from here the reference reader's bundle is path + chainL + bigram + position; 10b-quinquies
+stays the record of the three-code bundle; the tool's `sop train` should expose the code list so the reference world's model carries it
+(engineering, for the agent; not done in this run).
