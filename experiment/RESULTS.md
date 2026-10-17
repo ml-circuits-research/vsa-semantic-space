@@ -1449,7 +1449,7 @@ that, to, has, not, never, might 1.00; need 0.95, does 0.87, have 0.85, may 0.85
 Reading, by the decision rule stated before the run (judgment e9274a9 Q1): the subject does NOT fail. With the regime right (12-ter's depth-2
 failure was the unseen 'that' -> 'that' transition of a run that trained no depth-2 sentence), modal + negation after the subject compose to the
 unseen depth like every operator before them: structure 1.000 everywhere, B, C and the predicate 1.000, the subject 0.95-1.00 under two stacked
-operators at the unseen depth, with ONE soft spot — may_neg at depth 2 (0.855±0.114, seeds vary) — the only place where the stacked post-subject
+operators at the unseen depth, with ONE form BELOW THE CRITERION — may_neg at depth 2 (0.855±0.114; per-seed list in 12-quinquies) — the only place where the stacked post-subject
 operators cost anything. The "how" stands as 12-ter / trace_b51 said: the operator gates learn OPEN (0.83-1.00), the subject's re-seating is a
 mixture through and past the first operator, and the identity cleanup reads the filler from a blended address whose cosine with the gold key
 stays positive; the operator STRUCTURE is carried by the words after the operators. Consequences: limit (ii) is recorded as a property of the

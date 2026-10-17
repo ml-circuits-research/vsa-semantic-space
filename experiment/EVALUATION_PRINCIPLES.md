@@ -71,3 +71,8 @@ Added 2026-10-16 (external review of the positioning document; round 10):
     have different addresses. A pair with identical addresses and different targets stops the run — unless the run is a DECLARED measurement
     of that very limit (then the pair is named in the header as the one the reader cannot reach, and the result is read as its extent).
     One change per run when isolating a gap between two implementations of the same world (judgment e9274a9 C2).
+29. **Unseen depth vs unseen hop (judgment 45ccd1d B).** An 'unseen depth' claim is one more application of a hop that exists in training:
+    the opener -> opener transition at the test depth minus one is in the training set with plain (affirmative) forms. Every unseen-depth cell
+    states which of two things is unseen: (A) the depth itself — no training sentence at that depth, the hop seen (reference world depth 3, 6c);
+    (B) the operator form at a depth seen with plain forms (the E1b protocol; 12-quater). An unseen hop is a different measurement — a chaining
+    never performed is missing, not blurred (6c-bis; 12-ter) — and is labelled as such, never as an unseen depth.
