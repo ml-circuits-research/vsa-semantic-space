@@ -66,3 +66,8 @@ Added 2026-10-16 (external review of the positioning document; round 10):
 27. **A criterion is judged on the MEAN over seeds, with the per-seed list printed next to it** whenever the mean meets a criterion that some
     seeds do not; a criterion that every seed must meet says so ("5/5 seeds") and is reported as the count of seeds meeting it. (Hand-over
     78d36e8; the C2c two-quantifier scope was met 5/5, the C2b noun target one-quantifier scope 3/5 with the mean met.)
+28. **Address check before training on a new target (the 12-bis instrument; judgment e9274a9 C1).** With the real reader, random parameters
+    and hard gates, compare the ADDRESS of each token across the sentence pairs whose targets differ; two cases with different targets must
+    have different addresses. A pair with identical addresses and different targets stops the run — unless the run is a DECLARED measurement
+    of that very limit (then the pair is named in the header as the one the reader cannot reach, and the result is read as its extent).
+    One change per run when isolating a gap between two implementations of the same world (judgment e9274a9 C2).
