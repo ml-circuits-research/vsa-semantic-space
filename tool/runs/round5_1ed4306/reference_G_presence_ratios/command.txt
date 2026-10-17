@@ -1,0 +1,2 @@
+sop train /tmp/sop_round5_kXyx/reference --D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt --calibrate_on_heldout_formulations --store_presence_ratios --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/round5_1ed4306/reference_G_presence_ratios
+commit 1ed4306
