@@ -60,7 +60,8 @@ def main():
             rows[k].append(v)
         per.append((d["seed"], tp, tf, sp, sf, ov, best, sep, float(np.median(P_rep)) if len(P_rep) else float("nan"), float(np.percentile(A_rep, 90)), float(np.median(P_cal))))
     out = [f"Round 5, reference world (to / by / from given open), role {a.role}; report rows: present = the reported half of {UNSEEN} "
-           f"(n {rows['n_p'][0] if rows['n_p'] else '—'}), absent = the held-out sentences without a {a.role} (n {rows['n_a'][0] if rows['n_a'] else '—'}); {len(files)} seeds", "",
+           f"(n {rows['n_p'][0] if rows['n_p'] else '—'}), absent = the held-out sentences without a {a.role} (n {rows['n_a'][0] if rows['n_a'] else '—'}); {len(files)} seeds",
+           "The absent class: the held-out formulations contain no recipient-less sentence, so the absent class can only come from the seen recipient-less forms. The fitted threshold therefore uses the calibration half (present) against the training recipient-less rows (absent). The report side uses disjoint rows: the reported halves against the held-out sentences' recipient-less rows.", "",
            "| readout | threshold set by | threshold | present read present | absent read absent | balanced | present read present, all held-out formulations |",
            "|---|---|---|---|---|---|---|"]
     if files:

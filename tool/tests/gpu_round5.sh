@@ -6,6 +6,7 @@
 # present class (calibration halves / reported halves of the held-out formulations), absent class (training recipient-less / held-out
 # sentences recipient-less), per seed, in the run folder (presence_ratios_seed<k>.json; no models).
 #   reference_G_presence_ratios
+# The absent class: the held-out formulations contain no recipient-less sentence, so the absent class can only come from the seen recipient-less forms. The fitted threshold therefore uses the calibration half (present) against the training recipient-less rows (absent). The report side uses disjoint rows: the reported halves against the held-out sentences' recipient-less rows.
 # Readouts (tests/round5_table.py): (i) the pooled midpoint (the product today); (ii) a threshold FITTED on the calibration half alone (max
 # balanced present / absent accuracy, stated); the overlap (share of present ratios below the absent 90th percentile; best balanced accuracy).
 # DECISION RULE (written before the run, verbatim from judgment d8f8a98 Q5): if the present-class ratios on unseen formulations overlap the absent class (no threshold separates them above 0.9 present / 0.9 absent), the limit is the READER's and stays recorded as it is; if a threshold fitted on the held-out formulations alone separates them, the limit is the midpoint RULE's, and the tool's calibration becomes "threshold fitted on calibration rows that include held-out formulations, by a fit, not the pooled midpoint" (rule 25; calibration split disjoint from the report split), re-run once as round 5.
@@ -33,6 +34,7 @@ export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True VSA_MEM_FRACTION=${VSA_M
 mkdir -p "$OUT"; WORK="$(mktemp -d "${TMPDIR:-/tmp}/sop_round5_XXXX")"; LOG="$OUT/round5.log"
 echo "# round 5, commit $COMMIT, $(date -Iseconds); worlds in $WORK; runs in $OUT" | tee "$LOG"
 echo "# DECISION RULE (written before the run, verbatim from judgment d8f8a98 Q5): if the present-class ratios on unseen formulations overlap the absent class (no threshold separates them above 0.9 present / 0.9 absent), the limit is the READER's and stays recorded as it is; if a threshold fitted on the held-out formulations alone separates them, the limit is the midpoint RULE's, and the tool's calibration becomes \"threshold fitted on calibration rows that include held-out formulations, by a fit, not the pooled midpoint\" (rule 25; calibration split disjoint from the report split), re-run once as round 5." | tee -a "$LOG"
+echo "# The absent class: the held-out formulations contain no recipient-less sentence, so the absent class can only come from the seen recipient-less forms. The fitted threshold therefore uses the calibration half (present) against the training recipient-less rows (absent). The report side uses disjoint rows: the reported halves against the held-out sentences' recipient-less rows." | tee -a "$LOG"
 "$SOP" export --out "$WORK" --n 30000 --n_eval 30 --worlds reference 2>&1 | grep -v "^  T" | tee -a "$LOG"
 COMMON="--D 1024 --seeds 5 --vary_stars --device cuda --n_eval 600 --log_every 500 --no_ckpt"
 name=reference_G_presence_ratios
