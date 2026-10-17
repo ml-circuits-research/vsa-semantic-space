@@ -1,0 +1,64 @@
+# 2026-10-17T12:25:57+02:00  commit=2de830c  cmd: python3 rescore_v16_b7.py  (guard: mem fraction 0.5, min available 16 GB, max 6 h; MemAvailable at start 115 GB)
+# Python 3.12.3  NVIDIA GB10
+[guard] cuda allocator capped at 50% of 120 GB; watchdog: exit if MemAvailable < 16.0 GB or after 6.0 h
+  T4 '{A} V {C} {B} .': new transitions (GIVE) [('P', 'O'), ('gives', 'P')], new categories []
+  T5 '{C} is VP {B} by {A} .': new transitions (GIVE) [('O', 'by'), ('given', 'O')], new categories []
+  T7 'it is {B} that {A} V to {C} .': new transitions (GIVE) [('O', 'that'), ('that', 'P')], new categories ['that']
+  T8 '{B} , {A} V to {C} .': new transitions (GIVE) [], new categories []
+  T10 'from {A} , {C} VR {B} .': new transitions (GIVE) [], new categories []
+  T11 '{C} VR from {A} {B} .': new transitions (GIVE) [('P', 'O'), ('receives', 'from')], new categories []
+  T13 '{B} is what {A} V to {C} .': new transitions (GIVE) [('COP', 'what')], new categories []
+  T14 'by {A} , {B} is VP to {C} .': new transitions (GIVE) [(',', 'O')], new categories []
+
+rescore_v16_b7 (B7 settlement): three-code reference vs four-code B7 models, 5 seeds; unseen-transition templates [4, 5, 7, 11, 13, 14]
+trained position range: positions 0-14 (longest training sentence 15 tokens); depth-3 sentences reach 18 tokens
+
+== (a) unseen-transition templates, per template and role: three codes | four codes (means over seeds)
+  seed 0 read
+  seed 1 read
+  seed 2 read
+  seed 3 read
+  seed 4 read
+   T4 '{A} V {C} {B} .': A 1.000 -> 0.290 | B 0.640 -> 1.000 | C 0.080 -> 0.420 | FULL 0.060 -> 0.090
+   T5 '{C} is VP {B} by {A} .': A 1.000 -> 1.000 | B 1.000 -> 1.000 | C 1.000 -> 0.990 | FULL 1.000 -> 0.990
+   T7 'it is {B} that {A} V to {C} .': A 0.060 -> 0.060 | B 1.000 -> 1.000 | C 1.000 -> 0.560 | FULL 0.060 -> 0.030
+   T11 '{C} VR from {A} {B} .': A 1.000 -> 1.000 | B 0.610 -> 0.980 | C 1.000 -> 1.000 | FULL 0.610 -> 0.980
+   T13 '{B} is what {A} V to {C} .': A 1.000 -> 1.000 | B 1.000 -> 1.000 | C 1.000 -> 1.000 | FULL 1.000 -> 1.000
+   T14 'by {A} , {B} is VP to {C} .': A 1.000 -> 1.000 | B 1.000 -> 1.000 | C 1.000 -> 1.000 | FULL 1.000 -> 1.000
+   per-code vote (four-code reader; cos of the word's single-code address with its role address, mean over seeds and events): template | role | path | bigram | chainL | position | all four
+   T4 | A | +0.172 | +0.059 | +0.324 | +0.223 | +0.547
+   T4 | B | -0.008 | +0.002 | +0.305 | +0.278 | +0.252
+   T4 | C | +0.027 | +0.002 | +0.077 | +0.117 | +0.105
+   T5 | A | +0.016 | +0.556 | +0.754 | -0.008 | +0.608
+   T5 | B | +0.005 | -0.004 | +0.861 | +0.278 | +0.531
+   T5 | C | -0.009 | +0.025 | +0.572 | +0.122 | +0.474
+   T7 | A | +0.001 | -0.160 | -0.124 | +0.241 | -0.019
+   T7 | B | +0.106 | +0.550 | +0.012 | +0.536 | +0.567
+   T7 | C | -0.003 | +0.579 | -0.178 | -0.069 | +0.171
+   T11 | A | +0.012 | +0.483 | +0.748 | +0.318 | +0.663
+   T11 | B | +0.034 | +0.002 | +0.132 | +0.217 | +0.184
+   T11 | C | -0.009 | +0.025 | +0.895 | +0.122 | +0.786
+   T13 | A | +0.033 | +0.350 | +0.928 | +0.318 | +0.708
+   T13 | B | +0.301 | +0.513 | +0.895 | +0.447 | +0.981
+   T13 | C | +0.068 | +0.579 | +0.899 | +0.119 | +0.759
+   T14 | A | +0.043 | +0.556 | +0.815 | +0.304 | +0.727
+   T14 | B | +0.012 | +0.010 | +0.757 | +0.278 | +0.491
+   T14 | C | +0.016 | +0.579 | +0.823 | -0.069 | +0.714
+   reading aid: the code whose single-code cosine is high where the three-code reader fails is the one that carries the gain; a position cosine near 0 means the position code does not address that word (its displacement is per absolute position: a word that moves between templates gets a different one).
+
+== (b) out-of-range rule: the position term omitted beyond the trained range (positions >= 15) — four-code models re-scored, every axis; seen / new ids / unseen trans. / depth 2 / depth 3 UNSEEN (means over seeds)
+   four codes, as trained (untrained displacements beyond the range) | 1.000±0.000 | 1.000±0.000 | 0.687±0.011 | 1.000±0.000 | 0.998±0.003
+   four codes, position term OMITTED beyond the range               | 1.000±0.000 | 1.000±0.000 | 0.687±0.011 | 1.000±0.000 | 0.998±0.003
+   three codes (10b-quinquies models)                               | 1.000±0.000 | 1.000±0.000 | 0.630±0.019 | 1.000±0.000 | 0.977±0.020
+   expectation (written before): omitting the untrained positions costs nothing and may gain a little at depth 3.
+
+== (c) terms per sentence against the B6 capacity curve (32 terms clean at D = 1024, 64 begin to fail): depth | tokens (mean, max) | three codes | four codes
+   0 | 7.4, 9 | 22 (max 27) | 30 (max 36)
+   1 | 10.4, 12 | 31 (max 36) | 42 (max 48)
+   2 | 13.4, 15 | 40 (max 45) | 54 (max 60)
+   3 | 16.4, 18 | 49 (max 54) | 66 (max 72)
+   P1 length 20 tokens | three codes 60 terms | four codes 80 terms
+   P1 length 30 tokens | three codes 90 terms | four codes 120 terms
+   note: the chain code contributes one term per token like the others; the bundle's term count is tokens x codes, and the B6 curve was measured with role-filler terms over 1,000 candidates.
+
+checklist: [x] saved params, no retraining [x] same evaluation rngs as v16 [x] trace per template, role and code (11) [x] out-of-range rule declared and measured once, expectation written before [x] terms per sentence vs the B6 curve [x] 5 seeds

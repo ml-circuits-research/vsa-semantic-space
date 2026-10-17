@@ -1570,7 +1570,8 @@ Gates learned: that 1.00 (to, by, from given 1.00), '.' 0.48, who 0.31; particip
 Reading, by the decision rule: **KEPT** — the fourth code does not reduce the new-construction axis; it raises it by 0.05 (five seeds at 0.675-0.692,
 against 0.627±0.024) and takes the unseen depth 3 to 0.998 (one seed at 0.992). The positions beyond the training lengths (depth-3 sentences reach
 positions never seen) carry untrained displacements, so the position term is noise there and the other three codes decide — the gain at depth 3
-comes from the shorter forms — a HYPOTHESIS written as a reading, marked as such until the trace of RESULTS 14-bis (judgment d8f8a98 B1).
+comes from the shorter forms — a HYPOTHESIS written as a reading; WITHDRAWN by the trace of RESULTS 14-bis (the depth-3 gain comes from the trained
+positions 0-14; the untrained positions contribute nothing; the unseen-transition gain is a surface-position prior with wins and losses by template).
 Recording (rule 16; corrected by judgment d8f8a98 Q3): B7 is KEPT as a measured VARIANT available by flag; the change of the REFERENCE bundle is
 a separate decision, pending the trace (14-bis), the out-of-range rule and the terms-per-sentence table; 10b-quinquies stays the reference
 meanwhile; the tool's `sop train` should expose the code list so the reference world's model carries it
@@ -1595,3 +1596,36 @@ far below the training present mean. No cost elsewhere (held-out sentences 1.000
 formulations at 0.418-0.428 with presence decided and 0.556-0.596 under v16's every-role-read protocol. Reservation stated by the agent and left
 open: this run tested the pooled-midpoint rule only, not a threshold fitted on the held-out formulations alone, and the per-sentence presence
 ratios of the reported rows were not stored (the run keeps no models), so whether those ratios overlap the absent class is unknown.
+
+### 14-bis. B7 settlement (judgment d8f8a98 Q3 a-c): where the +0.051 comes from, the out-of-range rule, terms per sentence (rescore_v16_b7.py; logs/2026-10-17_1225_rescore_v16_b7_2de830c.txt; the saved three-code (10b-quinquies) and four-code (B7) models, 5 seeds, v16's evaluation rngs; no training)
+(a) Trace of the unseen-transition gain, per template and role (three codes -> four codes, means over seeds; FULL = A, B, C right):
+| held-out template with unseen transitions | A | B | C | FULL | per-code vote of the four-code reader (cos of the word's single-code address with its role address): the code that decides |
+|---|---|---|---|---|---|
+| T11 '{C} VR from {A} {B} .' | 1.000 -> 1.000 | **0.610 -> 0.980** | 1.000 -> 1.000 | **0.610 -> 0.980** | B: chain 0.13, **position 0.22** — the object at sentence-final position 5, where training templates T6 / T9 also put the object |
+| T4 '{A} V {C} {B} .' | **1.000 -> 0.290** | 0.640 -> 1.000 | 0.080 -> 0.420 | 0.060 -> 0.090 | B gains (position 0.28 vs chain 0.31 at position 3), A LOSES: the position code votes by absolute position, and positions 0-3 carry other roles in the training templates |
+| T7 'it is {B} that {A} V to {C} .' | 0.060 -> 0.060 | 1.000 -> 1.000 | **1.000 -> 0.560** | 0.060 -> 0.030 | C: bigram +0.58 carries it alone; position −0.07 and chain −0.18 vote against; the fourth term dilutes the one right vote ('that' opens a level here, the chain misreads the clause) |
+| T5, T13, T14 | 1.000 | 1.000 | 1.000 (T5 C 0.990) | 1.000 / 1.000 / 1.000 | unchanged |
+Mechanism named: the position code is a template-frequency prior over roles per ABSOLUTE position — it helps an unseen template that places a role
+where the training templates place the same role (T11: the object at position 5) and hurts one that does not (T4: the subject at 0 loses, T7: the
+recipient loses). The +0.051 is the net of one large gain (T11 +0.37) and two losses (T4 A −0.71, T7 C −0.44, both on templates already mostly
+failing); it is not a compositional gain. The RESULTS 14 hypothesis "the gain at depth 3 comes from the shorter forms" is WITHDRAWN as a reading
+of the transitions axis: the depth-3 gain (0.977 -> 0.998 on these draws) is a separate effect, carried by the trained positions 0-14 of the
+depth-3 sentences, since (b) shows the untrained positions contribute nothing.
+(b) Out-of-range rule (declared: the position term is OMITTED for positions beyond the trained range 0-14; depth-3 sentences reach 18 tokens):
+| four-code models | seen | new ids | unseen transitions | depth 2 | depth 3 UNSEEN |
+|---|---|---|---|---|---|
+| as trained (untrained displacements beyond the range) | 1.000 | 1.000 | 0.687±0.011 | 1.000 | 0.998±0.003 |
+| **position term omitted beyond the range** | 1.000 | 1.000 | 0.687±0.011 | 1.000 | 0.998±0.003 — **identical digits** |
+| three codes (10b-quinquies models, same draws) | 1.000 | 1.000 | 0.630±0.019 | 1.000 | 0.977±0.020 |
+Expectation (no loss, possibly a small gain) met on the no-loss side: the untrained displacements beyond position 14 change nothing — the last
+tokens of a depth-3 sentence ('to C .') are read through the chain. The omission rule is adopted as the stated behaviour of the position code
+(V8 `pos_max`); nothing measured depends on it. (The four-code unseen-transitions value is 0.687 here vs 0.678 in RESULTS 14: same models, a
+different draw of the evaluation events — same distribution, stated.)
+(c) Terms per sentence (tokens x codes) against the B6 curve (32 clean, 64 begin to fail at D = 1024, synthetic role-filler terms over 1,000
+candidates): depth 0 — 22 / 30 (three / four codes, mean; max 27 / 36); depth 1 — 31 / 42 (36 / 48); depth 2 — 40 / 54 (45 / 60); depth 3 — 49 /
+66 (54 / 72); P1 lengths 20 tokens — 60 / 80; 30 tokens — 90 / 120. The four-code depth-3 sentences already exceed B6's 64 and read 0.998, so the
+synthetic curve is not the binding constraint for the reader's structured bundles (role keys with a 12-candidate cleanup); at P1 lengths both
+bundles are far beyond it and the capacity at D = 1024 is untested there (00_READ_FIRST §7 item 6 stays PLANNED).
+Settlement, for the reviewing session's decision (not taken here): the position code is kept as a measured variant with the omission rule; its
+unseen-transition gain is a surface-position prior with wins and losses by template, not a compositional mechanism; its depth-3 gain is real
+on these draws (0.977 -> 0.998) and comes from trained positions; it adds a third more terms per sentence.
