@@ -15,8 +15,11 @@ Target state of a wire (the constructed worlds of the repository, generalized; R
   values:    word -> f_word (a multi-word value uses the identity of its LAST token: the token the sentence carries; stated convention);
              $w -> state(w); a & b -> sum; a | b -> sum / sqrt(n) (superposition); ~ -> m (filled, unrecognized); ? -> nothing.
 """
-import hashlib, json
+import hashlib, json, re
 import numpy as np
+
+ALNUM = re.compile(r"[a-z0-9]+")
+def alnum(s): return ALNUM.findall(str(s).lower())
 
 OPERATORS = {"not", "must", "may", "if", "says", "and"}
 
@@ -48,6 +51,16 @@ class Stars:
         t = value_token(word)
         if self.table is not None and t in self.table: return self.table[t]
         return self.get("id:" + t, self.star_seed)
+    def val(self, text, key=None, reader=None):
+        """the identity of a VALUE: a closed-set symbol (legend reader.closed_values[key]: its own star, 'sym:<value>'); a BUNDLE of the
+        lowercase alphanumeric tokens' stars (reader.value_identity = 'bundle_alnum', the WikiSQL world: a column name or a cell value is
+        the sum of its words, as experiment/v11_wikisql); else the identity of the last token (the default)"""
+        reader = reader or {}
+        if key is not None and key in (reader.get("closed_values") or {}): return self.get("sym:" + str(text), self.star_seed)
+        if reader.get("value_identity") == "bundle_alnum":
+            ts = alnum(text)
+            return sum(self.id(t) for t in ts) if ts else np.zeros(self.D, dtype=complex)
+        return self.id(text)
     def role(self, r): return self.get("role:" + r)
     def op(self, name): return self.get("op:" + name)
     def marker(self):
@@ -110,16 +123,42 @@ def frame_of(wire, by_id, legend):
     return f
 
 
+def reduce_filler(fl, drop=()):
+    """a filler with the parts outside the legend's questions removed (legend reader.full_excludes: 'attr', 'det'); sets sorted"""
+    if not fl or not drop: return fl
+    if fl[0] in ("set", "alt"): return [fl[0]] + sorted((reduce_filler(x, drop) for x in fl[1:]), key=json.dumps)
+    if fl[0] != "entity": return fl
+    out = list(fl)
+    if "attr" in drop: out[2] = None
+    if "det" in drop: out[3] = "quantified" if out[3] else None
+    return out
+
+
 def canon(f, with_pred=True, drop=()):
     """the comparison key of a frame. drop: parts outside the legend's questions (legend reader.full_excludes, e.g. 'det': the quantifier
     world v2 asks WHICH phrase is wide, not which determiner word was used — the determiner identity is its own axis, outside FULL; the
     presence of a quantifier on a slot stays inside FULL: author Q2, 78d36e8)"""
     roles = f["roles"]
-    if "det" in drop:      # the determiner WORD is outside FULL; its PRESENCE (the slot is quantified) stays a question of the legend
-        roles = {r: (fl[:3] + ["quantified" if fl[3] else None] if fl and fl[0] == "entity" else fl) for r, fl in roles.items()}
+    def red(fl):
+        if not fl: return fl
+        if fl[0] in ("set", "alt"): return [fl[0]] + sorted((red(x) for x in fl[1:]), key=json.dumps)
+        if fl[0] != "entity": return fl
+        out = list(fl)
+        if "attr" in drop: out[2] = None
+        if "det" in drop: out[3] = "quantified" if out[3] else None
+        return out
+    if drop: roles = {r: red(fl) for r, fl in roles.items()}
     keep = {"speakers": f["speakers"], "neg": f["neg"], "event": f["event"], "roles": roles, "shape": f["shape"], "scope": f.get("scope")}
     if with_pred: keep["lemma"] = f.get("lemma")
     return json.dumps(keep, sort_keys=True)
+
+
+def filler_heads(fl):
+    """the heads of a filler, in order: a word, an entity's head, a set's members' heads (set roles: the member identities)"""
+    if fl is None: return []
+    if fl[0] in ("word", "negword", "entity"): return [fl[1]]
+    if fl[0] in ("set", "alt"): return [h for x in fl[1:] for h in filler_heads(x)]
+    return []
 
 
 def filler_words(fl):
@@ -158,13 +197,13 @@ class Compiler:
         return []
 
     def value(self, line, by_id, tokens, used, depth=0):
-        vs = [self.atom(a, by_id, tokens, used, depth) for a in line.atoms]; vs = [v for v in vs if v is not None]
+        vs = [self.atom(a, by_id, tokens, used, depth, line.key) for a in line.atoms]; vs = [v for v in vs if v is not None]
         if not vs: return None
         s = sum(vs)
         return s / np.sqrt(len(vs)) if line.sep == "|" else s
 
-    def atom(self, a, by_id, tokens, used, depth):
-        if a.kind == "word": return self.st.id(a.text)
+    def atom(self, a, by_id, tokens, used, depth, key=None):
+        if a.kind == "word": return self.st.val(a.text, key, self.L.reader)
         if a.kind == "unknown": return self.st.marker()
         if a.kind == "asked": return None
         w = by_id.get(a.text)
@@ -189,11 +228,13 @@ class Compiler:
             if terms: S = S + sum(terms) / np.sqrt(len(terms))
         elif w.type == "entity":
             h = w.value("head")
-            if h is not None: S = S + st.id(h)
+            if h is not None: S = S + st.val(h, "head", self.L.reader)
             a = V("attr")
             if a is not None: S = S + st.op("attr") * a
             det = w.value("det")
             if det is not None and det not in self.L.reader["definite_dets"]: S = S + st.op("det") * st.id(det)
+            q = w.value("quantity")
+            if q is not None and self.L.reader.get("value_terms"): S = S + st.op("quantity") * st.val(q, "quantity", self.L.reader)
         elif w.type in ("not", "must", "may"):
             v = V("scope")
             if v is not None: S = S + st.op(w.type) * v

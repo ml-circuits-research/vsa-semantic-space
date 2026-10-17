@@ -15,7 +15,9 @@ ENTITY_KEYS = {"head", "attr", "quantity", "unit", "det"}
 VERDICT_KEYS = {"left", "right"}
 KNOWN_OPERATORS = set(OPERATOR_KEYS)
 READER_DEFAULTS = {"predicate_role": True, "occupancy_marker": True, "definite_dets": ["the"], "scope_terms": None, "scope_rule": None,
-                   "rel_emitters": None, "full_excludes": [], "gates_given": None, "level_openers": None}
+                   "rel_emitters": None, "full_excludes": [], "gates_given": None, "level_openers": None,
+                   "value_identity": "last_token", "closed_values": None, "table_roles": None, "set_roles": None, "value_terms": False,
+                   "no_sense_share": None, "codes": None}
 PUNCT = re.compile(r"([.,;:!?](?=\s|$))")
 
 

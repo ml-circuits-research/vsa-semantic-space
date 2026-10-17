@@ -11,3 +11,4 @@ experiment/logs/*.npz
 tool/worlds/
 tool/tests/out/
 tool/worlds_p0/
+tool/worlds_wikisql/

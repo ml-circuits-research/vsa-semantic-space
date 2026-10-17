@@ -1,0 +1,2 @@
+sop train /tmp/sop_wikisql_PSc0/wikisql --D 512 --epochs 3 --batch 32 --shuffle --seeds 3 --device cuda --n_eval 8421 --log_every 1000 --eval_modes primary --candidate_sets catalog --no_ckpt --run_dir /home/salboaie/work/ml-circuits-research/vsa-semantic-space/.claude/worktrees/agent-a42b50d396b003d0e/tool/runs/wikisql_f9e27b0/wikisql
+commit f9e27b0

@@ -68,7 +68,8 @@ def load_rows(world_dir, legend, force=False):
             toks = tokenize(text); f = world.frame_of(w, by, legend)
             if f["shape"] == "ok" and legend.reader["predicate_role"] and not f.get("lemma"):
                 f["lemma"] = comp.lemma_for(f["event"], toks, set())
-            rows.append({"id": f"{rel}#{w.id}", "file": rel, "text": text, "tokens": toks, "wire": w, "by": by, "frame": f, "template": w.value("_template"),
+            tl = w.get("_table"); table = [x.text for x in tl.atoms if x.kind == "word"] if tl is not None else None
+            rows.append({"table": table, "id": f"{rel}#{w.id}", "file": rel, "text": text, "tokens": toks, "wire": w, "by": by, "frame": f, "template": w.value("_template"),
                          "depth": len(f["speakers"]), "source": w.value("_source", "?")})
     return rows, errors, files
 
@@ -100,9 +101,10 @@ def fit_threshold(present, absent):
 def make_splits(rows, legend, hints, seed, cal_forms=False):
     share = hints.get("heldout_sentence_share", 0.1)
     t2split = {t: name for name, ts in hints.get("template_splits", {}).items() for t in ts}
-    new_ids = set(hints.get("new_identities", [])); defs = {"seed": seed, "heldout_sentence_share": share,
+    no_new = hints.get("new_identities") == "none" or str(hints.get("new_identities", "")).startswith("none")
+    new_ids = set() if no_new else set(hints.get("new_identities", [])); defs = {"seed": seed, "heldout_sentence_share": share,
                                                           "template_splits": hints.get("template_splits", {}), "source": "split_hints.json" if hints else "automatic"}
-    if not new_ids:    # automatic (spec 6.4): new identities per kind
+    if not new_ids and not no_new:    # automatic (spec 6.4): new identities per kind
         by_kind = collections.defaultdict(set)
         for r in rows:
             for fl in r["frame"]["roles"].values():
@@ -176,7 +178,8 @@ def build_schema(rows, legend):
             rs["attr_neg"] = any(a[0] == "negword" for a in at); rs["attr_rate"] = len(at) / len(ents)
             rs["det_kinds"] = sorted({legend.kind(d) for d in dt if legend.kind(d)}); rs["det_rate"] = len(dt) / len(ents)
         roles[r] = rs
-    core = [r for r, rs in roles.items() if rs["rate"] >= 0.95] or ([max(roles, key=lambda r: roles[r]["rate"])] if roles else [])
+    setr = set(legend.reader.get("set_roles") or [])
+    core = [r for r, rs in roles.items() if rs["rate"] >= 0.95 and r not in setr] or ([max((r for r in roles if r not in setr), key=lambda r: roles[r]["rate"])] if roles else [])
     sk = sorted({legend.kind(s) for f in ok for s in f["speakers"] if s and legend.kind(s)})
     return {"roles": roles, "role_order": [r for r in legend.roles if r in roles], "core_roles": core, "speaker_kinds": sk,
             "max_depth": max([len(f["speakers"]) for f in ok] or [0]), "neg_event": any(f["neg"] for f in ok),
@@ -188,6 +191,7 @@ def build_schema(rows, legend):
 def head_word(fl):
     if fl is None: return None
     if fl[0] in ("word", "negword", "entity"): return fl[1]
+    if fl[0] in ("set", "alt"): return json.dumps(sorted(world.filler_heads(fl)))     # a set: its members' heads, order-free
     return json.dumps(fl)
 
 
@@ -253,7 +257,7 @@ STRUCT_MODES = (("estimated", {}), ("fit estimate", {"estimator": "fit"}), ("gat
                 ("presence not decided", {"presence": "all"}), ("pooled midpoint (comparison)", {"alt_th": True}))
 
 
-def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset()):
+def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0, bag=None, seen_words=frozenset(), modes="all"):
     """one split. FULL is reported four ways side by side (author C3, judgment e9274a9 Q6): `FULL` = the depth ESTIMATED by the primary
     estimator (the open level gates passed, when the legend names level openers; else the fit), what `sop formalize` does; `FULL [fit
     estimate]` = the depth estimated by the fit (the check); depth GIVEN (as the repository scripts); depth and negation GIVEN. The negation
@@ -264,7 +268,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
     per_form = collections.defaultdict(list)
     for row in rs:
         g = row["frame"]
-        for mode, kw in STRUCT_MODES:
+        for mode, kw in (STRUCT_MODES if modes == "all" else [m_ for m_ in STRUCT_MODES if m_[0] in ("estimated", "pooled midpoint (comparison)")]):
             kk = {}
             if kw.get("force_depth"): kk["force_depth"] = len(g["speakers"])
             if kw.get("force"): kk["force"] = (len(g["speakers"]), g["neg"])
@@ -279,14 +283,14 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
                 saved_th = reader.th; reader.th = dict(reader.th, **reader._eval_alt_th)
             if mode in ("fit estimate", "gate-count estimate", "kind-count estimate") and not legend.reader.get("level_openers"): continue
             if {"gates": "gate-count estimate", "kinds": "kind-count estimate", "fit": "fit estimate"}[reader.cfg.get("depth_estimator", "gates")] == mode: continue  # = the primary
-            wires, f, info = reader.formalize(row["text"], 0, ids, filt, **kk)
+            wires, f, info = reader.formalize(row["text"], 0, ids, filt, table=row.get("table"), **kk)
             if saved_th is not None: reader.th = saved_th
             f_ok = f["shape"] == "ok"; same = lambda d: f_ok and g["shape"] == "ok" and world.canon(f, pred, d) == world.canon(g, pred, d)
             label = "" if mode == "estimated" else f" [{mode}]"
             acc["FULL" + label].append(same(drop))
             if mode in ("presence not decided", "pooled midpoint (comparison)"):
                 for r in schema["role_order"]:
-                    acc[f"role {r} [{mode}]"].append(json.dumps(g["roles"].get(r)) == json.dumps(f["roles"].get(r) if f_ok else None))
+                    acc[f"role {r} [{mode}]"].append(json.dumps(world.reduce_filler(g["roles"].get(r), drop)) == json.dumps(world.reduce_filler(f["roles"].get(r) if f_ok else None, drop)))
                 acc[f"heads FULL (model) [{mode}]"].append(all(head_word(g["roles"].get(r)) == head_word(f["roles"].get(r) if f_ok else None)
                                                                              for r in schema["role_order"]))
             if drop: acc["FULL incl. " + "+".join(drop) + " (previous definition)" + label].append(same(()))
@@ -310,6 +314,10 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             if f.get("depth_fit") is not None: acc["depth estimate: fit (check)"].append(f["depth_fit"] == len(g["speakers"]))
             if f.get("depth_kinds") is not None: acc["depth estimate: opener-kind count"].append(f["depth_kinds"] == len(g["speakers"]))
             mg = f.get("margins", {})
+            for r in legend.reader.get("set_roles") or []:     # set roles: the exact set, and the first gold member in the decoded set (8c's "condition-1")
+                gw = world.filler_heads(g["roles"].get(r)); pw = set(world.filler_heads(f["roles"].get(r))) if f_ok else set()
+                acc[f"set {r}: exact"].append(set(gw) == pw)
+                if gw: acc[f"set {r}: first gold member in the decoded set"].append(gw[0] in pw if f_ok else False)
             if pred:
                 ok = f_ok and f.get("lemma") == g.get("lemma"); acc["predicate (surface lemma)"].append(ok); cal.add("predicate", ok, mg.get("event", 0))
                 acc["event type (synonym table)"].append(f_ok and f.get("event") == g.get("event"))
@@ -319,7 +327,7 @@ def evaluate(reader, rows, legend, schema, tau, filt, lexical, n_max, rng_seed=0
             lex = lexical(row["tokens"]); bg = bag(row["tokens"]) if bag else {}; heads_m, heads_l, heads_b = [], [], []
             for r in schema["role_order"]:
                 gf, pf = g["roles"].get(r), f["roles"].get(r) if f_ok else None
-                ok = json.dumps(gf) == json.dumps(pf); acc[f"role {r}"].append(ok)
+                ok = json.dumps(world.reduce_filler(gf, drop)) == json.dumps(world.reduce_filler(pf, drop)); acc[f"role {r}"].append(ok)
                 hm, hl, hb = head_word(gf) == head_word(pf), head_word(gf) == lex.get(r), head_word(gf) == bg.get(r)
                 acc[f"head {r}"].append(hm); acc[f"lexical order head {r}"].append(hl); acc[f"lexical bag head {r}"].append(hb)
                 heads_m.append(hm); heads_l.append(hl); heads_b.append(hb)
@@ -364,6 +372,16 @@ def export_routebook(m, path):
     np.savez_compressed(path, **z)
 
 
+class Trimmed:
+    """the model as trainer.train_loop sees it, with each batch cut to its own longest sentence (exact: padded positions contribute nothing);
+    used with --length_buckets, where the batches are of similar length"""
+    def __init__(self, m): self.m = m
+    @property
+    def theta(self): return self.m.theta
+    def states(self, cats, ids, mask):
+        T = int(mask.sum(1).max().item()); return self.m.states(cats[:, :T], ids[:, :T], mask[:, :T])
+
+
 class Shim:
     """the minimal world object experiment/v8_gates.V8 needs: vocab, idx, cat (word -> kind)"""
     def __init__(self, words_kinds):
@@ -395,7 +413,13 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
     train = [r for r in rows if r.get("split") == "train" and r["frame"]["shape"] != "unknown"]
     order = []
     rng = np.random.default_rng(seed)
-    for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
+    if a.length_buckets:     # v11's batching (experiment/v11_wikisql): batches of similar length, the bucket order shuffled per epoch
+        lens = np.array([len(r["tokens"]) for r in train]); srt = np.argsort(lens, kind="stable")
+        for e in range(a.epochs):
+            bk = [list(srt[i:i + a.batch]) for i in range(0, len(srt), a.batch)]; np.random.default_rng(seed * 100 + e).shuffle(bk)
+            for b_ in bk: order += b_
+    else:
+        for e in range(a.epochs): order += list(rng.permutation(len(train)) if e > 0 or a.shuffle else range(len(train)))
     if a.max_train: order = order[:a.max_train]
     sents = [list(train[i]["tokens"]) for i in order]
     targets = np.array([comp.wire(train[i]["wire"], train[i]["by"], train[i]["tokens"]) for i in order])
@@ -421,7 +445,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
         print(f"[trace] target |S_world| = {np.linalg.norm(targets[0]):.2f} (sqrt(D) per unit term = {np.sqrt(a.D):.1f}); initial gates all {float(torch.sigmoid(m.logits[0])):.2f} (closed start)")
     cats, ids, mask = m.encode(sents); tgt = torch.tensor(targets, dtype=m.F.dtype, device=m.device)
     t0 = time.time()
-    trainer.train_loop(m, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
+    tm = Trimmed(m) if a.length_buckets else m
+    trainer.train_loop(tm, params, cats, ids, mask, tgt, a.batch, a.lr, log_every=a.log_every, ckpt=None if a.no_ckpt else os.path.join(run_dir, f"ckpt_seed{seed}.pt"),
                        resume=a.resume, tag=f" seed {seed}")
     t_train = time.time() - t0
     os.makedirs(model_dir, exist_ok=True)
@@ -439,7 +464,7 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
            "gate_init": "closed", "depth_estimator": a.depth_estimator, "presence_readout": "decided", "batch": a.batch, "lr": a.lr, "epochs": a.epochs, "n_train_steps_sentences": len(sents),
            "thresholds": {"tau": a.tau, "tau_source": "stated (the repository's v16 value), not fitted on any rows", "no_sense_share": 0.5,
                           "no_sense_source": "stated", "no_fit_residual": 0.9, "no_fit_source": "stated (dispatcher only, spec section 9)",
-                          "presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}}
+                          "presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None, "set_member": {}}}
     with open(os.path.join(model_dir, "config.json"), "w") as f: json.dump(cfg, f, indent=1)
     # numpy (inference) vs torch (training) agreement on three rows
     rd = Reader(model_dir); worst = 0.0
@@ -458,8 +483,11 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
             g = row["frame"]
             if g["shape"] != "ok": continue
             S, kept, _, _ = rd.chart(row["tokens"])
-            f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]))
+            f = rd.read(S, row["tokens"], force=(len(g["speakers"]), g["neg"]), table=row.get("table"))
             st_ = legend.reader.get("scope_terms") or {}
+            for r in legend.reader.get("set_roles") or []:      # set members: the gold members vs the other candidates of the table
+                mr = f["presence"].get(r + ".members") or {}; gold = set(world.filler_heads(g["roles"].get(r)))
+                for col, x in mr.items(): stats[("set_member", r)]["present" if col in gold else "absent"].append(x)
             for r in schema["role_order"]:
                 gf = g["roles"].get(r)
                 if st_ and gf is not None and gf[0] == "entity" and r + ".wide" in f["presence"]:
@@ -471,8 +499,8 @@ def train_one(a, legend, rows, splits, schema, seed, model_dir, run_dir):
                 if gf is not None and gf[0] == "entity":
                     for part, idx in (("attr", 2), ("det", 3)):
                         if r + "." + part in f["presence"]: stats[(part + "_presence", r)]["present" if gf[idx] is not None else "absent"].append(f["presence"][r + "." + part])
-        th = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}; calrep = {}
-        mid = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None}      # the pooled midpoint: the comparison, one more round
+        th = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None, "set_member": {}}; calrep = {}
+        mid = {"presence": {}, "attr_presence": {}, "det_presence": {}, "scope_term": None, "set_member": {}}      # the pooled midpoint: the comparison, one more round
         for (kind, r), v in stats.items():
             if kind == "scope_term":       # one threshold for every slot (ratio to the structure score)
                 ok_ = bool(v["present"] and v["absent"])
@@ -577,10 +605,11 @@ def run_eval(rd, rows, legend, schema, a, lexical, seen_words, new_ids, bag=None
             new_kinds = {legend.kind(w) for w in new_ids}
             filt = set(new_ids) | {w for w in seen_words if legend.kind(w) not in new_kinds}
         else: filt = set(seen_words)
-        out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words),
-                  "experiment candidates": evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words)}
+        out[s] = {"catalog candidates": evaluate(rd, by[s], legend, schema, a.tau, None, lexical, a.n_eval, bag=bag, seen_words=seen_words, modes=a.eval_modes)}
+        if a.candidate_sets == "both":
+            out[s]["experiment candidates"] = evaluate(rd, by[s], legend, schema, a.tau, filt, lexical, a.n_eval, bag=bag, seen_words=seen_words, modes=a.eval_modes)
     rd._eval_presence_all = bool(getattr(a, "also_presence_all", False)); rd._eval_alt_th = None; trs = by.get("train", [])
-    out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words)}
+    out["train (sample)"] = {"catalog candidates": evaluate(rd, trs, legend, schema, a.tau, None, lexical, min(a.n_eval, 300), 7, bag=bag, seen_words=seen_words, modes=a.eval_modes)}
     return out
 
 
@@ -720,6 +749,11 @@ def main(argv=None):
                     "report rows (present and absent classes) per seed in the run folder (presence_ratios_seed<k>.json)")
     ap.add_argument("--also_presence_all", action="store_true", help="also score every split with presence NOT decided (every role read, as "
                     "v16), next to the decided readout (round 3, run D); the model's default readout stays 'decided'")
+    ap.add_argument("--eval_modes", default="all", choices=["all", "primary"], help="'primary' = only the product readout and the pooled-midpoint "
+                    "comparison (no structure variants: worlds without reporting depth, e.g. WikiSQL)")
+    ap.add_argument("--candidate_sets", default="both", choices=["both", "catalog"], help="'catalog' = skip the experiment-candidate pass")
+    ap.add_argument("--length_buckets", action="store_true", help="batches of similar length in shuffled bucket order, each trimmed to its "
+                    "longest sentence (as experiment/v11_wikisql; real text with long sentences); off by default (the constructed worlds' regime)")
     ap.add_argument("--no_ckpt", action="store_true", help="no checkpoint file (the run folder keeps logs, metrics, splits, command only)")
     ap.add_argument("--run_dir", help="write this run's folder here instead of <world>/runs/<timestamp>")
     ap.add_argument("--eval_only", action="store_true", help="re-score the saved model/ (no training): metrics.json and REPORT.md rewritten")

@@ -1,0 +1,769 @@
+!world wikisql
+!legend sha256:9b7ddb62bd1851f2b29a8fd0fba0977fab6f5e558ec19f0daaf0b6f3723f8b67
+!generated export_wikisql.py from the WikiSQL SQL (gold)
+
+@w1 query
+_text=what position does the player who played for butler cc ks play
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Position
+aggregate=NONE
+condition=$w2
+
+@w2 entity
+head="School/Club Team"
+attr=EQ
+quantity="Butler CC (KS)"
+
+@w3 query
+_text=how many schools did player number 3 play at
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select="School/Club Team"
+aggregate=COUNT
+condition=$w4
+
+@w4 entity
+head=No.
+attr=EQ
+quantity=3
+
+@w5 query
+_text=what school did player number 21 play for
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select="School/Club Team"
+aggregate=NONE
+condition=$w6
+
+@w6 entity
+head=No.
+attr=EQ
+quantity=21
+
+@w7 query
+_text=who is the player that wears number 42
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Player
+aggregate=NONE
+condition=$w8
+
+@w8 entity
+head=No.
+attr=EQ
+quantity=42
+
+@w9 query
+_text=what player played guard for toronto in 1996 97
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Player
+aggregate=NONE
+condition=$w10 & $w11
+
+@w10 entity
+head=Position
+attr=EQ
+quantity=Guard
+
+@w11 entity
+head="Years in Toronto"
+attr=EQ
+quantity=1996-97
+
+@w12 query
+_text=who are all of the players on the westchester high school club team
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Player
+aggregate=NONE
+condition=$w13
+
+@w13 entity
+head="School/Club Team"
+attr=EQ
+quantity="Westchester High School"
+
+@w14 query
+_text=what school club team is amir johnson on
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select="School/Club Team"
+aggregate=NONE
+condition=$w15
+
+@w15 entity
+head=Player
+attr=EQ
+quantity="Amir Johnson"
+
+@w16 query
+_text=what are the total amount of numbers on the toronto team in 2005 06
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=No.
+aggregate=COUNT
+condition=$w17
+
+@w17 entity
+head="Years in Toronto"
+attr=EQ
+quantity=2005-06
+
+@w18 query
+_text=what are the total number of positions on the toronto team in 2006 07
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Position
+aggregate=COUNT
+condition=$w19
+
+@w19 entity
+head="Years in Toronto"
+attr=EQ
+quantity=2006-07
+
+@w20 query
+_text=what are the nationality of the players on the fresno state school club team
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select=Nationality
+aggregate=NONE
+condition=$w21
+
+@w21 entity
+head="School/Club Team"
+attr=EQ
+quantity="Fresno State"
+
+@w22 query
+_text=what school club team is trey johnson on
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & No. & Nationality & Position & "Years in Toronto" & "School/Club Team"
+select="School/Club Team"
+aggregate=NONE
+condition=$w23
+
+@w23 entity
+head=Player
+attr=EQ
+quantity="Trey Johnson"
+
+@w24 query
+_text=when did jacques chirac stop being a g8 leader
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Entered office as Head of State or Government" & "Began time as senior G8 leader" & "Ended time as senior G8 leader" & Person & Office
+select="Ended time as senior G8 leader"
+aggregate=NONE
+condition=$w25
+
+@w25 entity
+head=Person
+attr=EQ
+quantity="Jacques Chirac"
+
+@w26 query
+_text=when did the prime minister of italy take office
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Entered office as Head of State or Government" & "Began time as senior G8 leader" & "Ended time as senior G8 leader" & Person & Office
+select="Entered office as Head of State or Government"
+aggregate=NONE
+condition=$w27
+
+@w27 entity
+head=Office
+attr=EQ
+quantity="Prime Minister of Italy"
+
+@w28 query
+_text=what is the english name of the country whose official native language is dutch papiamento
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Country ( exonym )"
+aggregate=NONE
+condition=$w29
+
+@w29 entity
+head="Official or native language(s) (alphabet/script)"
+attr=EQ
+quantity="Dutch Papiamento"
+
+@w30 query
+_text=what official or native languages are spoken in the country whose capital city is canberra
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Official or native language(s) (alphabet/script)"
+aggregate=NONE
+condition=$w31
+
+@w31 entity
+head="Capital ( exonym )"
+attr=EQ
+quantity=Canberra
+
+@w32 query
+_text=what is the local name given to the city of canberra
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Capital ( endonym )"
+aggregate=NONE
+condition=$w33
+
+@w33 entity
+head="Capital ( exonym )"
+attr=EQ
+quantity=Canberra
+
+@w34 query
+_text=what is the local name given to the capital of anguilla
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Capital ( endonym )"
+aggregate=NONE
+condition=$w35
+
+@w35 entity
+head="Country ( endonym )"
+attr=EQ
+quantity=Anguilla
+
+@w36 query
+_text=what is the english name given to the city of st john s
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Capital ( exonym )"
+aggregate=NONE
+condition=$w37
+
+@w37 entity
+head="Capital ( endonym )"
+attr=EQ
+quantity="St. John's"
+
+@w38 query
+_text=how many capital cities does australia have
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Country ( exonym )" & "Capital ( exonym )" & "Country ( endonym )" & "Capital ( endonym )" & "Official or native language(s) (alphabet/script)"
+select="Capital ( endonym )"
+aggregate=COUNT
+condition=$w39
+
+@w39 entity
+head="Country ( endonym )"
+attr=EQ
+quantity=Australia
+
+@w40 query
+_text=the episode with production code 9abx02 was originally aired on what date
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="No. in set" & "No. in series" & Title & "Directed by" & "Written by" & "Original air date" & "Production code"
+select="Original air date"
+aggregate=NONE
+condition=$w41
+
+@w41 entity
+head="Production code"
+attr=EQ
+quantity=9ABX02
+
+@w42 query
+_text=what is the episode number that has production code 8abx15
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="No. in set" & "No. in series" & Title & "Directed by" & "Written by" & "Original air date" & "Production code"
+select="No. in series"
+aggregate=MIN
+condition=$w43
+
+@w43 entity
+head="Production code"
+attr=EQ
+quantity=8ABX15
+
+@w44 query
+_text=name the minimum tiesplayed for 6 years
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Player & "Highest singles ranking" & "Highest doubles ranking" & "First year played" & "Years played" & "Ties played" & "Total W–L" & "Singles W–L" & "Doubles W–L"
+select="Ties played"
+aggregate=MIN
+condition=$w45
+
+@w45 entity
+head="Years played"
+attr=EQ
+quantity=6
+
+@w46 query
+_text=what is the amount of trees that require replacement when prevailing types is pine 29 37 poplar 26 12 acer negundo 13 2
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select="Amount of trees, that require replacement"
+aggregate=NONE
+condition=$w47
+
+@w47 entity
+head="Prevailing types, %"
+attr=EQ
+quantity="Pine — 29.37 Poplar — 26.12 Acer negundo — 13.2"
+
+@w48 query
+_text=what is the amount of trees that require replacement when district is leninsky
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select="Amount of trees, that require replacement"
+aggregate=NONE
+condition=$w49
+
+@w49 entity
+head=District
+attr=EQ
+quantity=Leninsky
+
+@w50 query
+_text=what is the district when the total amount of trees is smaller than 150817 6878461314 and amount of old trees is 1 928 1 89
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select=District
+aggregate=NONE
+condition=$w51 & $w52
+
+@w51 entity
+head="Total amount of trees"
+attr=LT
+quantity=150817.6878461314
+
+@w52 entity
+head="Amount of old trees"
+attr=EQ
+quantity="1,928 (1.89%)"
+
+@w53 query
+_text=what is the amount of trees that require replacement when the district is motovilikhinsky
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select="Amount of trees, that require replacement"
+aggregate=NONE
+condition=$w54
+
+@w54 entity
+head=District
+attr=EQ
+quantity=Motovilikhinsky
+
+@w55 query
+_text=what is the total amount of trees when district is leninsky
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select="Total amount of trees"
+aggregate=MAX
+condition=$w56
+
+@w56 entity
+head=District
+attr=EQ
+quantity=Leninsky
+
+@w57 query
+_text=what is the district when prevailing types is acer negundo 30 22 tilia 18 6 poplar 15 23
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=District & "Total amount of trees" & "Prevailing types, %" & "Amount of old trees" & "Amount of trees, that require replacement"
+select=District
+aggregate=NONE
+condition=$w58
+
+@w58 entity
+head="Prevailing types, %"
+attr=EQ
+quantity="Acer negundo — 30.22 Tilia — 18.6 Poplar — 15.23"
+
+@w59 query
+_text=when the value of since beginning of big 12 is synonymous with its category what are the in ames values
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table="Iowa State vs." & "Overall Record" & "in Ames" & "at Opponents Venue" & "at Neutral Site" & "Last 5 Meetings" & "Last 10 Meetings" & "Current Streak" & "Since Beginning of Big 12"
+select="in Ames"
+aggregate=NONE
+condition=$w60
+
+@w60 entity
+head="Since Beginning of Big 12"
+attr=EQ
+quantity="Since Beginning of Big 12"
+
+@w61 query
+_text=what s the u s open cup status for regular season of 4th atlantic division
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Year & Division & League & "Regular Season" & Playoffs & "U.S. Open Cup"
+select="U.S. Open Cup"
+aggregate=NONE
+condition=$w62
+
+@w62 entity
+head="Regular Season"
+attr=EQ
+quantity="4th, Atlantic Division"
+
+@w63 query
+_text=how many division did not qualify for u s open cup in 2003
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Year & Division & League & "Regular Season" & Playoffs & "U.S. Open Cup"
+select=Division
+aggregate=NONE
+condition=$w64 & $w65
+
+@w64 entity
+head="U.S. Open Cup"
+attr=EQ
+quantity="Did Not Qualify"
+
+@w65 entity
+head=Year
+attr=EQ
+quantity=2003
+
+@w66 query
+_text=which round is u s open cup division semifinals
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Year & Division & League & "Regular Season" & Playoffs & "U.S. Open Cup"
+select="U.S. Open Cup"
+aggregate=NONE
+condition=$w67
+
+@w67 entity
+head=Playoffs
+attr=EQ
+quantity="Division Semifinals"
+
+@w68 query
+_text=what are all the playoffs for regular season is 1st atlantic division
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Year & Division & League & "Regular Season" & Playoffs & "U.S. Open Cup"
+select=Playoffs
+aggregate=NONE
+condition=$w69
+
+@w69 entity
+head="Regular Season"
+attr=EQ
+quantity="1st, Atlantic Division"
+
+@w70 query
+_text=what are all the playoffs for u s open cup in 1st round
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Year & Division & League & "Regular Season" & Playoffs & "U.S. Open Cup"
+select=Playoffs
+aggregate=NONE
+condition=$w71
+
+@w71 entity
+head="U.S. Open Cup"
+attr=EQ
+quantity="1st Round"
+
+@w72 query
+_text=what is the total number of 2nd leg where aggregate is 7 2
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select="2nd leg"
+aggregate=COUNT
+condition=$w73
+
+@w73 entity
+head=Aggregate
+attr=EQ
+quantity=7-2
+
+@w74 query
+_text=what s the aggregate where 1st leg is 3 2
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select=Aggregate
+aggregate=NONE
+condition=$w75
+
+@w75 entity
+head="1st leg"
+attr=EQ
+quantity=3–2
+
+@w76 query
+_text=what s the competition where aggregate is 4 7
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select=Competition
+aggregate=NONE
+condition=$w77
+
+@w77 entity
+head=Aggregate
+attr=EQ
+quantity=4–7
+
+@w78 query
+_text=what s the competition where 1st leg is 4 1 h
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select=Competition
+aggregate=NONE
+condition=$w79
+
+@w79 entity
+head="1st leg"
+attr=EQ
+quantity="4-1 (h)"
+
+@w80 query
+_text=what is the total number of round where opponents is haugar
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select=Round
+aggregate=COUNT
+condition=$w81
+
+@w81 entity
+head=Opponents
+attr=EQ
+quantity=Haugar
+
+@w82 query
+_text=what s the 1st leg where opponents is galatasaray
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Season & Competition & Round & Opponents & "1st leg" & "2nd leg" & Aggregate
+select="1st leg"
+aggregate=NONE
+condition=$w83
+
+@w83 entity
+head=Opponents
+attr=EQ
+quantity=Galatasaray
+
+@w84 query
+_text=what is the highest rd that tom sneva had the pole position in
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select=Rd
+aggregate=MAX
+condition=$w85
+
+@w85 entity
+head="Pole Position"
+attr=EQ
+quantity="Tom Sneva"
+
+@w86 query
+_text=how many winning drivers were there in the race that had a fastest lap time of 56 920
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select="Winning driver"
+aggregate=COUNT
+condition=$w87
+
+@w87 entity
+head="Fastest Lap"
+attr=EQ
+quantity=56.920
+
+@w88 query
+_text=how many reports are there in the race that forsythe racing won and teo fabi had the pole position in
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select=Report
+aggregate=COUNT
+condition=$w89 & $w90
+
+@w89 entity
+head="Winning team"
+attr=EQ
+quantity="Forsythe Racing"
+
+@w90 entity
+head="Pole Position"
+attr=EQ
+quantity="Teo Fabi"
+
+@w91 query
+_text=which rd took place at the indianapolis 500
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select=Rd
+aggregate=NONE
+condition=$w92
+
+@w92 entity
+head=Name
+attr=EQ
+quantity="Indianapolis 500"
+
+@w93 query
+_text=which teams won when bobby rahal was their winning driver
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select="Winning team"
+aggregate=NONE
+condition=$w94
+
+@w94 entity
+head="Winning driver"
+attr=EQ
+quantity="Bobby Rahal"
+
+@w95 query
+_text=what was the fastest lap time in the escort radar warning 200
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select="Fastest Lap"
+aggregate=NONE
+condition=$w96
+
+@w96 entity
+head=Name
+attr=EQ
+quantity="Escort Radar Warning 200"
+
+@w97 query
+_text=what report was there for the porsche north america
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rnd & "Race Name" & Circuit & City/Location & Date & "Pole position" & "Winning driver" & "Winning team" & Report
+select=Report
+aggregate=NONE
+condition=$w98
+
+@w98 entity
+head="Winning team"
+attr=EQ
+quantity="Porsche North America"
+
+@w99 query
+_text=what rnds were there for the phoenix international raceway
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rnd & "Race Name" & Circuit & City/Location & Date & "Pole position" & "Winning driver" & "Winning team" & Report
+select=Rnd
+aggregate=NONE
+condition=$w100
+
+@w100 entity
+head=Circuit
+attr=EQ
+quantity="Phoenix International Raceway"
+
+@w101 query
+_text=who was the pole position for the rnd equalling 12
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rnd & "Race Name" & Circuit & City/Location & Date & "Pole position" & "Winning driver" & "Winning team" & Report
+select="Pole position"
+aggregate=NONE
+condition=$w102
+
+@w102 entity
+head=Rnd
+attr=EQ
+quantity=12
+
+@w103 query
+_text=how many reports were the for the cleveland burke lakefront airport circut
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rnd & "Race Name" & Circuit & City/Location & Date & "Pole position" & "Winning driver" & "Winning team" & Report
+select=Report
+aggregate=COUNT
+condition=$w104
+
+@w104 entity
+head=Circuit
+attr=EQ
+quantity="Cleveland Burke Lakefront Airport"
+
+@w105 query
+_text=how many winning drivers were the for the rnd equalling 5
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rnd & "Race Name" & Circuit & City/Location & Date & "Pole position" & "Winning driver" & "Winning team" & Report
+select="Winning driver"
+aggregate=COUNT
+condition=$w106
+
+@w106 entity
+head=Rnd
+attr=EQ
+quantity=5
+
+@w107 query
+_text=the race tony bettenhausen 200 has what smallest rd
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select=Rd
+aggregate=MIN
+condition=$w108
+
+@w108 entity
+head=Name
+attr=EQ
+quantity="Tony Bettenhausen 200"
+
+@w109 query
+_text=the winning team of the race los angeles times 500 is who
+_source="wikisql-gold (the dataset's SQL)"
+_world=wikisql
+_table=Rd & Name & "Pole Position" & "Fastest Lap" & "Winning driver" & "Winning team" & Report
+select="Winning team"
+aggregate=NONE
+condition=$w110
+
+@w110 entity
+head=Name
+attr=EQ
+quantity="Los Angeles Times 500"
+
+@w111 query
+_text=how many winning drivers in the kraco twin 125 r2 race were there
+_source="wikisql-

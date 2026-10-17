@@ -1,0 +1,53 @@
+{
+ "world": "wikisql",
+ "D": 512,
+ "seed": 0,
+ "language": "en",
+ "legend_sha256": "sha256:9b7ddb62bd1851f2b29a8fd0fba0977fab6f5e558ec19f0daaf0b6f3723f8b67",
+ "legend_version": 1,
+ "training_code_commit": "1528450",
+ "trained": "2026-10-17T15:15:31",
+ "codes": [
+  "path",
+  "chainL",
+  "bigram"
+ ],
+ "gate_init": "closed",
+ "depth_estimator": "kinds",
+ "presence_readout": "decided",
+ "batch": 32,
+ "lr": 0.02,
+ "epochs": 3,
+ "n_train_steps_sentences": 169065,
+ "thresholds": {
+  "tau": 0.05,
+  "tau_source": "stated (the repository's v16 value), not fitted on any rows",
+  "no_sense_share": 0.5,
+  "no_sense_source": "stated",
+  "no_fit_residual": 0.9,
+  "no_fit_source": "stated (dispatcher only, spec section 9)",
+  "presence": {
+   "select": null,
+   "aggregate": null,
+   "condition": null
+  },
+  "attr_presence": {},
+  "det_presence": {},
+  "scope_term": null,
+  "set_member": {
+   "condition": 0.3407346239481427
+  },
+  "calibration_split": "train (a sample of 400 training sentences, rng 1234+seed); never the scored rows (rule 25)",
+  "rule": "FITTED: per role, the threshold that maximises the balanced present / absent accuracy on the calibration rows (judgment 752853c \u00a72); the pooled midpoint of the same rows is kept as thresholds_pooled_midpoint, the comparison",
+  "presence_margin": "|presence ratio - threshold| (ratio units), on the wire as _presence_margin.<role> (SOP Lang keys carry one dot); the role's _margin = min(identity margin, presence margin): a near-threshold reading abstains"
+ },
+ "thresholds_pooled_midpoint": {
+  "presence": {},
+  "attr_presence": {},
+  "det_presence": {},
+  "scope_term": null,
+  "set_member": {
+   "condition": 0.4328130355459426
+  }
+ }
+}
