@@ -80,7 +80,13 @@ def ok(c, m):
     global fails; print(("PASS " if c else "FAIL ") + m); fails += 0 if c else 1
 s = log["steps"][0]; cl = s["feedback"]["unplaced_clusters"]
 print("  _unplaced clusters (words, kinds, sentences, routes, residual share, supported, novel):")
-for c in cl: print("   ", c["words"], c["kinds"], c["sentences"], c["routes"], round(c["residual_share_mean"], 3), c["supported"], c["novel"])
+for c in cl: print("   ", c["words"], c["kinds"], c["sentences"], c["routes"], round(c["residual_share_mean"], 3), c["supported"], c["novel"],
+                   "| N6: cos same / different", c.get("residual_cos_same_filler"), "/", c.get("residual_cos_different_filler"), "1-NN", c.get("loo_1nn_filler_accuracy"), "chance", c.get("loo_1nn_chance"))
+prop = [c for c in cl if c.get("proposable")]
+ok(bool(prop) and all(c.get(k) is not None for c in prop for k in ("residual_cos_same_filler", "residual_cos_different_filler", "loo_1nn_filler_accuracy", "loo_1nn_chance")),
+   "every proposed cluster carries the two N6 statistics (residual cosine same / different filler; leave-one-out 1-NN filler accuracy with its chance)")
+chg = open(os.path.join(wd, "versions", "v2", "CHANGES.md")).read()
+ok("the N6 statistics: residual cosine same filler" in chg and "leave-one-out 1-NN filler" in chg, "CHANGES.md prints the N6 statistics next to the proposed legend line")
 dest = {"archive", "cloud", "trash", "folder"}
 ch = s["evolve"]["changes"]; ok(len(ch) == 1, f"one change set item proposed: {[(c['role'], c['fillers'], c['naming'][:60]) for c in ch]}")
 ok(bool(ch) and set(ch[0]["fillers"]) == dest, "the proposed role's fillers are exactly the removed role's fillers (archive, cloud, trash, folder)")

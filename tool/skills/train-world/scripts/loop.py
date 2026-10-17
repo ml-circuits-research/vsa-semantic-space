@@ -33,6 +33,9 @@ FULL_TOL = 0.02            # stated: "within seed variance" with one seed (with 
 CW_TOL = 0.005             # stated: confident-wrong "not up" tolerance
 
 
+def fmt6(x): return "—" if x is None else f"{x:.3f}"
+
+
 def now(): return datetime.datetime.now().isoformat(timespec="seconds")
 def wname(wd): return os.path.basename(os.path.abspath(wd).rstrip("/"))
 def jdump(obj, p):
@@ -347,6 +350,21 @@ def accept_training(wd, k=10, seed=0):
 
 
 # ------------------------------------------------------------------ 5. feedback
+def residual_statistics(items, n_max=400):
+    """the two N6 statistics of a proposed cluster (judgment 934fbae E1; RESULTS 15 on the constructed world: 0.19 / 0.05; 1-NN 0.57 vs
+    chance 0.08): the mean cosine between the RESIDUALS (S - a rec, the unexplained part of the chart) of sentences sharing the cluster's
+    filler vs of sentences with different fillers, and the leave-one-out nearest-neighbour accuracy of the filler over the residuals alone
+    (cosine; chance = 1 / the number of distinct fillers). Reporting only: they are the numbers that support a proposed legend line."""
+    its = items[:n_max]
+    if len(its) < 3: return {"residual_cos_same_filler": None, "residual_cos_different_filler": None, "loo_1nn_filler_accuracy": None, "loo_1nn_chance": None}
+    R = np.array([i["res"] for i in its]); w = np.array([i["word"] for i in its]); C = np.real(R @ R.conj().T)
+    same = w[:, None] == w[None, :]; off = ~np.eye(len(its), dtype=bool)
+    cs = float(C[same & off].mean()) if (same & off).any() else None; cd = float(C[~same].mean()) if (~same).any() else None
+    C2 = C.copy(); np.fill_diagonal(C2, -np.inf); nn = C2.argmax(1)
+    return {"residual_cos_same_filler": cs, "residual_cos_different_filler": cd, "loo_1nn_filler_accuracy": float((w[nn] == w).mean()),
+            "loo_1nn_chance": 1.0 / len(set(w.tolist())), "n_items_for_statistics": len(its)}
+
+
 def feedback(wd, n_max=1500):
     from sop.infer import Reader
     rd = Reader(os.path.join(wd, "model")); legend = rd.legend; texts = []
@@ -366,7 +384,8 @@ def feedback(wd, n_max=1500):
             if i not in info["kept"]: continue
             k = info["kept"].index(i); a = info["addr"][k]; term = a * rd.st.id(info["tokens"][i])
             share = abs(np.vdot(term, Rv)) / (np.linalg.norm(term) * max(1e-9, np.linalg.norm(Rv)))
-            items.append({"word": info["tokens"][i], "kind": rd.kind(info["tokens"][i]), "sentence": si, "dir": a / np.linalg.norm(a), "share": float(share)})
+            items.append({"word": info["tokens"][i], "kind": rd.kind(info["tokens"][i]), "sentence": si, "dir": a / np.linalg.norm(a), "share": float(share),
+                          "res": Rv / max(1e-12, np.linalg.norm(Rv))})
     clusters = []
     for it in items:
         for c in clusters:
@@ -381,7 +400,8 @@ def feedback(wd, n_max=1500):
     n = max(1, len(texts)); props = []
     for m in merged:
         sents = {i["sentence"] for i in m["items"]}
-        props.append({"words": sorted(m["words"]), "kinds": sorted({i["kind"] for i in m["items"] if i["kind"]}), "sentences": len(sents),
+        st6 = residual_statistics(m["items"])
+        props.append({**st6, "words": sorted(m["words"]), "kinds": sorted({i["kind"] for i in m["items"] if i["kind"]}), "sentences": len(sents),
                       "share_of_corpus": len(sents) / n, "routes": m["routes"], "residual_share_mean": float(np.mean([i["share"] for i in m["items"]])),
                       "examples": [texts[j] for j in sorted(sents)[:5]], "supported": len(sents) >= max(5, MIN_SUPPORT * n)})
     filled = collections.Counter(); annotated_words = set()
@@ -435,7 +455,8 @@ def evolve(wd, fb):
         while rid in legend.roles: rid += "_new"
         new["roles"].append({"id": rid, "question": q})
         changes.append({"type": "add_role", "role": rid, "question": q, "naming": how, "fillers": prop["words"], "kinds": prop["kinds"],
-                        "evidence": {k2: prop[k2] for k2 in ("sentences", "share_of_corpus", "routes", "residual_share_mean", "examples")}})
+                        "evidence": {k2: prop.get(k2) for k2 in ("sentences", "share_of_corpus", "routes", "residual_share_mean", "examples",
+                                                                 "residual_cos_same_filler", "residual_cos_different_filler", "loo_1nn_filler_accuracy", "loo_1nn_chance")}})
     if any({r["id"] for r in new["roles"]} == rj for rj in rejected): return {"version": nv, "changes": [], "note": "this change set equals a rejected version: not proposed again"}
     if not changes: return {"version": nv, "changes": [], "note": "no supported proposal in the feedback"}
     os.makedirs(vd, exist_ok=True); jdump(new, os.path.join(vd, "legend.json"))
@@ -450,7 +471,9 @@ def evolve(wd, fb):
         for c in changes:
             e = c["evidence"]
             f.write(f"- `_unplaced` cluster {c['fillers']} (kinds {c['kinds']}): {e['sentences']} sentences ({e['share_of_corpus']:.1%} of those read), "
-                    f"{e['routes']} route(s), mean share of the residual {e['residual_share_mean']:.3f}; e.g. \"{e['examples'][0]}\"\n")
+                    f"{e['routes']} route(s), mean share of the residual {e['residual_share_mean']:.3f}; the N6 statistics: residual cosine same filler "
+                    f"{fmt6(e.get('residual_cos_same_filler'))} / different fillers {fmt6(e.get('residual_cos_different_filler'))}, leave-one-out 1-NN filler "
+                    f"accuracy over the residuals {fmt6(e.get('loo_1nn_filler_accuracy'))} (chance {fmt6(e.get('loo_1nn_chance'))}); e.g. \"{e['examples'][0]}\"\n")
         f.write("\n## Change set\n" + "".join(f"- ADD role `{c['role']}` — {c['question']} [{c['naming']}]\n" for c in changes))
         f.write("\nRemovals: none (add freely; remove only what is empty across the corpus" + (f"; empty now: {fb['roles_empty_across_corpus']}" if fb['roles_empty_across_corpus'] else "") + ").\n")
         f.write("\n## Migration\nmigration.json: " + "; ".join(f"add `{r['add_role']}` from fillers {r['fillers']}" for r in migration["rules"]) + "\n")
@@ -584,7 +607,9 @@ def step(wd, train_args, annotator="oracle"):
 
 def summarize_fb(fb):
     return {k: fb[k] for k in ("sentences_read", "residual_mean", "status", "roles_empty_across_corpus", "unknown_wires_by_words")} | \
-           {"unplaced_clusters": [{k: c[k] for k in ("words", "kinds", "sentences", "routes", "supported", "novel", "proposable", "residual_share_mean")} for c in fb["unplaced_clusters"]]}
+           {"unplaced_clusters": [{k: c[k] for k in ("words", "kinds", "sentences", "routes", "supported", "novel", "proposable", "residual_share_mean",
+                                                     "residual_cos_same_filler", "residual_cos_different_filler", "loo_1nn_filler_accuracy", "loo_1nn_chance")}
+                                  for c in fb["unplaced_clusters"]]}
 
 
 def seeds_for(wd, train_args):
