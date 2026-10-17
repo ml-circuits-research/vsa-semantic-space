@@ -1496,3 +1496,30 @@ and broke the gate count; FULL with the kind count equals FULL with the depth gi
 10b-quinquies on every axis (seen 1.000, new ids 1.000, depth 3 0.987, unseen transitions 0.596 vs 0.627 with every role read), and the commands
 world reproduces 10d with its own depth estimate. Defaults after this round: depth estimator = opener kinds (gate count and fit as checks);
 presence decided (the spec's `_empty` depends on it) — whether the reference world should read every role is a question for the reviewing session.
+
+### 12-quinquies. 12-quater per seed (rescore_v20.py; logs/2026-10-17_1028_rescore_v20_b8b61dc.txt; the saved models of the E1b-protocol run, same worlds, seeds and evaluation rngs; no retraining)
+The means reproduce the digits of the 12-quater log exactly: the readout is deterministic. Depth 2 (UNSEEN for the operator forms, rule 29 (B)),
+subject A = FULL on every form (B, C, pred, structure are 1.000):
+| form | per seed (0-4) | mean ± sd | seeds above 0.9 |
+|---|---|---|---|
+| aff / may / neg / must_neg | 1.000 ×5 | 1.000 | 5/5 |
+| must | 0.925, 1.000, 0.925, 1.000, 0.975 | 0.965±0.034 | 5/5 |
+| neg_must | 1.000, 0.975, 1.000, 1.000, 0.975 | 0.990±0.012 | 5/5 |
+| **may_neg** ("may not", "might not") | **0.850, 0.800, 0.950, 0.675, 1.000** | **0.855**±0.114 | **2/5** — below the criterion 0.9 on the mean: the NAMED EXCEPTION of the regularity row |
+
+## 10c-nonies. C5 closed — per-slot presence thresholds (rescore_v17_c5_slots.py; logs/2026-10-17_1029_rescore_v17_c5_slots_b8b61dc.txt; saved frames of the C5 reader; thresholds per slot index (1, 2, 3+) set on the calibration half, every number on the odd half; no retraining)
+Criterion written before the run: present read as present >= 0.9 on the second and later slots AND false alarm on gold <= 0.152 (10c-sexies).
+| scheme | slot 1 present / absent (n) | slot 2 present / absent | slot 3+ present / absent | slots 2+ present | gold false alarm (column-margin verdict) |
+|---|---|---|---|---|---|
+| single threshold 0.194 (10c-sexies) | 0.995 / 0.000 (4,177 / 33) | 0.726 / 0.981 (1,312 / 2,898) | 0.129 / 1.000 (295 / 8,125) | 0.616 | 0.152 |
+| per-slot thresholds (0.452 / 0.156 / 0.097) | **0.330** / 0.182 | 0.758 / 0.964 | 0.773 / 0.930 | **0.760** | 0.153 |
+Present slots read as present by the NUMBER of conditions in the question (single threshold): 1 condition 0.995 (n 2,865), 2 conditions 0.835
+(2,094), 3+ conditions 0.664 (825). By SLOT INDEX: 0.995 / 0.726 / 0.129.
+Reading: NOT met — closed as "bounded by the presence reading of the later slots". The per-slot thresholds lift slots 2+ from 0.616 to 0.760
+(still under 0.9) and wreck slot 1 (0.995 -> 0.330): the absent class of slot 1 is tiny (33 odd-half questions without conditions) and its
+marker cosine is HIGHER than the present class's (0.484 vs 0.421 on the calibration half), so the midpoint falls above most present scores — a
+calibration that cannot be set on so few examples, not a tuning choice. Diagnostic (judgment 45ccd1d C): the drop follows the SLOT INDEX more than
+the number of conditions — slot 3+ reads 0.129 while 3-condition questions average 0.664 over their three slots (slot 1 stays near 1.0 inside them,
+inferred from the two tables) — so the parameter is the slot's own role R_COND[k] with few training examples (slot 3+ is 295 of 16,840 report
+slots), not superposition of the conditions; a capacity effect would lower all slots of a 3-condition question together. The condition axis of
+the verifier goes to the HYPOTHESIS list with this diagnostic.
