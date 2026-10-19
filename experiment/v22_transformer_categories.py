@@ -20,6 +20,7 @@ CRITERION written before the run:
   Depth 3 (unseen) is reported on the same rule with thresholds 0.9 / 0.5.
 Run: python3 v22_transformer_categories.py [--seeds 5] [--device cpu]
 """
+import guard  # process-level memory/time protection (see guard.py), as in v9
 import argparse, time, sys
 import numpy as np, torch, torch.nn as nn
 import v5_scale as v5, v7_nested as v7
@@ -100,7 +101,7 @@ if __name__ == "__main__":
     print(f"chance: seen ids 1/12 = {1/12:.3f}; new ids 1/6 = {1/6:.3f}. Reference (7b, no categories): new ids 0.215, depth 3 0.390.\n", flush=True)
     grid = [(float(lr), float(dp)) for lr in a.lrs.split(",") for dp in a.dropouts.split(",")]
     cols = ["seen", "new ids", "new form., seen trans.", "new form., UNSEEN trans.", "new form., ROLE CUES seen", "depth 1", "depth 2 (seen)", "depth 3 (UNSEEN)"]
-    results, roles3, chosen = [], [], None
+    results, roles3, roles2, chosen = [], [], [], None
     for seed in range(a.seeds):
         w = v5.BigWorld(a.n_id, np.random.default_rng(seed)); trP, teP, trO, teO = w.persons[:12], w.persons[12:], w.objects[:12], w.objects[12:]
         F = np.exp(1j * np.random.default_rng(300 + seed).uniform(-np.pi, np.pi, (len(w.vocab), D))); world = v7.NestedRoleWorld(F, w, np.random.default_rng(100 + seed))
@@ -121,16 +122,20 @@ if __name__ == "__main__":
         r = [v7.decode_nested(m, world, w, v5.TRAIN_T, trP, trO, 0, n=20), v7.decode_nested(m, world, w, v5.TRAIN_T, teP, teO, 0, n=20),
              v7.decode_nested(m, world, w, held_seen, trP, trO, 0, n=30), v7.decode_nested(m, world, w, held_new, trP, trO, 0, n=30),
              v7.decode_nested(m, world, w, cues_ok, trP, trO, 0, n=30), v7.decode_nested(m, world, w, v5.TRAIN_T, trP, trO, 1, n=15),
-             v7.decode_nested(m, world, w, v5.TRAIN_T, trP, trO, 2, n=15), d3]
-        results.append(r); roles3.append([pr3[k] for k in ("A", "B", "C", "X1", "X2", "X3")])
+             None, d3]
+        r[6], pr2 = v7.decode_nested(m, world, w, v5.TRAIN_T, trP, trO, 2, n=15, per_role=True)   # same call as before, per role reported (as 7b)
+        results.append(r); roles2.append([pr2[k] for k in ("A", "B", "C", "X1", "X2")]); roles3.append([pr3[k] for k in ("A", "B", "C", "X1", "X2", "X3")])
         print(f"  seed {seed} transformer+categories " + " | ".join(f"{x:.3f} (m {mg:.2f})" for x, mg in r), flush=True)
     r = np.array(results)
     print(f"\n== MEANS over {a.seeds} seeds: accuracy (margin) ==  columns: " + " | ".join(cols))
     print(f"  transformer + categories (lr={chosen[0]:g}, dropout={chosen[1]:g}) " + " | ".join(f"{r[:,i,0].mean():.3f}±{r[:,i,0].std():.3f} (m {r[:,i,1].mean():.2f})" for i in range(len(cols))))
     print("  per seed, new ids: " + ", ".join(f"{x:.3f}" for x in r[:, 1, 0]) + "; depth 3: " + ", ".join(f"{x:.3f}" for x in r[:, 7, 0]))
+    r2 = np.array(roles2); print("== depth 2 (seen), PER ROLE: A | B | C | X1 | X2\n  " + " | ".join(f"{r2[:,i].mean():.3f}±{r2[:,i].std():.3f}" for i in range(5)))
     r3 = np.array(roles3); print("== depth 3 (UNSEEN), PER ROLE: A | B | C | X1 | X2 | X3\n  " + " | ".join(f"{r3[:,i].mean():.3f}±{r3[:,i].std():.3f}" for i in range(6)))
     print("reference: 7b transformer WITHOUT categories (log 2026-10-15_1414): new ids 0.215±0.012, depth 3 0.390±0.024, unseen trans. 0.783±0.057; "
           "reader (7c, learned gates, closed start): new ids 1.000, depth 3 0.996, unseen trans. 0.870±0.038.")
     ni, d3m = r[:, 1, 0].mean(), r[:, 7, 0].mean()
     verdict = lambda v: "> 0.9: the 7b gap on this axis came from the category input" if v > 0.9 else ("< 0.5: the gap on this axis is the mechanism" if v < 0.5 else "in between: reported as is, both readings stated")
     print(f"== decision rule (written before the run): new ids {ni:.3f} -> {verdict(ni)}; depth 3 {d3m:.3f} -> {verdict(d3m)}")
+    print(f"\nchecklist: [x] world addresses [x] shared F (assert) [x] chance printed [x] separate axes [x] margin [{'x' if a.seeds >= 3 else ' '}] >=3 seeds "
+          "[x] no test calibration (validation on training distribution) [x] same data/objective (13) [x] one change vs v9 (23) [x] per role (15) [x] criterion before the run")
