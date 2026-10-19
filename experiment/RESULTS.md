@@ -380,6 +380,33 @@ a small transformer trained identically does not generalize to new identities or
 What the control does NOT cover: more data / epochs, a larger model, learned input embeddings (which would remove the fixed-identity
 constraint and with it the zero-shot test). Parameter counts are comparable (0.79M vs ~1.6M).
 
+## 7b-bis. The 7b transformer control with the word categories at the input (v22_transformer_categories.py; logs/2026-10-19_1525_v22_transformer_categories_18dc7fd.txt)
+Requested by the external review (Astra, 2026-10-19): in 7b the reader is given each word's category and the transformer is not, so 1.000 vs
+0.215 on new identities did not isolate the mechanism. ONE change from 7b (rule 23): the input of token t is Linear(F[w_t]) + Emb(category(w_t)),
+Emb a learned table over the world's 32 categories, exactly the reader's inventory (P for every person, O for every object, every other word
+its own category); held-out persons and objects carry P / O at the input, as for the reader. Everything else as 7b: same world (v7
+NestedRoleWorld, prefixed reporting), same fixed F, same objective, same decoder, 30k sentences, 12 epochs, batch 32, same tuning grid selected
+on seed 0 by training-distribution validation: lr 1e-3 / dropout 0 -> val cos 0.918; 1e-3 / 0.1 -> 0.857; 3e-4 / 0 -> 0.963; 3e-4 / 0.1 -> 0.859.
+Chosen: lr 3e-4, dropout 0 (7b chose 1e-3 / 0; same grid, same rule). 0.80M parameters (7b 0.79M; the category table adds 32 x 128).
+Criterion written in the script header before the run (PR #1, commit a262f7c): new ids > 0.9 -> the 7b gap came from the category input; < 0.5 ->
+the gap is the mechanism; in between -> reported as is with both readings. Depth 3 (unseen) on the same rule. Merged at 9ea8adc; 18dc7fd adds
+import guard, the depth-2 per-role print and the checklist (no change to the computation). DGX (GB10), CUDA, 5 seeds.
+| model | seen | new ids | seen trans. | UNSEEN trans. | ROLE CUES seen | depth 1 | depth 2 (seen) | depth 3 (UNSEEN) |
+|---|---|---|---|---|---|---|---|---|
+| transformer + categories (7b-bis) | 1.000±0.000 (m .54) | **0.253±0.034** (m -.02) | 0.830±0.139 | 0.790±0.123 | 1.000±0.000 | 0.976±0.048 | 0.800±0.008 | **0.393±0.023** (m .12) |
+| transformer, no categories (7b) | 0.971±0.057 (m .48) | 0.215±0.012 (m -.02) | 0.770±0.122 | 0.783±0.057 | 0.968±0.050 | 0.839±0.095 | 0.797±0.008 | 0.390±0.024 (m .11) |
+| reader, learned gates, start closed (7c) | 1.000 | 1.000 | 0.848±0.064 | 0.870±0.038 | 1.000 | 1.000 | 1.000 | 0.996 |
+Chance: seen ids 1/12 = 0.083; new ids 1/6 = 0.167. Per seed, new ids: 0.213, 0.234, 0.282, 0.304, 0.231 (all < 0.5); depth 3: 0.434, 0.386,
+0.380, 0.365, 0.399 (all < 0.5). Per role, transformer + categories: depth 2 (seen): A 0.519±0.056, B 1.000, C 0.481±0.048, X1 1.000, X2 1.000
+(7b: A 0.486, C 0.497); depth 3 (unseen): A 0.088, B 0.104, C 0.102 (chance 0.083), X1 1.000, X2 0.998, X3 0.065 (7b: 0.082 / 0.100 / 0.096 /
+1.000 / 1.000 / 0.063).
+Decision rule as written: new ids 0.253 < 0.5 -> the gap on this axis is the mechanism; depth 3 0.393 < 0.5 -> the gap on this axis is the
+mechanism. Given the same categories as the reader, the transformer still does not carry an unseen identity vector to its role (margin -0.02,
+as in 7b) and still does not compose a third reporting level (the same signature: the two known speakers placed, every inner role at chance).
+What the categories did change: the seen and flat axes (seen 0.971 -> 1.000, depth 1 0.839 -> 0.976, role cues 0.968 -> 1.000, seen trans.
+0.770 -> 0.830); unseen transitions unchanged within spread (0.783 vs 0.790). Same caveat as 7b: at this data regime and size, not "transformers
+cannot". New ids 0.253 is above 7b's 0.215 and above chance 0.167 with negative margin; it is not read as partial transfer.
+
 ## 7c. §5.2 — GATES LEARNED BY GRADIENT (v8_gates.py; logs/2026-10-15_1412_v8_gates_06e12bd.txt; 5 seeds, same regime as 6c)
 Soft chain: g_c = sigmoid(s_c) = probability that category c emits; the address of a word is the gate-weighted mixture over "the most
 recent open emitter before it" (right) and, for a non-emitter, "the first open emitter after it" (left re-addressing, v6); fully in torch,

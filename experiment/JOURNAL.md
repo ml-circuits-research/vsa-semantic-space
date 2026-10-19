@@ -355,3 +355,15 @@ the stopped attempt's duplicate splits.json replaced by its sha note; E1's 1-NN 
 Tag paper-2026-10 = the state cited by the paper; experiments frozen until submission.
 The full text of judgment 753287f (sections A-G) arrived after the tag: saved verbatim; STATUS section 3 and current_status aligned to its
 section F; the consolidation directions (E) and the demonstration bounds (G) recorded for after submission. No run, no number moved.
+
+## 2026-10-19 (DGX) — freeze lifted for one run: 7b-bis, the transformer control with the word categories at the input
+Reviewed PR #1 (branch review/v22-transformer-categories; external review, Astra, 2026-10-19): one new file, v22_transformer_categories.py;
+same world, F, objective, decoder, data RNGs, init order, training loop and seed-0 selection as v9 (unchanged); the only change is
+Linear(F[w]) + Emb(category) over the reader's 32 categories; criterion in the header before the run. Merged (9ea8adc). Follow-up 18dc7fd:
+import guard (missing; required on the DGX), depth-2 per-role print as in 7b, checklist (rule 3); no change to the computation; CUDA smoke
+test (1 seed, N=300, 1 epoch) not logged.
+Ran: run.sh v22_transformer_categories.py --seeds 5 --device cuda -> logs/2026-10-19_1525_v22_transformer_categories_18dc7fd.txt (~10 min)
+Result (RESULTS 7b-bis): chosen lr 3e-4 / dropout 0; new ids 0.253±0.034 (7b 0.215, chance 0.167, reader 1.000), depth 3 0.393±0.023 (7b 0.390,
+  reader 0.996); every seed < 0.5 on both. Rule as written: the 7b gap is the mechanism, not the category input, on both axes. Categories lift
+  the seen and flat axes (seen 1.000, depth 1 0.976, role cues 1.000); the depth-3 signature is 7b's (known speakers placed, inner roles at chance).
+Changed: RESULTS 7b-bis; STATUS transformer-control row; current_status. Paper not touched (the reviewing session updates it). Push = judgment point.

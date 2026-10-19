@@ -1,15 +1,14 @@
-# Current status — the state at the FREEZE (judgment 753287f, 2026-10-17): experiments stopped for the article; tag paper-2026-10
+# Current status — the freeze (tag paper-2026-10) lifted for ONE run: 7b-bis, the transformer control with categories (2026-10-19)
 
-Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/JUDGMENT_2026-10-17_8d335f8.md and _753287f.md (saved verbatim; the full text of 753287f
-arrived after the tag and is saved in the commit that follows it), experiment/RESULTS.md 11-octies, 15, 15-bis; STATUS.md; experiment/JOURNAL.md; tool/README.md.
+Labels (rule 22): BUILT / PLANNED / HYPOTHESIS. Sources: experiment/RESULTS.md 7b-bis (this judgment point), 11-octies, 15, 15-bis;
+experiment/JUDGMENT_2026-10-17_8d335f8.md and _753287f.md; STATUS.md; experiment/JOURNAL.md; tool/README.md.
 
-## A. Done since 8d335f8
+## A. Done since the freeze (judgment point after 6dca504)
 | step | result | outcome |
 |---|---|---|
-| judgment 8d335f8 (one commit) | N6 row reworded to the supported claim (the omitted role's identity remains in the residual at a consistent address, recoverable at 0.963 once named; separable by filler with the neighbours' labels; share not a signal; "detectable" NOT claimed); N6-bis PLANNED; external-review wording (WikiSQL question-only encoder with the schema as the decoder's candidate set; confident-wrong defined with the conditional risk and the rule-of-three bound; 7b as the mean over roles; quantifier cells as scope markers read through the legend rule); round 6 adopted | done, no number moved |
-| tool E1 (agent) | the legend-gap report prints the N6 statistics per proposed cluster (residual cosine same / different filler; leave-one-out 1-NN with its chance; "uses the fillers' labels: separability, not recovery"; n_items_for_statistics, cap 400) | done |
-| tool E2 (agent; RESULTS 11-octies; tool/runs/wikisql_1528450/) | WikiSQL through the tool: selected column 0.816 (8c 0.810±0.004) and aggregator 0.827 (0.814) reproduced; SOP round trip exact on 64,776 questions; FULL 0.217 vs 0.376 NOT reproduced — the gap is the SET-SIZE decision (how many conditions), which 8c's protocol is given (FULL defined as such from now on); with the count given, FULL 0.423 (seed 0); abstention on dev at tau 0.05: 4,391 of 8,421 (0.52); condition role confident-wrong 0.285 at coverage 0.53 | the C5 legend question answered on data: a set-valued condition role reads the columns; its size is the open item (PLANNED row) |
-| judgment 753287f (this commit) | FULL labelled with its count protocol in RESULTS 8c / 8d and the STATUS WikiSQL row; 11-octies carries the abstention and the condition confident-wrong; the tool's REPORT prints the threshold rule actually applied (fitted since round 6), with an erratum line on the committed WikiSQL REPORT; the condition-presence row prints its reason; the duplicate splits.json of the stopped attempt replaced by its sha note; the set-size PLANNED row | done, no number moved; experiments frozen |
+| PR #1 reviewed and merged (9ea8adc) | experiment/v22_transformer_categories.py (external review, Astra, 2026-10-19): the 7b control with ONE change, the reader's 32 word categories at the transformer's input; criterion in the header before the run; v9_transformer.py unchanged. Follow-up 18dc7fd: import guard, depth-2 per-role print, checklist (no change to the computation) | merged |
+| run 7b-bis (DGX, CUDA, 5 seeds; logs/2026-10-19_1525_v22_transformer_categories_18dc7fd.txt) | chosen lr 3e-4 / dropout 0 by seed-0 validation; new ids 0.253±0.034 (per seed 0.213-0.304; 7b 0.215; reader 1.000); depth 3 0.393±0.023 (per seed 0.365-0.434; 7b 0.390; reader 0.996); inner roles at depth 3 at chance, the two known speakers placed (7b's signature); categories lift the seen / flat axes (seen 1.000, depth 1 0.976, role cues 1.000) | decision rule as written: < 0.5 on both axes -> the 7b gap is the mechanism, not the category input. STATUS transformer-control row updated. The paper is NOT changed here; the reviewing session updates it from RESULTS 7b-bis |
+| earlier at the freeze (judgment 753287f) | see JOURNAL 2026-10-17 (evening) and tag paper-2026-10 | unchanged |
 
 ## B. PLANNED after submission, in order (judgment 753287f section F)
 1. Set-size reading of a set-valued role on the WikiSQL world: (a) a relative member rule on the stored scores (re-scoring; CPU; permitted before
@@ -32,4 +31,5 @@ term as a structure witness); the verifier's condition axis (legend choice settl
 before drawing" (diagnostic in the next kinds run).
 
 ## D. Open questions
-None. Experiments stopped for the article at tag paper-2026-10; the state cited by the paper is this commit.
+1. For the reviewing session: carry 7b-bis into the paper's control paragraph (the comparison now isolates the mechanism on new identities
+   and on the unseen depth). Experiments are frozen again after this run; nothing else runs.
