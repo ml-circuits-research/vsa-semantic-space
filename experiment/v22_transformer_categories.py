@@ -60,19 +60,27 @@ class TModelCat(TModel):
         for n in range(n_sent):
             d = int(rng.integers(depth_train + 1)); ev = self.w.event(persons, objects, depth=d)
             sents.append(self.w.render(ev, rng.choice(list(templates)))); targets.append(world.state(ev))
-        x, cats, mask = self.encode(sents); return x, cats, mask, torch.tensor(np.array(targets), dtype=torch.complex64, device=self.device)
+        ids, cats, mask = self.encode_ids(sents)            # identities gathered per batch (memory: 30k x T x 2D floats would not fit on a small host)
+        return ids, cats, mask, torch.tensor(np.array(targets), dtype=torch.complex64, device=self.device)
+    def encode_ids(self, sentences):
+        B = len(sentences); T = max(len(s) for s in sentences)
+        ids = torch.zeros(B, T, dtype=torch.long); cats = torch.zeros(B, T, dtype=torch.long); mask = torch.zeros(B, T, dtype=self.dtype)
+        for b, toks in enumerate(sentences):
+            ids[b, :len(toks)] = torch.tensor([self.w.idx[t] for t in toks])
+            cats[b, :len(toks)] = torch.tensor([self.cat_id[self.w.cat[t]] for t in toks]); mask[b, :len(toks)] = 1
+        return ids.to(self.device), cats.to(self.device), mask.to(self.device)
     def train(self, data, lr, epochs, batch, wd=0.01):
-        x, cats, mask, tgt = data; n = x.shape[0]; opt = torch.optim.AdamW(self.net.parameters(), lr=lr, weight_decay=wd)
+        ids, cats, mask, tgt = data; n = ids.shape[0]; opt = torch.optim.AdamW(self.net.parameters(), lr=lr, weight_decay=wd)
         sched = torch.optim.lr_scheduler.CosineAnnealingLR(opt, T_max=epochs * ((n + batch - 1) // batch)); g = torch.Generator(device="cpu").manual_seed(0)
         for ep in range(epochs):
             self.net.train(); perm = torch.randperm(n, generator=g).to(self.device)
             for i in range(0, n, batch):
-                sl = perm[i:i + batch]; S = self.net(x[sl], mask[sl], cats[sl]); t = tgt[sl]
+                sl = perm[i:i + batch]; S = self.net(self.Freal[ids[sl]], mask[sl], cats[sl]); t = tgt[sl]
                 cos = torch.real((torch.conj(t) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * t.abs().pow(2).sum(-1).sqrt() + 1e-8)
                 opt.zero_grad(); (-cos.mean()).backward(); opt.step(); sched.step()
             print(f"    epoch {ep + 1}/{epochs} done", flush=True)
     def val_cos(self, data):
-        x, cats, mask, tgt = data; S = self.states(x, cats, mask)
+        ids, cats, mask, tgt = data; S = self.states(self.Freal[ids], cats, mask)
         return float((torch.real((torch.conj(tgt) * S).sum(-1)) / (S.abs().pow(2).sum(-1).sqrt() * tgt.abs().pow(2).sum(-1).sqrt() + 1e-8)).mean())
 
 
@@ -104,7 +112,9 @@ if __name__ == "__main__":
             val = m.make_data(world, np.random.default_rng(900 + seed), 2000, v5.TRAIN_T, trP, trO, a.depth_train)
             t0 = time.time(); m.train(data, lr, a.epochs, a.batch); t_train = time.time() - t0; vc = m.val_cos(val)
             print(f"  seed {seed} lr={lr:g} dropout={dp:g} ({t_train:5.0f}s, {m.n_params/1e6:.2f}M params) validation cos {vc:.3f}", flush=True)
+            del data, val
             if best is None or vc > best[0]: best = (vc, lr, dp, m)
+            else: del m
         if seed == 0: chosen = (best[1], best[2]); print(f"  => chosen config: lr={chosen[0]:g}, dropout={chosen[1]:g} (by validation cos, seed 0)", flush=True)
         m = best[3]
         d3, pr3 = v7.decode_nested(m, world, w, v5.TRAIN_T, trP, trO, 3, n=15, per_role=True)
